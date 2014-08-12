@@ -1,9 +1,7 @@
 var Hapi = require('hapi');
 
-// Create a server with a host and port
-var server = new Hapi.Server('localhost', 8000),
+var server = new Hapi.Server('0.0.0.0', 8000),
     fs = require('fs');
-
 
 var walk = function (path) {
   fs.readdirSync(path).forEach(function(file) {
@@ -21,16 +19,4 @@ var walk = function (path) {
 };
 walk(__dirname + '/apis');
 
-
-// // Add the route
-// server.route({
-//     method: 'GET',
-//     path: '/hello',
-//     handler: function (request, reply) {
-//       mysql.query();
-//       reply('hello world');
-//     }
-// });
-
-// Start the server
 server.start();

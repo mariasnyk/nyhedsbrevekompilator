@@ -5,25 +5,16 @@ var members = require('./members.js');
 
 module.exports = function (prefix) {
 
-  return [{
+  return [
+  {
     method: 'GET',
     path: '/' + prefix + '/members',
-    handler: function (request, reply) {
-      //mysql.query();
-      members.getAllMembers();
-      reply('hello world');
-    }
+    handler: members.selectAllMembers
+  },
+  {
+    method: 'POST',
+    path: '/' + prefix + '/members',
+    handler: members.insertMember
   }
   ];
-
 }
-
-// Add the route
-// server.route({
-//     method: 'GET',
-//     path: '/hello',
-//     handler: function (request, reply) {
-//       mysql.query();
-//       reply('hello world');
-//     }
-// });
