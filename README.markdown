@@ -1,3 +1,6 @@
+From [http://docs.userdb.apiary.io/](http://docs.userdb.apiary.io/)
+
+
 FORMAT: 1A
 HOST: http://localhost:8000/v0
 

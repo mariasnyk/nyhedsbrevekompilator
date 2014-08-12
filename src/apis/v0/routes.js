@@ -1,14 +1,16 @@
-var test = require('./test.js');
+'use strict';
+
+var members = require('./members.js');
 
 
 module.exports = function (prefix) {
 
   return [{
     method: 'GET',
-    path: '/' + prefix + '/hello',
+    path: '/' + prefix + '/members',
     handler: function (request, reply) {
       //mysql.query();
-      test.test();
+      members.getAllMembers();
       reply('hello world');
     }
   }
