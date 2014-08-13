@@ -21,4 +21,10 @@ connection.connect(function(err) {
   console.log('Connected as id ' + connection.threadId);
 });
 
+process.on('SIGINT', function() {
+  console.log('Closing the database connection.');
+  connection.end();
+  process.exit();
+});
+
 module.exports = connection;
