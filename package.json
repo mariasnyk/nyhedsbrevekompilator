@@ -13,6 +13,8 @@
     "gulp-jshint": "^1.8.4",
     "hapi": "^6.4.0",
     "mysql": "^2.4.2",
-    "node-mysql": "^0.3.7"
+  },
+  "devDependencies": {
+    "jasmine-node": "^1.14.5"
   }
 }

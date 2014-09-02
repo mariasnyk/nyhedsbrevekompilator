@@ -15,7 +15,7 @@ process.stdout.write('Connecting to ' + process.env.RDS_HOSTNAME +' as ' + proce
 pool.getConnection(function(err, connection) {
   if (err) {
     console.log('Connection failed: ', err)
-    process.exit(1);
+    //process.exit(1);
   } else {
     process.stdout.write('done\n');
     connection.release();

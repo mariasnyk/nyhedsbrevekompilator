@@ -19,5 +19,10 @@ var walk = function (path) {
 };
 walk(__dirname + '/apis');
 
-server.start();
-console.log('Server started on http://localhost:8000');
+if (!module.parent) {
+  server.start(function() {
+    console.log("Server started", server.info.uri);
+  });
+}
+
+module.exports = server;
