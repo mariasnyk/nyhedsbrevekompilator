@@ -12,6 +12,11 @@ module.exports = function (prefix) {
     handler: members.selectAllMembers
   },
   {
+    method: 'GET',
+    path: '/' + prefix + '/members/{id}',
+    handler: members.selectMember
+  },
+  {
     method: 'POST',
     path: '/' + prefix + '/members',
     handler: members.insertMember

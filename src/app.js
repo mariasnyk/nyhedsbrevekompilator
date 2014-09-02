@@ -20,3 +20,4 @@ var walk = function (path) {
 walk(__dirname + '/apis');
 
 server.start();
+console.log('Server started on http://localhost:8000');

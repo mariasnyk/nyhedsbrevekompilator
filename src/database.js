@@ -11,12 +11,13 @@ var pool = mysql.createPool({
 });
 
 // Testing we can connect to database
-console.log('Connecting to ' + process.env.RDS_HOSTNAME +' as ' + process.env.RDS_USERNAME + '...');
+process.stdout.write('Connecting to ' + process.env.RDS_HOSTNAME +' as ' + process.env.RDS_USERNAME + '...');
 pool.getConnection(function(err, connection) {
   if (err) {
     console.log('Connection failed: ', err)
     process.exit(1);
   } else {
+    process.stdout.write('done\n');
     connection.release();
   }
 });

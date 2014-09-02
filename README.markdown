@@ -1,6 +1,5 @@
 From [http://docs.userdb.apiary.io/](http://docs.userdb.apiary.io/)
 
-
 FORMAT: 1A
 HOST: http://localhost:8000/v0
 
@@ -12,39 +11,88 @@ This documents the API for *User DB*, a service for handling the subscription in
 These methods are related to the **Member** resources.
 
 ## Members Collection [/members]
+Optional querystring parameter "show":
+
+- _default_ (not set) - showing only active members
+- _all_ - show both active and inactive members
+- _inactive_ - show only inactive members
 
 ### List all members [GET]
+
 + Response 200 (application/json)
 
         [{
-          "id": 1, "title": "Jogging in park"
+        "id": "1", "firstname": "Lars", "lastname": "Jensen", "birth_year": "1977", "birth_date": "03-11-1977", "gender": "", "company": "", "company_cvr": "" 
         }, {
-          "id": 2, "title": "Pick-up posters from post-office"
+        "id": "2", "firstname": "Lone", "lastname": "Hansen", "birth_year": "1963", "birth_date": "", "gender": "f", "company": "", "company_cvr": ""
         }]
 
 ### Create a Member [POST]
+Fields:
+
+- `firstname` (text 255 characters)
+- `lastname` (text 255 characters)
+- `birth_year` (number 4 digits), optional
+- `birth_date` (date ISO 8601 in UTC)
+- `gender` (`m`, `f`)
+- `company` (text 255 characters), optional
+- `company_cvr` (text 255 characters), optional
+- `is_internal` (`0` default, `1`), optional
+- `robinson_flag` (`0` default, `1`), optional
 
 + Request (application/json)
 
-+ Response 201
+            { "firstname": "Lars", "lastname": "Jensen", "birth_year": "1977", "birth_date": "03-11-1977", "gender": "", "company": "", "company_cvr": "" }
 
++ Response 201
+    
+            { "message": "OK", "id": "123" }
 
 
 ## Member [/members/{id}]
+
 Retrieve the specific member with all related data.
 
 + Parameters
-    + id (required, number, `1`) ... Numeric `id` of the Note to perform action with. Has example value.
+    + id (required, number, `1`) ... The `id` of the member to be retrived.
 
 ### Retrieve a Member [GET]
+
 + Response 200 (application/json)
 
-        { "id": 2, "title": "Pick-up posters from post-office" }
-
+        {
+        "id": "2", "firstname": "Lone", "lastname": "Hansen", "birth_year": "1963", "birth_date": "", "gender": "f", "company": "", "company_cvr": "", 
+        "addresses": 
+        [
+        {"id": "14", "type": "home", "system_id": "3", "coname": "", "road_name": "Pilestræde", "house_number": "34", "house_letter": "", "floor": "", "side_door": "", "place_name": "", "city": "København K", "postcode": "1147", "country_code": "DK"}
+        ], 
+        "emails": 
+        [
+        {"id": "33", "type": "work", "email": "lone@work.com"},
+        {"id": "56", "type": "personal", "email": "123@hotmail.com"}
+        ],
+        "phones": 
+        [
+        {"id": "62", "type": "home", "phone_number": "33112244"}
+        ],
+        "subscriptions":
+        [
+        {"id": "76", "newsletter_id": "565", "newsletter_href": "http://api.udb.berlingskemedia.net/v0/newsletters/565/", "subscription_date": "12-07-2009", "location_id": "112", "email_id": "56"},
+        {"id": "77", "newsletter_id": "878", "newsletter_href": "http://api.udb.berlingskemedia.net/v0/newsletters/868/", "subscription_date": "12-07-2009", "location_id": "112", "email_id": "33"},
+        ],
+        "permissions":
+        [
+        ],
+        "interests":
+        [
+        {"id": "978", "interest_id": "14", "interest_href": "http://api.udb.berlingskemedia.net/v0/interests/14/", "subscription_date": "12-07-2009", "location_id": "112"}
+        ]
+        }
+        
 ### Delete a Member [DELETE]
-This is a soft delete. Eg. member will be marked as deleted and will be removed from all subscriptions.
+This is a soft delete. Eg. member `status` and subscriptions will be to *inactive*. This means that the member will not be return from any API subscription requests.
 But the member data will not be deleted from the database before an admin job deletes it.
-
+        
 + Response 204
 
 
@@ -55,27 +103,24 @@ But the member data will not be deleted from the database before an admin job de
 The request must contain the email adresse and type to be added.
 Fields:
 
-- email eg. `test@test.nl`
-- type (optional) eg. `work`
+- `email_address` (text 255 characters)
+- `type` (text 50 characters)
+
 
 + Request (application/json)
 
-        { "type": "work", "email": "test@test.nl" }
+        { "type": "work", "email_address": "test@test.nl" }
 
 + Response 201
 
+## Delete member email [/members/{id}/email/{emailid}]
+
++ Parameters
+    + emailid (required, number, `33`) ... The `id` from resource *member.email*.
+    
 ### Remove an existing email from the member [DELETE]
-The request must contain the email to be deleted.
-Fields:
-
-- email
-
-+ Request (application/json)
-
-        { "email": "test@test.nl" }
 
 + Response 204
-
 
 
 ## Member phone [/members/{id}/phone]
@@ -84,24 +129,21 @@ Fields:
 The request must contain the phone number to be added.
 Fields:
 
-- phone eg. `+4583736415`
-- type (optional) eg. `work`
+- `phone_number` (text 50 characters)
+- `type` (text 50 characters)
 
 + Request (application/json)
 
-        { "type": "work", "phone": "+4583736415" }
+        { "type": "work", "phone_number": "+4583736415" }
 
 + Response 201
 
+## Delete member phone [/members/{id}/phone/{phoneid}]
+
++ Parameters
+    + phoneid (required, number, `62`) ... The `id` from resource *member.phone*.
+    
 ### Remove an existing phone number from the member [DELETE]
-The request must contain the phone number to be deleted.
-Fields:
-
-- phone
-
-+ Request (application/json)
-
-        { "phone": "+4583736415" }
 
 + Response 204
 
@@ -114,18 +156,29 @@ Fields:
 The request must contain the address to be added.
 Fields:
 
-- address
-- type (optional) eg. `work`
+- `type` (`billing` default, `shipping`)
+- `road_name` (text 255 characters)
+- `house_number` (text 10 characters)
+- `house_letter` (text 10 characters), optional
+- `floor` (text 10 characters), optional
+- `side_door` (text 10 characters), optional
+- `place_name` (text 40 characters), optional
+- `coname` (text 255 characters), optional
+- `city` (text 70 characters)
+- `postal_number` (text 32 characters)
+- `country_code` (text 2 characters)
 
 + Request (application/json)
 
 + Response 201
 
-### Remove an existing address from the member [DELETE]
-The request must contain the address to be deleted.
-Fields:
 
-- address
+## Delete member address [/members/{id}/address/{addressid}]
+
++ Parameters
+    + addressid (required, number, `14`) ... The `id` from resource *member.addresses*.
+    
+### Remove an existing address from the member [DELETE]
 
 + Response 204
 
@@ -136,18 +189,21 @@ Fields:
 ### Add a new subscription to the member [POST]
 Fields:
 
-- newsletter
-- email
+- `newsletter_id`
+- `email` (text 255 characters)
+- `location_id`
 
 + Request (application/json)
 
 + Response 201
 
-### Remove an existing subscription from the member [DELETE]
-Fields:
+## Delete member subscriptions [/members/{id}/subscription/{subscriptionid}]
+The subscription will be marked as inactive. Maybe we will delete it after 30 days.
 
-- newsletter
-- email (optional). If omitted, all subscription from the member to the newsletter will be deleted.
++ Parameters
+    + subscriptionid (required, number, `76`) ... The `id` from resource *member.subscriptions*.
+
+### Remove an existing subscription from the member [DELETE]
 
 + Response 204
 
@@ -161,6 +217,11 @@ Fields:
 
 + Response 201
 
+## Member permissions [/members/{id}/permission/{permissionid}]
+
++ Parameters
+    + permissionid (required, number, `76`) ... The `id` from resource *member.permissions*.
+    
 ### Remove an existing permission from the member [DELETE]
 
 + Response 204
@@ -174,6 +235,11 @@ Fields:
 + Request (application/json)
 
 + Response 201
+
+## Member interests [/members/{id}/interest/{interestid}]
+
++ Parameters
+    + interestid (required, number, `978`) ... The `id` from resource *member.interests*.
 
 ### Remove an existing interest from the member [DELETE]
 
@@ -191,21 +257,34 @@ These methods are related to the **Publishers** resources.
 + Response 200 (application/json)
 
         [{
-          "id": 1, "title": "Jogging in park"
+          "id": 1, "name": "AOK"
         }, {
-          "id": 2, "title": "Pick-up posters from post-office"
+          "id": 2, "name": "Berlingske"
         }]
 
 ### Create a Publisher [POST]
+Fields:
+
+- `name` (text 255 characters)
+- `display_text` (text 255 characters)
+- `from_email` (text 255 characters)
+- `from_name` (text 255 characters)
+- `url_picture_top` (text 255 characters)
+- `url` (text 255 characters)
 
 + Request (application/json)
 
+        [{
+        "name": "AOK",
+        "display_text": "Alt om København", 
+        "from_email": "nothing@aok.dk", 
+        "from_name": "AOK.dk", 
+        "url_picture_top": "http://aok.dk/gfx/top.png", 
+        "url": "http://aok.dk/"
+        }]
 + Response 201
 
 ## Publisher [/publisher/{id}]
-
-+ Parameters
-    + id (required, number, `1`) ... Numeric `id` of the Note to perform action with. Has example value.
 
 ### Retrieve a Publisher [GET]
 
@@ -214,9 +293,6 @@ These methods are related to the **Publishers** resources.
 ### Delete a Publisher [DELETE]
 
 + Response 204    
-
-
-
 
 
 
@@ -236,6 +312,9 @@ These methods are related to the **Newsletter** resources.
         }]
 
 ### Create a Newsletter [POST]
+Fields:
+
+- TODO
 
 + Request (application/json)
 
@@ -243,9 +322,6 @@ These methods are related to the **Newsletter** resources.
 
 
 ## Newsletters [/newsletters/{id}]
-
-+ Parameters
-    + id (required, number, `1`) ... Numeric `id` of the Note to perform action with. Has example value.
     
 ### Retrieve a Newsletter [GET]
 
@@ -271,7 +347,7 @@ These methods are related to the **Newsletter** resources.
 # Group Permissions
 These methods are related to the **Permission** resources.
 
-## Permission Collection [/permissions]
+## Permissions Collection [/permissions]
 
 ### List all Permissions [GET]
 
@@ -284,15 +360,15 @@ These methods are related to the **Permission** resources.
         }]
 
 ### Create a Permission [POST]
+Fields:
+
+- TODO
 
 + Request (application/json)
 
 + Response 201
 
 ## Permission [/permissions/{id}]
-
-+ Parameters
-    + id (required, number, `1`) ... Numeric `id` of the Note to perform action with. Has example value.
 
 ### Retrieve a Permission [GET]
 
@@ -307,7 +383,7 @@ These methods are related to the **Permission** resources.
 # Group Interests
 These methods are related to the **Interests** resources.
 
-## Interest Collection [/interests]
+## Interests Collection [/interests]
 
 ### List all Interests [GET]
 
@@ -320,15 +396,15 @@ These methods are related to the **Interests** resources.
         }]
 
 ### Create a Interest [POST]
+Fields:
+
+- TODO
 
 + Request (application/json)
 
 + Response 201
 
 ## Interest [/interests/{id}]
-
-+ Parameters
-    + id (required, number, `1`) ... Numeric `id` of the Note to perform action with. Has example value.
 
 ### Retrieve an Interest [GET]
 
