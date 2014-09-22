@@ -19,6 +19,18 @@ var walk = function (path) {
 };
 walk(__dirname + '/apis');
 
+server.route({
+  method: 'GET',
+  path: '/admin/{param*}',
+  handler: {
+    directory: {
+      path: 'src/admin',
+      index: true
+    }
+  }
+});
+
+
 if (!module.parent) {
   server.start(function() {
     console.log("Server started", server.info.uri);

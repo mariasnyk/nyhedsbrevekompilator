@@ -11,13 +11,12 @@ var pool = mysql.createPool({
 });
 
 // Testing we can connect to database
-process.stdout.write('Connecting to ' + process.env.RDS_HOSTNAME +' as ' + process.env.RDS_USERNAME + '...');
+console.log('Connecting to ' + process.env.RDS_HOSTNAME +' as ' + process.env.RDS_USERNAME + '...');
 pool.getConnection(function(err, connection) {
   if (err) {
     console.log('Connection failed: ', err)
     //process.exit(1);
   } else {
-    process.stdout.write('done\n');
     connection.release();
   }
 });
@@ -39,14 +38,13 @@ module.exports = pool;
 // +----------------+---------------------+------+-----+---------+----------------+
 
 
-// mysql> show columns from action_types;
+// mysql> show columns from action_type;
 // +-------------+---------------------+------+-----+---------+----------------+
 // | Field       | Type                | Null | Key | Default | Extra          |
 // +-------------+---------------------+------+-----+---------+----------------+
 // | id          | tinyint(3) unsigned | NO   | PRI | NULL    | auto_increment |
 // | description | varchar(255)        | NO   |     | NULL    |                |
 // +-------------+---------------------+------+-----+---------+----------------+
-
 
 // mysql> show columns from address;
 // +---------------+----------------------------+------+-----+---------+----------------+
@@ -65,10 +63,12 @@ module.exports = pool;
 // | place_name    | varchar(40)                | YES  |     |         |                |
 // | city          | varchar(70)                | YES  |     |         |                |
 // | postal_number | varchar(32)                | YES  |     |         |                |
+// | country       | varchar(70)                | YES  |     | NULL    |                |
 // | country_code  | char(2)                    | YES  |     | NULL    |                |
 // | created_at    | timestamp                  | YES  |     | NULL    |                |
 // | updated_at    | datetime                   | YES  |     | NULL    |                |
 // +---------------+----------------------------+------+-----+---------+----------------+
+
 
 // mysql> show columns from foreign_key;
 // +------------+------------------+------+-----+---------+----------------+
@@ -95,16 +95,18 @@ module.exports = pool;
 // +---------------+---------------------+------+-----+-------------------+----------------+
 
 // mysql> show columns from interest;
-// +--------------+---------------------+------+-----+---------+----------------+
-// | Field        | Type                | Null | Key | Default | Extra          |
-// +--------------+---------------------+------+-----+---------+----------------+
-// | id           | int(11) unsigned    | NO   | PRI | NULL    | auto_increment |
-// | parent_id    | int(11) unsigned    | YES  |     | NULL    |                |
-// | name         | varchar(128)        | NO   |     | NULL    |                |
-// | display_name | varchar(255)        | YES  |     |         |                |
-// | description  | varchar(255)        | YES  |     |         |                |
-// | active       | tinyint(3) unsigned | NO   |     | 1       |                |
-// +--------------+---------------------+------+-----+---------+----------------+
+// +------------------+---------------------+------+-----+---------+----------------+
+// | Field            | Type                | Null | Key | Default | Extra          |
+// +------------------+---------------------+------+-----+---------+----------------+
+// | id               | int(11) unsigned    | NO   | PRI | NULL    | auto_increment |
+// | parent_id        | int(11) unsigned    | YES  |     | NULL    |                |
+// | name             | varchar(128)        | NO   |     | NULL    |                |
+// | display_name     | varchar(255)        | YES  |     |         |                |
+// | description      | varchar(255)        | YES  |     |         |                |
+// | active           | tinyint(3) unsigned | NO   |     | 1       |                |
+// | mdb_interesse_id | int(11)             | YES  |     | NULL    |                |
+// +------------------+---------------------+------+-----+---------+----------------+
+
 
 // mysql> show columns from interest_line;
 // +-------------+---------------------+------+-----+-------------------+----------------+
@@ -132,13 +134,15 @@ module.exports = pool;
 // +--------------+---------------------+------+-----+---------+----------------+
 
 // mysql> show columns from location;
-// +-------------+------------------+------+-----+---------+----------------+
-// | Field       | Type             | Null | Key | Default | Extra          |
-// +-------------+------------------+------+-----+---------+----------------+
-// | id          | int(11) unsigned | NO   | PRI | NULL    | auto_increment |
-// | description | varchar(255)     | NO   |     |         |                |
-// | active      | tinyint(4)       | NO   |     | 1       |                |
-// +-------------+------------------+------+-----+---------+----------------+
+// +-----------------+------------------+------+-----+---------+----------------+
+// | Field           | Type             | Null | Key | Default | Extra          |
+// +-----------------+------------------+------+-----+---------+----------------+
+// | id              | int(11) unsigned | NO   | PRI | NULL    | auto_increment |
+// | description     | varchar(255)     | NO   |     |         |                |
+// | active          | tinyint(4)       | NO   |     | 1       |                |
+// | mdb_location_id | int(11)          | YES  |     | NULL    |                |
+// +-----------------+------------------+------+-----+---------+----------------+
+
 
 // mysql> show columns from member;
 // +---------------+---------------------------+------+-----+-------------------+----------------+
@@ -161,7 +165,10 @@ module.exports = pool;
 // | created_at    | timestamp                 | YES  |     | CURRENT_TIMESTAMP |                |
 // | activated_at  | datetime                  | YES  |     | NULL              |                |
 // | updated_at    | datetime                  | YES  |     | NULL              |                |
+// | mdb_user_id   | int(11)                   | YES  |     | NULL              |                |
+// | external_id   | varchar(255)              | YES  |     | NULL              |                |
 // +---------------+---------------------------+------+-----+-------------------+----------------+
+
 
 // mysql> show columns from opt_out_desc;
 // +-------------+------------------+------+-----+---------+----------------+
@@ -189,15 +196,17 @@ module.exports = pool;
 // +-------+------------------+------+-----+---------+----------------+
 
 // mysql> show columns from permission;
-// +--------------+---------------------+------+-----+---------+----------------+
-// | Field        | Type                | Null | Key | Default | Extra          |
-// +--------------+---------------------+------+-----+---------+----------------+
-// | id           | int(11) unsigned    | NO   | PRI | NULL    | auto_increment |
-// | name         | varchar(255)        | YES  |     | NULL    |                |
-// | active       | tinyint(3) unsigned | NO   |     | 1       |                |
-// | display_text | varchar(255)        | YES  |     | NULL    |                |
-// | description  | text                | YES  |     | NULL    |                |
-// +--------------+---------------------+------+-----+---------+----------------+
+// +-------------------+---------------------+------+-----+---------+----------------+
+// | Field             | Type                | Null | Key | Default | Extra          |
+// +-------------------+---------------------+------+-----+---------+----------------+
+// | id                | int(11) unsigned    | NO   | PRI | NULL    | auto_increment |
+// | name              | varchar(255)        | YES  |     | NULL    |                |
+// | active            | tinyint(3) unsigned | NO   |     | 1       |                |
+// | display_text      | varchar(255)        | YES  |     | NULL    |                |
+// | description       | text                | YES  |     | NULL    |                |
+// | mdb_nyhedsbrev_id | int(11)             | YES  |     | NULL    |                |
+// +-------------------+---------------------+------+-----+---------+----------------+
+
 
 // mysql> show columns from permission_member;
 // +-----------------+---------------------+------+-----+---------+----------------+
@@ -236,19 +245,20 @@ module.exports = pool;
 // +-------+------------------+------+-----+---------+----------------+
 
 // mysql> show columns from publisher;
-// +-----------------+------------------+------+-----+-------------------+----------------+
-// | Field           | Type             | Null | Key | Default           | Extra          |
-// +-----------------+------------------+------+-----+-------------------+----------------+
-// | id              | int(11) unsigned | NO   | PRI | NULL              | auto_increment |
-// | name            | varchar(255)     | YES  |     |                   |                |
-// | display_text    | varchar(255)     | YES  |     |                   |                |
-// | from_email      | varchar(255)     | YES  |     |                   |                |
-// | from_name       | varchar(255)     | YES  |     |                   |                |
-// | url_picture_top | varchar(255)     | YES  |     |                   |                |
-// | active          | tinyint(4)       | NO   |     | 1                 |                |
-// | url             | varchar(255)     | YES  |     |                   |                |
-// | created_at      | timestamp        | YES  |     | CURRENT_TIMESTAMP |                |
-// +-----------------+------------------+------+-----+-------------------+----------------+
+// +------------------+------------------+------+-----+-------------------+----------------+
+// | Field            | Type             | Null | Key | Default           | Extra          |
+// +------------------+------------------+------+-----+-------------------+----------------+
+// | id               | int(11) unsigned | NO   | PRI | NULL              | auto_increment |
+// | name             | varchar(255)     | YES  |     |                   |                |
+// | display_text     | varchar(255)     | YES  |     |                   |                |
+// | from_email       | varchar(255)     | YES  |     |                   |                |
+// | from_name        | varchar(255)     | YES  |     |                   |                |
+// | url_picture_top  | varchar(255)     | YES  |     |                   |                |
+// | active           | tinyint(4)       | NO   |     | 1                 |                |
+// | url              | varchar(255)     | YES  |     |                   |                |
+// | created_at       | timestamp        | YES  |     | CURRENT_TIMESTAMP |                |
+// | mdb_publisher_id | int(11)          | YES  |     | NULL              |                |
+// +------------------+------------------+------+-----+-------------------+----------------+
 
 // mysql> show columns from reason_type;
 // +-------+------------------+------+-----+---------+----------------+
@@ -259,16 +269,17 @@ module.exports = pool;
 // +-------+------------------+------+-----+---------+----------------+
 
 // mysql> show columns from subscription;
-// +--------------+---------------------+------+-----+---------+----------------+
-// | Field        | Type                | Null | Key | Default | Extra          |
-// +--------------+---------------------+------+-----+---------+----------------+
-// | id           | int(11) unsigned    | NO   | PRI | NULL    | auto_increment |
-// | publisher_id | int(11) unsigned    | NO   | MUL | NULL    |                |
-// | name         | varchar(255)        | YES  |     | NULL    |                |
-// | active       | tinyint(3) unsigned | YES  |     | 1       |                |
-// | display_text | varchar(255)        | YES  |     | NULL    |                |
-// | description  | text                | YES  |     | NULL    |                |
-// +--------------+---------------------+------+-----+---------+----------------+
+// +-------------------+---------------------+------+-----+---------+----------------+
+// | Field             | Type                | Null | Key | Default | Extra          |
+// +-------------------+---------------------+------+-----+---------+----------------+
+// | id                | int(11) unsigned    | NO   | PRI | NULL    | auto_increment |
+// | publisher_id      | int(11) unsigned    | NO   | MUL | NULL    |                |
+// | name              | varchar(255)        | YES  |     | NULL    |                |
+// | active            | tinyint(3) unsigned | YES  |     | 1       |                |
+// | display_text      | varchar(255)        | YES  |     | NULL    |                |
+// | description       | text                | YES  |     | NULL    |                |
+// | mdb_nyhedsbrev_id | int(11)             | YES  |     | NULL    |                |
+// +-------------------+---------------------+------+-----+---------+----------------+
 
 // mysql> show columns from subscription_member;
 // +-----------------+---------------------+------+-----+---------+----------------+

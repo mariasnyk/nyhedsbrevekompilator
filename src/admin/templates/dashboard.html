@@ -1,0 +1,73 @@
+<div class="top_left">
+  <input type="text" class="btn btn-xs btn-default" ng-model="apibase">
+  <button class="btn btn-default btn-xs" ng-click="setApibase(apibase)">Save</button>
+</div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-2">
+      <h2>Articles</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-1">
+      <button class="btn btn-primary btn-sm" ng-click="openArticleEditor()">New</button>
+    </div>
+    <div class="col-sm-2">
+      <label>
+        <input type="checkbox" ng-model="showDeleted" ng-change="loadArticles()">
+        Show deleted
+      </label>
+    </div>
+    <div class="col-sm-3 col-sm-offset-6">
+      <input class="form-control input-sm" placeholder="Filter" type="text" ng-model="articleFilter">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div ng-show="noConnection">No connection</div>
+      <table class="table">
+        <tr ng-repeat="article in articles | filter: articleFilter">
+          <td>
+            <button type="button" class="btn btn-info btn-xs" ng-click="openArticleEditor(article._id)">Edit</button>
+          </td>
+          <td ng-click="openArticleEditor(article._id)">
+            <abbr ng-attr-title="Version {{article._version}} fra d. {{article._updated}}" class="">{{article.title}}</abbr>
+          </td>
+          <td>
+            <span class="authorlabel">af {{article.author}}</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-2">
+      <h2>Lists</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-2">
+      <!-- <button class="btn btn-primary btn-sm" ng-click="openArticleEditor()">New</button> -->
+      <input class="form-control input-sm" placeholder="Add new" ng-keyup="createNewList($event)" type="text" ng-model="newListDescription">
+    </div>
+    <div class="col-sm-3 col-sm-offset-7">
+      <input class="form-control input-sm" placeholder="Filter" type="text" ng-model="listFilter">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div ng-show="noConnection">No connection</div>
+      <table class="table">
+        <tr ng-repeat="list in lists | filter: listFilter">
+          <td>
+            <button type="button" class="btn btn-info btn-xs" ng-click="openListEditor(list._id)">Edit</button>
+          </td>
+          <td>
+            <abbr class="">{{list.description}}</abbr>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

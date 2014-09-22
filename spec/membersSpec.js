@@ -1,9 +1,21 @@
 'use strict';
 
 var server = require("../src/app");
-
+var mysql;
 
 describe ( 'testing' , function () {
+  bar = null;
+
+  beforeEach(function() {
+    mysql = {
+      query: function(value) {
+        bar = value;
+      }
+    };
+
+    spyOn(mysql, 'query');
+  });
+
 
   it ( 'returns _id, _version, checksum etc.' , function ( done ) {
     var options = {
