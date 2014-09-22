@@ -1,8 +1,8 @@
 //(function(window, angular, undefined) {'use strict';
-console.log('APP')
-var app = angular.module('userdb', ['ngRoute', 'ngSanitize', 'ngCookies', 'slugifier'])
 
-.config(function ( $routeProvider, $locationProvider ) {
+var app = angular.module('userdb', ['ngRoute', 'ngSanitize', 'ngCookies', 'ui.bootstrap'])
+
+app.config(function ($routeProvider, $locationProvider) {
 
   $routeProvider
     .when( '/', {
@@ -20,8 +20,13 @@ var app = angular.module('userdb', ['ngRoute', 'ngSanitize', 'ngCookies', 'slugi
   //$locationProvider.html5Mode(true);
   //$locationProvider.hashPrefix('!');
 });
+app.value('apiVersion', 'v0');
+app.factory('Members', function memberFactory(apiVersion, $http) {
+  console.log(apiVersion)
+  return 'a12345654321x';
+});
 
-function DashboardCtrl ( Settings, $scope, $http, $location ) {
+function DashboardCtrl ($scope, $http, $location) {
 
   // $scope.apibase = Settings.apibase;
   // $scope.setApibase = function() {

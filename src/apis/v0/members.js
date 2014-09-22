@@ -25,6 +25,20 @@ module.exports.selectMember = function (request, reply) {
 };
 
 
+module.exports.searchMember = function(request, reply) {
+  console.log(request);
+  var queryinput = request.query.text;
+
+  var query = 'SELECT * from member WHERE firstname LIKE "%' + queryinput + '%" OR lastname LIKE "%' + queryinput + '%"';
+
+  database.query(query , function (err, result) {
+    if (err) reply(err);//.code(500);
+
+    reply(result);
+  });
+}
+
+
 module.exports.insertMember = function (request, reply) {
   var query = member.insert({
     lastname: 'Jane',

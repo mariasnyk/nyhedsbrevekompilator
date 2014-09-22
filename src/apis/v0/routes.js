@@ -13,6 +13,11 @@ module.exports = function (prefix) {
   },
   {
     method: 'GET',
+    path: '/' + prefix + '/search/members',
+    handler: members.searchMember
+  },
+  {
+    method: 'GET',
     path: '/' + prefix + '/members/{id}',
     handler: members.selectMember
   },
