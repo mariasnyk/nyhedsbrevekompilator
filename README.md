@@ -1,3 +1,7 @@
+=======
+userdb
+======
+
 From [http://docs.userdb.apiary.io/](http://docs.userdb.apiary.io/)
 
 FORMAT: 1A
@@ -413,5 +417,4 @@ Fields:
 ### Delete an Interest [DELETE]
 
 + Response 204    
-
 
