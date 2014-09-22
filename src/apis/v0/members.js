@@ -19,14 +19,15 @@ module.exports.selectMember = function (request, reply) {
 
   database.query(query , function (err, member) {
     if (err) reply(err);//.code(500);
-
-    reply(member);
+    if (member.length === 0) reply().code(404);
+    else if (member.length > 1) reply().code(509);
+    else reply(member[0]);
   });
 };
 
 
-module.exports.searchMember = function(request, reply) {
-  console.log(request);
+module.exports.searchMembers = function(request, reply) {
+  console.log('Search', request.query);
   var queryinput = request.query.text;
 
   var query = 'SELECT * from member WHERE firstname LIKE "%' + queryinput + '%" OR lastname LIKE "%' + queryinput + '%"';

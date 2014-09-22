@@ -14,7 +14,7 @@ module.exports = function (prefix) {
   {
     method: 'GET',
     path: '/' + prefix + '/search/members',
-    handler: members.searchMember
+    handler: members.searchMembers
   },
   {
     method: 'GET',
