@@ -8,7 +8,7 @@ app.config(['$routeProvider',
   $routeProvider
     .when( '/', {
       templateUrl: 'templates/member-search.html',
-      controller: 'MemberSearchCtrl' })
+      controller: 'MemberCtrl' })
     // .when( '/members', {
     //   templateUrl: 'templates/dashboard.html',
     //   controller: 'DashboardCtrl' })
@@ -17,7 +17,7 @@ app.config(['$routeProvider',
     //   controller: 'ArticleEditorCtrl' })
     .when( '/members/:memberId', {
       templateUrl: 'templates/member-editor.html',
-      controller: 'MemberEditorCtrl' })
+      controller: 'MemberCtrl' })
     .otherwise({
       redirectTo: '/' });
 
@@ -38,4 +38,21 @@ app.service('userdbService', ['apiVersion', '$http',
     this.searchMembers = function (input) {
       return $http({method: 'GET', url: baseUrl + 'search/members?text=' + input});
     }
+  }]);
+
+app.controller('MenuCtrl', ['$scope', '$location',
+  function($scope, $location) {
+    $scope.menuitems = [
+    {
+      name:'Members',
+      href:'members',
+      class:'active'
+    },{
+      name:'Publishers',
+      href:'members'
+    },{
+      name:'Newsletters',
+      href:'newsletters'
+    }];
+
   }]);

@@ -1,20 +1,10 @@
-var gulp = require('gulp');
-var jshint = require('gulp-jshint');
-var spawn = require('child_process').spawn;
+var gulp = require('gulp'),
+    browserSync = require('browser-sync'),
+    jshint = require('gulp-jshint'),
+    spawn = require('child_process').spawn;
+
 
 gulp.task('default', ['serve']);
-
-gulp.task('help', function () {
-  console.log('=================');
-  console.log('Usage:');
-  console.log('     gulp [serve]');
-  console.log('     gulp start');
-  console.log('     gulp debug');
-  console.log('     gulp lint');
-  console.log('     gulp test');
-  console.log('     gulp build');
-  console.log('=================');
-});
 
 var node;
 gulp.task('start', function() {
@@ -38,10 +28,18 @@ gulp.task('debug', function() {
 });
 
 gulp.task('serve', ['start'], function () {
-  var watcher = gulp.watch('./src/**/*.js', ['start']);
-  watcher.on('change', function(event) {
-    console.log('File '+event.path+' was '+event.type+', running tasks...');
+  gulp.watch(['./src/*.js', './src/apis/**/*.js'], ['start']);
+});
+
+// Browser-sync virker ikke med et statisk website fra Express/Hapi
+gulp.task('browser-sync', function () {
+  browserSync({
+    notify: false,
+    server: {
+      baseDir: './src/admin/'
+    }
   });
+  gulp.watch(['./src/admin/**'], browserSync.reload);
 });
 
 gulp.task('lint', function() {

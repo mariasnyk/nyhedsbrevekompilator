@@ -2,7 +2,6 @@
 
 var members = require('./members.js');
 
-
 module.exports = function (prefix) {
 
   return [

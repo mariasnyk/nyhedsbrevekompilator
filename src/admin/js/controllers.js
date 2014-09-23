@@ -1,16 +1,20 @@
 var userdbControllers = angular.module('userdbControllers', []);
 
-userdbControllers.controller('MenuCtrl', ['$scope', '$location',
-  function($scope, $location) {
-    $scope.menuitems = [{name:'MembersX', class:'active'},{name:'Publishers'},{name:'Newsletters'}];
-
-  }]);
-
-userdbControllers.controller('MemberSearchCtrl', ['$scope', '$http', '$location', 'userdbService',
-  function ($scope, $http, $location, userdbService) {
+userdbControllers.controller('MemberCtrl', ['$scope', '$routeParams', '$http', '$location', 'userdbService',
+  function ($scope, $routeParams, $http, $location, userdbService) {
 
     // $scope.searching = false;
     // $scope.noresult = false;
+
+    if ($routeParams.memberId) {
+      userdbService.getMember($routeParams.memberId)
+      .success( function (data, status, headers) {
+        console.log(data);
+        $scope.member = data;
+      }).error( function (data, status) {
+        $location.path('/');
+      });
+    }
     
     $scope.searchMembersEvent = function () {
       $scope.searching = true;
@@ -46,17 +50,17 @@ userdbControllers.controller('MemberSearchCtrl', ['$scope', '$http', '$location'
     //   });
   }]);
 
-userdbControllers.controller('MemberEditorCtrl', ['$scope', '$routeParams', 'userdbService',
-  function ($scope, $routeParams, userdbService) {
-    $scope.memberId = $routeParams.memberId;
+// userdbControllers.controller('MemberEditorCtrl', ['$scope', '$routeParams', 'userdbService',
+//   function ($scope, $routeParams, userdbService) {
+//     $scope.memberId = $routeParams.memberId;
 
-    if ($routeParams.memberId) {
-      userdbService.getMember($routeParams.memberId)
-      .success( function (data, status, headers) {
-        console.log(data);
-        $scope.member = data;
-      }).error( function (data, status) {
-        $location.path('/');
-      });
-    }
-  }]);
+//     if ($routeParams.memberId) {
+//       userdbService.getMember($routeParams.memberId)
+//       .success( function (data, status, headers) {
+//         console.log(data);
+//         $scope.member = data;
+//       }).error( function (data, status) {
+//         $location.path('/');
+//       });
+//     }
+//   }]);
