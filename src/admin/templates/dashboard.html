@@ -8,14 +8,22 @@
   </div>
   <table class="table table-striped">
     <tr>
-      <th>Firstname</th>
-      <th>Lastname</th>
-      <th>Email</th>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Username</th>
+      <th></th>
+    </tr>
+    <tr ng-show="searching">
+      <td>Searching...</td><td></td><td></td><td></td>
+    </tr>
+    <tr ng-show="noresult">
+      <td>No result...</td><td></td><td></td><td></td>
     </tr>
     <tr ng-repeat="member in members">
-      <td>{{member.firstname}}</td>
-      <td>{{member.lastname}}</td>
       <td>{{member.id}}</td>
+      <td>{{member.firstname}} {{member.lastname}}</td>
+      <td>{{member.username}}</td>
+      <td><button type="button" class="btn btn-info btn-xs" ng-click="editMember(member.id)">Edit</button></td>
     </tr>
   </table>
 </div>

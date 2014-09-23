@@ -15,13 +15,34 @@ module.exports.selectAllMembers = function (request, reply) {
 
 
 module.exports.selectMember = function (request, reply) {
+  // select * from member left join email on email.member_id = member.id where member.id=443765;
   var query = 'SELECT * FROM member WHERE id=' + request.params.id;
 
-  database.query(query , function (err, member) {
+  database.query(query , function (err, result) {
     if (err) reply(err);//.code(500);
-    if (member.length === 0) reply().code(404);
-    else if (member.length > 1) reply().code(509);
-    else reply(member[0]);
+    if (result.length === 0) reply().code(404);
+    else if (result.length > 1) reply().code(509);
+    else {
+      var member = result[0];
+
+      database.query('SELECT * FROM email WHERE member_id=' + member.id, function (err, emails) {
+        member.emails = emails;
+
+        database.query('SELECT * FROM address WHERE member_id=' + member.id, function (err, addresses) {
+          member.addresses = addresses;
+
+          database.query('SELECT phone.*, phone_type.type FROM phone LEFT JOIN phone_type ON phone.type_id = phone_type.id WHERE member.member_id=' + member.id, function (err, phones) {
+            member.phones = phones;
+
+            database.query('SELECT interest_line.*, interest.* FROM interest_line LEFT JOIN interest ON interest_line.interest_id = interest.id WHERE interest_line.member_id=' + member.id, function (err, interests) {
+              member.interests = interests;
+
+              reply(member);
+            });
+          });
+        });
+      });
+    }
   });
 };
 
@@ -30,7 +51,7 @@ module.exports.searchMembers = function(request, reply) {
   console.log('Search', request.query);
   var queryinput = request.query.text;
 
-  var query = 'SELECT * from member WHERE firstname LIKE "%' + queryinput + '%" OR lastname LIKE "%' + queryinput + '%"';
+  var query = 'SELECT id, firstname, lastname, username from member WHERE firstname LIKE "%' + queryinput + '%" OR lastname LIKE "%' + queryinput + '%"';
 
   database.query(query , function (err, result) {
     if (err) reply(err);//.code(500);
