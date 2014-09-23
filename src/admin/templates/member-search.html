@@ -1,0 +1,41 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <h1>Search members</h1>
+      <div class="input-group">
+        <input class="form-control input-sm" placeholder="Search member" ng-keyup="searchMembersKeyUpEvent($event)" type="text" ng-model="searchMembersInput">
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default btn-sm" ng-click="searchMembersEvent()">Search</button>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <table class="table table-striped">
+        <tr>
+          <th>Id</th>
+          <th></th>
+          <th>Name</th>
+          <th>Username</th>
+        </tr>
+        <tr ng-show="searching">
+          <td>Searching...</td><td></td><td></td>
+        </tr>
+        <tr ng-show="noresult">
+          <td>No result...</td><td></td><td></td>
+        </tr>
+        <tr ng-repeat="member in members">
+          <td>
+            {{member.id}}
+          </td>
+          <td>
+            <button type="button" class="btn btn-info btn-xs" ng-click="editMember(member.id)">Edit</button>
+          </td>
+          <td>{{member.firstname}} {{member.lastname}}</td>
+          <td>{{member.username}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

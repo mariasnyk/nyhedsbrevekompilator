@@ -1,7 +1,13 @@
 var userdbControllers = angular.module('userdbControllers', []);
 
-userdbControllers.controller('DashboardCtrl', ['$scope', '$http', 'userdbService',
-  function ($scope, $http, userdbService) {
+userdbControllers.controller('MenuCtrl', ['$scope', '$location',
+  function($scope, $location) {
+    $scope.menuitems = [{name:'MembersX', class:'active'},{name:'Publishers'},{name:'Newsletters'}];
+
+  }]);
+
+userdbControllers.controller('MemberSearchCtrl', ['$scope', '$http', '$location', 'userdbService',
+  function ($scope, $http, $location, userdbService) {
 
     // $scope.searching = false;
     // $scope.noresult = false;
@@ -27,8 +33,6 @@ userdbControllers.controller('DashboardCtrl', ['$scope', '$http', 'userdbService
     $scope.searchMembersKeyUpEvent = function (clickEvent) {
       if (clickEvent.keyCode === 13) { /* Enter */
         $scope.searchMembersEvent();
-      } else {
-        $scope.members = [];
       }
     };
 
@@ -42,7 +46,17 @@ userdbControllers.controller('DashboardCtrl', ['$scope', '$http', 'userdbService
     //   });
   }]);
 
-userdbControllers.controller('MemberDetailCtrl', ['$scope', '$routeParams',
-  function ($scope, $routeParams) {
-    $scope.phoneId = $routeParams.phoneId;
+userdbControllers.controller('MemberEditorCtrl', ['$scope', '$routeParams', 'userdbService',
+  function ($scope, $routeParams, userdbService) {
+    $scope.memberId = $routeParams.memberId;
+
+    if ($routeParams.memberId) {
+      userdbService.getMember($routeParams.memberId)
+      .success( function (data, status, headers) {
+        console.log(data);
+        $scope.member = data;
+      }).error( function (data, status) {
+        $location.path('/');
+      });
+    }
   }]);

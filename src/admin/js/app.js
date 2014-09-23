@@ -7,8 +7,17 @@ app.config(['$routeProvider',
 
   $routeProvider
     .when( '/', {
-      templateUrl: 'templates/dashboard.html',
-      controller: 'DashboardCtrl' })
+      templateUrl: 'templates/member-search.html',
+      controller: 'MemberSearchCtrl' })
+    // .when( '/members', {
+    //   templateUrl: 'templates/dashboard.html',
+    //   controller: 'DashboardCtrl' })
+    // .when( '/members/', {
+    //   templateUrl: 'article-editor/article-editor.html',
+    //   controller: 'ArticleEditorCtrl' })
+    .when( '/members/:memberId', {
+      templateUrl: 'templates/member-editor.html',
+      controller: 'MemberEditorCtrl' })
     .otherwise({
       redirectTo: '/' });
 
