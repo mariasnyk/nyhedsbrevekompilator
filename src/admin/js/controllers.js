@@ -6,13 +6,13 @@ userdbControllers.controller('MemberCtrl', ['$scope', '$routeParams', '$http', '
     // $scope.searching = false;
     // $scope.noresult = false;
 
-    if ($routeParams.memberId) {
-      userdbService.getMember($routeParams.memberId)
+    if ($routeParams.id) {
+      userdbService.getMember($routeParams.id)
       .success( function (data, status, headers) {
         console.log(data);
         $scope.member = data;
       }).error( function (data, status) {
-        $location.path('/');
+        $location.path('/members');
       });
     }
     
@@ -41,8 +41,8 @@ userdbControllers.controller('MemberCtrl', ['$scope', '$routeParams', '$http', '
     };
 
 
-    $scope.editMember = function(member_id) {
-      $location.path(member_id !== undefined ? '/members/' + member_id : '/');
+    $scope.editMemberClick = function(memberId) {
+      $location.path(memberId !== undefined ? '/members/' + memberId : '/');
     };
     // userdbService.getMember(443765).
     //   success(function (data, status) {
@@ -64,3 +64,29 @@ userdbControllers.controller('MemberCtrl', ['$scope', '$routeParams', '$http', '
 //       });
 //     }
 //   }]);
+
+userdbControllers.controller('PublisherCtrl', ['$scope', '$routeParams', '$http', '$location', 'userdbService',
+  function ($scope, $routeParams, $http, $location, userdbService) {
+
+    if ($routeParams.id) {
+      userdbService.getPublisher($routeParams.id)
+      .success( function (data, status, headers) {
+        console.log(data);
+        $scope.publisher = data;
+      }).error( function (data, status) {
+        $location.path('/publishers');
+      });
+    } else {
+      userdbService.getAllPublishers()
+      .success( function (data, status, headers) {
+        console.log(data);
+        $scope.publishers = data;
+      }).error( function (data, status) {
+        $location.path('/publishers');
+      });
+    }
+
+    $scope.editPublisherClick = function (publisherId) {
+      $location.path(publisherId !== undefined ? '/publishers/' + publisherId : '/');
+    };
+  }]);

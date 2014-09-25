@@ -1,6 +1,7 @@
 'use strict';
 
-var members = require('./members.js');
+var members = require('./members.js'),
+    publishers = require('./publishers.js');
 
 module.exports = function (prefix) {
 
@@ -24,6 +25,16 @@ module.exports = function (prefix) {
     method: 'POST',
     path: '/' + prefix + '/members',
     handler: members.insertMember
+  },
+  {
+    method: 'GET',
+    path: '/' + prefix + '/publishers',
+    handler: publishers.selectAllPublishers
+  },
+    {
+    method: 'GET',
+    path: '/' + prefix + '/publishers/{id}',
+    handler: publishers.selectPublisher
   }
   ];
 }

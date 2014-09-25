@@ -20,7 +20,9 @@
         <div class="col-xs-12">
           <div id="menu" ng-controller="MenuCtrl">
             <ul class="nav nav-tabs" role="tablist">
-              <li ng-repeat="menuitem in menuitems" class="{{menuitem.class}}"><a href="#/{{menuitem.href}}">{{menuitem.name}}</a></li>
+              <li ng-repeat="menuitem in menuitems" ng-class="{'active' : menuitem.active === true}">
+                <a href="#{{menuitem.href}}" ng-click="menuitemClickEvent($index)">{{menuitem.name}}</a>
+              </li>
             </ul>
           </div>
         </div>
