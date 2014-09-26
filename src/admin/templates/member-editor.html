@@ -1,11 +1,14 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
-      <h1>Member</h1>
       <div class="page-header">
-        <h2><small>Navn:</small> {{member.firstname}} {{member.lastname}} <small>ID:</small> {{member.id}}</h2>
+        <h2><small>Medlem navn:</small> {{member.firstname}} {{member.lastname}} <small>ID:</small> {{member.id}}</h2>
       </div>
-      <div class="" ng-repeat="email in member.emails">
+    </div>
+  </div>
+  <div class="" ng-repeat="email in member.emails">
+    <div class="row">
+      <div class="col-xs-12">
         <div class="form-group">
           <label for="email_address{{email.id}}">Email address</label>
           <input type="email" class="form-control" id="email_address{{email.id}}" placeholder="Enter email" ng-model="email.email_address">
@@ -16,50 +19,54 @@
           </div>
         </div>
       </div>
-      <div class="" ng-repeat="address in member.addresses">
+    </div>
+  </div>
+  <div class="" ng-repeat="address in member.addresses">
+    <div class="row">
+      <div class="col-xs-12">
         <div class="form-group">
-          <label for="road_name{{address.id}}">Road name</label>
+          <label for="road_name{{address.id}}">Vejnavn</label>
           <input type="text" class="form-control" id="road_name{{address.id}}" placeholder="Enter road name" ng-model="address.road_name">
         </div>
         <div class="form-group">
-          <label for="house_number{{address.id}}">house_number</label>
+          <label for="house_number{{address.id}}">Husnummer</label>
           <input type="text" class="form-control" id="house_number{{address.id}}" placeholder="Enter house number" ng-model="address.house_number">
         </div>
         <div class="form-group">
-          <label for="house_letter{{address.id}}">house_letter</label>
+          <label for="house_letter{{address.id}}">Husbogstav</label>
           <input type="text" class="form-control" id="house_letter{{address.id}}" placeholder="Enter house letter" ng-model="address.house_letter">
         </div>
         <div class="form-group">
-          <label for="floor{{address.id}}">floor</label>
+          <label for="floor{{address.id}}">Etage</label>
           <input type="text" class="form-control" id="floor{{address.id}}" placeholder="Enter floor" ng-model="address.floor">
         </div>
         <div class="form-group">
-          <label for="side_door{{address.id}}">side_door</label>
+          <label for="side_door{{address.id}}">Side d&oslash;r</label>
           <input type="text" class="form-control" id="side_door{{address.id}}" placeholder="Enter side door" ng-model="address.side_door">
         </div>
         <div class="form-group">
-          <label for="postal_number{{address.id}}">postal_number</label>
+          <label for="postal_number{{address.id}}">Postnummer</label>
           <input type="text" class="form-control" id="postal_number{{address.id}}" placeholder="Enter postal number" ng-model="address.postal_number">
         </div>
         <div class="form-group">
-          <label for="city{{address.id}}">city</label>
+          <label for="city{{address.id}}">By</label>
           <input type="text" class="form-control" id="city{{address.id}}" placeholder="Enter city" ng-model="address.city">
         </div>
         <div class="form-group">
-          <label for="place_name{{address.id}}">place_name</label>
+          <label for="place_name{{address.id}}">Stednavn</label>
           <input type="text" class="form-control" id="place_name{{address.id}}" placeholder="Enter place name" ng-model="address.place_name">
         </div>
         <div class="form-group">
-          <label for="country{{address.id}}">Country</label>
+          <label for="country{{address.id}}">Land</label>
           <input type="text" class="form-control" id="country{{address.id}}" placeholder="Enter country" ng-model="address.country">
         </div>
         <div class="checkbox">
           <label>
-            <input type="checkbox"ng-modul="email.active">Active
+            <input type="checkbox"ng-modul="email.active">Aktiv
           </label>
         </div>
       </div>
-      <button type="submit" class="btn btn-default">Save (doesnt' work)</button>
+      <button type="submit" class="btn btn-default">Gem (virker ikke)</button>
     </div>
     <div>
   </div>

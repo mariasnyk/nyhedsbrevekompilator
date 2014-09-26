@@ -18,6 +18,14 @@ module.exports.selectPublisher = function (request, reply) {
     if (err) return reply(err);
     if (result.length === 0) reply().code(404);
     else if (result.length > 1) reply().code(509);
-    else reply(result[0]);
+    else {
+      var publisher = result[0];
+
+      database.query('SELECT * FROM subscription WHERE publisher_id = ' + publisher.id, function (err, result) {
+        publisher.subscriptions = result;
+
+        reply(publisher);
+      });
+    }
   });
 }

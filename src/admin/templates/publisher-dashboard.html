@@ -1,18 +1,18 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
-      <table class="table table-striped">
+      <table class="table table-hover">
         <tr>
           <th>Id</th>
           <th>Name</th>
           <th>Email</th>
           <th></th>
         </tr>
-        <tr ng-repeat="publisher in publishers">
-          <td><div ng-click="editPublisherClick(publisher.id)">{{publisher.id}}</div></td>
+        <tr ng-repeat="publisher in publishers" ng-click="editPublisherClick(publisher.id)">
+          <td>{{publisher.id}}</td>
           <td>{{publisher.name}}</td>
           <td>{{publisher.from_email}}</td>
-          <td><img src="{{publisher.url_picture_top}}" /></td>
+          <td><img class="img-responsive" src="{{publisher.url_picture_top}}" alt="{{publisher.url_picture_top}}" title="{{publisher.url_picture_top}}" /></td>
         </tr>
       </table>
     </div>

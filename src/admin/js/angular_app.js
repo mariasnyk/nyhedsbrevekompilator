@@ -9,7 +9,7 @@ app.config(['$routeProvider',
     .when( '/', {
       redirectTo: '/members' })
     .when( '/members', {
-      templateUrl: 'templates/member-search.html',
+      templateUrl: 'templates/member-dashboard.html',
       controller: 'MemberCtrl' })
     .when( '/members/:id', {
       templateUrl: 'templates/member-editor.html',
@@ -20,6 +20,9 @@ app.config(['$routeProvider',
     .when( '/publishers/:id', {
       templateUrl: 'templates/publisher-editor.html',
       controller: 'PublisherCtrl' })
+    .when( '/tester', {
+      templateUrl: 'templates/tester.html',
+      controller: 'TesterCtrl' })
     .otherwise({
       redirectTo: '/' });
 
@@ -58,14 +61,17 @@ app.controller('MenuCtrl', ['$scope', '$location', '$rootScope',
   function($scope, $location, $rootScope) {
     $scope.menuitems = [
     {
-      name:'Members',
-      href:'/members'
+      name: 'Members',
+      href: '/members'
     },{
-      name:'Publishers',
-      href:'/publishers'
+      name: 'Publishers',
+      href: '/publishers'
     },{
-      name:'Newsletters',
-      href:'/newsletters'
+      name: 'Newsletters',
+      href: '/newsletters'
+    },{
+      name: 'Tester',
+      href: '/tester'
     }];
 
     $rootScope.$on('$locationChangeSuccess', setActiveMenuitem);

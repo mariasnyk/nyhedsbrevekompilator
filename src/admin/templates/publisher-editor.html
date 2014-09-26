@@ -1,3 +1,77 @@
 <div class="container">
-  {{publisher}}
+  <div class="row">
+    <div class="col-xs-12">
+      <h1>Publisher</h1>
+      <div class="page-header">
+        <h2><small>Publisher navn:</small> {{publisher.name}} <small>ID:</small> {{publisher.id}}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label for="publisher_name">Navn</label>
+        <input type="text" class="form-control" id="publisher_name" placeholder="Enter name" ng-model="publisher.name">
+      </div>
+      <div class="form-group">
+        <label for="publisher_display_text">Display navn</label>
+        <input type="text" class="form-control" id="publisher_display_text" placeholder="Enter display text" ng-model="publisher.display_text">
+      </div>
+      <div class="form-group">
+        <label for="publisher_from_email">Fra email</label>
+        <input type="text" class="form-control" id="publisher_from_email" placeholder="Enter from email" ng-model="publisher.from_email">
+      </div>
+      <div class="form-group">
+        <label for="publisher_from_name">Fra navn</label>
+        <input type="text" class="form-control" id="publisher_from_name" placeholder="Enter from name" ng-model="publisher.from_name">
+      </div>
+      <div class="form-group">
+        <label for="publisher_url_picture_top">URL billede</label>
+        <input type="text" class="form-control" id="publisher_url_picture_top" placeholder="Enter name" ng-model="publisher.url_picture_top">
+      </div>
+      <img src="{{publisher.url_picture_top}}" alt="{{publisher.url_picture_top}}" title="{{publisher.url_picture_top}}" />
+      <div class="form-group">
+        <label for="publisher_name">Navn</label>
+        <input type="text" class="form-control" id="publisher_name" placeholder="Enter name" ng-model="publisher.name">
+      </div>
+      <div class="form-group">
+        <label for="publisher_url">URL</label>
+        <input type="text" class="form-control" id="publisher_url" placeholder="Enter URL" ng-model="publisher.url">
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox"ng-modul="publisher.active">Aktiv
+        </label>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="" ng-repeat="subscription in publisher.subscriptions">
+    <div class="row">
+      <div class="col-xs-3">
+        <h3><span class="label label-default">Nyhedsbrev</span></h3>
+        <button type="button" class="btn btn-primary" ng-click="sendNewsletterClickEvent(subscription.id)">Send</button>
+      </div>
+      <div class="col-xs-9 well well-lg">
+        <div class="form-group">
+          <label for="subscription_name_{{subscription.id}}">Navn</label>
+          <input type="text" class="form-control" id="subscription_name_{{subscription.id}}" placeholder="Enter name" ng-model="subscription.name">
+        </div>
+        <div class="form-group">
+          <label for="subscription_display_text{{subscription.id}}">Navn</label>
+          <input type="text" class="form-control" id="subscription_display_text_{{subscription.id}}" placeholder="Enter display name" ng-model="subscription.display_text">
+        </div>
+        <div class="form-group">
+          <label for="subscription_description_{{subscription.id}}">Beskrivelse</label>
+          <input type="text" class="form-control" id="subscription_description_{{subscription.id}}" placeholder="Enter description" ng-model="subscription.description">
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox"ng-modul="subscription.active">Aktiv
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

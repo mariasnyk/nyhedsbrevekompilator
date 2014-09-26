@@ -1,0 +1,1 @@
+var userdbEmailDispatcher = angular.module('userdbEmailDispatcher', []);

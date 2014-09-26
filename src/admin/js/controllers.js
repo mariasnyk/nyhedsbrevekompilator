@@ -34,8 +34,8 @@ userdbControllers.controller('MemberCtrl', ['$scope', '$routeParams', '$http', '
         });
     };
 
-    $scope.searchMembersKeyUpEvent = function (clickEvent) {
-      if (clickEvent.keyCode === 13) { /* Enter */
+    $scope.searchMembersKeyUpEvent = function (event) {
+      if (event.keyCode === 13) { /* Enter */
         $scope.searchMembersEvent();
       }
     };
@@ -44,26 +44,8 @@ userdbControllers.controller('MemberCtrl', ['$scope', '$routeParams', '$http', '
     $scope.editMemberClick = function(memberId) {
       $location.path(memberId !== undefined ? '/members/' + memberId : '/');
     };
-    // userdbService.getMember(443765).
-    //   success(function (data, status) {
-    //     console.log('Daniel Nielsen', status, data);
-    //   });
   }]);
 
-// userdbControllers.controller('MemberEditorCtrl', ['$scope', '$routeParams', 'userdbService',
-//   function ($scope, $routeParams, userdbService) {
-//     $scope.memberId = $routeParams.memberId;
-
-//     if ($routeParams.memberId) {
-//       userdbService.getMember($routeParams.memberId)
-//       .success( function (data, status, headers) {
-//         console.log(data);
-//         $scope.member = data;
-//       }).error( function (data, status) {
-//         $location.path('/');
-//       });
-//     }
-//   }]);
 
 userdbControllers.controller('PublisherCtrl', ['$scope', '$routeParams', '$http', '$location', 'userdbService',
   function ($scope, $routeParams, $http, $location, userdbService) {
@@ -88,5 +70,38 @@ userdbControllers.controller('PublisherCtrl', ['$scope', '$routeParams', '$http'
 
     $scope.editPublisherClick = function (publisherId) {
       $location.path(publisherId !== undefined ? '/publishers/' + publisherId : '/');
+    };
+
+    $scope.sendNewsletterClickEvent = function (subscriptionId) {
+      console.log('sendNewsletterClickEvent' + subscriptionId);
+    };
+  }]);
+
+
+userdbControllers.controller('TesterCtrl', ['$scope',
+  function ($scope) {
+    $scope.recepients = [];
+
+    $scope.addRecepientsKeyUp = function(event) {
+      if (event.keyCode === 13) { /* Enter */
+        $scope.addRecepientClick();
+      }
+    }
+
+    $scope.addRecepientClick = function () {
+      if ($scope.new_recepient !== undefined) {
+        $scope.recepients.unshift($scope.new_recepient);
+        $scope.new_recepient = undefined;
+      }
+    }
+
+    $scope.removeRecepientClick = function (index) {
+      $scope.recepients = $scope.recepients.splice(index, 1);
+    }
+
+    $scope.sendTestNewsletterEventClick = function () {
+      console.log($scope.from_email, $scope.from_name, $scope.subject, $scope.html_url);
+
+
     };
   }]);
