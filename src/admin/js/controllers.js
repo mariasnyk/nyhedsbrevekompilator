@@ -78,30 +78,41 @@ userdbControllers.controller('PublisherCtrl', ['$scope', '$routeParams', '$http'
   }]);
 
 
-userdbControllers.controller('TesterCtrl', ['$scope',
-  function ($scope) {
-    $scope.recepients = [];
+userdbControllers.controller('TesterCtrl', ['$scope', 'userdbService',
+  function ($scope, userdbService) {
+    // Just to prefill
+    $scope.recipients = ['dako@berlingskemedia.dk'];
+    $scope.from_email = 'kommunikation@berlingskemedia.dk';
+    $scope.from_name = 'Berlingske Media';
+    $scope.subject = 'Super sejt nyhedsbrev';
+    $scope.html_url = 'http://nodeweekly.com/issues/52';
 
-    $scope.addRecepientsKeyUp = function(event) {
+    $scope.addRecipientsKeyUp = function(event) {
       if (event.keyCode === 13) { /* Enter */
-        $scope.addRecepientClick();
+        $scope.addRecipientClick();
       }
     }
 
-    $scope.addRecepientClick = function () {
-      if ($scope.new_recepient !== undefined) {
-        $scope.recepients.unshift($scope.new_recepient);
-        $scope.new_recepient = undefined;
+    $scope.addRecipientClick = function () {
+      if ($scope.new_recipient !== undefined) {
+        $scope.recipients.unshift($scope.new_recipient);
+        $scope.new_recipient = undefined;
       }
     }
 
-    $scope.removeRecepientClick = function (index) {
-      $scope.recepients = $scope.recepients.splice(index, 1);
+    $scope.removeRecipientClick = function (index) {
+      $scope.recipients = $scope.recipients.splice(index, 1);
     }
 
     $scope.sendTestNewsletterEventClick = function () {
-      console.log($scope.from_email, $scope.from_name, $scope.subject, $scope.html_url);
+      var data = {
+        from_email: $scope.from_email,
+        from_name: $scope.from_name,
+        subject: $scope.subject,
+        html_url: $scope.html_url,
+        recipients: $scope.recipients
+      };
 
-
+      userdbService.sendTestNewsletter(data)
     };
   }]);

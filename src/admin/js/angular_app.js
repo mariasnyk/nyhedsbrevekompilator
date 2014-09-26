@@ -55,6 +55,11 @@ app.service('userdbService', ['apiVersion', '$http',
     this.getPublisher = function (publisherId) {
       return $http({method: 'GET', url: baseUrl + 'publishers/' + publisherId});
     };
+
+    this.sendTestNewsletter = function (data) {
+      //return $http({method: 'POST', url: baseUrl + 'newsletters/tester'})
+      return $http.post(baseUrl + 'newsletters/tester', data);
+    }
   }]);
 
 app.controller('MenuCtrl', ['$scope', '$location', '$rootScope',

@@ -19,6 +19,7 @@ var walk = function (path) {
 };
 walk(__dirname + '/apis');
 
+
 server.route({
   method: 'GET',
   path: '/admin/{param*}',
@@ -28,6 +29,11 @@ server.route({
       index: true
     }
   }
+});
+
+
+server.on('tail', function (request) {
+  console.log('Request complete', new Date().toString());
 });
 
 

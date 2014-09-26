@@ -1,40 +1,42 @@
+/*jshint node: true */
+
 'use strict';
 
 var members = require('./members.js'),
-    publishers = require('./publishers.js');
+    publishers = require('./publishers.js'),
+    newsletters = require('./newsletters.js');
 
 module.exports = function (prefix) {
 
   return [
   {
-    method: 'GET',
+    method: 'get',
     path: '/' + prefix + '/members',
     handler: members.selectAllMembers
-  },
-  {
-    method: 'GET',
+  },{
+    method: 'get',
     path: '/' + prefix + '/search/members',
     handler: members.searchMembers
-  },
-  {
-    method: 'GET',
+  },{
+    method: 'get',
     path: '/' + prefix + '/members/{id}',
     handler: members.selectMember
-  },
-  {
-    method: 'POST',
+  },{
+    method: 'post',
     path: '/' + prefix + '/members',
     handler: members.insertMember
-  },
-  {
-    method: 'GET',
+  },{
+    method: 'get',
     path: '/' + prefix + '/publishers',
     handler: publishers.selectAllPublishers
-  },
-    {
-    method: 'GET',
+  },{
+    method: 'get',
     path: '/' + prefix + '/publishers/{id}',
     handler: publishers.selectPublisher
+  },{
+    method: 'post',
+    path: '/' + prefix + '/newsletters/tester',
+    handler: newsletters.sendTestEmail
   }
   ];
 }

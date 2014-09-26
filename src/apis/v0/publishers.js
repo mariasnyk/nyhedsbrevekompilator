@@ -1,3 +1,5 @@
+/*jshint node: true */
+
 'use strict';
 
 var database = require('../../database.js');
@@ -9,7 +11,7 @@ module.exports.selectAllPublishers = function (request, reply) {
     if (err) return reply(err);
     reply(result);
   });
-}
+};
 
 module.exports.selectPublisher = function (request, reply) {
   var query = 'SELECT * from publisher WHERE id = ' + request.params.id;
@@ -28,4 +30,4 @@ module.exports.selectPublisher = function (request, reply) {
       });
     }
   });
-}
+};

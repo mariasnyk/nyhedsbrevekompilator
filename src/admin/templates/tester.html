@@ -26,18 +26,18 @@
   </div>
   <div class="row">
     <div class="col-xs-1">
-      <button type="button" class="btn btn-default" ng-click="addRecepientClick()"><span class="glyphicon glyphicon-plus"></span></button>
+      <button type="button" class="btn btn-default" ng-click="addRecipientClick()"><span class="glyphicon glyphicon-plus"></span></button>
     </div>
     <div class="col-xs-11">
       <div class="input-group">
         <span class="input-group-addon">@</span>
-        <input type="email" class="form-control" placeholder="Add recepient mail" ng-model="new_recepient" ng-keyup="addRecepientsKeyUp($event)">
+        <input type="email" class="form-control" placeholder="Add recipient mail" ng-model="new_recipient" ng-keyup="addRecipientsKeyUp($event)">
       </div>
     </div>
   </div>
-  <div class="row" style="margin-top: 10px;" ng-repeat="recepient in recepients">
+  <div class="row" style="margin-top: 10px;" ng-repeat="recipient in recipients">
     <div class="col-xs-11 col-xs-offset-1">
-      <button type="button" class="btn btn-xs btn-default" ng-click="removeRecepientClick($index)"><span class="glyphicon glyphicon-minus"> {{recepient}}</span></button>
+      <button type="button" class="btn btn-xs btn-default" ng-click="removeRecipientClick($index)"><span class="glyphicon glyphicon-minus"> {{recipient}}</span></button>
     </div>
   </div>
 </div>
