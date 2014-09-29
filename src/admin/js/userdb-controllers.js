@@ -9,7 +9,6 @@ userdbControllers.controller('MemberCtrl', ['$scope', '$routeParams', '$location
     if ($routeParams.id) {
       userdbService.getMember($routeParams.id)
       .success( function (data, status, headers) {
-        console.log(data);
         $scope.member = data;
       }).error( function (data, status) {
         $location.path('/members');
@@ -53,7 +52,6 @@ userdbControllers.controller('PublisherCtrl', ['$scope', '$routeParams', '$locat
     if ($routeParams.id) {
       userdbService.getPublisher($routeParams.id)
       .success( function (data, status, headers) {
-        console.log(data);
         $scope.publisher = data;
       }).error( function (data, status) {
         $location.path('/publishers');
@@ -61,7 +59,6 @@ userdbControllers.controller('PublisherCtrl', ['$scope', '$routeParams', '$locat
     } else {
       userdbService.getAllPublishers()
       .success( function (data, status, headers) {
-        console.log(data);
         $scope.publishers = data;
       }).error( function (data, status) {
         $location.path('/');

@@ -56,6 +56,9 @@ app.controller('MenuCtrl', ['$scope', '$location', '$rootScope',
       name: 'Interests',
       href: '/interests'
     },{
+      name: 'Smartlinks',
+      href: '/smartlinks'
+    },{
       name: 'Tester',
       href: '/tester'
     }];

@@ -33,5 +33,5 @@ userdbServices.service('userdbService', ['apiVersion', '$http',
   }]);
 
 function removeFirstSlash(url) {
-  return url.indexOf('/') === 0 ? url.slice(1) : url;
+  return url.charAt(0) === '/' ? url.slice(1) : url;
 }
