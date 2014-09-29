@@ -20,6 +20,12 @@ app.config(['$routeProvider',
     .when( '/publishers/:id', {
       templateUrl: 'templates/publisher-editor.html',
       controller: 'PublisherCtrl' })
+    .when( '/newsletters', {
+      templateUrl: 'templates/newsletter-dashboard.html',
+      controller: 'NewsletterCtrl' })
+    .when( '/newsletters/:id', {
+      templateUrl: 'templates/newsletter-editor.html',
+      controller: 'NewsletterCtrl' })
     .when( '/tester', {
       templateUrl: 'templates/tester.html',
       controller: 'TesterCtrl' })
