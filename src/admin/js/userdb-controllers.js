@@ -131,7 +131,7 @@ userdbControllers.controller('TesterCtrl', ['$scope', 'userdbService',
     }
 
     $scope.removeRecipientClick = function (index) {
-      $scope.recipients = $scope.recipients.splice(index, 1);
+      $scope.recipients.splice(index, 1);
     }
 
     $scope.sendTestNewsletterEventClick = function () {
