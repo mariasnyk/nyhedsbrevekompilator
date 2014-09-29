@@ -78,6 +78,12 @@ userdbControllers.controller('PublisherCtrl', ['$scope', '$routeParams', '$http'
   }]);
 
 
+userdbControllers.controller('NewsletterCtrl', ['$scope', 'userdbService',
+  function ($scope, userdbService) {
+    
+  }]);
+
+
 userdbControllers.controller('TesterCtrl', ['$scope', 'userdbService',
   function ($scope, userdbService) {
     // Just to prefill

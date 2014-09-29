@@ -33,7 +33,7 @@ server.route({
 
 
 server.on('tail', function (request) {
-  console.log('Request complete', new Date().toString());
+  //console.log('Request complete', new Date().toString());
 });
 
 
