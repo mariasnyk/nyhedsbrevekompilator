@@ -24,7 +24,7 @@ module.exports.selectPublisher = function (request, reply) {
       var publisher = result[0];
 
       database.query('SELECT * FROM subscription WHERE publisher_id = ' + publisher.id, function (err, result) {
-        publisher.subscriptions = result;
+        publisher.newsletters = result;
 
         reply(publisher);
       });

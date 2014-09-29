@@ -50,6 +50,12 @@ app.controller('MenuCtrl', ['$scope', '$location', '$rootScope',
       name: 'Newsletters',
       href: '/newsletters'
     },{
+      name: 'Permissions',
+      href: '/permissions'
+    },{
+      name: 'Interests',
+      href: '/interests'
+    },{
       name: 'Tester',
       href: '/tester'
     }];

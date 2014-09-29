@@ -2,6 +2,18 @@
   <div class="row">
     <div class="col-xs-12">
       <table class="table table-hover">
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Publisher</th>
+          <th>Beskrivelse</th>
+        </tr>
+        <tr ng-repeat="newsletter in newsletters" ng-click="editNewsletterClick(newsletter.id)">
+          <td>{{newsletter.id}}</td>
+          <td>{{newsletter.name}}</td>
+          <td>{{newsletter.publisher_name}}</td>
+          <td>{{newsletter.description}}</td>
+        </tr>
       </table>
     </div>
   </div>

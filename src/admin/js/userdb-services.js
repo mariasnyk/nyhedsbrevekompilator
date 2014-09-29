@@ -7,7 +7,7 @@ userdbServices.service('userdbService', ['apiVersion', '$http',
     var baseUrl = '/' + apiVersion + '/';
 
     this.get = function (relUrl) {
-      return $http({method: 'GET', url: baseUrl + relUrl});
+      return $http({method: 'GET', url: baseUrl + removeFirstSlash(relUrl)});
     };
 
     this.getMember = function (memberId) {
@@ -31,3 +31,7 @@ userdbServices.service('userdbService', ['apiVersion', '$http',
       return $http.post(baseUrl + 'newsletters/tester', data);
     }
   }]);
+
+function removeFirstSlash(url) {
+  return url.indexOf('/') === 0 ? url.slice(1) : url;
+}

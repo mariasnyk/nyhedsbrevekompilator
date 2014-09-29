@@ -1,7 +1,7 @@
 var userdbControllers = angular.module('userdbControllers', []);
 
-userdbControllers.controller('MemberCtrl', ['$scope', '$routeParams', '$http', '$location', 'userdbService',
-  function ($scope, $routeParams, $http, $location, userdbService) {
+userdbControllers.controller('MemberCtrl', ['$scope', '$routeParams', '$location', 'userdbService',
+  function ($scope, $routeParams, $location, userdbService) {
 
     // $scope.searching = false;
     // $scope.noresult = false;
@@ -47,8 +47,8 @@ userdbControllers.controller('MemberCtrl', ['$scope', '$routeParams', '$http', '
   }]);
 
 
-userdbControllers.controller('PublisherCtrl', ['$scope', '$routeParams', '$http', '$location', 'userdbService',
-  function ($scope, $routeParams, $http, $location, userdbService) {
+userdbControllers.controller('PublisherCtrl', ['$scope', '$routeParams', '$location', 'userdbService',
+  function ($scope, $routeParams, $location, userdbService) {
 
     if ($routeParams.id) {
       userdbService.getPublisher($routeParams.id)
@@ -64,7 +64,7 @@ userdbControllers.controller('PublisherCtrl', ['$scope', '$routeParams', '$http'
         console.log(data);
         $scope.publishers = data;
       }).error( function (data, status) {
-        $location.path('/publishers');
+        $location.path('/');
       });
     }
 
@@ -72,15 +72,42 @@ userdbControllers.controller('PublisherCtrl', ['$scope', '$routeParams', '$http'
       $location.path(publisherId !== undefined ? '/publishers/' + publisherId : '/');
     };
 
-    $scope.sendNewsletterClickEvent = function (subscriptionId) {
-      console.log('sendNewsletterClickEvent' + subscriptionId);
+    $scope.editNewsletterClick = function (newsletterId) {
+      $location.path(newsletterId !== undefined ? '/newsletters/' + newsletterId : '/');
+    };
+
+    $scope.sendNewsletterClick = function (newsletterId) {
+      console.log('sendNewsletterClickEvent' + newsletterId);
     };
   }]);
 
 
-userdbControllers.controller('NewsletterCtrl', ['$scope', 'userdbService',
-  function ($scope, userdbService) {
-    
+userdbControllers.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdbService',
+  function ($scope, $routeParams, $location, userdbService) {
+    if ($routeParams.id) {
+      //userdbService.getNewsletter($routeParams.id)
+      userdbService.get('/newsletters/' + $routeParams.id)
+      .success( function (data, status, headers) {
+        $scope.newsletter = data;
+      }).error( function (data, status) {
+        $location.path('/newsletters');
+      });
+    } else {
+      userdbService.get('/newsletters')
+      .success( function (data, status, headers) {
+        $scope.newsletters = data;
+      }).error( function (data, status) {
+        $location.path('/');
+      });
+    }
+
+    $scope.editNewsletterClick = function (newsletterId) {
+      $location.path(newsletterId !== undefined ? '/newsletters/' + newsletterId : '/');
+    };
+
+    $scope.sendNewsletterClick = function (newsletterId) {
+      console.log('sendNewsletterClickEvent' + newsletterId);
+    };
   }]);
 
 

@@ -34,6 +34,14 @@ module.exports = function (prefix) {
     path: '/' + prefix + '/publishers/{id}',
     handler: publishers.selectPublisher
   },{
+    method: 'get',
+    path: '/' + prefix + '/newsletters',
+    handler: newsletters.selectAllNewsletters
+  },{
+    method: 'get',
+    path: '/' + prefix + '/newsletters/{id}',
+    handler: newsletters.selectNewsletter
+  },{
     method: 'post',
     path: '/' + prefix + '/newsletters/tester',
     handler: newsletters.sendTestEmail

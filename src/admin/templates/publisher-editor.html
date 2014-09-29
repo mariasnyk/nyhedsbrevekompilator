@@ -47,28 +47,29 @@
   </div>
 
 
-  <div class="" ng-repeat="subscription in publisher.subscriptions">
+  <div class="" ng-repeat="newsletter in publisher.newsletters">
     <div class="row">
       <div class="col-xs-3">
         <h3><span class="label label-default">Nyhedsbrev</span></h3>
-        <button type="button" class="btn btn-primary" ng-click="sendNewsletterClickEvent(subscription.id)">Send</button>
+        <button type="button" class="btn btn-info" ng-click="editNewsletterClick(newsletter.id)">Edit</button>
+        <button type="button" class="btn btn-primary" ng-click="sendNewsletterClick(newsletter.id)">Send</button>
       </div>
       <div class="col-xs-9 well well-lg">
         <div class="form-group">
-          <label for="subscription_name_{{subscription.id}}">Navn</label>
-          <input type="text" class="form-control" id="subscription_name_{{subscription.id}}" placeholder="Enter name" ng-model="subscription.name">
+          <label for="newsletter_name_{{newsletter.id}}">Navn</label>
+          <input type="text" class="form-control" id="newsletter_name_{{newsletter.id}}" placeholder="Enter name" ng-model="newsletter.name">
         </div>
         <div class="form-group">
-          <label for="subscription_display_text{{subscription.id}}">Navn</label>
-          <input type="text" class="form-control" id="subscription_display_text_{{subscription.id}}" placeholder="Enter display name" ng-model="subscription.display_text">
+          <label for="newsletter_display_text{{newsletter.id}}">Navn</label>
+          <input type="text" class="form-control" id="newsletter_display_text_{{newsletter.id}}" placeholder="Enter display name" ng-model="newsletter.display_text">
         </div>
         <div class="form-group">
-          <label for="subscription_description_{{subscription.id}}">Beskrivelse</label>
-          <input type="text" class="form-control" id="subscription_description_{{subscription.id}}" placeholder="Enter description" ng-model="subscription.description">
+          <label for="newsletter_description_{{newsletter.id}}">Beskrivelse</label>
+          <input type="text" class="form-control" id="newsletter_description_{{newsletter.id}}" placeholder="Enter description" ng-model="newsletter.description">
         </div>
         <div class="checkbox">
           <label>
-            <input type="checkbox"ng-modul="subscription.active">Aktiv
+            <input type="checkbox"ng-modul="newsletter.active">Aktiv
           </label>
         </div>
       </div>

@@ -23,7 +23,7 @@
           <div id="topnavmenu" ng-controller="MenuCtrl">
             <ul class="nav nav-tabs" role="tablist">
               <li ng-repeat="menuitem in menuitems" ng-class="{'active' : menuitem.active === true}">
-                <a href="#{{menuitem.href}}" ng-click="menuitemClickEvent($index)">{{menuitem.name}}</a>
+                <a href="#{{menuitem.href}}">{{menuitem.name}}</a>
               </li>
             </ul>
           </div>

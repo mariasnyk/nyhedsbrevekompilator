@@ -1,8 +1,32 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
-      <table class="table table-hover">
-      </table>
+      <div class="form-group">
+        <label for="name">Navn</label>
+        <input type="text" class="form-control" id="name" placeholder="Enter name" ng-model="newsletter.name">
+      </div>
+      <div class="form-group">
+        <label for="publisher_id">Publisher ID</label>
+        <input type="number" class="form-control" id="publisher_id" placeholder="Enter publisher id" ng-model="newsletter.publisher_id">
+      </div>
+      <div class="form-group">
+        <label for="display_text">Display text</label>
+        <input type="text" class="form-control" id="display_text" placeholder="Enter display text" ng-model="newsletter.display_text">
+      </div>
+      <div class="form-group">
+        <label for="description">Beskrivelse</label>
+        <input type="text" class="form-control" id="description" placeholder="Enter description" ng-model="newsletter.description">
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox"ng-modul="newsletter.active">Aktiv
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-3">
+      <button type="button" class="btn btn-primary" ng-click="sendNewsletterClick(newsletter.id)">Send</button>
     </div>
   </div>
 </div>

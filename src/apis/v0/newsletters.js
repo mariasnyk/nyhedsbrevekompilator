@@ -4,7 +4,30 @@
 
 var AWS = require('aws-sdk'),
     ses = new AWS.SES(),
-    http = require('http');
+    http = require('http'),
+    database = require('../../database.js');
+
+module.exports.selectAllNewsletters = function (request, reply) {
+  var query = 'SELECT subscription.*, publisher.name as publisher_name FROM subscription LEFT JOIN publisher ON publisher.id = subscription.publisher_id';
+
+  database.query(query, function (err, result) {
+    if (err) return reply(err);
+    reply(result);
+  });
+};
+
+module.exports.selectNewsletter = function (request, reply) {
+  var query = 'SELECT * FROM subscription WHERE id = ' + request.params.id;
+
+  database.query(query, function (err, result) {
+    if (err) return reply(err);
+    if (result.length === 0) reply().code(404);
+    else if (result.length > 1) reply().code(509);
+    else {
+      reply(result[0]);
+    }
+  });
+};
 
 module.exports.sendTestEmail = function (request, reply) {
 
