@@ -108,6 +108,30 @@ userdbControllers.controller('NewsletterCtrl', ['$scope', '$routeParams', '$loca
   }]);
 
 
+userdbControllers.controller('PermissionCtrl', ['$scope', '$routeParams', '$location', 'userdbService',
+  function ($scope, $routeParams, $location, userdbService) {
+    if ($routeParams.id) {
+      userdbService.get('/permissions/' + $routeParams.id)
+      .success( function (data, status, headers) {
+        $scope.permission = data;
+      }).error( function (data, status) {
+        $location.path('/permissions');
+      });
+    } else {
+      userdbService.get('/permissions')
+      .success( function (data, status, headers) {
+        $scope.permissions = data;
+      }).error( function (data, status) {
+        $location.path('/');
+      });
+    }
+
+    $scope.editPermissionClick = function (permissionId) {
+      $location.path(permissionId !== undefined ? '/permissions/' + permissionId : '/');
+    };
+  }]);
+
+
 userdbControllers.controller('TesterCtrl', ['$scope', 'userdbService',
   function ($scope, userdbService) {
     // Just to prefill

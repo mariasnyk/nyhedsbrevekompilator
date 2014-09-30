@@ -1,7 +1,6 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
-      <h1>Publisher</h1>
       <div class="page-header">
         <h2><small>Publisher navn:</small> {{publisher.name}} <small>ID:</small> {{publisher.id}}</h2>
       </div>
@@ -40,13 +39,11 @@
       </div>
       <div class="checkbox">
         <label>
-          <input type="checkbox"ng-modul="publisher.active">Aktiv
+          <input type="checkbox"ng-modul="publisher.active" ng-true-value="1" ng-false-value="0">Aktiv
         </label>
       </div>
     </div>
   </div>
-
-
   <div class="" ng-repeat="newsletter in publisher.newsletters">
     <div class="row">
       <div class="col-xs-3">
@@ -69,7 +66,7 @@
         </div>
         <div class="checkbox">
           <label>
-            <input type="checkbox"ng-modul="newsletter.active">Aktiv
+            <input type="checkbox"ng-modul="newsletter.active" ng-true-value="1" ng-false-value="0">Aktiv
           </label>
         </div>
       </div>

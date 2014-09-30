@@ -28,22 +28,45 @@ module.exports.selectMember = function (request, reply) {
 
       // TODO: Do this with eventEmitter instead.
 
-      database.query('SELECT * FROM email WHERE member_id=' + member.id, function (err, emails) {
+      database.query('SELECT * FROM email WHERE member_id = ' + member.id, function (err, emails) {
         member.emails = emails;
 
-        database.query('SELECT * FROM address WHERE member_id=' + member.id, function (err, addresses) {
+        database.query('SELECT * FROM address WHERE member_id = ' + member.id, function (err, addresses) {
           member.addresses = addresses;
 
-          database.query('SELECT phone.*, phone_type.type FROM phone LEFT JOIN phone_type ON phone.type_id = phone_type.id WHERE member.member_id=' + member.id, function (err, phones) {
+          var sql = ['SELECT phone.*, phone_type.type',
+            'FROM phone',
+            'LEFT JOIN phone_type ON phone.type_id = phone_type.id',
+            'WHERE member_id = ' + member.id].join(' ');
+
+            console.log(sql)
+
+          database.query(sql, function (err, phones) {
             member.phones = phones;
 
-            database.query('SELECT interest_line.*, interest.* FROM interest_line LEFT JOIN interest ON interest_line.interest_id = interest.id WHERE interest_line.member_id=' + member.id, function (err, interests) {
+            var sql = ['SELECT interest_line.*, interest.name AS interest_name, interest.display_name AS interest_display_name, interest.description AS interest_description, interest_parent.name AS interest_parent_name',
+             'FROM interest_line',
+             'LEFT JOIN interest ON interest_line.interest_id = interest.id',
+             'LEFT JOIN interest interest_parent ON interest.parent_id = interest_parent.id',
+             'WHERE interest_line.member_id = ' + member.id].join(' ');
+
+            database.query(sql, function (err, interests) {
               member.interests = interests;
 
-              database.query('SELECT subscription_member.*, subscription.name AS subscription_name FROM subscription_member LEFT JOIN subscription ON subscription.id = subscription_member.subscription_id WHERE subscription_member.member_id = ' + member.id, function (err, subscriptions) {
+              var sql = ['SELECT subscription_member.*, subscription.name AS subscription_name',
+              'FROM subscription_member',
+              'LEFT JOIN subscription ON subscription.id = subscription_member.subscription_id',
+              'WHERE subscription_member.member_id = ' + member.id].join(' ');
+
+              database.query(sql, function (err, subscriptions) {
                 member.subscriptions = subscriptions;
 
-                database.query('SELECT permission_member.*, permission.name AS permission_name FROM permission_member LEFT JOIN permission ON permission.id = permission_member.permission_id WHERE permission_member.member_id = ' + member.id, function (err, permissions) {
+                var sql = ['SELECT permission_member.*, permission.name AS permission_name',
+                'FROM permission_member',
+                'LEFT JOIN permission ON permission.id = permission_member.permission_id',
+                'WHERE permission_member.member_id = ' + member.id].join(' ');
+
+                database.query(sql, function (err, permissions) {
                   member.permissions = permissions;
 
                   reply(member);
@@ -64,10 +87,11 @@ module.exports.searchMembers = function(request, reply) {
   var queryinput = request.query.text;
 
 
-   var query = 'SELECT id, firstname, lastname, username from member WHERE firstname LIKE "%' + queryinput + '%" OR lastname LIKE "%' + queryinput + '%"';
-  
+  var query = 'SELECT id, firstname, lastname, username from member WHERE firstname LIKE "%' + queryinput + '%" OR lastname LIKE "%' + queryinput + '%"';
+  var a = '+'.concat('Ole Nielsen'.split(' ').join(' +'));
+  var query2 = 'SELECT id, firstname, lastname from member where match(firstname, lastname) AGAINST("' + a + '" IN BOOLEAN MODE)';
 
-  database.query(query , function (err, result) {
+  database.query(query2 , function (err, result) {
     if (err) return reply(err);//.code(500);
 
     reply(result);

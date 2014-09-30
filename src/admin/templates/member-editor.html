@@ -2,28 +2,115 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="page-header">
-        <h2><small>Medlem navn:</small> {{member.firstname}} {{member.lastname}} <small>ID:</small> {{member.id}}</h2>
+        <h2><small>Navn:</small> {{member.firstname}} {{member.lastname}} <small>ID:</small> {{member.id}}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-3">
+      <button type="submit" class="btn btn-default">Gem (virker ikke)</button>
+    </div>
+    <div class="col-xs-9">
+      <div class="form-group">
+        <label for="firstname">Firstname</label>
+        <input type="text" class="form-control" id="firstname" placeholder="Enter firstname" ng-model="member.firstname">
+      </div>
+      <div class="form-group">
+        <label for="lastname">Lastname</label>
+        <input type="text" class="form-control" id="lastname" placeholder="Enter lastname" ng-model="member.lastname">
+      </div>
+      <div class="form-group">
+        <label for="coname">C/O name</label>
+        <input type="text" class="form-control" id="coname" placeholder="Enter C/O name" ng-model="member.coname">
+      </div>
+      <div class="form-group">
+        <label for="birth_year">Birth year</label>
+        <input type="text" class="form-control" id="birth_year" placeholder="Enter birth year" ng-model="member.birth_year">
+      </div>
+      <div class="form-group">
+        <label for="birth_date">Birth date</label>
+        <input type="text" class="form-control" id="birth_date" placeholder="Enter birth year" ng-model="member.birth_date">
+      </div>
+      <div class="form-group">
+        <label for="gender">Gender</label>
+        <input type="text" class="form-control" id="gender" placeholder="Enter gender" ng-model="member.gender">
+      </div>
+      <div class="form-group">
+        <label for="company">Company</label>
+        <input type="text" class="form-control" id="company" placeholder="Enter company" ng-model="member.company">
+      </div>
+      <div class="form-group">
+        <label for="company_cvr">Company CVR</label>
+        <input type="text" class="form-control" id="company_cvr" placeholder="Enter company CVR" ng-model="member.company_cvr">
+      </div>
+      <div class="form-group">
+        <label for="external_id">External ID</label>
+        <input type="text" class="form-control" id="external_id" placeholder="Enter external id" ng-model="member.external_id">
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" ng-model="member.is_internal" ng-true-value="1" ng-false-value="0">Intern
+        </label>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" ng-model="member.robinson_flag" ng-true-value="1" ng-false-value="0">Robinson
+        </label>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" ng-model="member.status" ng-true-value="'active'" ng-false-value="'inactive'">Aktiv
+        </label>
       </div>
     </div>
   </div>
   <div class="" ng-repeat="email in member.emails">
     <div class="row">
-      <div class="col-xs-12">
+      <div class="col-xs-3">
+        <h3><span class="label label-default">Email</span></h3>
+      </div>
+      <div class="col-xs-9 well well-lg">
         <div class="form-group">
           <label for="email_address{{email.id}}">Email address</label>
           <input type="email" class="form-control" id="email_address{{email.id}}" placeholder="Enter email" ng-model="email.email_address">
           <div class="checkbox">
             <label>
-              <input type="checkbox"ng-modul="email.active">Active
+              <input type="checkbox" ng-model="email.active" ng-true-value="1" ng-false-value="0">Active
             </label>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <div class="" ng-repeat="phone in member.phones">
+    <div class="row">
+      <div class="col-xs-3">
+        <h3><span class="label label-default">Phone</span></h3>
+        <p><span class="label label-info">{{phone.type}}</span><p>
+      </div>
+      <div class="col-xs-9 well well-lg">
+          <div class="form-group">
+            <label for="number{{phone.id}}">Location</label>
+            <input type="text" class="form-control" id="number{{phone.id}}" placeholder="Enter number" ng-model="phone.number">
+          </div>
+          <div class="form-group">
+            <label for="type_id{{phone.id}}">Interest</label>
+            <input type="number" class="form-control" id="type_id{{phone.id}}" placeholder="Enter type_id" ng-model="phone.type_id">
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="phone.status" ng-true-value="1" ng-false-value="0">Aktiv
+            </label>
+          </div>
+      </div>
+    </div>
+ </div>
   <div class="" ng-repeat="address in member.addresses">
     <div class="row">
-      <div class="col-xs-12">
+      <div class="col-xs-3">
+        <h3><span class="label label-default">Adresse</span></h3>
+      </div>
+      <div class="col-xs-9 well well-lg">
         <div class="form-group">
           <label for="road_name{{address.id}}">Vejnavn</label>
           <input type="text" class="form-control" id="road_name{{address.id}}" placeholder="Enter road name" ng-model="address.road_name">
@@ -62,12 +149,39 @@
         </div>
         <div class="checkbox">
           <label>
-            <input type="checkbox"ng-modul="email.active">Aktiv
+            <input type="checkbox" ng-model="address.active" ng-true-value="1" ng-false-value="0">Aktiv
           </label>
         </div>
       </div>
-      <button type="submit" class="btn btn-default">Gem (virker ikke)</button>
     </div>
-    <div>
+  </div>
+  <div class="" ng-repeat="interest in member.interests">
+    <div class="row">
+      <div class="col-xs-3">
+        <h3><span class="label label-default">Interesse</span></h3>
+        <p>
+          <span class="label label-default">{{interest.interest_name}}</span>
+          <span class="label label-primary">{{interest.interest_display_name}}</span>
+          <span class="label label-success">{{interest.interest_name}}</span>
+          <span class="label label-info">{{interest.interest_description}}</span>
+          <span class="label label-warning">{{interest.interest_parent_name}}</span>
+        <p>
+      </div>
+      <div class="col-xs-9 well well-lg">
+          <div class="form-group">
+            <label for="interest_id{{interest.id}}">Interest</label>
+            <input type="number" class="form-control" id="interest_id{{interest.id}}" placeholder="Enter interest_id" ng-model="interest.interest_id">
+          </div>
+          <div class="form-group">
+            <label for="location_id{{interest.id}}">Location</label>
+            <input type="text" class="form-control" id="location_id{{interest.id}}" placeholder="Enter location_id" ng-model="interest.location_id">
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="interest.active" ng-true-value="1" ng-false-value="0">Aktiv
+            </label>
+          </div>
+      </div>
+    </div>
   </div>
 </div>

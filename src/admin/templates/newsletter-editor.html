@@ -1,6 +1,13 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
+      <div class="page-header">
+        <h2><small>Newsletter navn:</small> {{newsletter.name}} <small>ID:</small> {{newsletter.id}}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
       <div class="form-group">
         <label for="name">Navn</label>
         <input type="text" class="form-control" id="name" placeholder="Enter name" ng-model="newsletter.name">
@@ -19,7 +26,7 @@
       </div>
       <div class="checkbox">
         <label>
-          <input type="checkbox"ng-modul="newsletter.active">Aktiv
+          <input type="checkbox"ng-modul="newsletter.active" ng-true-value="1" ng-false-value="0">Aktiv
         </label>
       </div>
     </div>
