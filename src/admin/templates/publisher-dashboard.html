@@ -12,7 +12,11 @@
           <td><a href="#/publishers/{{publisher.id}}">{{publisher.id}}</a></td>
           <td>{{publisher.name}}</td>
           <td>{{publisher.from_email}}</td>
-          <td><img class="img-responsive" src="{{publisher.url_picture_top}}" alt="{{publisher.url_picture_top}}" title="{{publisher.url_picture_top}}" /></td>
+          <td>
+            <a href="#/publishers/{{publisher.id}}">
+              <img class="img-responsive" src="{{publisher.url_picture_top}}" alt="{{publisher.url_picture_top}}" title="{{publisher.url_picture_top}}" />
+            </a>
+          </td>
         </tr>
       </table>
     </div>

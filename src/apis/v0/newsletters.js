@@ -5,21 +5,23 @@
 var AWS = require('aws-sdk'),
     ses = new AWS.SES(),
     http = require('http'),
+    eventEmitter = require('events').EventEmitter,
+    workerEmitter = new eventEmitter(),
     database = require('../../database.js');
 
 module.exports.selectAllNewsletters = function (request, reply) {
-  var query = 'SELECT subscription.*, publisher.name as publisher_name FROM subscription LEFT JOIN publisher ON publisher.id = subscription.publisher_id';
+  var sql = 'SELECT subscription.*, publisher.name as publisher_name FROM subscription LEFT JOIN publisher ON publisher.id = subscription.publisher_id';
 
-  database.query(query, function (err, result) {
+  database.query(sql, function (err, result) {
     if (err) return reply(err);
     reply(result);
   });
 };
 
 module.exports.selectNewsletter = function (request, reply) {
-  var query = 'SELECT * FROM subscription WHERE id = ' + request.params.id;
+  var sql = 'SELECT * FROM subscription WHERE id = ' + request.params.id;
 
-  database.query(query, function (err, result) {
+  database.query(sql, function (err, result) {
     if (err) return reply(err);
     if (result.length === 0) reply().code(404);
     else if (result.length > 1) reply().code(509);
@@ -28,6 +30,62 @@ module.exports.selectNewsletter = function (request, reply) {
     }
   });
 };
+
+
+module.exports.selectNewsletterSubscribers = function (request, reply) {
+  var sql = ['SELECT member_id',
+    'FROM subscription_member',
+    'WHERE active = 1 AND subscription_id = ' + request.params.id].join(' ');
+  
+  database.query(sql, function (err, result) {
+    if (err) return reply(err);
+    else {
+        // Mapping the result down to
+        //  [107043, 104760, 1657432, 385718]
+        // instead of 
+        //  [ { "member_id": 107043 }, { "member_id": 104760 }]
+
+      reply(result.map(function (member) {
+        return member.member_id;
+      })).
+      header('X-Member-Count', result.length);
+    }
+  });
+};
+
+
+
+
+workerEmitter.on('newsletter', selectNewsletterRecipientEmails);
+workerEmitter.on('newsletter', downloadEmailHtml);
+
+
+module.exports.sendNewsletter = function (request, reply) {
+  var newsletterId = request.params.id;
+
+  
+
+  var sql = ['SELECT * FROM subscription',
+    'WHERE id = ' + newsletterId ].join(' ');
+
+  database.query(sql, function (err, subscription) {
+    if (err) return reply(err);
+
+    console.log(subscription);
+
+    // TODO: test that from_email, subject is present
+    // if (subscription[0].html_url === null)
+    //   return reply().code(400);
+
+    workerEmitter.mail('newsletter');
+    var tail = request.tail();
+    reply();
+
+
+    tail();
+  });
+};
+
 
 module.exports.sendTestEmail = function (request, reply) {
 
@@ -44,7 +102,7 @@ module.exports.sendTestEmail = function (request, reply) {
 
     var sendTail = request.tail('Send email');
 
-    downloadHtml(data.html_url, function (err, message) {
+    downloadEmailHtml(data.html_url, function (err, message) {
       data.message = message;
       sendPreview(data, function (err, data) {
         sendTail();
@@ -56,7 +114,24 @@ module.exports.sendTestEmail = function (request, reply) {
 };
 
 
-function downloadHtml (url, callback) {
+function selectNewsletterRecipientEmails (newsletterId, callback) {
+  var sql = ['SELECT email.email_address',
+    'FROM subscription_member',
+    'LEFT JOIN email ON email.id = subscription_member.email_id',
+    'WHERE subscription_id = ' + newsletterId ].join(' ');
+
+  database.query(sql, function (err, subscription_members) {
+    if (err) return callback(err);
+
+    var recipients_email_addresses = subscription_members.map(function (subscription_member) {
+      return subscription_member.email_address;
+    });
+    callback(null, recipients_email_addresses);
+  });
+}
+
+
+function downloadEmailHtml (url, callback) {
   console.log('Requesting on', url);
 
   http.get( url, function( response ) {

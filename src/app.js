@@ -34,6 +34,7 @@ server.route({
 
 server.on('tail', function (request) {
   //console.log('Request complete', new Date().toString());
+  console.log('tail', request.path, request.headers);
 });
 
 

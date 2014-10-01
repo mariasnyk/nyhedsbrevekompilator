@@ -5,9 +5,9 @@
 var database = require('../../database.js');
 
 module.exports.selectAllMembers = function (request, reply) {
-  var query = 'SELECT * FROM member LIMIT 1000';
+  var sql = 'SELECT * FROM member LIMIT 1000';
   
-  database.query(query , function (err, members) {
+  database.query(sql , function (err, members) {
     if (err) return reply(err);//.code(500);
 
     reply(members);
@@ -17,9 +17,9 @@ module.exports.selectAllMembers = function (request, reply) {
 
 module.exports.selectMember = function (request, reply) {
   // select * from member left join email on email.member_id = member.id where member.id=443765;
-  var query = 'SELECT * FROM member WHERE id = ' + request.params.id;
+  var sql = 'SELECT * FROM member WHERE id = ' + request.params.id;
 
-  database.query(query , function (err, result) {
+  database.query(sql , function (err, result) {
     if (err) return reply(err);//.code(500);
     if (result.length === 0) reply().code(404);
     else if (result.length > 1) reply().code(509);
@@ -87,9 +87,9 @@ module.exports.searchMembers = function(request, reply) {
   var queryinput = request.query.text;
 
   var a = '+'.concat('Ole Nielsen'.split(' ').join(' +'));
-  var query2 = 'SELECT id, firstname, lastname, status FROM member WHERE MATCH(firstname, lastname) AGAINST("' + a + '" IN BOOLEAN MODE)';
+  var sql = 'SELECT id, firstname, lastname, status FROM member WHERE MATCH(firstname, lastname) AGAINST("' + a + '" IN BOOLEAN MODE)';
 
-  database.query(query2 , function (err, result) {
+  database.query(sql , function (err, result) {
     if (err) return reply(err);//.code(500);
 
     reply(result);
@@ -98,20 +98,20 @@ module.exports.searchMembers = function(request, reply) {
 
 
 module.exports.insertMember = function (request, reply) {
-  var query = member.insert({
+  var sql = member.insert({
     lastname: 'Jane',
     firstname: 'Doe',
     coname: "None",
     birth_date: new Date().toISOString()
   }).getString();
 
-  console.log(query);
+  console.log(sql);
   // var query = 'INSERT INTO member ' +
   //  '(firstname, lastname, coname, birth_year, birth_date, gender, username, password, status, company, company_cvr, is_internal, robinson_flag, activated_at, updated_at )' +
   //   ' VALUES ' + 
   //   ' ("John", "Doe", "", "", "23-08-1981", "m", "", "", "active", "", "", "0", "0", "13-08-2014", "13-08-2014")';
 
-  database.query(query.text, function (err, result) {
+  database.query(sql.text, function (err, result) {
     console.log(err);
     if (err) return reply(err);
 

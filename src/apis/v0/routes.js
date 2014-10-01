@@ -45,12 +45,24 @@ module.exports = function (prefix) {
     handler: newsletters.selectNewsletter
   },{
     method: 'get',
+    path: '/' + prefix + '/newsletters/{id}/subscribers',
+    handler: newsletters.selectNewsletterSubscribers
+  },{
+    method: 'post',
+    path: '/' + prefix + '/newsletters/{id}/send',
+    handler: newsletters.sendNewsletter
+  },{
+    method: 'get',
     path: '/' + prefix + '/permissions',
     handler: permissions.selectAllPermissions
   },{
     method: 'get',
     path: '/' + prefix + '/permissions/{id}',
     handler: permissions.selectPermission
+  },{
+    method: 'get',
+    path: '/' + prefix + '/permissions/{id}/subscribers',
+    handler: permissions.selectPermissionSubscribers
   },{
     method: 'get',
     path: '/' + prefix + '/interests',
