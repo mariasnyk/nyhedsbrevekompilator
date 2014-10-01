@@ -86,10 +86,8 @@ module.exports.searchMembers = function(request, reply) {
   //console.log(Object.keys(request.query));
   var queryinput = request.query.text;
 
-
-  var query = 'SELECT id, firstname, lastname, username from member WHERE firstname LIKE "%' + queryinput + '%" OR lastname LIKE "%' + queryinput + '%"';
   var a = '+'.concat('Ole Nielsen'.split(' ').join(' +'));
-  var query2 = 'SELECT id, firstname, lastname from member where match(firstname, lastname) AGAINST("' + a + '" IN BOOLEAN MODE)';
+  var query2 = 'SELECT id, firstname, lastname, status FROM member WHERE MATCH(firstname, lastname) AGAINST("' + a + '" IN BOOLEAN MODE)';
 
   database.query(query2 , function (err, result) {
     if (err) return reply(err);//.code(500);

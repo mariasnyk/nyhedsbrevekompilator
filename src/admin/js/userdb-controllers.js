@@ -132,6 +132,31 @@ userdbControllers.controller('PermissionCtrl', ['$scope', '$routeParams', '$loca
   }]);
 
 
+userdbControllers.controller('InterestCtrl', ['$scope', '$routeParams', '$location', 'userdbService',
+  function ($scope, $routeParams, $location, userdbService) {
+    if ($routeParams.id) {
+      userdbService.get('/interests/' + $routeParams.id)
+      .success( function (data, status, headers) {
+        $scope.interest = data;
+      }).error( function (data, status) {
+        $location.path('/interests');
+      });
+    } else {
+      userdbService.get('/interests')
+      .success( function (data, status, headers) {
+        $scope.interests = data;
+      }).error( function (data, status) {
+        $location.path('/');
+      });
+    }
+
+    $scope.editInterestClick = function (interestId) {
+      console.log('not implementet');
+      //$location.path(interestId !== undefined ? '/interests/' + interestId : '/');
+    };
+  }]);
+
+
 userdbControllers.controller('TesterCtrl', ['$scope', 'userdbService',
   function ($scope, userdbService) {
     // Just to prefill

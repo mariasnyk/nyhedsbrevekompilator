@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <table class="table table-hover">
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Publisher</th>
+          <th>Beskrivelse</th>
+          <th>Parent</th>
+        </tr>
+        <tr ng-repeat="interest in interests" ng-click="editInterestClick(interest.id)" ng-class="{'warning' : interest.active === 0}">
+          <td>{{interest.id}}</td>
+          <td>{{interest.name}}</td>
+          <td>{{interest.display_name}}</td>
+          <td>{{interest.description}}</td>
+          <td>{{interest.interest_parent_name}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

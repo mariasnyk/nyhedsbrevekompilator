@@ -5,7 +5,8 @@
 var members = require('./members.js'),
     publishers = require('./publishers.js'),
     newsletters = require('./newsletters.js'),
-    permissions = require('./permissions.js');
+    permissions = require('./permissions.js'),
+    interests = require('./interests.js');
 
 module.exports = function (prefix) {
 
@@ -50,6 +51,14 @@ module.exports = function (prefix) {
     method: 'get',
     path: '/' + prefix + '/permissions/{id}',
     handler: permissions.selectPermission
+  },{
+    method: 'get',
+    path: '/' + prefix + '/interests',
+    handler: interests.selectAllInterests
+  },{
+    method: 'get',
+    path: '/' + prefix + '/interests/{id}',
+    handler: interests.selectInterest
   },{
     method: 'post',
     path: '/' + prefix + '/newsletters/tester',

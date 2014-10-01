@@ -8,7 +8,7 @@
           <th>Email</th>
           <th></th>
         </tr>
-        <tr ng-repeat="publisher in publishers" ng-click="editPublisherClick(publisher.id)">
+        <tr ng-repeat="publisher in publishers" ng-click="editPublisherClick(publisher.id)" ng-class="{'warning' : publisher.active === 0}">
           <td>{{publisher.id}}</td>
           <td>{{publisher.name}}</td>
           <td>{{publisher.from_email}}</td>

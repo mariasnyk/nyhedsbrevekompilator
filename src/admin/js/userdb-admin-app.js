@@ -32,6 +32,12 @@ app.config(['$routeProvider',
     .when( '/permissions/:id', {
       templateUrl: 'templates/permission-editor.html',
       controller: 'PermissionCtrl' })
+    .when( '/interests', {
+      templateUrl: 'templates/interest-dashboard.html',
+      controller: 'InterestCtrl' })
+    .when( '/interests/:id', {
+      templateUrl: 'templates/interest-editor.html',
+      controller: 'InterestCtrl' })
     .when( '/tester', {
       templateUrl: 'templates/tester.html',
       controller: 'TesterCtrl' })

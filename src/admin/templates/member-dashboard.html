@@ -23,7 +23,7 @@
         <tr ng-show="noresult">
           <td>No result...</td><td></td><td></td>
         </tr>
-        <tr ng-repeat="member in members" ng-click="editMemberClick(member.id)">
+        <tr ng-repeat="member in members" ng-click="editMemberClick(member.id)" ng-class="{'warning' : member.status === 'inactive'}">
           <td>
             {{member.id}}
           </td>

@@ -2,10 +2,7 @@
 
 'use strict';
 
-var AWS = require('aws-sdk'),
-    ses = new AWS.SES(),
-    http = require('http'),
-    database = require('../../database.js');
+var database = require('../../database.js');
 
 module.exports.selectAllPermissions = function (request, reply) {
   var query = 'SELECT * FROM permission';
