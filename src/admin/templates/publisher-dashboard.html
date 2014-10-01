@@ -8,8 +8,8 @@
           <th>Email</th>
           <th></th>
         </tr>
-        <tr ng-repeat="publisher in publishers" ng-click="editPublisherClick(publisher.id)" ng-class="{'warning' : publisher.active === 0}">
-          <td>{{publisher.id}}</td>
+        <tr ng-repeat="publisher in publishers" ng-class="{'warning' : publisher.active === 0}">
+          <td><a href="#/publishers/{{publisher.id}}">{{publisher.id}}</a></td>
           <td>{{publisher.name}}</td>
           <td>{{publisher.from_email}}</td>
           <td><img class="img-responsive" src="{{publisher.url_picture_top}}" alt="{{publisher.url_picture_top}}" title="{{publisher.url_picture_top}}" /></td>

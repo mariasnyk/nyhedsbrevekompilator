@@ -65,14 +65,6 @@ userdbControllers.controller('PublisherCtrl', ['$scope', '$routeParams', '$locat
       });
     }
 
-    $scope.editPublisherClick = function (publisherId) {
-      $location.path(publisherId !== undefined ? '/publishers/' + publisherId : '/');
-    };
-
-    $scope.editNewsletterClick = function (newsletterId) {
-      $location.path(newsletterId !== undefined ? '/newsletters/' + newsletterId : '/');
-    };
-
     $scope.sendNewsletterClick = function (newsletterId) {
       console.log('sendNewsletterClickEvent' + newsletterId);
     };
@@ -98,10 +90,6 @@ userdbControllers.controller('NewsletterCtrl', ['$scope', '$routeParams', '$loca
       });
     }
 
-    $scope.editNewsletterClick = function (newsletterId) {
-      $location.path(newsletterId !== undefined ? '/newsletters/' + newsletterId : '/');
-    };
-
     $scope.sendNewsletterClick = function (newsletterId) {
       console.log('sendNewsletterClickEvent' + newsletterId);
     };
@@ -125,10 +113,6 @@ userdbControllers.controller('PermissionCtrl', ['$scope', '$routeParams', '$loca
         $location.path('/');
       });
     }
-
-    $scope.editPermissionClick = function (permissionId) {
-      $location.path(permissionId !== undefined ? '/permissions/' + permissionId : '/');
-    };
   }]);
 
 
@@ -149,11 +133,6 @@ userdbControllers.controller('InterestCtrl', ['$scope', '$routeParams', '$locati
         $location.path('/');
       });
     }
-
-    $scope.editInterestClick = function (interestId) {
-      console.log('not implementet');
-      //$location.path(interestId !== undefined ? '/interests/' + interestId : '/');
-    };
   }]);
 
 

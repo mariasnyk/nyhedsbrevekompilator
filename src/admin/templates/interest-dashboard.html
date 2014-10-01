@@ -9,8 +9,8 @@
           <th>Beskrivelse</th>
           <th>Parent</th>
         </tr>
-        <tr ng-repeat="interest in interests" ng-click="editInterestClick(interest.id)" ng-class="{'warning' : interest.active === 0}">
-          <td>{{interest.id}}</td>
+        <tr ng-repeat="interest in interests" ng-class="{'warning' : interest.active === 0}">
+          <td><a href="#/interests/{{interest.id}}">{{interest.id}}</a></td>
           <td>{{interest.name}}</td>
           <td>{{interest.display_name}}</td>
           <td>{{interest.description}}</td>

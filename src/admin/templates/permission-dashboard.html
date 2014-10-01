@@ -7,8 +7,8 @@
           <th>Name</th>
           <th>Beskrivelse</th>
         </tr>
-        <tr ng-repeat="permission in permissions" ng-click="editPermissionClick(permission.id)" ng-class="{'warning' : permission.active === 0}">
-          <td>{{permission.id}}</td>
+        <tr ng-repeat="permission in permissions" ng-class="{'warning' : permission.active === 0}">
+          <td><a href="#/permissions/{{permission.id}}">{{permission.id}}</a></td>
           <td>{{permission.name}}</td>
           <td>{{permission.description}}</td>
         </tr>

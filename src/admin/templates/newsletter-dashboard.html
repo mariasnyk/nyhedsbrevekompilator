@@ -7,14 +7,12 @@
           <th>Name</th>
           <th>Publisher</th>
           <th>Beskrivelse</th>
-          <th>Aktiv</th>
         </tr>
-        <tr ng-repeat="newsletter in newsletters" ng-click="editNewsletterClick(newsletter.id)" ng-class="{'warning' : newsletter.active === 0}">
-          <td>{{newsletter.id}}</td>
+        <tr ng-repeat="newsletter in newsletters" ng-class="{'warning' : newsletter.active === 0}">
+          <td><a href="#/newsletters/{{newsletter.id}}">{{newsletter.id}}</a></td>
           <td>{{newsletter.name}}</td>
           <td>{{newsletter.publisher_name}}</td>
           <td>{{newsletter.description}}</td>
-          <td>{{newsletter.active}}</td>
         </tr>
       </table>
     </div>

@@ -13,7 +13,7 @@
         <input type="text" class="form-control" id="name" placeholder="Enter name" ng-model="newsletter.name">
       </div>
       <div class="form-group">
-        <label for="publisher_id">Publisher ID</label>
+        <label for="publisher_id">Publisher ID <small><a href="#/publishers/{{newsletter.publisher_id}}">edit</a></small></label>
         <input type="number" class="form-control" id="publisher_id" placeholder="Enter publisher id" ng-model="newsletter.publisher_id">
       </div>
       <div class="form-group">
@@ -26,7 +26,7 @@
       </div>
       <div class="checkbox">
         <label>
-          <input type="checkbox"ng-modul="newsletter.active" ng-true-value="1" ng-false-value="0">Aktiv
+          <input type="checkbox" ng-model="newsletter.active" ng-true-value="1" ng-false-value="0">Aktiv
         </label>
       </div>
     </div>
