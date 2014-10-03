@@ -48,6 +48,14 @@ module.exports = function (prefix) {
     path: '/' + prefix + '/newsletters/{id}/subscribers',
     handler: newsletters.selectNewsletterSubscribers
   },{
+    method: 'options',
+    path: '/' + prefix + '/newsletters/{id}/subscribers',
+    handler: newsletters.selectNewsletterSubscribersCount
+  },{
+    method: 'get',
+    path: '/' + prefix + '/newsletters/{id}/subscribers/count',
+    handler: newsletters.selectNewsletterSubscribersCount
+  },{
     method: 'post',
     path: '/' + prefix + '/newsletters/{id}/send',
     handler: newsletters.sendNewsletter

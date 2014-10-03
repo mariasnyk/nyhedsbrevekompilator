@@ -86,8 +86,12 @@ module.exports.searchMembers = function(request, reply) {
   //console.log(Object.keys(request.query));
   var queryinput = request.query.text;
 
-  var a = '+'.concat('Ole Nielsen'.split(' ').join(' +'));
-  var sql = 'SELECT id, firstname, lastname, status FROM member WHERE MATCH(firstname, lastname) AGAINST("' + a + '" IN BOOLEAN MODE)';
+  var a = '+'.concat(queryinput.split(' ').join(' +'));
+  var sql = ['SELECT member.id, member.firstname, member.lastname, member.status, email.email_address',
+    'FROM member',
+    'LEFT JOIN email ON email.member_id = member.id',
+    'WHERE MATCH(firstname, lastname) AGAINST("' + a + '" IN BOOLEAN MODE)'].join(' ');
+  console.log(sql);
 
   database.query(sql , function (err, result) {
     if (err) return reply(err);//.code(500);

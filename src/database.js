@@ -23,6 +23,18 @@ pool.getConnection(function(err, connection) {
 
 module.exports = pool;
 
+module.exports.selectOne = function (sql, callback) {
+  pool.query(sql, function (err, result) {
+    if (err) throw err;
+    else if (result.length === 0)
+      callback(null, null);
+    else if (result.length > 1)
+      callback(new Error('Too many results'));
+    else
+      callback(null, result[0]);
+  });
+}
+
 
 
 // mysql> show columns from action_history;

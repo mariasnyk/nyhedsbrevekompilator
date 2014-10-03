@@ -44,34 +44,6 @@
       </div>
     </div>
   </div>
-<!--   <div class="" ng-repeat="newsletter in publisher.newsletters">
-    <div class="row">
-      <div class="col-xs-3">
-        <h3><span class="label label-default">Nyhedsbrev</span></h3>
-        <button type="button" class="btn btn-primary" ng-click="sendNewsletterClick(newsletter.id)">Send</button>
-        <a href="#/newsletters/{{newsletter.id}}">Edit</a>
-      </div>
-      <div class="col-xs-9 well well-lg">
-        <div class="form-group">
-          <label for="newsletter_name_{{newsletter.id}}">Navn</label>
-          <input type="text" class="form-control" id="newsletter_name_{{newsletter.id}}" placeholder="Enter name" ng-model="newsletter.name">
-        </div>
-        <div class="form-group">
-          <label for="newsletter_display_text{{newsletter.id}}">Display navn</label>
-          <input type="text" class="form-control" id="newsletter_display_text_{{newsletter.id}}" placeholder="Enter display name" ng-model="newsletter.display_text">
-        </div>
-        <div class="form-group">
-          <label for="newsletter_description_{{newsletter.id}}">Beskrivelse</label>
-          <input type="text" class="form-control" id="newsletter_description_{{newsletter.id}}" placeholder="Enter description" ng-model="newsletter.description">
-        </div>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" ng-model="newsletter.active" ng-true-value="1" ng-false-value="0">Aktiv
-          </label>
-        </div>
-      </div>
-    </div>
-  </div> -->
   <div class="row">
     <div class="col-xs-4">
       <h3>Nyhedsbreve</h3>
@@ -81,8 +53,8 @@
         <tr ng-repeat="newsletter in publisher.newsletters" ng-class="{'warning' : newsletter.active === 0}">
           <td><a href="#/newsletters/{{newsletter.id}}">{{newsletter.id}}</a></td>
           <td>{{newsletter.name}}</td>
-          <td>{{newsletterz .description}}</td>
-          <td><button type="button" class="btn btn-primary" ng-click="sendNewsletterClick(newsletter.id)">Send</button></td>
+          <td>{{newsletter.description}}</td>
+          <td><a href="#/newsletters/{{newsletter.id}}/preview">Preview</a></td>
         </tr>
       </table>
     </div>

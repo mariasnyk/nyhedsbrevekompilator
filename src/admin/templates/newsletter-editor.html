@@ -1,9 +1,12 @@
 <div class="container">
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-10">
       <div class="page-header">
         <h2><small>Newsletter navn:</small> {{newsletter.name}} <small>ID:</small> {{newsletter.id}}</h2>
+        <a href="#/newsletters/{{newsletter.id}}/preview">Preview</a>
       </div>
+    </div>
+    <div class="col-xs-2">
     </div>
   </div>
   <div class="row">
@@ -33,11 +36,6 @@
           <input type="checkbox" ng-model="newsletter.active" ng-true-value="1" ng-false-value="0">Aktiv
         </label>
       </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-3">
-      <button type="button" class="btn btn-primary" ng-click="sendNewsletterClick(newsletter.id)">Send</button>
     </div>
   </div>
 </div>

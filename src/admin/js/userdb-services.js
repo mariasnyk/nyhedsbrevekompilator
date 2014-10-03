@@ -26,6 +26,11 @@ userdbServices.service('userdbService', ['apiVersion', '$http',
       return $http({method: 'GET', url: baseUrl + 'publishers/' + publisherId});
     };
 
+    this.sendNewsletter = function (newsletterId) {
+      //return $http({method: 'POST', url: baseUrl + 'newsletters/tester'})
+      return $http.post(baseUrl + 'newsletters/' + newsletterId + '/send');
+    }
+
     this.sendTestNewsletter = function (data) {
       //return $http({method: 'POST', url: baseUrl + 'newsletters/tester'})
       return $http.post(baseUrl + 'newsletters/tester', data);

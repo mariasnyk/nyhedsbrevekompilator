@@ -2,9 +2,9 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="input-group">
-        <input class="form-control input-sm" placeholder="Search member" ng-keyup="searchMembersKeyUpEvent($event)" type="text" ng-model="searchMembersInput">
+        <input class="form-control input-sm" placeholder="Search member" ng-keyup="searchMembersEvent($event)" type="text" ng-model="searchMembersInput">
         <span class="input-group-btn">
-          <button type="button" class="btn btn-default btn-sm" ng-click="searchMembersEvent()">Search</button>
+          <button type="button" class="btn btn-default btn-sm" ng-click="searchMembersEvent($event)">Search</button>
         </span>
       </div>
     </div>
@@ -15,7 +15,7 @@
         <tr>
           <th>Id</th>
           <th>Name</th>
-          <th>Username</th>
+          <th>Email</th>
         </tr>
         <tr ng-show="searching">
           <td>Searching...</td><td></td><td></td>
@@ -24,11 +24,9 @@
           <td>No result...</td><td></td><td></td>
         </tr>
         <tr ng-repeat="member in members" ng-click="editMemberClick(member.id)" ng-class="{'warning' : member.status === 'inactive'}">
-          <td>
-            {{member.id}}
-          </td>
+          <td><a href="#/members/{{member.id}}">{{member.id}}</a></td>
           <td>{{member.firstname}} {{member.lastname}}</td>
-          <td>{{member.username}}</td>
+          <td>{{member.email_address}}</td>
         </tr>
       </table>
     </div>

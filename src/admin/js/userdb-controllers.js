@@ -3,8 +3,8 @@ var userdbControllers = angular.module('userdbControllers', []);
 userdbControllers.controller('MemberCtrl', ['$scope', '$routeParams', '$location', 'userdbService',
   function ($scope, $routeParams, $location, userdbService) {
 
-    // $scope.searching = false;
-    // $scope.noresult = false;
+    $scope.searching = false;
+    $scope.noresult = false;
 
     if ($routeParams.id) {
       userdbService.getMember($routeParams.id)
@@ -13,9 +13,8 @@ userdbControllers.controller('MemberCtrl', ['$scope', '$routeParams', '$location
       }).error( function (data, status) {
         $location.path('/members');
       });
-    }
-    
-    $scope.searchMembersEvent = function () {
+    } else if ($location.search().q) {
+      $scope.searchMembersInput = $location.search().q;
       $scope.searching = true;
       $scope.noresult = false;
       $scope.members = [];
@@ -31,17 +30,12 @@ userdbControllers.controller('MemberCtrl', ['$scope', '$routeParams', '$location
           console.log('error_data', data);
           $scope.searching = false;
         });
-    };
-
-    $scope.searchMembersKeyUpEvent = function (event) {
-      if (event.keyCode === 13) { /* Enter */
-        $scope.searchMembersEvent();
+    }
+    
+    $scope.searchMembersEvent = function (event) {
+      if ((event.type === 'keyup' && event.keyCode === 13 /* Enter */) || event.type === 'click') {
+        $location.search('q', $scope.searchMembersInput);
       }
-    };
-
-
-    $scope.editMemberClick = function(memberId) {
-      $location.path(memberId !== undefined ? '/members/' + memberId : '/');
     };
   }]);
 
@@ -64,10 +58,6 @@ userdbControllers.controller('PublisherCtrl', ['$scope', '$routeParams', '$locat
         $location.path('/');
       });
     }
-
-    $scope.sendNewsletterClick = function (newsletterId) {
-      console.log('sendNewsletterClickEvent' + newsletterId);
-    };
   }]);
 
 
@@ -90,8 +80,19 @@ userdbControllers.controller('NewsletterCtrl', ['$scope', '$routeParams', '$loca
       });
     }
 
+    if ($location.path().indexOf('preview') > 0) {
+      userdbService.get('/newsletters/' + $routeParams.id + '/subscribers/count')
+      .success(function (data) {
+        console.log('data', data);
+        $scope.subscribersCount = data.count;
+      }).error( function (data, status) {
+        $location.path('/newsletters/' + $routeParams.id);
+      });
+    }
+
     $scope.sendNewsletterClick = function (newsletterId) {
       console.log('sendNewsletterClickEvent' + newsletterId);
+      userdbService.sendNewsletter(newsletterId);
     };
   }]);
 

@@ -53,7 +53,16 @@ module.exports.selectNewsletterSubscribers = function (request, reply) {
   });
 };
 
-
+module.exports.selectNewsletterSubscribersCount = function (request, reply) {
+  var sql = ['SELECT count(id) as count',
+    'FROM subscription_member',
+    'WHERE active = 1 AND subscription_id = ' + request.params.id].join(' ');
+  
+  database.selectOne(sql, function (err, result) {
+    if (err) return reply(err);
+    else reply(result).header('X-Member-Count', result.count);
+  });
+};
 
 
 workerEmitter.on('newsletter', selectNewsletterRecipientEmails);
@@ -63,33 +72,36 @@ workerEmitter.on('newsletter', downloadEmailHtml);
 module.exports.sendNewsletter = function (request, reply) {
   var newsletterId = request.params.id;
 
-  
-
   var sql = ['SELECT * FROM subscription',
     'WHERE id = ' + newsletterId ].join(' ');
 
-  database.query(sql, function (err, subscription) {
+  database.selectOne(sql, function (err, subscription) {
     if (err) return reply(err);
-
-    console.log(subscription);
 
     // TODO: test that from_email, subject is present
     // if (subscription[0].html_url === null)
     //   return reply().code(400);
 
-    workerEmitter.mail('newsletter');
+    //workerEmitter.emit('newsletter');
+
     var tail = request.tail();
-    reply();
+
+    selectNewsletterRecipientEmails(newsletterId, function (err, recipients_email_addresses) {
+      reply(recipients_email_addresses);
+
+      downloadEmailHtml(subscription.html_url, function (err, html) {
+        tail();
+      });
+    });
 
 
-    tail();
   });
 };
 
 
 module.exports.sendTestEmail = function (request, reply) {
-
   var data = request.payload;
+
   if (data.from_email === undefined ||
       data.from_name === undefined ||
       data.subject === undefined ||

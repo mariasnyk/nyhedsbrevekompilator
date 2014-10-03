@@ -26,6 +26,9 @@ app.config(['$routeProvider',
     .when( '/newsletters/:id', {
       templateUrl: 'templates/newsletter-editor.html',
       controller: 'NewsletterCtrl' })
+    .when( '/newsletters/:id/preview', {
+      templateUrl: 'templates/newsletter-preview.html',
+      controller: 'NewsletterCtrl' })
     .when( '/permissions', {
       templateUrl: 'templates/permission-dashboard.html',
       controller: 'PermissionCtrl' })
