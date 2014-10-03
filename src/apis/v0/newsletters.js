@@ -13,21 +13,46 @@ module.exports.selectAllNewsletters = function (request, reply) {
   var sql = 'SELECT subscription.*, publisher.name as publisher_name FROM subscription LEFT JOIN publisher ON publisher.id = subscription.publisher_id';
 
   database.query(sql, function (err, result) {
-    if (err) return reply(err);
+    if (err) return reply(err).code(509);
     reply(result);
   });
 };
 
 module.exports.selectNewsletter = function (request, reply) {
   var sql = 'SELECT * FROM subscription WHERE id = ' + request.params.id;
+  console.log(request.query);
 
   database.query(sql, function (err, result) {
-    if (err) return reply(err);
-    if (result.length === 0) reply().code(404);
-    else if (result.length > 1) reply().code(509);
-    else {
+    if (err) return reply(err).code(509);
+    else if (result.length === 0)
+      reply().code(404);
+    else if (result.length > 1)
+      reply().code(509);
+    else
       reply(result[0]);
-    }
+  });
+};
+
+
+module.exports.saveNewsletter = function (request, reply) {
+  var subscription = request.payload;
+  var sql = ['UPDATE subscription SET',
+    ['publisher_id = ' + subscription.publisher_id,
+    'name=' + database.escape(subscription.name),
+    'active=' + subscription.active,
+    'display_text=' + database.escape(subscription.display_text),
+    'description=' + database.escape(subscription.description),
+    'html_url=' + database.escape(subscription.html_url)].join(','),
+    'WHERE id=' + subscription.id].join(' ');
+
+  database.query(sql, function (err, result) {
+    console.log(err, result);
+    if (err)
+      reply(err);
+    else if (result.affectedRows === 0)
+      reply().code(404);
+    else 
+      reply();
   });
 };
 
@@ -58,7 +83,7 @@ module.exports.selectNewsletterSubscribersCount = function (request, reply) {
     'FROM subscription_member',
     'WHERE active = 1 AND subscription_id = ' + request.params.id].join(' ');
   
-  database.selectOne(sql, function (err, result) {
+  database.queryOne(sql, function (err, result) {
     if (err) return reply(err);
     else reply(result).header('X-Member-Count', result.count);
   });
@@ -75,7 +100,7 @@ module.exports.sendNewsletter = function (request, reply) {
   var sql = ['SELECT * FROM subscription',
     'WHERE id = ' + newsletterId ].join(' ');
 
-  database.selectOne(sql, function (err, subscription) {
+  database.queryOne(sql, function (err, subscription) {
     if (err) return reply(err);
 
     // TODO: test that from_email, subject is present

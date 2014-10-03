@@ -1,9 +1,8 @@
 //(function(window, angular, undefined) {'use strict';
 
-var app = angular.module('userdb', ['ngRoute', 'ngSanitize', 'ngCookies', 'ui.bootstrap', 'userdbControllers', 'userdbServices'])
+var app = angular.module('userdb', ['ngRoute', 'ngSanitize', 'ngResource', 'ngCookies', 'ui.bootstrap'])
 
-app.config(['$routeProvider',
-  function ($routeProvider) {
+app.config(['$routeProvider', function ($routeProvider) {
 
   $routeProvider
     .when( '/', {
@@ -49,11 +48,14 @@ app.config(['$routeProvider',
 
   //$locationProvider.html5Mode(true);
   //$locationProvider.hashPrefix('!');
-  }]);
+}]);
 
+app.config(['$resourceProvider', function ($resourceProvider) {
+  // Don't strip trailing slashes from calculated URLs
+  //$resourceProvider.defaults.stripTrailingSlashes = false;
+}]);
 
-app.controller('MenuCtrl', ['$scope', '$location', '$rootScope',
-  function($scope, $location, $rootScope) {
+app.controller('MenuCtrl', ['$scope', '$location', '$rootScope', function ($scope, $location, $rootScope) {
     $scope.menuitems = [
     {
       name: 'Members',
@@ -89,4 +91,4 @@ app.controller('MenuCtrl', ['$scope', '$location', '$rootScope',
           menuitem.active = false;
       });
     }
-  }]);
+}]);

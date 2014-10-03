@@ -1,8 +1,8 @@
-var userdbServices = angular.module('userdbServices', []);
+//var userdbServices = angular.module('userdbServices', []);
 
-userdbServices.value('apiVersion', 'v0');
+app.value('apiVersion', 'v0');
 
-userdbServices.service('userdbService', ['apiVersion', '$http',
+app.service('userdbService', ['apiVersion', '$http',
   function (apiVersion, $http) {
     var baseUrl = '/' + apiVersion + '/';
 

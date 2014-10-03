@@ -1,6 +1,11 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
+      <input class="form-control input-sm" placeholder="Filter" type="text" ng-model="interestFilter">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
       <table class="table table-hover">
         <tr>
           <th>Id</th>
@@ -9,7 +14,7 @@
           <th>Beskrivelse</th>
           <th>Parent</th>
         </tr>
-        <tr ng-repeat="interest in interests" ng-class="{'warning' : interest.active === 0}">
+        <tr ng-repeat="interest in interests | filter: interestFilter" ng-class="{'warning' : interest.active === 0}">
           <td><a href="#/interests/{{interest.id}}">{{interest.id}}</a></td>
           <td>{{interest.name}}</td>
           <td>{{interest.display_name}}</td>

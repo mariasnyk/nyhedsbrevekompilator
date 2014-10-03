@@ -23,7 +23,8 @@ pool.getConnection(function(err, connection) {
 
 module.exports = pool;
 
-module.exports.selectOne = function (sql, callback) {
+
+module.exports.queryOne = function (sql, callback) {
   pool.query(sql, function (err, result) {
     if (err) throw err;
     else if (result.length === 0)
@@ -33,7 +34,31 @@ module.exports.selectOne = function (sql, callback) {
     else
       callback(null, result[0]);
   });
+};
+
+
+module.exports.update = function (tableName, data, callback) {
+
+  if (data.id === undefined) {
+    callback('Field id missing.');
+  }
+
+  var sql = updateSqlString(tableName, data);
+  pool.query(sql, callback);
+};
+
+
+
+function updateSqlString (tableName, data) {
+  var pairs = [];
+  for (var column in data) {
+    if (column !== 'id')
+      pairs.push(column + '=' + pool.escape(data[column]));
+  }
+
+  return 'UPDATE ' + tableName + ' SET ' + pairs.join(',') + ' WHERE id = ' + data.id;
 }
+
 
 
 

@@ -1,6 +1,6 @@
-var userdbControllers = angular.module('userdbControllers', []);
+//var userdbControllers = angular.module('userdbControllers', []);
 
-userdbControllers.controller('MemberCtrl', ['$scope', '$routeParams', '$location', 'userdbService',
+app.controller('MemberCtrl', ['$scope', '$routeParams', '$location', 'userdbService',
   function ($scope, $routeParams, $location, userdbService) {
 
     $scope.searching = false;
@@ -40,7 +40,7 @@ userdbControllers.controller('MemberCtrl', ['$scope', '$routeParams', '$location
   }]);
 
 
-userdbControllers.controller('PublisherCtrl', ['$scope', '$routeParams', '$location', 'userdbService',
+app.controller('PublisherCtrl', ['$scope', '$routeParams', '$location', 'userdbService',
   function ($scope, $routeParams, $location, userdbService) {
 
     if ($routeParams.id) {
@@ -61,26 +61,34 @@ userdbControllers.controller('PublisherCtrl', ['$scope', '$routeParams', '$locat
   }]);
 
 
-userdbControllers.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdbService',
-  function ($scope, $routeParams, $location, userdbService) {
+app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdbService', '$resource', '$sce',
+  function ($scope, $routeParams, $location, userdbService, $resource, $sce) {
+    var Newsletters = $resource('/v0/newsletters/:id', {id: '@id'});
+    
     if ($routeParams.id) {
-      //userdbService.getNewsletter($routeParams.id)
-      userdbService.get('/newsletters/' + $routeParams.id)
-      .success( function (data, status, headers) {
-        $scope.newsletter = data;
-      }).error( function (data, status) {
-        $location.path('/newsletters');
-      });
+      $scope.newsletter = Newsletters.get({id: $routeParams.id});
+
+      // userdbService.get('/newsletters/' + $routeParams.id)
+      // .success( function (data, status, headers) {
+      //   $scope.newsletter = data;
+      // }).error( function (data, status) {
+      //   $location.path('/newsletters');
+      // });
     } else {
-      userdbService.get('/newsletters')
-      .success( function (data, status, headers) {
-        $scope.newsletters = data;
-      }).error( function (data, status) {
-        $location.path('/');
-      });
+      $scope.newsletters = Newsletters.query();
+      // userdbService.get('/newsletters')
+      // .success( function (data, status, headers) {
+      //   $scope.newsletters = data;
+      // }).error( function (data, status) {
+      //   $location.path('/');
+      // });
     }
 
     if ($location.path().indexOf('preview') > 0) {
+      console.log($scope.newsletter.html_url);
+      $scope.iframe_src = $sce.trustAsResourceUrl('http://m.b.dk');
+      console.log($scope.sd);
+
       userdbService.get('/newsletters/' + $routeParams.id + '/subscribers/count')
       .success(function (data) {
         console.log('data', data);
@@ -90,6 +98,17 @@ userdbControllers.controller('NewsletterCtrl', ['$scope', '$routeParams', '$loca
       });
     }
 
+    $scope.save = function () {
+      $scope.newsletter.$save();
+      // userdbService.saveNewsletter($scope.newsletter)
+      // .success(function (data) {
+      //   console.log('savedata', data);
+      // }).error( function (data, status) {
+      //   $scope.showError = true;
+      //   $scope.errorMessage = 'Fejl';
+      // });
+    };
+
     $scope.sendNewsletterClick = function (newsletterId) {
       console.log('sendNewsletterClickEvent' + newsletterId);
       userdbService.sendNewsletter(newsletterId);
@@ -97,7 +116,7 @@ userdbControllers.controller('NewsletterCtrl', ['$scope', '$routeParams', '$loca
   }]);
 
 
-userdbControllers.controller('PermissionCtrl', ['$scope', '$routeParams', '$location', 'userdbService',
+app.controller('PermissionCtrl', ['$scope', '$routeParams', '$location', 'userdbService',
   function ($scope, $routeParams, $location, userdbService) {
     if ($routeParams.id) {
       userdbService.get('/permissions/' + $routeParams.id)
@@ -117,7 +136,7 @@ userdbControllers.controller('PermissionCtrl', ['$scope', '$routeParams', '$loca
   }]);
 
 
-userdbControllers.controller('InterestCtrl', ['$scope', '$routeParams', '$location', 'userdbService',
+app.controller('InterestCtrl', ['$scope', '$routeParams', '$location', 'userdbService',
   function ($scope, $routeParams, $location, userdbService) {
     if ($routeParams.id) {
       userdbService.get('/interests/' + $routeParams.id)
@@ -137,7 +156,7 @@ userdbControllers.controller('InterestCtrl', ['$scope', '$routeParams', '$locati
   }]);
 
 
-userdbControllers.controller('TesterCtrl', ['$scope', 'userdbService',
+app.controller('TesterCtrl', ['$scope', 'userdbService',
   function ($scope, userdbService) {
     // Just to prefill
     $scope.recipients = ['dako@berlingskemedia.dk'];
