@@ -60,7 +60,7 @@ module.exports = function (prefix) {
     path: '/' + prefix + '/newsletters/{id}/subscribers/count',
     handler: newsletters.selectNewsletterSubscribersCount
   },{
-    method: 'post',
+    method: ['put','post'],
     path: '/' + prefix + '/newsletters/{id}/send',
     handler: newsletters.sendNewsletter
   },{

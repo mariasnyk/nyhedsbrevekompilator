@@ -20,7 +20,6 @@ module.exports.selectAllNewsletters = function (request, reply) {
 
 module.exports.selectNewsletter = function (request, reply) {
   var sql = 'SELECT * FROM subscription WHERE id = ' + request.params.id;
-  console.log(request.query);
 
   database.query(sql, function (err, result) {
     if (err) return reply(err).code(509);
@@ -90,36 +89,46 @@ module.exports.selectNewsletterSubscribersCount = function (request, reply) {
 };
 
 
-workerEmitter.on('newsletter', selectNewsletterRecipientEmails);
-workerEmitter.on('newsletter', downloadEmailHtml);
-
-
 module.exports.sendNewsletter = function (request, reply) {
   var newsletterId = request.params.id;
 
-  var sql = ['SELECT * FROM subscription',
-    'WHERE id = ' + newsletterId ].join(' ');
+  var sql = ['SELECT subscription.*, publisher.from_email, publisher.from_name FROM subscription',
+    'LEFT JOIN publisher ON subscription.publisher_id = publisher.id',
+    'WHERE subscription.id = ' + newsletterId ].join(' ');
 
-  database.queryOne(sql, function (err, subscription) {
+  database.queryOne(sql, function (err, data) {
     if (err) return reply(err);
 
     // TODO: test that from_email, subject is present
-    // if (subscription[0].html_url === null)
+    // if (data[0].html_url === null)
     //   return reply().code(400);
 
-    //workerEmitter.emit('newsletter');
-
-    var tail = request.tail();
+    if (data.html_url.indexOf('http://') !== 0 || data.html_url.indexOf('https://') !== 0) {
+      if (data.html_url.charAt(0) === '/') {
+        data.html_url = request.server.info.uri + data.html_url;
+      } else {
+        data.html_url = request.server.info.uri + '/' + data.html_url;
+      }
+    }
 
     selectNewsletterRecipientEmails(newsletterId, function (err, recipients_email_addresses) {
-      reply(recipients_email_addresses);
+      //data.recipients = recipients_email_addresses;
+      data.recipients = ['dako@berlingskemedia.dk'];
 
-      downloadEmailHtml(subscription.html_url, function (err, html) {
-        tail();
+      downloadEmailHtml(data.html_url, function (err, html) {
+        if (err) reply(err);
+        if (html === null) reply().code(509);
+        else {
+          data.message = html;
+
+          sendPreview(data, function (err, result) {
+            console.log('AWS send', err, result);
+            if (err) reply(err);
+            else reply(result);
+          });
+        }
       });
     });
-
-
   });
 };
 
@@ -140,8 +149,10 @@ module.exports.sendTestEmail = function (request, reply) {
     var sendTail = request.tail('Send email');
 
     downloadEmailHtml(data.html_url, function (err, message) {
+      data.display_text = 'FAKE';
       data.message = message;
       sendPreview(data, function (err, data) {
+        console.log('AWS send', err, data);
         sendTail();
       });
     });
@@ -171,7 +182,7 @@ function selectNewsletterRecipientEmails (newsletterId, callback) {
 function downloadEmailHtml (url, callback) {
   console.log('Requesting on', url);
 
-  http.get( url, function( response ) {
+  http.get(url, function( response ) {
 
     console.log('HTTP ' + response.statusCode + ' response from', url);
 
@@ -189,17 +200,21 @@ function downloadEmailHtml (url, callback) {
     });
 
     response.on('end', function() {
-      console.log('Response ended.');
       callback(null, data);
     });
   }).on('error', function(e) {
-    console.log('Got error while requesting: ' + e.message);
+    console.log('Got error while requesting HTML: ' + e.message);
     callback(e, null);
   });
 }
 
 
 function sendPreview (data, callback) {
+
+  // We're only accepting @berlingskemedia.dk emails
+  data.recipients = data.recipients.filter(function (email) {
+    return email.indexOf("@berlingskemedia.dk") === email.lastIndexOf("@");
+  });
 
   var params = {
     Destination: { /* required */
@@ -225,17 +240,19 @@ function sendPreview (data, callback) {
         }
       },
       Subject: { /* required */
-        Data: data.subject, /* required */
+        Data: data.display_text, /* required */
         Charset: 'UTF-8'
       }
     },
-    Source: data.from_email, /* required */
+    Source: 'dako@berlingskemedia.dk', /* required */
     ReplyToAddresses: [
       'dako@berlingskemedia.dk',
       /* more items */
     ],
     ReturnPath: 'dako@berlingskemedia.dk'
   };
+
+  console.log('SES sendEmail params:', params);
 
   ses.sendEmail(params, callback);
 }

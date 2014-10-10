@@ -1,7 +1,22 @@
-var Hapi = require('hapi');
+var Hapi = require('hapi'),
+    //path = require('path'),
+    fs = require('fs'),
+    swig = require('swig'),
+    newsletters = require('./newsletters');
 
-var server = new Hapi.Server('0.0.0.0', 8000),
-    fs = require('fs');
+swig.setDefaults({ cache: false }); /* must be turned of when in production*/
+
+var serverOptions = {
+  views: {
+    engines: {
+      html: swig
+    },
+    path: 'src/emails',
+    isCached: false /* must be turned of when in production*/
+  }
+};
+
+var server = new Hapi.Server('0.0.0.0', 8000, serverOptions);
 
 var walk = function (path) {
   fs.readdirSync(path).forEach(function(file) {
@@ -31,10 +46,33 @@ server.route({
   }
 });
 
+server.route(newsletters);
+
+// server.route({
+//   method: 'GET',
+//   path: '/emails/static/{param*}',
+//   handler: {
+//     directory: {
+//       path: 'src/emails/static',
+//       index: false
+//     }
+//   }
+// });
+
+// server.route({
+//     method: 'GET',
+//     path: '/emails/{template*}',
+//     handler: function (request, reply) {
+//       console.log('DSDASDAS', request);
+//       reply.view(request.params.template, {title:'HEJ'});
+//     }
+// });
+
+
 
 server.on('tail', function (request) {
   //console.log('Request complete', new Date().toString());
-  console.log('tail', request.path, request.headers);
+  //console.log('tail', request.path, request.headers);
 });
 
 
@@ -45,3 +83,7 @@ if (!module.parent) {
 }
 
 module.exports = server;
+
+function context(request) {
+
+}

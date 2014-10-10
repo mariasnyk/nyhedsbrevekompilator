@@ -1,17 +1,151 @@
 <div class="container">
   <div class="row">
-    <div class="col-xs-12">
-      <div class="page-header">
-        <h2><small>Navn:</small> {{member.firstname}} {{member.lastname}} <small>ID:</small> {{member.id}}</h2>
-        <p><small>MDB User ID:</small> {{member.mdb_user_id}}</p>
-      </div>
+    <div class="col-xs-8">
+      <h2><small>Navn:</small> {{member.firstname}} {{member.lastname}}</h2>
+    </div>
+    <div class="col-xs-4">
+      <div ng-show="member.status === 'active'"><span class="label label-success">Aktiv</span></div>
+      <div ng-show="member.status === 'inactive'"><span class="label label-warning">Inaktiv</span></div>
+      <div>ID: {{member.id}}</div>
+      <div>MDB User ID: {{member.mdb_user_id}}</div>
+    </div>
+  </div>  
+  <div class="row">
+    <div class="col-xs-3">
+      <h3><span class="label label-default">Emails</span></h3>
+    </div>
+    <div class="col-xs-9">
+      <table class="table table-condensed">
+        <tr>
+          <th>Email adresse</th>
+          <th>Active</th>
+        </tr>
+        <tr ng-repeat="email in member.emails">
+          <td>{{email.email_address}}</td>
+          <td>
+            <span ng-show="email.active" class="label label-success">Aktiv</span>
+            <span ng-show="!email.active" class="label label-warning">Inaktiv</span>
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-3">
-      <button type="submit" class="btn btn-default">Gem (virker ikke)</button>
+      <h3><span class="label label-default">Phones</span></h3>
     </div>
     <div class="col-xs-9">
+      <table class="table table-condensed">
+        <tr>
+          <th>Type</th>
+          <th>Number</th>
+          <th>Active</th>
+        </tr>
+        <tr ng-repeat="phone in member.phones">
+          <td>{{phone.type}}</td>
+          <td>{{phone.number}}</td>
+          <td>
+            <span ng-show="phone.status" class="label label-success">Aktiv</span>
+            <span ng-show="!phone.status" class="label label-warning">Inaktiv</span>
+          </td>
+        </tr>
+      </table>  
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-3">
+      <h3><span class="label label-default">Interesser</span></h3>
+    </div>
+    <div class="col-xs-9">
+      <table class="table table-condensed">
+        <tr>
+          <th>Name</th>
+          <th>Display name</th>
+          <th>Beskrivelse</th>
+          <th>Parent</th>
+          <th>Active</th>
+          <th>Location</th>
+        </tr>
+        <tr ng-repeat="interest in member.interests">
+          <td>{{interest.interest_name}}</td>
+          <td>{{interest.interest_display_name}}</td>
+          <td>{{interest.interest_description}}</td>
+          <td>{{interest.interest_parent_name}}</td>
+          <td>
+            <span ng-show="interest.active" class="label label-success">Aktiv</span>
+            <span ng-show="!interest.active" class="label label-warning">Inaktiv</span>
+          </td>
+          <td>{{interest.location_description}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-3">
+      <h3><span class="label label-default">Subscriptions</span></h3>
+    </div>
+    <div class="col-xs-9">
+      <table class="table table-condensed">
+        <tr>
+          <th>Newsletter</th>
+          <th>Email</th>
+          <th>Location</th>
+          <th>Active</th>
+          <th>Joined</th>
+          <th>Unjoined</th>
+          <th>Unsub reason</th>
+        </tr>
+        <tr ng-repeat="subscription in member.subscriptions">
+          <td>{{subscription.newsletter_name}}</td>
+          <td>{{subscription.email_address}}</td>
+          <td>{{subscription.location_description}}</td>
+          <td>
+            <span ng-show="subscription.active" class="label label-success">Aktiv</span>
+            <span ng-show="!subscription.active" class="label label-warning">Inaktiv</span>
+          </td>
+          <td>{{subscription.joined}}</td>
+          <td>{{subscription.unjoined}}</td>
+          <td>{{subscription.unsub_reason_id}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-3">
+      <h3><span class="label label-default">Permissions</span></h3>
+    </div>
+    <div class="col-xs-9">
+      <table class="table table-condensed">
+        <tr>
+          <th>Permission</th>
+          <th>Email</th>
+          <th>Location</th>
+          <th>Active</th>
+          <th>Joined</th>
+          <th>Unjoined</th>
+          <th>Unsub reason</th>
+        </tr>
+        <tr ng-repeat="permission in member.permissions">
+          <td>{{permission.permission_name}}</td>
+          <td>{{permission.email_address}}</td>
+          <td>{{permission.location_description}}</td>
+          <td>
+            <span ng-show="permission.active" class="label label-success">Aktiv</span>
+            <span ng-show="!permission.active" class="label label-warning">Inaktiv</span>
+          </td>
+          <td>{{permission.joined}}</td>
+          <td>{{permission.unjoined}}</td>
+          <td>{{permission.unsub_reason_id}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+<div class="row">
+    <div class="col-xs-3">
+      <h3><span class="label label-default">Details</span></h3>
+      <button type="button" class="btn btn-primary" disabled>Gem</button>
+    </div>
+    <div class="col-xs-9  well well-lg">
       <div class="form-group">
         <label for="firstname">Firstname</label>
         <input type="text" class="form-control" id="firstname" placeholder="Enter firstname" ng-model="member.firstname">
@@ -26,15 +160,20 @@
       </div>
       <div class="form-group">
         <label for="birth_year">Birth year</label>
-        <input type="text" class="form-control" id="birth_year" placeholder="Enter birth year" ng-model="member.birth_year">
+        <input type="number" class="form-control" id="birth_year" placeholder="Enter birth year" ng-model="member.birth_year">
       </div>
       <div class="form-group">
         <label for="birth_date">Birth date</label>
-        <input type="text" class="form-control" id="birth_date" placeholder="Enter birth year" ng-model="member.birth_date">
+        <input type="date" class="form-control" id="birth_date" placeholder="Enter birth date" ng-model="member.birth_date">
       </div>
       <div class="form-group">
-        <label for="gender">Gender</label>
-        <input type="text" class="form-control" id="gender" placeholder="Enter gender" ng-model="member.gender">
+        <label for="genderRadioOptions">Gender: </label>
+        <label class="radio-inline">
+          <input type="radio" name="genderRadioOptions" id="genderFemaleRadio" ng-model="member.gender" value="K"> Kvinde
+        </label>
+        <label class="radio-inline">
+          <input type="radio" name="genderRadioOptions" id="genderMaleRadio" ng-model="member.gender" value="M"> Mand
+        </label>
       </div>
       <div class="form-group">
         <label for="company">Company</label>
@@ -65,51 +204,11 @@
       </div>
     </div>
   </div>
-  <div class="" ng-repeat="email in member.emails">
-    <div class="row">
-      <div class="col-xs-3">
-        <h3><span class="label label-default">Email</span></h3>
-      </div>
-      <div class="col-xs-9 well well-lg">
-        <div class="form-group">
-          <label for="email_address{{email.id}}">Email address</label>
-          <input type="email" class="form-control" id="email_address{{email.id}}" placeholder="Enter email" ng-model="email.email_address">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" ng-model="email.active" ng-true-value="1" ng-false-value="0">Active
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="" ng-repeat="phone in member.phones">
-    <div class="row">
-      <div class="col-xs-3">
-        <h3><span class="label label-default">Phone</span></h3>
-        <p><span class="label label-info">{{phone.type}}</span><p>
-      </div>
-      <div class="col-xs-9 well well-lg">
-          <div class="form-group">
-            <label for="number{{phone.id}}">Location</label>
-            <input type="text" class="form-control" id="number{{phone.id}}" placeholder="Enter number" ng-model="phone.number">
-          </div>
-          <div class="form-group">
-            <label for="type_id{{phone.id}}">Interest</label>
-            <input type="number" class="form-control" id="type_id{{phone.id}}" placeholder="Enter type_id" ng-model="phone.type_id">
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" ng-model="phone.status" ng-true-value="1" ng-false-value="0">Aktiv
-            </label>
-          </div>
-      </div>
-    </div>
- </div>
   <div class="" ng-repeat="address in member.addresses">
     <div class="row">
       <div class="col-xs-3">
         <h3><span class="label label-default">Adresse</span></h3>
+        <button type="button" class="btn btn-primary" disabled>Gem</button>
       </div>
       <div class="col-xs-9 well well-lg">
         <div class="form-group">
@@ -153,35 +252,6 @@
             <input type="checkbox" ng-model="address.active" ng-true-value="1" ng-false-value="0">Aktiv
           </label>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="" ng-repeat="interest in member.interests">
-    <div class="row">
-      <div class="col-xs-3">
-        <h3><span class="label label-default">Interesse</span></h3>
-        <p>
-          <span class="label label-default">{{interest.interest_name}}</span>
-          <span class="label label-primary">{{interest.interest_display_name}}</span>
-          <span class="label label-success">{{interest.interest_name}}</span>
-          <span class="label label-info">{{interest.interest_description}}</span>
-          <span class="label label-warning">{{interest.interest_parent_name}}</span>
-        <p>
-      </div>
-      <div class="col-xs-9 well well-lg">
-          <div class="form-group">
-            <label for="interest_id{{interest.id}}">Interest</label>
-            <input type="number" class="form-control" id="interest_id{{interest.id}}" placeholder="Enter interest_id" ng-model="interest.interest_id">
-          </div>
-          <div class="form-group">
-            <label for="location_id{{interest.id}}">Location</label>
-            <input type="text" class="form-control" id="location_id{{interest.id}}" placeholder="Enter location_id" ng-model="interest.location_id">
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" ng-model="interest.active" ng-true-value="1" ng-false-value="0">Aktiv
-            </label>
-          </div>
       </div>
     </div>
   </div>

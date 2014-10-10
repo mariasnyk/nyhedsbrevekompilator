@@ -39,31 +39,34 @@ module.exports.selectMember = function (request, reply) {
             'LEFT JOIN phone_type ON phone.type_id = phone_type.id',
             'WHERE member_id = ' + member.id].join(' ');
 
-            console.log(sql)
-
           database.query(sql, function (err, phones) {
             member.phones = phones;
 
-            var sql = ['SELECT interest_line.*, interest.name AS interest_name, interest.display_name AS interest_display_name, interest.description AS interest_description, interest_parent.name AS interest_parent_name',
+            var sql = ['SELECT interest_line.*, interest.name AS interest_name, interest.display_name AS interest_display_name, interest.description AS interest_description, interest_parent.name AS interest_parent_name, location.description AS location_description',
              'FROM interest_line',
              'LEFT JOIN interest ON interest_line.interest_id = interest.id',
              'LEFT JOIN interest interest_parent ON interest.parent_id = interest_parent.id',
+             'LEFT JOIN location ON location.id = interest_line.location_id',
              'WHERE interest_line.member_id = ' + member.id].join(' ');
 
             database.query(sql, function (err, interests) {
               member.interests = interests;
 
-              var sql = ['SELECT subscription_member.*, subscription.name AS subscription_name',
+              var sql = ['SELECT subscription_member.*, subscription.name AS newsletter_name, email.email_address, location.description AS location_description',
               'FROM subscription_member',
               'LEFT JOIN subscription ON subscription.id = subscription_member.subscription_id',
+              'LEFT JOIN email ON email.id = subscription_member.email_id',
+              'LEFT JOIN location ON location.id = subscription_member.location_id',
               'WHERE subscription_member.member_id = ' + member.id].join(' ');
 
               database.query(sql, function (err, subscriptions) {
                 member.subscriptions = subscriptions;
 
-                var sql = ['SELECT permission_member.*, permission.name AS permission_name',
+                var sql = ['SELECT permission_member.*, permission.name AS permission_name, email.email_address, location.description AS location_description',
                 'FROM permission_member',
                 'LEFT JOIN permission ON permission.id = permission_member.permission_id',
+                'LEFT JOIN email ON email.id = permission_member.email_id',
+                'LEFT JOIN location ON location.id = permission_member.location_id',
                 'WHERE permission_member.member_id = ' + member.id].join(' ');
 
                 database.query(sql, function (err, permissions) {

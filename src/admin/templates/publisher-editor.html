@@ -1,13 +1,19 @@
 <div class="container">
   <div class="row">
-    <div class="col-xs-12">
-      <div class="page-header">
-        <h2><small>Publisher navn:</small> {{publisher.name}} <small>ID:</small> {{publisher.id}}</h2>
-      </div>
+    <div class="col-xs-8">
+      <h2><small>Publisher navn:</small> {{publisher.name}}</h2>
+    </div>
+    <div class="col-xs-4">
+      <div ng-show="publisher.active"><span class="label label-success">Aktiv</span></div>
+      <div ng-show="!publisher.active"><span class="label label-warning">Inaktiv</span></div>
+      <div>ID: {{publisher.id}}</div>
     </div>
   </div>
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-3">
+      <h3><span class="label label-default">Details</span></h3>
+    </div>
+    <div class="col-xs-9 well well-lg">
       <div class="form-group">
         <label for="publisher_name">Navn</label>
         <input type="text" class="form-control" id="publisher_name" placeholder="Enter name" ng-model="publisher.name">
@@ -45,11 +51,11 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-xs-4">
-      <h3>Nyhedsbreve</h3>
+    <div class="col-xs-3">
+      <h3><span class="label label-default">Nyhedsbreve</span></h3>
     </div>
-    <div class="col-xs-8">
-      <table class="table table-hover">
+    <div class="col-xs-9">
+      <table class="table table-condensed">
         <tr ng-repeat="newsletter in publisher.newsletters" ng-class="{'warning' : newsletter.active === 0}">
           <td><a href="#/newsletters/{{newsletter.id}}">{{newsletter.id}}</a></td>
           <td>{{newsletter.name}}</td>

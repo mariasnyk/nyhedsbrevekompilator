@@ -1,7 +1,7 @@
 //var userdbControllers = angular.module('userdbControllers', []);
 
-app.controller('MemberCtrl', ['$scope', '$routeParams', '$location', 'userdbService',
-  function ($scope, $routeParams, $location, userdbService) {
+app.controller('MemberCtrl', ['$scope', '$routeParams', '$location', 'userdbService', 'notifications',
+  function ($scope, $routeParams, $location, userdbService, notifications) {
 
     $scope.searching = false;
     $scope.noresult = false;
@@ -10,6 +10,7 @@ app.controller('MemberCtrl', ['$scope', '$routeParams', '$location', 'userdbServ
       userdbService.getMember($routeParams.id)
       .success( function (data, status, headers) {
         $scope.member = data;
+        $scope.member.birth_date = new Date($scope.member.birth_date);
       }).error( function (data, status) {
         $location.path('/members');
       });
@@ -61,13 +62,15 @@ app.controller('PublisherCtrl', ['$scope', '$routeParams', '$location', 'userdbS
   }]);
 
 
-app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdbService', '$resource', '$sce',
-  function ($scope, $routeParams, $location, userdbService, $resource, $sce) {
+app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdbService', '$resource', '$sce', 'notifications',
+  function ($scope, $routeParams, $location, userdbService, $resource, $sce, notifications) {
     var Newsletters = $resource('/v0/newsletters/:id', {id: '@id'});
     
     if ($routeParams.id) {
-      $scope.newsletter = Newsletters.get({id: $routeParams.id});
-
+      $scope.newsletter = Newsletters.get({id: $routeParams.id}, function (newsletter) {
+        $scope.newsletter = newsletter;
+        $scope.iframe_src = $sce.trustAsResourceUrl(newsletter.html_url);
+      });
       // userdbService.get('/newsletters/' + $routeParams.id)
       // .success( function (data, status, headers) {
       //   $scope.newsletter = data;
@@ -85,10 +88,6 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
     }
 
     if ($location.path().indexOf('preview') > 0) {
-      console.log($scope.newsletter.html_url);
-      $scope.iframe_src = $sce.trustAsResourceUrl('http://m.b.dk');
-      console.log($scope.sd);
-
       userdbService.get('/newsletters/' + $routeParams.id + '/subscribers/count')
       .success(function (data) {
         console.log('data', data);
@@ -100,6 +99,7 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
 
     $scope.save = function () {
       $scope.newsletter.$save();
+      notifications.showSuccess('Saved');
       // userdbService.saveNewsletter($scope.newsletter)
       // .success(function (data) {
       //   console.log('savedata', data);
@@ -110,8 +110,8 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
     };
 
     $scope.sendNewsletterClick = function (newsletterId) {
-      console.log('sendNewsletterClickEvent' + newsletterId);
       userdbService.sendNewsletter(newsletterId);
+      notifications.showSuccess('Done');
     };
   }]);
 

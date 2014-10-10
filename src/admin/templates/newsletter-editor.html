@@ -1,15 +1,17 @@
 <div class="container">
   <div class="row">
-    <div class="col-xs-12">
-      <div class="page-header">
-        <h2><small>Newsletter navn:</small> {{newsletter.name}} <small>ID:</small> {{newsletter.id}}</h2>
-      </div>
+    <div class="col-xs-8">
+      <h2><small>Newsletter navn:</small> {{newsletter.name}}</h2>
+    </div>
+    <div class="col-xs-4">
+      <div ng-show="newsletter.active"><span class="label label-success">Aktiv</span></div>
+      <div ng-show="!newsletter.active"><span class="label label-warning">Inaktiv</span></div>
+      <div>ID: {{newsletter.id}}</div>
+      <a href="#/newsletters/{{newsletter.id}}/preview" class="btn btn-default btn-xs active">Preview</a>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12">
-      <button type="button" class="btn btn-primary" ng-click="save()">Gem</button>
-      <a href="#/newsletters/{{newsletter.id}}/preview">Preview</a>
     </div>
   </div>
   <div class="row">
@@ -18,7 +20,11 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-3">
+      <h3><span class="label label-default">Details</span></h3>
+      <button type="button" class="btn btn-primary" ng-click="save()">Gem</button>
+    </div>
+    <div class="col-xs-9 well well-lg">
       <div class="form-group">
         <label for="name">Navn</label>
         <input type="text" class="form-control" id="name" placeholder="Enter name" ng-model="newsletter.name">
