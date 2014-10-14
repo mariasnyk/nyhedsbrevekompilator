@@ -2,9 +2,29 @@
 
 'use strict';
 
-var database = require('../../database.js');
+var database = require('../../userdb_client.js');
 
-module.exports.selectAllMembers = function (request, reply) {
+module.exports = [
+  // {
+  //   method: 'get',
+  //   path: '/members',
+  //   handler: selectAllMembers
+  // },{
+  //   method: 'get',
+  //   path: '/search/members',
+  //   handler: searchMembers
+  // },{
+  //   method: 'get',
+  //   path: '/members/{id}',
+  //   handler: selectMember
+  // },{
+  //   method: 'post',
+  //   path: '/members',
+  //   handler: insertMember
+  // }
+];
+
+function selectAllMembers (request, reply) {
   var sql = 'SELECT * FROM member LIMIT 1000';
   
   database.query(sql , function (err, members) {
@@ -15,7 +35,7 @@ module.exports.selectAllMembers = function (request, reply) {
 };
 
 
-module.exports.selectMember = function (request, reply) {
+function selectMember (request, reply) {
   // select * from member left join email on email.member_id = member.id where member.id=443765;
   var sql = 'SELECT * FROM member WHERE id = ' + request.params.id;
 
@@ -84,7 +104,7 @@ module.exports.selectMember = function (request, reply) {
 };
 
 
-module.exports.searchMembers = function(request, reply) {
+function searchMembers (request, reply) {
   console.log('Search', request.query);
   //console.log(Object.keys(request.query));
   var queryinput = request.query.text;
@@ -104,7 +124,7 @@ module.exports.searchMembers = function(request, reply) {
 }
 
 
-module.exports.insertMember = function (request, reply) {
+function insertMember (request, reply) {
   var sql = member.insert({
     lastname: 'Jane',
     firstname: 'Doe',

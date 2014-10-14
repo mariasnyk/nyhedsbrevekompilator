@@ -2,7 +2,7 @@ var Hapi = require('hapi'),
     //path = require('path'),
     fs = require('fs'),
     swig = require('swig'),
-    newsletters = require('./newsletters');
+    bond_client = require('./bond_client');
 
 swig.setDefaults({ cache: false }); /* must be turned of when in production*/
 
@@ -11,23 +11,64 @@ var serverOptions = {
     engines: {
       html: swig
     },
-    path: 'src/emails',
+    path: 'src/templates',
     isCached: false /* must be turned of when in production*/
+  },
+  router: {
+    stripTrailingSlash: false
   }
 };
 
 var server = new Hapi.Server('0.0.0.0', 8000, serverOptions);
 
+
+// Templates
+server.route([{
+  method: 'GET',
+  path: '/templates/static/{param*}',
+  handler: {
+    directory: {
+      path: 'src/templates/static',
+      index: false
+    }
+  }
+},{
+  method: 'GET',
+  path: '/templates/{template*}',
+  handler: function (request, reply) {
+    console.log('DSDASDAS', request.query, request.params);
+    if (request.query.node) {
+      bond_client.getNode(request.query.node, function (err, node) {
+        reply.view(request.params.template, node);
+      });
+    } else if (request.query.nodequeue) {
+      // getNodequeue(request.query.nodequeue, function (err, nodequeue) {
+      //   reply.view(request.params.template, nodequeue);
+      // });
+      reply.view(JSON.parse(a));
+    } else {
+      reply.view(request.params.template);
+      // reply.view(request.params.template, {title:'HEJ'});
+    }
+  }
+}]);
+
+
+// APIs
 var walk = function (path) {
   fs.readdirSync(path).forEach(function(file) {
-    var newPath = path + '/' + file;
-    var stat = fs.statSync(newPath);
+    var newPath = path + '/' + file,
+        stat = fs.statSync(newPath),
+        t = newPath.split('/'),
+        route_prefix = '/' + t[t.length-2];
 
     if (stat.isDirectory()) {
-      var t = newPath.split('/');
-      var route_prefix = t[t.length-1];
-
-      var routes = require(newPath + '/routes.js')(route_prefix);
+      walk(newPath);
+    } else if (stat.isFile() && newPath.slice(-3) === '.js') {
+      var routes = require(newPath);
+      routes.forEach(function (route) {
+        route.path = route_prefix + route.path;
+      });
       server.route(routes);
     }
   });
@@ -35,6 +76,7 @@ var walk = function (path) {
 walk(__dirname + '/apis');
 
 
+// Admin
 server.route({
   method: 'GET',
   path: '/admin/{param*}',
@@ -45,29 +87,6 @@ server.route({
     }
   }
 });
-
-server.route(newsletters);
-
-// server.route({
-//   method: 'GET',
-//   path: '/emails/static/{param*}',
-//   handler: {
-//     directory: {
-//       path: 'src/emails/static',
-//       index: false
-//     }
-//   }
-// });
-
-// server.route({
-//     method: 'GET',
-//     path: '/emails/{template*}',
-//     handler: function (request, reply) {
-//       console.log('DSDASDAS', request);
-//       reply.view(request.params.template, {title:'HEJ'});
-//     }
-// });
-
 
 
 server.on('tail', function (request) {

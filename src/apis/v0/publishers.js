@@ -2,9 +2,21 @@
 
 'use strict';
 
-var database = require('../../database.js');
+var database = require('../../userdb_client.js');
 
-module.exports.selectAllPublishers = function (request, reply) {
+module.exports = [
+  // {
+  //   method: 'get',
+  //   path: '/publishers',
+  //   handler: selectAllPublishers
+  // },{
+  //   method: 'get',
+  //   path: '/publishers/{id}',
+  //   handler: selectPublisher
+  // }
+];
+
+function selectAllPublishers (request, reply) {
   var sql = 'SELECT * from publisher';
 
   database.query(sql, function (err, result) {
@@ -13,7 +25,8 @@ module.exports.selectAllPublishers = function (request, reply) {
   });
 };
 
-module.exports.selectPublisher = function (request, reply) {
+
+function selectPublisher (request, reply) {
   var sql = 'SELECT * from publisher WHERE id = ' + request.params.id;
 
   database.query(sql, function (err, result) {

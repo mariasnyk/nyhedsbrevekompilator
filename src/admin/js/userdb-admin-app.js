@@ -58,21 +58,21 @@ app.config(['$resourceProvider', function ($resourceProvider) {
 app.controller('MenuCtrl', ['$scope', '$location', '$rootScope', function ($scope, $location, $rootScope) {
     $scope.menuitems = [
     {
-      name: 'Members',
-      href: '/members'
-    },{
-      name: 'Publishers',
-      href: '/publishers'
-    },{
+    //   name: 'Members',
+    //   href: '/members'
+    // },{
+    //   name: 'Publishers',
+    //   href: '/publishers'
+    // },{
       name: 'Newsletters',
       href: '/newsletters'
     },{
-      name: 'Permissions',
-      href: '/permissions'
-    },{
-      name: 'Interests',
-      href: '/interests'
-    },{
+    //   name: 'Permissions',
+    //   href: '/permissions'
+    // },{
+    //   name: 'Interests',
+    //   href: '/interests'
+    // },{
       name: 'Smartlinks',
       href: '/smartlinks'
     },{

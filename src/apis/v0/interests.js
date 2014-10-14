@@ -2,9 +2,21 @@
 
 'use strict';
 
-var database = require('../../database.js');
+var database = require('../../userdb_client.js');
 
-module.exports.selectAllInterests = function (request, reply) {
+module.exports = [
+  // {
+  //   method: 'get',
+  //   path: '/interests',
+  //   handler: selectAllInterests
+  // },{
+  //   method: 'get',
+  //   path: '/interests/{id}',
+  //   handler: selectInterest
+  // }
+];
+
+function selectAllInterests (request, reply) {
   //var sql = 'SELECT * FROM interest';
   var sql = ['SELECT interest.*, interest_parent.name AS interest_parent_name, interest_parent.display_name AS interest_parent_display_name',
    'FROM interest',
@@ -27,7 +39,8 @@ function removeInterestParentIfNull (interest) {
   return interest;
 }
 
-module.exports.selectInterest = function (request, reply) {
+
+function selectInterest (request, reply) {
   var sql = 'SELECT * FROM interest WHERE id = ' + request.params.id;
 
   database.query(sql, function (err, result) {

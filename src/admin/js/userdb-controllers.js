@@ -65,6 +65,7 @@ app.controller('PublisherCtrl', ['$scope', '$routeParams', '$location', 'userdbS
 app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdbService', '$resource', '$sce', 'notifications',
   function ($scope, $routeParams, $location, userdbService, $resource, $sce, notifications) {
     var Newsletters = $resource('/v0/newsletters/:id', {id: '@id'});
+    var Identities = $resource('/v0/newsletters/identities');
     
     if ($routeParams.id) {
       $scope.newsletter = Newsletters.get({id: $routeParams.id}, function (newsletter) {
@@ -86,6 +87,9 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
       //   $location.path('/');
       // });
     }
+
+    $scope.identities = Identities.query();
+
 
     if ($location.path().indexOf('preview') > 0) {
       userdbService.get('/newsletters/' + $routeParams.id + '/subscribers/count')

@@ -1,13 +1,20 @@
 <div class="container">
   <div class="row">
+    <div class="col-xs-2">
+      <a href="#/newsletters"><span class="glyphicon glyphicon-arrow-left"></span> Tilbage</a>
+    </div>
+  </div>
+  <div class="row">
     <div class="col-xs-8">
-      <h2><small>Newsletter navn:</small> {{newsletter.name}}</h2>
+      <h2><small>Navn:</small> {{newsletter.nyhedsbrev_navn}}</h2>
     </div>
     <div class="col-xs-4">
-      <div ng-show="newsletter.active"><span class="label label-success">Aktiv</span></div>
-      <div ng-show="!newsletter.active"><span class="label label-warning">Inaktiv</span></div>
-      <div>ID: {{newsletter.id}}</div>
-      <a href="#/newsletters/{{newsletter.id}}/preview" class="btn btn-default btn-xs active">Preview</a>
+      <div ng-show="newsletter.enabled"><span class="label label-success">Aktiv</span></div>
+      <div ng-show="!newsletter.enabled"><span class="label label-danger">Inaktiv</span></div>
+      <div ng-show="newsletter.hidden"><span class="label label-warning">Hidden</span></div>
+      <div ng-show="newsletter.nyt"><span class="label label-default">Nyt</span></div>
+      <div>ID: {{newsletter.nyhedsbrev_id}}</div>
+      <a href="#/newsletters/{{newsletter.nyhedsbrev_id}}/preview">Preview</a>
     </div>
   </div>
   <div class="row">
@@ -20,35 +27,34 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-xs-3">
-      <h3><span class="label label-default">Details</span></h3>
-      <button type="button" class="btn btn-primary" ng-click="save()">Gem</button>
+    <div class="col-xs-6">
+      <p>Udgiver: {{newsletter.publisher_navn}}</p>
+      <p>Tidligere sendt fra: {{newsletter.publisher_sendfrom}}</p>
+      <p>Link til hjulet: <a href="{{newsletter.publisher_url}}">{{newsletter.publisher_url}}</a></p>
     </div>
-    <div class="col-xs-9 well well-lg">
+    <div class="col-xs-6">
+      <img class="img-responsive" src="{{newsletter.publisher_toppic}}" alt="{{newsletter.publisher_toppic}}" title="{{newsletter.publisher_toppic}}" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
       <div class="form-group">
-        <label for="name">Navn</label>
-        <input type="text" class="form-control" id="name" placeholder="Enter name" ng-model="newsletter.name">
+        <label for="identity">Identity</label>
+        <select
+          id="identity"
+          class="form-control"
+          ng-model="newsletter_identity"
+          ng-options="sender.identity for sender in identities track by sender.identity"
+          ng-required="true">
+        </select>
       </div>
       <div class="form-group">
-        <label for="publisher_id">Publisher ID <small><a href="#/publishers/{{newsletter.publisher_id}}">edit</a></small></label>
-        <input type="number" class="form-control" id="publisher_id" placeholder="Enter publisher id" ng-model="newsletter.publisher_id">
+        <label for="template">Default template</label>
+        <!-- <input type="text" class="form-control" id="template" placeholder="Select default template" ng-model=""> -->
       </div>
       <div class="form-group">
-        <label for="display_text">Display text</label>
-        <input type="text" class="form-control" id="display_text" placeholder="Enter display text" ng-model="newsletter.display_text">
-      </div>
-      <div class="form-group">
-        <label for="description">Beskrivelse</label>
-        <input type="text" class="form-control" id="description" placeholder="Enter description" ng-model="newsletter.description">
-      </div>
-      <div class="form-group">
-        <label for="html_url">HTML URL</label>
-        <input type="text" class="form-control" id="html_url" placeholder="Enter URL to HTML" ng-model="newsletter.html_url">
-      </div>
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" ng-model="newsletter.active" ng-true-value="1" ng-false-value="0">Aktiv
-        </label>
+        <label for="subject">Default subject</label>
+        <!-- <input type="text" class="form-control" id="subject" placeholder="Enter default subject" ng-model=""> -->
       </div>
     </div>
   </div>

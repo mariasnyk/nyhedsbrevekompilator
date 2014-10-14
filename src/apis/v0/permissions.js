@@ -2,9 +2,25 @@
 
 'use strict';
 
-var database = require('../../database.js');
+var database = require('../../userdb_client.js');
 
-module.exports.selectAllPermissions = function (request, reply) {
+module.exports = [
+  // {
+  //   method: 'get',
+  //   path: '/permissions',
+  //   handler: selectAllPermissions
+  // },{
+  //   method: 'get',
+  //   path: '/permissions/{id}',
+  //   handler: selectPermission
+  // },{
+  //   method: 'get',
+  //   path: '/permissions/{id}/subscribers',
+  //   handler: selectPermissionSubscribers
+  // }
+];
+
+function selectAllPermissions (request, reply) {
   var sql = 'SELECT * FROM permission';
 
   database.query(sql, function (err, result) {
@@ -13,7 +29,7 @@ module.exports.selectAllPermissions = function (request, reply) {
   });
 };
 
-module.exports.selectPermission = function (request, reply) {
+function selectPermission (request, reply) {
   var sql = 'SELECT * FROM permission WHERE id = ' + request.params.id;
 
   database.query(sql, function (err, result) {
@@ -26,7 +42,7 @@ module.exports.selectPermission = function (request, reply) {
   });
 };
 
-module.exports.selectPermissionSubscribers = function (request, reply) {
+function selectPermissionSubscribers (request, reply) {
   var sql = ['SELECT member_id',
     'FROM permission_member',
     'WHERE active = 1 AND permission_id = ' + request.params.id].join(' ');

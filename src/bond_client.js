@@ -1,38 +1,16 @@
 'use strict';
+
 var http = require('http'),
     bondapiUrl = process.env.BOND_API;
 
-module.exports = [
-  {
-    method: 'GET',
-    path: '/emails/static/{param*}',
-    handler: {
-      directory: {
-        path: 'src/emails/static',
-        index: false
-      }
-    }
-  },{
-    method: 'GET',
-    path: '/emails/{template*}',
-    handler: function (request, reply) {
-      console.log('DSDASDAS', request.query);
-      if (request.query.node) {
-        getNodeFromBond(request.query.node, function (err, node) {
-          reply.view(request.params.template, node);
-        });
-      } else if (request.query.nodequeue) {
-        // getNodequeueFromBond(request.query.nodequeue, function (err, nodequeue) {
-        //   reply.view(request.params.template, nodequeue);
-        // });
-        reply.view(JSON.parse( a ));
-      } else {
-        reply.view(request.params.template);
-        // reply.view(request.params.template, {title:'HEJ'});
-      }
-    }
-  }
-];
+module.exports.getNode = function (id, callback) {
+  getFromBond('node', id, callback);
+}
+
+
+module.exports.getNodequeue = function (id, callback) {
+  getFromBond('nodequeue', id, callback);
+}
 
 
 function isValidId (nodeid) {
@@ -57,16 +35,6 @@ function isValidId (nodeid) {
   // }
 
   return typeof(temp) === 'number';
-}
-
-
-function getNodeFromBond (id, callback) {
-  getFromBond('node', id, callback);
-}
-
-
-function getNodequeueFromBond (id, callback) {
-  getFromBond('nodequeue', id, callback);
 }
 
 
@@ -104,4 +72,3 @@ function getFromBond ( type, id, callback ) {
     callback(e, null);
   });
 }
-
