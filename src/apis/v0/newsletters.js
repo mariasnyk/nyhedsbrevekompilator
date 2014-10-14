@@ -43,10 +43,10 @@ module.exports = [
     method: 'get',
     path: '/newsletters/identities',
     handler: listSendGridIdentities
-  },{
-    method: 'get',
-    path: '/newsletters/templates',
-    handler: listNewsletterTemplates
+  // },{
+  //   method: 'get',
+  //   path: '/newsletters/templates',
+  //   handler: listNewsletterTemplates
   }
 ];
 
@@ -63,6 +63,11 @@ function selectAllNewsletters (request, reply) {
 };
 
 function selectNewsletter (request, reply) {
+
+  // TODO: Validate request.params.id
+  // Because a GET http://localhost:8000/v0/newsletters/zxc
+  // will throw database error: Uncaught error: column "zxc" does not exists
+
   var sql = [
     'SELECT *',
     'FROM tbl_nyhedsbrev',
@@ -304,9 +309,10 @@ function sendPreview (data, callback) {
 }
 
 
-function listNewsletterTemplates (request, reply) {
-  reply(['/1', '/template']);
-}
+// function listNewsletterTemplates (request, reply) {
+//   console.log('dirname', __dirname);
+//   reply(['/1', '/template']);
+// }
 
 
 function listSendGridIdentities (request, reply) {

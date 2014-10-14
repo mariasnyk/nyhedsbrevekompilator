@@ -34,6 +34,14 @@ server.route([{
   }
 },{
   method: 'GET',
+  path: '/templates/',
+  handler: function (request, reply) {
+    reply(listHtmlFiles(__dirname + '/templates').map(function (file) {
+      return request.path + file.substring(0, file.lastIndexOf('.'));
+    }));
+  }
+},{
+  method: 'GET',
   path: '/templates/{template*}',
   handler: function (request, reply) {
     console.log('DSDASDAS', request.query, request.params);
@@ -53,6 +61,13 @@ server.route([{
   }
 }]);
 
+
+function listHtmlFiles (path) {
+  return fs.readdirSync(path)
+  .filter(function (file) {
+    return fs.statSync(path + '/' + file).isFile() && file.slice(-5) === '.html';
+  });
+}
 
 // APIs
 var walk = function (path) {
@@ -76,7 +91,7 @@ var walk = function (path) {
 walk(__dirname + '/apis');
 
 
-// Admin
+// Admin Angular
 server.route({
   method: 'GET',
   path: '/admin/{param*}',
