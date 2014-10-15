@@ -66,9 +66,10 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
   function ($scope, $routeParams, $location, userdbService, $resource, $sce, notifications) {
     var Newsletters = $resource('/v0/newsletters/:id', {id: '@id'});
     var Identities = $resource('/v0/newsletters/identities');
+    var Templates = $resource('/templates/');
     
     if ($routeParams.id) {
-      $scope.newsletter = Newsletters.get({id: $routeParams.id}, function (newsletter) {
+      Newsletters.get({id: $routeParams.id}, function (newsletter) {
         $scope.newsletter = newsletter;
         $scope.iframe_src = $sce.trustAsResourceUrl(newsletter.html_url);
       });
@@ -89,6 +90,7 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
     }
 
     $scope.identities = Identities.query();
+    $scope.templates = Templates.query();
 
 
     if ($location.path().indexOf('preview') > 0) {
@@ -102,7 +104,9 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
     }
 
     $scope.save = function () {
+      // console.log($scope.newsletter);
       $scope.newsletter.$save();
+      // userdbService.saveNewsletter($scope.newsletter);
       notifications.showSuccess('Saved');
       // userdbService.saveNewsletter($scope.newsletter)
       // .success(function (data) {

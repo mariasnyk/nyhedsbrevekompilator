@@ -34,18 +34,14 @@ server.route([{
   }
 },{
   method: 'GET',
-  path: '/templates/',
-  handler: function (request, reply) {
-    reply(listHtmlFiles(__dirname + '/templates').map(function (file) {
-      return request.path + file.substring(0, file.lastIndexOf('.'));
-    }));
-  }
-},{
-  method: 'GET',
   path: '/templates/{template*}',
   handler: function (request, reply) {
     console.log('DSDASDAS', request.query, request.params);
-    if (request.query.node) {
+    if (request.params.template === undefined) {
+      reply(listHtmlFiles(__dirname + '/templates').map(function (file) {
+        return request.path + '/' + file.substring(0, file.lastIndexOf('.'));
+      }));
+    } else if (request.query.node) {
       bond_client.getNode(request.query.node, function (err, node) {
         reply.view(request.params.template, node);
       });

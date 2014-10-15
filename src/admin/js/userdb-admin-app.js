@@ -6,7 +6,7 @@ app.config(['$routeProvider', function ($routeProvider) {
 
   $routeProvider
     .when( '/', {
-      redirectTo: '/members' })
+      redirectTo: '/newsletters' })
     .when( '/members', {
       templateUrl: 'templates/member-dashboard.html',
       controller: 'MemberCtrl' })

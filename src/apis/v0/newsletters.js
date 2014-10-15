@@ -8,7 +8,8 @@ var AWS = require('aws-sdk'),
     https = require('https'),
     eventEmitter = require('events').EventEmitter,
     workerEmitter = new eventEmitter(),
-    database = require('../../mdb_client.js');
+    mdb = require('../../mdb_client.js'),
+    userdb = require('../../userdb_client.js');
 
 module.exports = [
   {
@@ -19,10 +20,14 @@ module.exports = [
     method: 'get',
     path: '/newsletters/{id}',
     handler: selectNewsletter
-  // },{
-  //   method: ['post','put'],
-  //   path: '/newsletters/{id}',
-  //   handler: newsletters.saveNewsletter
+  },{
+    method: 'post',
+    path: '/newsletters',
+    handler: saveNewsletter
+  },{
+    method: ['post','put'],
+    path: '/newsletters/{id}',
+    handler: saveNewsletter
   },{
     method: 'get',
     path: '/newsletters/{id}/subscribers',
@@ -56,7 +61,7 @@ function selectAllNewsletters (request, reply) {
     'FROM tbl_nyhedsbrev',
     'LEFT JOIN tbl_publisher ON tbl_publisher.publisher_id = tbl_nyhedsbrev.publisher_id'].join(' ');
 
-  database.query(sql, function (err, result) {
+  mdb.query(sql, function (err, result) {
     if (err) return reply(err);
     reply(result.rows);
   });
@@ -74,45 +79,101 @@ function selectNewsletter (request, reply) {
     'LEFT JOIN tbl_publisher ON tbl_publisher.publisher_id = tbl_nyhedsbrev.publisher_id',
     'WHERE nyhedsbrev_id = ' + request.params.id].join(' ');
 
-  database.queryOne(sql, function (err, result) {
+  mdb.queryOne(sql, function (err, tbl_nyhedsbrev) {
     if (err) return reply(err).code(509);
-    else if (result === null)
+    else if (tbl_nyhedsbrev === null)
       reply().code(404);
-    else
-      reply(result);
+    else {
+      var sql = 'SELECT * FROM mdb_nyhedsbrev WHERE nyhedsbrev_id='+tbl_nyhedsbrev.nyhedsbrev_id;
+      console.log(sql);
+      userdb.queryOne(sql, function (err, mdb_nyhedsbrev) {
+        console.log(mdb_nyhedsbrev);
+        // Merging results
+        Object.keys(mdb_nyhedsbrev).forEach(function (key) {
+          tbl_nyhedsbrev[key] = mdb_nyhedsbrev[key];
+          console.log(key,mdb_nyhedsbrev['key']);
+        });
+
+        console.log(tbl_nyhedsbrev);
+        reply(tbl_nyhedsbrev);
+      });
+    }
   });
 };
 
 
-// function saveNewsletter (request, reply) {
-//   var subscription = request.payload;
-//   var sql = ['UPDATE subscription SET',
-//     ['publisher_id = ' + subscription.publisher_id,
-//     'name=' + database.escape(subscription.name),
-//     'active=' + subscription.active,
-//     'display_text=' + database.escape(subscription.display_text),
-//     'description=' + database.escape(subscription.description),
-//     'html_url=' + database.escape(subscription.html_url)].join(','),
-//     'WHERE id=' + subscription.id].join(' ');
+function saveNewsletter (request, reply) {
+  console.log(request.params);
+  var newsletter = request.payload;
+  console.log(newsletter);
 
-//   database.query(sql, function (err, result) {
-//     console.log(err, result);
-//     if (err)
-//       reply(err);
-//     else if (result.affectedRows === 0)
-//       reply().code(404);
-//     else 
-//       reply();
-//   });
-// };
+  if (request.params.id) {
+    // TODO:
+    // var sql = ['UPDATE subscription SET',
+    //   ['publisher_id = ' + subscription.publisher_id,
+    //   'name=' + database.escape(subscription.name),
+    //   'active=' + subscription.active,
+    //   'display_text=' + database.escape(subscription.display_text),
+    //   'description=' + database.escape(subscription.description),
+    //   'html_url=' + database.escape(subscription.html_url)].join(','),
+    //   'WHERE id=' + subscription.id].join(' ');
 
+    // userdb.query(sql, function (err, result) {
+    //   console.log(err, result);
+    //   if (err)
+    //     reply(err);
+    //   else if (result.affectedRows === 0)
+    //     reply().code(404);
+    //   else 
+    //     reply();
+    // });
+  } else {
+    // This is when we save the temporary newsletter attributes for use in Fase 1 of Email Marketing.
+
+    // nyhedsbrev_id: 19,
+    // identity: { identity: 'BerlingskeMedia' },
+    // bond_type: 'nodequeue',
+    // bond_id: 2,
+    // template: '/templates1' }
+
+    var sql = [
+      'INSERT INTO mdb_nyhedsbrev',
+      '(nyhedsbrev_id, identity, bond_type, bond_id, template)',
+      'VALUES (',
+      userdb.escape(newsletter.nyhedsbrev_id) + ',',
+      userdb.escape(newsletter.identity.identity) + ',',
+      userdb.escape(newsletter.bond_type) + ',',
+      userdb.escape(newsletter.bond_id.toString()) + ',',
+      userdb.escape(newsletter.template) + ')',
+      'ON DUPLICATE KEY UPDATE',
+      'identity = VALUES(identity),',
+      'bond_type = VALUES(bond_type),',
+      'bond_id = VALUES(bond_id),',
+      'template = VALUES(template)'].join (' ');
+
+    userdb.query(sql, function (err, result) {
+      if (err) return reply(err).code(509);
+      else reply();
+      console.log('done', err, result);
+    });
+  }
+};
+
+// CREATE TABLE `mdb_nyhedsbrev` (
+//   `nyhedsbrev_id` int(11) unsigned NOT NULL,
+//   `identity` varchar(255) DEFAULT NULL,
+//   `bond_type` varchar(255) DEFAULT NULL,
+//   `bond_id` varchar(255) DEFAULT NULL,
+//   `template` varchar(255) DEFAULT NULL,
+//   PRIMARY KEY (`nyhedsbrev_id`)
+// ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 function selectNewsletterSubscribers (request, reply) {
   var sql = ['SELECT member_id',
     'FROM subscription_member',
     'WHERE active = 1 AND subscription_id = ' + request.params.id].join(' ');
   
-  database.query(sql, function (err, result) {
+  userdb.query(sql, function (err, result) {
     if (err) return reply(err);
     else {
         // Mapping the result down to
@@ -133,7 +194,7 @@ function selectNewsletterSubscribersCount (request, reply) {
     'FROM subscription_member',
     'WHERE active = 1 AND subscription_id = ' + request.params.id].join(' ');
   
-  database.queryOne(sql, function (err, result) {
+  userdb.queryOne(sql, function (err, result) {
     if (err) return reply(err);
     else reply(result).header('X-Member-Count', result.count);
   });
@@ -147,7 +208,7 @@ function sendNewsletter (request, reply) {
     'LEFT JOIN publisher ON subscription.publisher_id = publisher.id',
     'WHERE subscription.id = ' + newsletterId ].join(' ');
 
-  database.queryOne(sql, function (err, data) {
+  userdb.queryOne(sql, function (err, data) {
     if (err) return reply(err);
 
     // TODO: test that from_email, subject is present
@@ -219,7 +280,7 @@ function selectNewsletterRecipientEmails (newsletterId, callback) {
     'LEFT JOIN email ON email.id = subscription_member.email_id',
     'WHERE subscription_id = ' + newsletterId ].join(' ');
 
-  database.query(sql, function (err, subscription_members) {
+  userdb.query(sql, function (err, subscription_members) {
     if (err) return callback(err);
 
     var recipients_email_addresses = subscription_members.map(function (subscription_member) {

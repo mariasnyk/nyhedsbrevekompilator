@@ -26,6 +26,10 @@ app.service('userdbService', ['apiVersion', '$http',
       return $http({method: 'GET', url: baseUrl + 'publishers/' + publisherId});
     };
 
+    this.saveNewsletter = function (data) {
+      return $http.put(baseUrl + 'newsletters/' + data.nyhedsbrev_id, data);
+    }
+
     this.sendNewsletter = function (newsletterId) {
       //return $http({method: 'POST', url: baseUrl + 'newsletters/tester'})
       return $http.post(baseUrl + 'newsletters/' + newsletterId + '/send');
