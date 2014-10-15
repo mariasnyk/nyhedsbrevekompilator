@@ -44,7 +44,7 @@
           id="identity"
           class="form-control"
           ng-model="newsletter.identity"
-          ng-options="sender.identity for sender in identities track by sender.identity"
+          ng-options="identity for identity in identities"
           ng-required="true">
         </select>
       </div>

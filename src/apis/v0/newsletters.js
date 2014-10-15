@@ -131,7 +131,7 @@ function saveNewsletter (request, reply) {
     // This is when we save the temporary newsletter attributes for use in Fase 1 of Email Marketing.
 
     // nyhedsbrev_id: 19,
-    // identity: { identity: 'BerlingskeMedia' },
+    // identity: 'BerlingskeMedia',
     // bond_type: 'nodequeue',
     // bond_id: 2,
     // template: '/templates1' }
@@ -141,7 +141,7 @@ function saveNewsletter (request, reply) {
       '(nyhedsbrev_id, identity, bond_type, bond_id, template)',
       'VALUES (',
       userdb.escape(newsletter.nyhedsbrev_id) + ',',
-      userdb.escape(newsletter.identity.identity) + ',',
+      userdb.escape(newsletter.identity) + ',',
       userdb.escape(newsletter.bond_type) + ',',
       userdb.escape(newsletter.bond_id.toString()) + ',',
       userdb.escape(newsletter.template) + ')',
@@ -379,7 +379,9 @@ function sendPreview (data, callback) {
 function listSendGridIdentities (request, reply) {
   callSendGrid('/api/newsletter/identity/list.json', null, function (err, data) {
     if (err) return reply(err).code(500);
-    else reply(data);
+    else reply(data.map(function (identity) {
+      return identity.identity;
+    }));
   });
 }
 
