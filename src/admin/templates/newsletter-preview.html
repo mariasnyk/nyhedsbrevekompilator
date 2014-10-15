@@ -1,13 +1,16 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-2">
-      <a href="#/newsletters/{{newsletter.id}}"><span class="glyphicon glyphicon-arrow-left"></span> Til opsætning</a>
+      <a href="#/newsletters/{{newsletter.nyhedsbrev_id}}"><span class="glyphicon glyphicon-arrow-left"></span> Til opsætning</a>
     </div>
-    <div class="col-xs-9">
+    <div class="col-xs-2">
       Antal modtagere <span class="badge">{{subscribersCount}}</span>
     </div>
-    <div class="col-xs-1">
-      <button type="button" class="btn btn-warning" ng-click="sendNewsletterClick(newsletter.id)">
+    <div class="col-xs-6">
+      <input type="text" class="form-control" ng-model="html_url" ng-keyup="changeHtmlUrl($event)">
+    </div>
+    <div class="col-xs-2">
+      <button type="button" class="btn btn-warning" ng-click="sendNewsletterClick(newsletter.nyhedsbrev_id)">
         Send <span class="glyphicon glyphicon-envelope"></span>
       </button>
     </div>

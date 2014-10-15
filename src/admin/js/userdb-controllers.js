@@ -71,7 +71,8 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
     if ($routeParams.id) {
       Newsletters.get({id: $routeParams.id}, function (newsletter) {
         $scope.newsletter = newsletter;
-        $scope.iframe_src = $sce.trustAsResourceUrl(newsletter.html_url);
+        $scope.html_url = newsletter.template + '?' + newsletter.bond_type + '=' + newsletter.bond_id;
+        $scope.iframe_src = $sce.trustAsResourceUrl($scope.html_url);
       });
       // userdbService.get('/newsletters/' + $routeParams.id)
       // .success( function (data, status, headers) {
@@ -102,6 +103,14 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
         $location.path('/newsletters/' + $routeParams.id);
       });
     }
+
+    $scope.changeHtmlUrl = updatePreview;
+
+    function updatePreview (event) {
+      console.log(event);
+      console.log($scope.html_url);
+      $scope.iframe_src = $sce.trustAsResourceUrl($scope.html_url);
+    };
 
     $scope.save = function () {
       // console.log($scope.newsletter);

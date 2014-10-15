@@ -1,0 +1,24 @@
+{% extends 'partials/layout.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+  {% parent %}
+{% endblock %}
+
+{% block content %}
+<p>Dato: {{ dateCreated }}</p>
+<p>Forfatter:</p>
+{% for author in authors %}
+  <li{% if loop.first %} class="first"{% endif %}>
+    {{ author.profileName }} {{ author.email }}
+    {% if author.picture !== '' %}<img src="http://www.bt.dk/{{ author.picture }}">{% endif %}
+  </li>
+{% endfor %}
+{% autoescape false %}{{ body }}{% endautoescape %}
+
+{% for image in images %}
+  <img width="900px" title="{{ image.title }}" src="http://www.bt.dk/{{ image.file.path }}">
+{% endfor %}
+
+{% endblock %}

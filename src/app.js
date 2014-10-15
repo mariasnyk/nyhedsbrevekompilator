@@ -38,18 +38,24 @@ server.route([{
   handler: function (request, reply) {
     console.log('DSDASDAS', request.query, request.params);
     if (request.params.template === undefined) {
-      reply(listHtmlFiles(__dirname + '/templates').map(function (file) {
+      var path = __dirname + '/templates';
+      reply(fs.readdirSync(path)
+      .filter(function (file) {
+        return fs.statSync(path + '/' + file).isFile() && file.slice(-5) === '.html';
+      })
+      .map(function (file) {
         return request.path + '/' + file.substring(0, file.lastIndexOf('.'));
       }));
     } else if (request.query.node) {
       bond_client.getNode(request.query.node, function (err, node) {
+        console.log(node);
         reply.view(request.params.template, node);
       });
     } else if (request.query.nodequeue) {
-      // getNodequeue(request.query.nodequeue, function (err, nodequeue) {
-      //   reply.view(request.params.template, nodequeue);
-      // });
-      reply.view(JSON.parse(a));
+      bond_client.getNodequeue(request.query.nodequeue, function (err, nodequeue) {
+        console.log(nodequeue);
+        reply.view(request.params.template, nodequeue);
+      });
     } else {
       reply.view(request.params.template);
       // reply.view(request.params.template, {title:'HEJ'});
@@ -58,12 +64,12 @@ server.route([{
 }]);
 
 
-function listHtmlFiles (path) {
-  return fs.readdirSync(path)
-  .filter(function (file) {
-    return fs.statSync(path + '/' + file).isFile() && file.slice(-5) === '.html';
-  });
-}
+// function listHtmlFiles (path) {
+//   return fs.readdirSync(path)
+//   .filter(function (file) {
+//     return fs.statSync(path + '/' + file).isFile() && file.slice(-5) === '.html';
+//   });
+// }
 
 // APIs
 var walk = function (path) {

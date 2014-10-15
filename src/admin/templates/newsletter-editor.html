@@ -1,20 +1,22 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-2">
-      <a href="#/newsletters"><span class="glyphicon glyphicon-arrow-left"></span> Tilbage</a>
+      <a href="#/newsletters"><span class="glyphicon glyphicon-arrow-left"></span> Tilbage til oversigt</a>
     </div>
+<!--     <div class="col-xs-2 col-xs-offset-8">
+      <a href="#/newsletters/{{newsletter.nyhedsbrev_id}}/preview">Preview <span class="glyphicon glyphicon-arrow-right"></span></a>
+    </div> -->
   </div>
   <div class="row">
     <div class="col-xs-8">
       <h2><small>Navn:</small> {{newsletter.nyhedsbrev_navn}}</h2>
     </div>
     <div class="col-xs-4">
-      <div ng-show="newsletter.enabled"><span class="label label-success">Aktiv</span></div>
-      <div ng-show="!newsletter.enabled"><span class="label label-danger">Inaktiv</span></div>
-      <div ng-show="newsletter.hidden"><span class="label label-warning">Hidden</span></div>
-      <div ng-show="newsletter.nyt"><span class="label label-default">Nyt</span></div>
+      <span ng-show="newsletter.enabled" class="label label-success">Aktiv</span>
+      <span ng-show="!newsletter.enabled" class="label label-danger">Inaktiv</span>
+      <span ng-show="newsletter.hidden" class="label label-warning">Hidden</span>
+      <span ng-show="newsletter.nyt" class="label label-default">Nyt</span>
       <div>ID: {{newsletter.nyhedsbrev_id}}</div>
-      <a href="#/newsletters/{{newsletter.nyhedsbrev_id}}/preview">Preview</a>
     </div>
   </div>
   <div class="row">
@@ -63,12 +65,12 @@
     <div class="col-xs-3">
       <div class="form-group">
         <label for="bond_id">ID</label>
-        <input type="number" class="form-control" id="bond_id" placeholder="{{bond_type}} ID" ng-model="newsletter.bond_id">
+        <input type="text" class="form-control" id="bond_id" placeholder="{{newsletter.bond_type}} ID" ng-model="newsletter.bond_id">
       </div>
     </div>
-    <div class="col-xs-6" ng-show="bond_id">
+    <div class="col-xs-6" ng-show="newsletter.bond_id">
       <p style="padding-top: 30px;">
-        <a href="http://edit.berlingskemedia.net/{{bond_type}}/{{bond_id}}">http://edit.berlingskemedia.net/{{bond_type}}/{{bond_id}}</a>
+        <a href="http://edit.berlingskemedia.net/{{newsletter.bond_type}}/{{newsletter.bond_id}}/edit">http://edit.berlingskemedia.net/{{newsletter.bond_type}}/{{newsletter.bond_id}}/edit</a>
       </p>
     </div>
   </div>
@@ -88,9 +90,21 @@
     </div>
   </div>
   <div class="row">
+    <div class="col-xs-2">
+      <button type="button" class="btn btn-primary" ng-click="save()">
+        Save <span class="glyphicon glyphicon-save"></span>
+      </button>
+    </div>
+    <div class="col-xs-2 col-xs-offset-8 text-right">
+      <!-- <a href="#/newsletters/{{newsletter.nyhedsbrev_id}}/preview">Preview</a> -->
+      <button type="button" class="btn btn-warning" ng-click="sendNewsletterClick(newsletter.nyhedsbrev_id)">
+        Send <span class="glyphicon glyphicon-envelope"></span>
+      </button>
+    </div>
+  </div>
+  <div class="row newsletter-preview">
     <div class="col-xs-12">
-      <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
-      <a href="#/newsletters/{{newsletter.nyhedsbrev_id}}/preview">Preview</a>
+      <iframe ng-src="{{iframe_src}}" width="100%" height="1000px"></iframe>
     </div>
   </div>
 </div>

@@ -103,11 +103,10 @@ function selectNewsletter (request, reply) {
 
 
 function saveNewsletter (request, reply) {
-  console.log(request.params);
   var newsletter = request.payload;
-  console.log(newsletter);
 
   if (request.params.id) {
+    reply().code(501);
     // TODO:
     // var sql = ['UPDATE subscription SET',
     //   ['publisher_id = ' + subscription.publisher_id,
@@ -127,15 +126,9 @@ function saveNewsletter (request, reply) {
     //   else 
     //     reply();
     // });
-  } else {
+  } else if (newsletter.nyhedsbrev_id) {
     // This is when we save the temporary newsletter attributes for use in Fase 1 of Email Marketing.
-
-    // nyhedsbrev_id: 19,
-    // identity: 'BerlingskeMedia',
-    // bond_type: 'nodequeue',
-    // bond_id: 2,
-    // template: '/templates1' }
-
+    
     var sql = [
       'INSERT INTO mdb_nyhedsbrev',
       '(nyhedsbrev_id, identity, bond_type, bond_id, template)',
@@ -143,7 +136,7 @@ function saveNewsletter (request, reply) {
       userdb.escape(newsletter.nyhedsbrev_id) + ',',
       userdb.escape(newsletter.identity) + ',',
       userdb.escape(newsletter.bond_type) + ',',
-      userdb.escape(newsletter.bond_id.toString()) + ',',
+      userdb.escape(newsletter.bond_id) + ',',
       userdb.escape(newsletter.template) + ')',
       'ON DUPLICATE KEY UPDATE',
       'identity = VALUES(identity),',
@@ -154,19 +147,12 @@ function saveNewsletter (request, reply) {
     userdb.query(sql, function (err, result) {
       if (err) return reply(err).code(509);
       else reply();
-      console.log('done', err, result);
     });
+  } else {
+    reply().code(501);
   }
 };
 
-// CREATE TABLE `mdb_nyhedsbrev` (
-//   `nyhedsbrev_id` int(11) unsigned NOT NULL,
-//   `identity` varchar(255) DEFAULT NULL,
-//   `bond_type` varchar(255) DEFAULT NULL,
-//   `bond_id` varchar(255) DEFAULT NULL,
-//   `template` varchar(255) DEFAULT NULL,
-//   PRIMARY KEY (`nyhedsbrev_id`)
-// ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 function selectNewsletterSubscribers (request, reply) {
   var sql = ['SELECT member_id',
@@ -377,7 +363,8 @@ function sendPreview (data, callback) {
 
 
 function listSendGridIdentities (request, reply) {
-  callSendGrid('/api/newsletter/identity/list.json', null, function (err, data) {
+  callSendGrid('/api/newsletter/identity/list.json', function (err, data) {
+    console.log('Sad', err, data);
     if (err) return reply(err).code(500);
     else reply(data.map(function (identity) {
       return identity.identity;
@@ -400,8 +387,6 @@ function callSendGrid (path, body, callback) {
     body = body + '&';
 
   body = body + 'api_user=' + encodeURIComponent(process.env.SENDGRID_API_USER) + '&api_key=' + encodeURIComponent(process.env.SENDGRID_API_KEY);
-
-  console.log('body', body);
 
   var options = {
     hostname: 'api.sendgrid.com',
