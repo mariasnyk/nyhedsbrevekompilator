@@ -60,7 +60,7 @@
           id="template"
           class="form-control"
           ng-model="newsletter.template"
-          ng-options="template for template in templates"
+          ng-options="template.name as template.name for template in templates"
           ng-required="true">
         </select>
       </div>
@@ -87,8 +87,8 @@
       <input type="text" id="subject" class="form-control" ng-model="subject">
     </div>
     <div class="col-xs-3">
-      <label for="subject">Emne</label>
-      <input type="text" id="subject" class="form-control" ng-model="subject">
+      <label for="list">Liste</label>
+      <input type="text" id="subject" class="form-control" ng-model="list">
     </div>
   </div>
   <div class="row" style="padding-top: 10px;">

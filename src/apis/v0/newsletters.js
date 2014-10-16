@@ -18,6 +18,14 @@ module.exports = [
     handler: selectAllNewsletters
   },{
     method: 'get',
+    path: '/newsletters/identities',
+    handler: listSendGridIdentities
+  },{
+    method: ['put','post'],
+    path: '/newsletters/send',
+    handler: sendNewsletterAdhoc
+  },{
+    method: 'get',
     path: '/newsletters/{id}',
     handler: selectNewsletter
   },{
@@ -44,14 +52,6 @@ module.exports = [
     method: ['put','post'],
     path: '/newsletters/{id}/send',
     handler: sendNewsletterWithDefaults
-  },{
-    method: ['put','post'],
-    path: '/newsletters/send',
-    handler: sendNewsletterAdhoc
-  },{
-    method: 'get',
-    path: '/newsletters/identities',
-    handler: listSendGridIdentities
   // },{
   //   method: 'get',
   //   path: '/newsletters/templates',
@@ -217,11 +217,11 @@ function sendNewsletterWithDefaults (request, reply) {
       //data.recipients = recipients_email_addresses;
       data.recipients = ['dako@berlingskemedia.dk'];
 
-      downloadEmailHtml(data.html_url, function (err, html) {
+      downloadHtml(data.html_url, function (err, html) {
         if (err) reply(err);
         if (html === null) reply().code(509);
         else {
-          data.message = html;
+          data.html = html;
 
           sendPreview(data, function (err, result) {
             console.log('AWS send', err, result);
@@ -236,10 +236,21 @@ function sendNewsletterWithDefaults (request, reply) {
 
 
 function sendNewsletterAdhoc (request, reply) {
-  var identity = '';
-  var html_url = '';
-  var html = '';
-  reply();
+  var data = request.payload;
+  data.recipients = ['dako@berlingskemedia.dk'];
+
+  if (data.html === undefined || data.html === null) {
+    downloadHtml(data.html_url, function (err, html) {
+      data.html = html;
+      sendPreview(data, function (err, result) {
+        reply();
+      });
+    });
+  } else {
+    sendPreview(data, function (err, result) {
+      reply();
+    });
+  }
 }
 
 
@@ -258,9 +269,9 @@ function sendTestEmail (request, reply) {
 
     var sendTail = request.tail('Send email');
 
-    downloadEmailHtml(data.html_url, function (err, message) {
-      data.display_text = 'FAKE';
-      data.message = message;
+    downloadHtml(data.html_url, function (err, html) {
+      data.subject = 'FAKE';
+      data.html = html;
       sendPreview(data, function (err, data) {
         console.log('AWS send', err, data);
         sendTail();
@@ -269,7 +280,7 @@ function sendTestEmail (request, reply) {
     
     reply().code(200);
   }
-};
+}
 
 
 function selectNewsletterRecipientEmails (newsletterId, callback) {
@@ -289,12 +300,8 @@ function selectNewsletterRecipientEmails (newsletterId, callback) {
 }
 
 
-function downloadEmailHtml (url, callback) {
-  console.log('Requesting on', url);
-
+function downloadHtml (url, callback) {
   http.get(url, function( response ) {
-
-    console.log('HTTP ' + response.statusCode + ' response from', url);
 
     if (response.statusCode === 401) {
       return callback (null, null);
@@ -321,6 +328,8 @@ function downloadEmailHtml (url, callback) {
 
 function sendPreview (data, callback) {
 
+  data.text = 'To be filled out.';
+
   // We're only accepting @berlingskemedia.dk emails
   data.recipients = data.recipients.filter(function (email) {
     return email.indexOf("@berlingskemedia.dk") === email.lastIndexOf("@");
@@ -341,16 +350,16 @@ function sendPreview (data, callback) {
     Message: { /* required */
       Body: { /* required */
         Html: {
-          Data: data.message, /* required */
+          Data: data.html, /* required */
           Charset: 'UTF-8'
         },
         Text: {
-          Data: 'To be filled out.', /* required */
+          Data: data.text, /* required */
           Charset: 'UTF-8'
         }
       },
       Subject: { /* required */
-        Data: data.display_text, /* required */
+        Data: data.subject, /* required */
         Charset: 'UTF-8'
       }
     },
@@ -368,15 +377,9 @@ function sendPreview (data, callback) {
 }
 
 
-// function listNewsletterTemplates (request, reply) {
-//   console.log('dirname', __dirname);
-//   reply(['/1', '/template']);
-// }
-
 
 function listSendGridIdentities (request, reply) {
   callSendGrid('/api/newsletter/identity/list.json', function (err, data) {
-    console.log('Sad', err, data);
     if (err) return reply(err).code(500);
     else reply(data.map(function (identity) {
       return identity.identity;

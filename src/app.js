@@ -32,37 +32,82 @@ server.route([{
       index: false
     }
   }
+// },{
+//   method: 'GET',
+//   path: '/title/'
 },{
   method: 'GET',
-  path: '/templates/{template*}',
+  path: '/templates',
   handler: function (request, reply) {
-    console.log('DSDASDAS', request.query, request.params);
-    if (request.params.template === undefined) {
-      var path = __dirname + '/templates';
-      reply(fs.readdirSync(path)
-      .filter(function (file) {
-        return fs.statSync(path + '/' + file).isFile() && file.slice(-5) === '.html';
-      })
-      .map(function (file) {
-        return request.path + '/' + file.substring(0, file.lastIndexOf('.'));
-      }));
-    } else if (request.query.node) {
+    var path = __dirname + '/templates';
+    reply(fs.readdirSync(path)
+    .filter(function (file) {
+      return fs.statSync(path + '/' + file).isFile() && file.slice(-5) === '.html';
+    })
+    .map(function (file) {
+      var templateName = file.substring(0, file.lastIndexOf('.'));
+      return {
+        name: templateName,
+        uri: server.info.protocol + '://' + request.info.host + request.path + '/' + templateName
+      };
+      // return server.info.protocol + '://' + request.info.host + request.path + '/' + file.substring(0, file.lastIndexOf('.'));
+    }));
+  }
+},{
+  method: 'GET',
+  path: '/templates/{template}',
+  handler: function (request, reply) {
+    if (request.query.node) {
       bond_client.getNode(request.query.node, function (err, node) {
-        console.log(node);
-        reply.view(request.params.template, node);
+        reply
+        .view(request.params.template, node)
+        .header('X-Subject-Suggestion', emailSubjectSuggestion(node));
       });
     } else if (request.query.nodequeue) {
       bond_client.getNodequeue(request.query.nodequeue, function (err, nodequeue) {
-        console.log(nodequeue);
-        reply.view(request.params.template, nodequeue);
+        reply
+        .view(request.params.template, nodequeue)
+        .header('X-Subject-Suggestion', emailSubjectSuggestion(nodequeue));
       });
     } else {
       reply.view(request.params.template);
-      // reply.view(request.params.template, {title:'HEJ'});
+    }
+  }
+},{
+  method: 'OPTIONS',
+  path: '/templates/{template}',
+  handler: function (request, reply) {
+    if (request.query.node) {
+      bond_client.getNode(request.query.node, function (err, node) {
+        reply()
+        .header('Content-Type', 'text/html; charset=utf-8')
+        .header('X-Subject-Suggestion', emailSubjectSuggestion(node));
+      });
+    } else if (request.query.nodequeue) {
+      bond_client.getNodequeue(request.query.nodequeue, function (err, nodequeue) {
+        reply()
+        .header('Content-Type', 'text/html; charset=utf-8')
+        .header('X-Subject-Suggestion', emailSubjectSuggestion(nodequeue));
+      });
+    } else {
+      reply().code(404);
     }
   }
 }]);
 
+
+function emailSubjectSuggestion (data) {
+  console.log('emailSubjectSuggestion', data);
+  if (data.type === 'nodequeue') {
+    var temp = [];
+    for (var i = 0; i < 3; i++) {
+      temp.push(data.nodes[i].title);
+    }
+    return temp.join(' | ');
+  } else {
+    return data.title;
+  }
+}
 
 // function listHtmlFiles (path) {
 //   return fs.readdirSync(path)
@@ -107,7 +152,7 @@ server.route({
 
 
 server.on('tail', function (request) {
-  //console.log('Request complete', new Date().toString());
+  console.log('Request complete:', request.method, request.path, new Date().toString());
   //console.log('tail', request.path, request.headers);
 });
 

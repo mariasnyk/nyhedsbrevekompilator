@@ -44,11 +44,9 @@ function getFromBond ( type, id, callback ) {
   }
 
   var href = bondapiUrl + '/' + type + '/' + id + '.ave-json';
-  console.log('Requesting BOND on ' + href);
-
   http.get( href, function( response ) {
 
-    console.log('HTTP ' + response.statusCode + ' response from BOND.');
+    console.log('HTTP ' + response.statusCode + ' response from BOND on', href);
 
     if (response.statusCode === 401) {
       return callback (null, null);
@@ -64,7 +62,6 @@ function getFromBond ( type, id, callback ) {
     });
 
     response.on('end', function() {
-      console.log('Response from BOND ended.');
       callback(null, JSON.parse( data ) );
     });
   }).on('error', function(e) {

@@ -35,6 +35,11 @@ app.service('userdbService', ['apiVersion', '$http',
       return $http.post(baseUrl + 'newsletters/' + newsletterId + '/send');
     }
 
+    this.sendNewsletterAdhoc = function (data) {
+      //return $http({method: 'POST', url: baseUrl + 'newsletters/tester'})
+      return $http.post(baseUrl + 'newsletters/send', data);
+    }
+
     this.sendTestNewsletter = function (data) {
       //return $http({method: 'POST', url: baseUrl + 'newsletters/tester'})
       return $http.post(baseUrl + 'newsletters/tester', data);
