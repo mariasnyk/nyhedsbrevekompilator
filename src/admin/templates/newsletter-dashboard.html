@@ -12,14 +12,14 @@
           <th>Name</th>
           <th>Publisher</th>
           <th>Beskrivelse</th>
-          <th></th>
+          <!-- <th></th> -->
         </tr>
         <tr ng-repeat="newsletter in newsletters | filter: newsletterFilter" ng-class="{'warning' : newsletter.enabled === 0}">
-          <td><a href="#/newsletters/{{newsletter.nyhedsbrev_id}}">{{newsletter.nyhedsbrev_id}}</a></td>
+          <td><a ng-href="#/newsletters/{{newsletter.nyhedsbrev_id}}">{{newsletter.nyhedsbrev_id}}</a></td>
           <td>{{newsletter.nyhedsbrev_navn}}</td>
-          <td>{{newsletter.publisher_name}}</td>
+          <td>{{newsletter.publisher_navn}}</td>
           <td>{{newsletter.indhold}}</td>
-          <td><a href="#/newsletters/{{newsletter.nyhedsbrev_id}}/preview">Preview</a></td>
+          <!-- <td><a ng-href="#/newsletters/{{newsletter.nyhedsbrev_id}}/preview">Preview</a></td> -->
         </tr>
       </table>
     </div>

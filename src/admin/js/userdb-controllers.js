@@ -126,8 +126,13 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
       // });
     };
 
-    $scope.sendNewsletterClick = function (newsletterId) {
-      userdbService.sendNewsletter(newsletterId);
+    $scope.send = function () {
+      var data = {
+        identity: $scope.newsletter.identity,
+        subject: $scope.subject,
+        html_url: $scope.html_url
+      }
+      userdbService.sendNewsletter(data);
       notifications.showSuccess('Done');
     };
   }]);

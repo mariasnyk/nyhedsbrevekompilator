@@ -43,7 +43,11 @@ module.exports = [
   },{
     method: ['put','post'],
     path: '/newsletters/{id}/send',
-    handler: sendNewsletter
+    handler: sendNewsletterWithDefaults
+  },{
+    method: ['put','post'],
+    path: '/newsletters/send',
+    handler: sendNewsletterAdhoc
   },{
     method: 'get',
     path: '/newsletters/identities',
@@ -187,7 +191,7 @@ function selectNewsletterSubscribersCount (request, reply) {
 };
 
 
-function sendNewsletter (request, reply) {
+function sendNewsletterWithDefaults (request, reply) {
   var newsletterId = request.params.id;
 
   var sql = ['SELECT subscription.*, publisher.from_email, publisher.from_name FROM subscription',
@@ -228,7 +232,15 @@ function sendNewsletter (request, reply) {
       });
     });
   });
-};
+}
+
+
+function sendNewsletterAdhoc (request, reply) {
+  var identity = '';
+  var html_url = '';
+  var html = '';
+  reply();
+}
 
 
 function sendTestEmail (request, reply) {

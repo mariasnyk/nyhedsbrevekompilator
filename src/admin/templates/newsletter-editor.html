@@ -38,8 +38,9 @@
       <img class="img-responsive" src="{{newsletter.publisher_toppic}}" alt="{{newsletter.publisher_toppic}}" title="{{newsletter.publisher_toppic}}" />
     </div>
   </div>
+  <hr>
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-3">
       <div class="form-group">
         <label for="identity">Identity</label>
         <select
@@ -51,8 +52,19 @@
         </select>
       </div>
     </div>
-  </div>
-  <div class="row">
+    <div class="col-xs-3">
+      <div class="form-group">
+        <label for="template">Template</label>
+        <!-- <input type="text" class="form-control" id="template" placeholder="Select default template" ng-model=""> -->
+        <select
+          id="template"
+          class="form-control"
+          ng-model="newsletter.template"
+          ng-options="template for template in templates"
+          ng-required="true">
+        </select>
+      </div>
+    </div>
     <div class="col-xs-3">
       <div class="form-group">
         <label for="bond_type">BOND Data type</label>
@@ -68,27 +80,26 @@
         <input type="text" class="form-control" id="bond_id" placeholder="{{newsletter.bond_type}} ID" ng-model="newsletter.bond_id">
       </div>
     </div>
-    <div class="col-xs-6" ng-show="newsletter.bond_id">
-      <p style="padding-top: 30px;">
-        <a href="http://edit.berlingskemedia.net/{{newsletter.bond_type}}/{{newsletter.bond_id}}/edit">http://edit.berlingskemedia.net/{{newsletter.bond_type}}/{{newsletter.bond_id}}/edit</a>
-      </p>
-    </div>
   </div>
   <div class="row">
-    <div class="col-xs-12">
-      <div class="form-group">
-        <label for="template">Default template</label>
-        <!-- <input type="text" class="form-control" id="template" placeholder="Select default template" ng-model=""> -->
-        <select
-          id="template"
-          class="form-control"
-          ng-model="newsletter.template"
-          ng-options="template for template in templates"
-          ng-required="true">
-        </select>
-      </div>
+    <div class="col-xs-9">
+      <label for="subject">Emne</label>
+      <input type="text" id="subject" class="form-control" ng-model="subject">
+    </div>
+    <div class="col-xs-3">
+      <label for="subject">Emne</label>
+      <input type="text" id="subject" class="form-control" ng-model="subject">
     </div>
   </div>
+  <div class="row" style="padding-top: 10px;">
+    <div class="col-xs-6">
+      <a target="_blank" href="{{html_url}}">{{html_url}}</a>
+    </div>
+    <div class="col-xs-6 text-right" ng-show="newsletter.bond_type == 'node'">
+      <a href="http://edit.berlingskemedia.net/{{newsletter.bond_type}}/{{newsletter.bond_id}}/edit">http://edit.berlingskemedia.net/{{newsletter.bond_type}}/{{newsletter.bond_id}}/edit</a>
+    </div>
+  </div>
+  <hr>
   <div class="row">
     <div class="col-xs-2">
       <button type="button" class="btn btn-primary" ng-click="save()">
@@ -97,7 +108,7 @@
     </div>
     <div class="col-xs-2 col-xs-offset-8 text-right">
       <!-- <a href="#/newsletters/{{newsletter.nyhedsbrev_id}}/preview">Preview</a> -->
-      <button type="button" class="btn btn-warning" ng-click="sendNewsletterClick(newsletter.nyhedsbrev_id)">
+      <button type="button" class="btn btn-warning" ng-click="send()">
         Send <span class="glyphicon glyphicon-envelope"></span>
       </button>
     </div>

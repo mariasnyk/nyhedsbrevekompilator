@@ -45,9 +45,6 @@ app.config(['$routeProvider', function ($routeProvider) {
       controller: 'TesterCtrl' })
     .otherwise({
       redirectTo: '/' });
-
-  //$locationProvider.html5Mode(true);
-  //$locationProvider.hashPrefix('!');
 }]);
 
 app.config(['$resourceProvider', function ($resourceProvider) {
