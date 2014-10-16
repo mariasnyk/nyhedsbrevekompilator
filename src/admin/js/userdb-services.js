@@ -4,7 +4,7 @@ app.value('apiVersion', 'v0');
 
 app.service('userdbService', ['apiVersion', '$http',
   function (apiVersion, $http) {
-    var baseUrl = '/' + apiVersion + '/';
+    var baseUrl = '/apis/' + apiVersion + '/';
 
     this.get = function (relUrl) {
       return $http({method: 'GET', url: baseUrl + removeFirstSlash(relUrl)});

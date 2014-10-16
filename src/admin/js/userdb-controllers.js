@@ -64,8 +64,8 @@ app.controller('PublisherCtrl', ['$scope', '$routeParams', '$location', 'userdbS
 
 app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdbService', '$resource', '$sce', 'notifications',
   function ($scope, $routeParams, $location, userdbService, $resource, $sce, notifications) {
-    var Newsletters = $resource('/v0/newsletters/:id', {id: '@id'});
-    var Identities = $resource('/v0/newsletters/identities');
+    var Newsletters = $resource('/apis/v0/newsletters/:id', {id: '@id'});
+    var Identities = $resource('/apis/v0/newsletters/identities');
     var Templates = $resource('/templates/');
     
     if ($routeParams.id) {
