@@ -1,0 +1,21 @@
+{% extends 'partials/layout.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+  {% parent %}
+{% endblock %}
+
+
+{% block content %}
+
+  {% for node in nodes %}
+  <h2>{{ node.title }}</h2>
+  {% for image in node.images %}
+    <img width="300px" title="{{ image.title }}" src="http://www.bt.dk/{{ image.file.path }}">
+  {% endfor %}
+  <p>Dato: {{ node.dateCreated }}</p>
+
+  
+  {% endfor %}
+{% endblock %}

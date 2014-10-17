@@ -22,11 +22,9 @@ var serverOptions = {
   router: {
     stripTrailingSlash: false
   }
-  // ,
-  // labels: ['admin', 'apis', 'templates']
+  // ,labels: ['admin', 'apis', 'templates']
 };
 
-//pack.server(8000, { labels: ['web'] });
 pack.server(8000, serverOptions);
 
 pack.register(admin, { route: { prefix: '/admin' } }, cb);

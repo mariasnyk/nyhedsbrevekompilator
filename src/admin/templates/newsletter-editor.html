@@ -52,19 +52,16 @@
         </select>
       </div>
     </div>
-    <div class="col-xs-3">
-      <div class="form-group">
-        <label for="template">Template</label>
-        <!-- <input type="text" class="form-control" id="template" placeholder="Select default template" ng-model=""> -->
-        <select
-          id="template"
-          class="form-control"
-          ng-model="newsletter.template"
-          ng-options="template.name as template.name for template in templates"
-          ng-required="true">
-        </select>
-      </div>
+    <div class="col-xs-6">
+      <label for="subject">Emne</label>
+      <input type="text" id="subject" class="form-control" ng-model="subject">
     </div>
+    <div class="col-xs-3">
+      <label for="list">Liste</label>
+      <input type="text" id="subject" class="form-control" ng-model="list">
+    </div>
+  </div>
+  <div class="row">
     <div class="col-xs-3">
       <div class="form-group">
         <label for="bond_type">BOND Data type</label>
@@ -80,15 +77,29 @@
         <input type="text" class="form-control" id="bond_id" placeholder="{{newsletter.bond_type}} ID" ng-model="newsletter.bond_id">
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-9">
-      <label for="subject">Emne</label>
-      <input type="text" id="subject" class="form-control" ng-model="subject">
+    <div class="col-xs-3">
+      <div class="form-group">
+        <label for="html_template">HTML Template</label>
+        <!-- <input type="text" class="form-control" id="template" placeholder="Select default template" ng-model=""> -->
+        <select
+          id="html_template"
+          class="form-control"
+          ng-model="newsletter.template_html"
+          ng-options="template.name as template.name for template in templates"
+          ng-required="true">
+        </select>
+      </div>
     </div>
     <div class="col-xs-3">
-      <label for="list">Liste</label>
-      <input type="text" id="subject" class="form-control" ng-model="list">
+      <div class="form-group">
+        <label for="text_template">Text Template</label>
+        <select
+          id="text_template"
+          class="form-control"
+          ng-model="newsletter.template_text">
+          <option>Not implemented</option>
+        </select>
+      </div>
     </div>
   </div>
   <div class="row" style="padding-top: 10px;">

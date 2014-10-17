@@ -28,22 +28,26 @@ app.service('userdbService', ['apiVersion', '$http',
 
     this.saveNewsletter = function (data) {
       return $http.put(baseUrl + 'newsletters/' + data.nyhedsbrev_id, data);
-    }
+    };
 
     this.sendNewsletter = function (newsletterId) {
       //return $http({method: 'POST', url: baseUrl + 'newsletters/tester'})
       return $http.post(baseUrl + 'newsletters/' + newsletterId + '/send');
-    }
+    };
 
     this.sendNewsletterAdhoc = function (data) {
       //return $http({method: 'POST', url: baseUrl + 'newsletters/tester'})
       return $http.post(baseUrl + 'newsletters/send', data);
-    }
+    };
 
     this.sendTestNewsletter = function (data) {
       //return $http({method: 'POST', url: baseUrl + 'newsletters/tester'})
       return $http.post(baseUrl + 'newsletters/tester', data);
-    }
+    };
+
+    this.getNewsletterSubjectSuggestion = function (url) {
+      return $http.head(url);
+    };
   }]);
 
 function removeFirstSlash(url) {

@@ -18,8 +18,16 @@ module.exports = [
     handler: selectAllNewsletters
   },{
     method: 'get',
-    path: '/newsletters/identities',
+    path: '/sendgrid/identities',
     handler: listSendGridIdentities
+  },{
+    method: 'get',
+    path: '/sendgrid/identities/{id}',
+    handler: getSendGridIdentity
+  },{
+    method: 'get',
+    path: '/sendgrid/lists',
+    handler: getSendGridLists
   },{
     method: ['put','post'],
     path: '/newsletters/send',
@@ -89,16 +97,15 @@ function selectNewsletter (request, reply) {
       reply().code(404);
     else {
       var sql = 'SELECT * FROM mdb_nyhedsbrev WHERE nyhedsbrev_id='+tbl_nyhedsbrev.nyhedsbrev_id;
-      console.log(sql);
       userdb.queryOne(sql, function (err, mdb_nyhedsbrev) {
-        console.log(mdb_nyhedsbrev);
-        // Merging results
-        Object.keys(mdb_nyhedsbrev).forEach(function (key) {
-          tbl_nyhedsbrev[key] = mdb_nyhedsbrev[key];
-          console.log(key,mdb_nyhedsbrev['key']);
-        });
 
-        console.log(tbl_nyhedsbrev);
+        // Merging results
+        if (mdb_nyhedsbrev) {
+          Object.keys(mdb_nyhedsbrev).forEach(function (key) {
+            tbl_nyhedsbrev[key] = mdb_nyhedsbrev[key];
+          });
+        }
+
         reply(tbl_nyhedsbrev);
       });
     }
@@ -135,22 +142,26 @@ function saveNewsletter (request, reply) {
     
     var sql = [
       'INSERT INTO mdb_nyhedsbrev',
-      '(nyhedsbrev_id, identity, bond_type, bond_id, template)',
+      '(nyhedsbrev_id, identity, bond_type, bond_id, template_html, template_text)',
       'VALUES (',
       userdb.escape(newsletter.nyhedsbrev_id) + ',',
       userdb.escape(newsletter.identity) + ',',
       userdb.escape(newsletter.bond_type) + ',',
       userdb.escape(newsletter.bond_id) + ',',
-      userdb.escape(newsletter.template) + ')',
+      userdb.escape(newsletter.template_html) + ',',
+      userdb.escape(newsletter.template_text) + ')',
       'ON DUPLICATE KEY UPDATE',
       'identity = VALUES(identity),',
       'bond_type = VALUES(bond_type),',
       'bond_id = VALUES(bond_id),',
-      'template = VALUES(template)'].join (' ');
+      'template_html = VALUES(template_html),',
+      'template_text = VALUES(template_text)'].join (' ');
 
     userdb.query(sql, function (err, result) {
-      if (err) return reply(err).code(509);
-      else reply();
+      if (err) {
+        console.log(err);
+        reply().code(509);
+      } else reply();
     });
   } else {
     reply().code(501);
@@ -377,6 +388,15 @@ function sendPreview (data, callback) {
 }
 
 
+function getSendGridLists (request, reply) {
+  callSendGrid('/api/newsletter/lists/get.json', function (err, data) {
+    if (err) return reply(err).code(500);
+    else reply(data.map(function (list) {
+      return list.list;
+    }));
+  });
+}
+
 
 function listSendGridIdentities (request, reply) {
   callSendGrid('/api/newsletter/identity/list.json', function (err, data) {
@@ -387,6 +407,14 @@ function listSendGridIdentities (request, reply) {
   });
 }
 
+function getSendGridIdentity (request, reply) {
+  var body = 'identity=' + request.params.id;
+
+  callSendGrid('/api/newsletter/identity/get.json', body, function (err, data) {
+    if (err) return reply(err).code(500);
+    reply(data);
+  }); 
+}
 
 function callSendGrid (path, body, callback) {
   var data = '';

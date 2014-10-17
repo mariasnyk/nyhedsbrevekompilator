@@ -64,17 +64,20 @@ app.controller('PublisherCtrl', ['$scope', '$routeParams', '$location', 'userdbS
 
 app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdbService', '$resource', '$sce', 'notifications',
   function ($scope, $routeParams, $location, userdbService, $resource, $sce, notifications) {
-    var Newsletters = $resource('/apis/v0/newsletters/:id', {id: '@id'});
-    var Identities = $resource('/apis/v0/newsletters/identities');
+    var Newsletters = $resource('/apis/v0/newsletters/:id', { id: '@id' });
+    var Identities = $resource('/apis/v0/sendgrid/identities');
+    var Lists = $resource('/apis/v0/sendgrid/lists');
     var Templates = $resource('/templates/');
     
     if ($routeParams.id) {
-      Newsletters.get({id: $routeParams.id}, function (newsletter) {
+      Newsletters.get({id: $routeParams.id}, function (newsletter, headers) {
         $scope.newsletter = newsletter;
         // $scope.html_url = '/templates' + $scope.newsletter.template + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id;
         // $scope.iframe_src = $sce.trustAsResourceUrl($scope.html_url);
         $scope.list = 'mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id;
         updatePreview();
+
+
       });
       // userdbService.get('/newsletters/' + $routeParams.id)
       // .success( function (data, status, headers) {
@@ -94,6 +97,7 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
 
     $scope.identities = Identities.query();
     $scope.templates = Templates.query();
+    $scope.lists = Lists.query();
 
 
     if ($location.path().indexOf('preview') > 0) {
@@ -110,10 +114,18 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
 
     function updatePreview () {
       var template = $scope.templates.filter(function (item) {
-        return item.name === $scope.newsletter.template;
+        return item.name === $scope.newsletter.template_html;
       })[0];
       $scope.html_url = template.uri + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id;
       $scope.iframe_src = $sce.trustAsResourceUrl($scope.html_url);
+
+      userdbService.getNewsletterSubjectSuggestion($scope.html_url)
+      .success(function (data, status, getHeaders) {
+        var headers = getHeaders();
+        $scope.subject = headers['x-subject-suggestion'];
+      }).error(function (data, status) {
+        console.log('Error when heading for subject suggestion', data, status);
+      });
     };
 
     $scope.save = function () {
