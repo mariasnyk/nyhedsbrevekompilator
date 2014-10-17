@@ -74,10 +74,7 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
         $scope.newsletter = newsletter;
         // $scope.html_url = '/templates' + $scope.newsletter.template + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id;
         // $scope.iframe_src = $sce.trustAsResourceUrl($scope.html_url);
-        $scope.list = 'mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id;
-        updatePreview();
-
-
+        $scope.changeNewsletter();
       });
       // userdbService.get('/newsletters/' + $routeParams.id)
       // .success( function (data, status, headers) {
@@ -110,9 +107,9 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
       });
     }
 
-    $scope.changeHtmlUrl = updatePreview;
 
-    function updatePreview () {
+    $scope.changeNewsletter = function () {
+      $scope.loadingNewsletter = true;
       var template = $scope.templates.filter(function (item) {
         return item.name === $scope.newsletter.template_html;
       })[0];
@@ -123,8 +120,10 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
       .success(function (data, status, getHeaders) {
         var headers = getHeaders();
         $scope.subject = headers['x-subject-suggestion'];
+        $scope.loadingNewsletter = false;
       }).error(function (data, status) {
         console.log('Error when heading for subject suggestion', data, status);
+        $scope.loadingNewsletter = false;
       });
     };
 

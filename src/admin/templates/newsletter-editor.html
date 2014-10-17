@@ -40,9 +40,9 @@
   </div>
   <hr>
   <div class="row">
-    <div class="col-xs-3">
+    <div class="col-xs-2">
       <div class="form-group">
-        <label for="identity">Identity</label>
+        <label for="identity">Identity (afsender)</label>
         <select
           id="identity"
           class="form-control"
@@ -52,45 +52,36 @@
         </select>
       </div>
     </div>
-    <div class="col-xs-6">
-      <label for="subject">Emne</label>
-      <input type="text" id="subject" class="form-control" ng-model="subject">
-    </div>
-    <div class="col-xs-3">
-      <label for="list">Liste</label>
-      <input type="text" id="subject" class="form-control" ng-model="list">
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-3">
+    <div class="col-xs-2">
       <div class="form-group">
         <label for="bond_type">BOND Data type</label>
-        <select class="form-control" id="bond_type" ng-model="newsletter.bond_type">
+        <select id="bond_type" class="form-control" ng-model="newsletter.bond_type" ng-change="changeNewsletter()">
           <option>node</option>
           <option>nodequeue</option>
         </select>
       </div>
     </div>
-    <div class="col-xs-3">
+    <div class="col-xs-2">
       <div class="form-group">
         <label for="bond_id">ID</label>
-        <input type="text" class="form-control" id="bond_id" placeholder="{{newsletter.bond_type}} ID" ng-model="newsletter.bond_id">
+        <input id="bond_id" type="text" class="form-control" placeholder="{{newsletter.bond_type}} ID" ng-model="newsletter.bond_id" ng-change="changeNewsletter()">
       </div>
     </div>
-    <div class="col-xs-3">
+    <div class="col-xs-2">
       <div class="form-group">
-        <label for="html_template">HTML Template</label>
+        <label for="template_html">HTML Template</label>
         <!-- <input type="text" class="form-control" id="template" placeholder="Select default template" ng-model=""> -->
         <select
-          id="html_template"
+          id="template_html"
           class="form-control"
           ng-model="newsletter.template_html"
           ng-options="template.name as template.name for template in templates"
-          ng-required="true">
+          ng-required="true"
+          ng-change="changeNewsletter()">
         </select>
       </div>
     </div>
-    <div class="col-xs-3">
+    <div class="col-xs-2">
       <div class="form-group">
         <label for="text_template">Text Template</label>
         <select
@@ -101,32 +92,62 @@
         </select>
       </div>
     </div>
+    <div class="col-xs-2 text-right" style="padding-top: 25px;">
+      <button type="button" class="btn btn-primary" ng-click="save()">
+        Save <span class="glyphicon glyphicon-save"></span>
+      </button>
+    </div>
   </div>
-  <div class="row" style="padding-top: 10px;">
+<!--   <div class="row" style="padding-top: 10px;">
     <div class="col-xs-6">
       <a target="_blank" href="{{html_url}}">{{html_url}}</a>
     </div>
     <div class="col-xs-6 text-right" ng-show="newsletter.bond_type == 'node'">
       <a href="http://edit.berlingskemedia.net/{{newsletter.bond_type}}/{{newsletter.bond_id}}/edit">http://edit.berlingskemedia.net/{{newsletter.bond_type}}/{{newsletter.bond_id}}/edit</a>
     </div>
+  </div> -->
+  <hr>
+  <div class="row">
+    <div class="col-xs-12">
+    <div class="form-horizontal">
+      <div class="form-group">
+        <div class="col-xs-5">
+        </div>
+        <label for="list" class="col-xs-2 control-label">Liste (modtagere)</label>
+        <div class="col-xs-3">
+      <!-- <input id="list" type="text" class="form-control" ng-model="list"> -->
+          <select
+            id="list"
+            class="form-control"
+            ng-model="newsletter.list"
+            ng-options="list for list in lists"
+            ng-required="true">
+          </select>
+        </div>
+        <div class="col-xs-2 text-right">
+          <!-- <a href="#/newsletters/{{newsletter.nyhedsbrev_id}}/preview">Preview</a> -->
+          <button type="button" class="btn btn-warning" ng-click="send()">
+            Send <span class="glyphicon glyphicon-envelope"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    </div>
   </div>
   <hr>
   <div class="row">
-    <div class="col-xs-2">
-      <button type="button" class="btn btn-primary" ng-click="save()">
-        Save <span class="glyphicon glyphicon-save"></span>
-      </button>
-    </div>
-    <div class="col-xs-2 col-xs-offset-8 text-right">
-      <!-- <a href="#/newsletters/{{newsletter.nyhedsbrev_id}}/preview">Preview</a> -->
-      <button type="button" class="btn btn-warning" ng-click="send()">
-        Send <span class="glyphicon glyphicon-envelope"></span>
-      </button>
+    <div class="col-xs-12">
+      <label for="subject">Emne</label>
+      <input type="text" id="subject" class="form-control" ng-model="subject">
     </div>
   </div>
   <div class="row newsletter-preview">
-    <div class="col-xs-12">
-      <iframe ng-src="{{iframe_src}}" width="100%" height="1000px"></iframe>
+    <div class="col-xs-12" ng-show="loadingNewsletter">
+      <p class="text-center"><img src="img/loading.gif"></p>
+    </div>
+    <div class="col-xs-12" ng-hide="loadingNewsletter">
+      <label>Indhold</label>
+      <iframe class="form-control" ng-src="{{iframe_src}}"></iframe>
     </div>
   </div>
 </div>

@@ -7,18 +7,24 @@
 {% endblock %}
 
 {% block content %}
-<p>Dato: {{ dateCreated }}</p>
-<p>Forfatter:</p>
-{% for author in authors %}
-  <li{% if loop.first %} class="first"{% endif %}>
-    {{ author.profileName }} {{ author.email }}
-    {% if author.picture !== '' %}<img src="http://www.bt.dk/{{ author.picture }}">{% endif %}
-  </li>
-{% endfor %}
-{% autoescape false %}{{ body }}{% endautoescape %}
 
-{% for image in images %}
-  <img width="900px" title="{{ image.title }}" src="http://www.bt.dk/{{ image.file.path }}">
-{% endfor %}
+  <p>{% autoescape false %}{{ supertitle }}{% endautoescape %}</p>
+  <p><a href="http://{{ website }}/node/{{ id }}">L&aelig;s mere</a></p>
+
+  {% for image in images %}
+    <img width="900px" title="{{ image.title }}" src="http://www.bt.dk/{{ image.file.path }}">
+  {% endfor %}
+
+  <p>{% autoescape false %}{{ title }}{% endautoescape %}</p>
+  <p>{% autoescape false %}{{ summary }}{% endautoescape %}</p>
+
+  <p>L&aelig;s ogs&aring;</p>
+  <ul>
+  {% for rel in related %}
+    {% if rel.relation == 'default' %}
+      <li><a href="http://{{ website }}/node/{{ rel.id }}">{{ rel.title }}</a></p>
+    {% endif %}
+  {% endfor %}
+  </ul>
 
 {% endblock %}

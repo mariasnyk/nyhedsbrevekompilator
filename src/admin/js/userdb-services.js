@@ -48,6 +48,10 @@ app.service('userdbService', ['apiVersion', '$http',
     this.getNewsletterSubjectSuggestion = function (url) {
       return $http.head(url);
     };
+
+    this.getNewsletterContent = function (url) {
+      return $http.get(url);
+    };
   }]);
 
 function removeFirstSlash(url) {

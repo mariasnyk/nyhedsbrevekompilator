@@ -106,6 +106,11 @@ function selectNewsletter (request, reply) {
           });
         }
 
+        if (tbl_nyhedsbrev.list === undefined || tbl_nyhedsbrev.list === null) {
+          console.log('list is o');
+          tbl_nyhedsbrev.list = 'mdb_nyhedsbrev_' + tbl_nyhedsbrev.nyhedsbrev_id;
+        }
+
         reply(tbl_nyhedsbrev);
       });
     }

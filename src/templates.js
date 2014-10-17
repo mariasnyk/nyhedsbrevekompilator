@@ -55,6 +55,10 @@ module.exports.register = function (plugin, options, next) {
           reply().code(404);
       } else if (request.query.node) {
         bond_client.getNode(request.query.node, function (err, node) {
+          if (node === null) {
+            return reply().code(404);
+          }
+
           reply
           .view(request.params.template, node)
           .header('Transfer-Encoding', 'chunked')
@@ -62,6 +66,11 @@ module.exports.register = function (plugin, options, next) {
         });
       } else if (request.query.nodequeue) {
         bond_client.getNodequeue(request.query.nodequeue, function (err, nodequeue) {
+          console.log(nodequeue);
+          if (nodequeue.title === null) {
+            return reply().code(404);
+          }
+
           reply
           .view(request.params.template, nodequeue)
           .header('Transfer-Encoding', 'chunked')
@@ -83,6 +92,7 @@ module.exports.register.attributes = {
 
 
 function emailSubjectSuggestion (data) {
+  if (data === null) return '';
   var maxLength = 255;
 
   if (data.type === 'nodequeue') {
