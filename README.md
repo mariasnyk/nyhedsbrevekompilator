@@ -39,10 +39,21 @@ The `-p` parameter determines what port the container will bind the app to.
 
 Check out the lastest source code from the GitHub repo.
 
-Run `sudo docker build -t bmdako/userdb` to create a build locally.
+First, to create a build locally run:
+
+```
+sudo docker build -t bmdako/userdb
+``` 
+
 The Docker image will contain the source code and the Node modules.
 
-Run `sudo docker push bmdako/userdb` to upload the last version of the image to Docker Hub. You need to have the right credentials on the Docker Hub to do this.
+Then, to upload the last version of the image to Docker Hub, run:
+
+```
+sudo docker push bmdako/userdb
+```
+
+You need to have the right credentials on the Docker Hub to do this.
 
 
 # Run from source
@@ -51,9 +62,13 @@ If you like to run the app directly from source, you can either clone this repo 
 
 You need Node (incl. NPM) and Python (for PostgreSQL client) installed.
 
-Run `npm install` to install the dependencies.
+First, install the depencdencies by running: 
 
-You need to set the following environment variables:
+```
+npm install
+```
+
+Before you can start the app, the following environment variables need to be set:
 
 - RDS_HOSTNAME
 - RDS_PORT
@@ -72,9 +87,15 @@ You need to set the following environment variables:
 - SENDGRID_API_USER
 - SENDGRID_API_KEY
 
-Start the app with `node src/app.js` or, if you have installed *gulp* (using `npm install -g gulp`), just with the command `gulp`.
+Start the app with the following command:
 
-Visit [http://localhost:8000/](http://localhost:8000/) if you get no error.
+```
+node src/app.js
+```
+
+'Or, if you have installed *gulp* (using `npm install -g gulp`), just with the command `gulp`.
+
+Visit [http://localhost:8000/](http://localhost:8000/) if you get no error after startup.
 
 # API
 
