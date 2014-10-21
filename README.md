@@ -47,7 +47,7 @@ sudo docker build -t bmdako/userdb
 
 The Docker image will contain the source code and the Node modules.
 
-Then, to upload the last version of the image to Docker Hub, run:
+Then, to upload the newly built version of the image to Docker Hub, run:
 
 ```
 sudo docker push bmdako/userdb
