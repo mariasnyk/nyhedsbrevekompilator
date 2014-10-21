@@ -38,23 +38,23 @@ Visit **http://\<Server DNS/IP\>:\<Port\>** to make sure the app is running. The
 
 # Build the Docker image
 
-Check out the lastest source code from the GitHub repo.
+First, check out the lastest source code from the GitHub repo.
 
-First, to create a build locally run:
+Next, to create a build locally run:
 
 ```
 sudo docker build -t bmdako/userdb
 ``` 
 
-The Docker image will contain the source code and the Node modules.
+(The source code and the Node modules will be copied onto the Docker image.)
 
-Then, to upload the newly built version of the image to Docker Hub, run:
+Lastly, to upload the newly built version of the image to Docker Hub, run:
 
 ```
 sudo docker push bmdako/userdb
 ```
 
-You need to have the right credentials on the Docker Hub to do this.
+(You need the right credentials on the Docker Hub to push the image.)
 
 
 # Run from source
