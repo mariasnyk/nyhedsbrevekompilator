@@ -8,6 +8,10 @@
   },
   "author": "Berlingske Media",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bmdako/userdb"
+  },
   "dependencies": {
     "aws-sdk": "^2.0.17",
     "hapi": "^6.9.0",

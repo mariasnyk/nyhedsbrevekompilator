@@ -25,11 +25,31 @@ var serverOptions = {
   // ,labels: ['admin', 'apis', 'templates']
 };
 
+var redirectRootToAdmin = {
+  register: function (plugin, options, next) {
+    plugin.route({
+      method: 'GET',
+      path: '/',
+      handler: function (request, reply) {
+        reply.redirect('/admin');
+      }
+    });
+
+    next();
+  }
+};
+
+redirectRootToAdmin.register.attributes = {
+  name: 'redirectRootToAdmin',
+  version: '1.0.0'
+};
+
 pack.server(8000, serverOptions);
 
 pack.register(admin, { route: { prefix: '/admin' } }, cb);
 pack.register(apis, { route: { prefix: '/apis' } }, cb);
 pack.register(templates, { route: { prefix: '/templates' } }, cb);
+pack.register(redirectRootToAdmin, cb);
 
 
 if (!module.parent) {

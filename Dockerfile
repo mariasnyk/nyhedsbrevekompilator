@@ -3,7 +3,8 @@ FROM ubuntu:14.04
 MAINTAINER Daniel Kokott <dako@berlingskemedia.dk>
 
 # Installing wget and python. Python is needed to Postgress support.
-RUN apt-get -y install wget python
+RUN apt-get update
+RUN apt-get install -y wget python
 
 # Downloading and installing Node.
 RUN wget -O - http://nodejs.org/dist/v0.10.32/node-v0.10.32-linux-x64.tar.gz \
@@ -14,10 +15,14 @@ RUN wget -O - http://nodejs.org/dist/v0.10.32/node-v0.10.32-linux-x64.tar.gz \
 WORKDIR /userdb
 
 # Copying the code into image. Be aware no config files are including.
-COPY . /userdb
+COPY ./src /userdb/src
+COPY ./node_modules /userdb/node_modules
+# COPY ./package.json /userdb
+# COPY ./gulpfile.js /userdb
 
 # Installing node modules.
-RUN npm install --production
+# Actually, we don't need this because we copy everything onto the image including node_modules directory.
+# RUN npm install --production
 
 # Exposing our endpoint to Docker.
 EXPOSE  8000

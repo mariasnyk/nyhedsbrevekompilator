@@ -2,12 +2,87 @@
 userdb
 ======
 
+# Run from Docker
+
+Running this app inside a Docker container is very easy.
+You need to have a Ubuntu/Linux computer with Docker installed.
+
+Docker will automatically download the image and run the app from just one (but very long) command:
+
+```
+sudo docker run \
+-e RDS_HOSTNAME=xxx \
+-e RDS_PORT=xxx \
+-e RDS_DATABASE=xxx \
+-e RDS_USERNAME=xxx \
+-e RDS_PASSWORD=xxx \
+-e MDB_ADDRESS=xxx \
+-e MDB_PORT=xxx \
+-e MDB_DATABASE=xxx \
+-e MDB_USERNAME=xxx \
+-e MDB_PASSWORD=nqO94hfrhC \
+-e AWS_ACCESS_KEY_ID=xxx \
+-e AWS_SECRET_ACCESS_KEY=xxx \
+-e AWS_REGION=xxx \
+-e BOND_API=xxx \
+-e SENDGRID_API_USER=xxx \
+-e SENDGRID_API_KEY=xxx \
+-p xxxx:8000 \
+-d bmdako/userdb
+```
+
+All the `-e` parameters are the environent variables to allow the app to connect to dependent services eg. SendGrid. These will be supplied seperatly
+The `-p` parameter determines what port the container will bind the app to.
+
+
+# Build the Docker image
+
+Check out the lastest source code from the GitHub repo.
+
+Run `sudo docker build -t bmdako/userdb` to create a build locally.
+The Docker image will contain the source code and the Node modules.
+
+Run `sudo docker push bmdako/userdb` to upload the last version of the image to Docker Hub. You need to have the right credentials on the Docker Hub to do this.
+
+
+# Run from source
+
+If you like to run the app directly from source, you can either clone this repo or download the latest ZIP.
+
+You need Node (incl. NPM) and Python (for PostgreSQL client) installed.
+
+Run `npm install` to install the dependencies.
+
+You need to set the following environment variables:
+
+- RDS_HOSTNAME
+- RDS_PORT
+- RDS_DATABASE
+- RDS_USERNAME
+- RDS_PASSWORD
+- MDB_ADDRESS
+- MDB_PORT
+- MDB_DATABASE
+- MDB_USERNAME
+- MDB_PASSWORD
+- AWS_ACCESS_KEY_ID
+- AWS_SECRET_ACCESS_KEY
+- AWS_REGION
+- BOND_API
+- SENDGRID_API_USER
+- SENDGRID_API_KEY
+
+Start the app with `node src/app.js` or, if you have installed *gulp* (using `npm install -g gulp`), just with the command `gulp`.
+
+Visit [http://localhost:8000/](http://localhost:8000/) if you get no error.
+
+# API
+
 From [http://docs.userdb.apiary.io/](http://docs.userdb.apiary.io/)
 
 FORMAT: 1A
 HOST: http://localhost:8000/v0
 
-# User DB
 This documents the API for *User DB*, a service for handling the subscription in marketing automation.
 
 
