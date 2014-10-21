@@ -34,7 +34,7 @@ sudo docker run \
 All the `-e` parameters are the environent variables to allow the app to connect to dependent services eg. SendGrid. These will be supplied seperatly
 The `-p` parameter determines what port the container will bind the app to.
 
-Visit **http://<Server DNS/IP>:<Port>** to make sure the app is running. The *Port* is the one you have defined above.
+Visit **http://\<Server DNS/IP\>:\<Port\>** to make sure the app is running. The *Port* is the one you have defined above.
 
 # Build the Docker image
 
