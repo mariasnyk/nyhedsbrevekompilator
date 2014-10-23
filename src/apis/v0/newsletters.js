@@ -31,10 +31,6 @@ module.exports = [
     path: '/newsletters/send',
     handler: adhocNewsletter
   },{
-    method: ['put','post'],
-    path: '/newsletters/draft',
-    handler: adhocNewsletter
-  },{
     method: 'get',
     path: '/newsletters/{id}',
     handler: selectNewsletter
@@ -326,31 +322,48 @@ function download (url, callback) {
 
 function adhocNewsletter (request, reply) {
 
-  var data = request.payload,
-      send = request.route.path === '/apis/v0/newsletters/send'; // This must be done in a better way than hardcoding the path
+  var data = request.payload;
 
   if (data.list === undefined)
-    return reply({message: 'Field list is missing.' });
+    return reply( { message: 'Field list is missing.' } );
+
   if (data.identity === undefined)
-    return reply({message: 'Field identity is missing.' });
-  if (data.html === undefined && data.html_url === undefined)
-    return reply({message: 'Field html or html_url is missing.' });
+    return reply( { message: 'Field identity is missing.' } );
+
   if (data.subject === undefined)
-    return reply({message: 'Field subject is missing.' });
+    return reply( { message: 'Field subject is missing.' } );
+
+  if (data.bond_type === undefined)
+    return reply( { message: 'Field bond_type is missing.' } );
+
+  if (data.bond_id === undefined)
+    return reply( { message: 'Field bond_id is missing.' } );
+
+  if (data.template_html === undefined)
+    return reply( { message: 'Field template_html is missing.' } );
+
+  if (data.template_plain === undefined)
+    return reply( { message: 'Field template_plain is missing.' } );
+
   if (data.name === undefined)
     data.name = 'newsletter_' + Date.now();
 
-  download(data.html_url, function (err, html_email) {
+
+  var createDraft = data.draft !== undefined &&
+        typeof data.draft === 'boolean' ? data.draft : 
+        typeof data.draft === 'string' ? data.draft === 'true' :
+        false
+
+  var html_url  = request.server.info.uri + '/templates/' + data.template_html + '?' + data.bond_type + '=' + data.bond_id,
+      plain_url = request.server.info.uri + '/templates/' + data.template_plain + '?' + data.bond_type + '=' + data.bond_id;
+
+  download(html_url, function (err, html_email) {
     if (err) return reply(err);
 
-    data.html = html_email;
-
-    download(data.plain_url, function (err, plain_email) {
+    download(plain_url, function (err, plain_email) {
       if (err) return reply(err);
 
-      data.plain = plain_email;
-      
-      addSendGridMarketingEmail(data.identity, data.name, data.subject, data.plain, data.html, function (err, result) {
+      addSendGridMarketingEmail(data.identity, data.name, data.subject, plain_email, html_email, function (err, result) {
         console.log('addSendGridMarketingEmail', err, result);
         if (err) return reply(err).code(400);
 
@@ -358,75 +371,30 @@ function adhocNewsletter (request, reply) {
           console.log('addSendGridRecipients', err, result);
           if (err) return reply(err).code(400);
 
-          if (send) {
+          if (createDraft) {
+            reply({message: 'Draft created.', name: data.name});
+          } else {
             addSendGridSchedule(data.name, function (err, result) {
               console.log('addSendGridSchedule', err, result);
               if (err) return reply(err).code(400);
 
               reply({message: 'Email sent.', name: data.name});
             });
-          } else {
-            reply({message: 'Draft created.', name: data.name});
           }
         })
       });
     })
   });
-
-
-  // function create () {
-  //   addSendGridMarketingEmail(data.identity, data.name, data.subject, data.plain, data.html, function (err, result) {
-  //     console.log('addSendGridMarketingEmail', err, result);
-  //     if (err) return reply(err).code(400);
-
-  //     addSendGridRecipients(data.list, data.name, function (err, result) {
-  //       console.log('addSendGridRecipients', err, result);
-  //       if (err) return reply(err).code(400);
-
-  //       if (send) {
-  //         addSendGridSchedule(data.name, function (err, result) {
-  //           console.log('addSendGridSchedule', err, result);
-  //           if (err) return reply(err).code(400);
-
-  //           reply({message: 'Email sent.', name: data.name});
-  //         });
-  //       } else {
-  //         reply({message: 'Draft created.', name: data.name});
-  //       }
-  //     })
-  //   });
-  // }
 }
 
-
-
-// function sendNewsletterAdhoc (request, reply) {
-//   var data = request.payload;
-//   data.recipients = ['dako@berlingskemedia.dk'];
-
-//   if (data.html === undefined || data.html === null) {
-//     download(data.html_url, function (err, html) {
-//       data.html = html;
-//       sendPreview(data, function (err, result) {
-//         reply();
-//       });
-//     });
-//   } else {
-//     sendPreview(data, function (err, result) {
-//       reply();
-//     });
-//   }
-// }
 
 
 function scheduledNewsletter (request, reply) {
   
   queryOneNewsletter(request.params.id, function (err, newsletter) {
 
-    var html_url = request.server.info.uri + '/templates/' + newsletter.template_html + '?' + newsletter.bond_type + '=' + newsletter.bond_id;
-    var plain_url = request.server.info.uri + '/templates/' + newsletter.template_plain + '?' + newsletter.bond_type + '=' + newsletter.bond_id;
-
-    console.log('ulerer', html_url, plain_url);
+    var html_url  = request.server.info.uri + '/templates/' + newsletter.template_html + '?' + newsletter.bond_type + '=' + newsletter.bond_id,
+        plain_url = request.server.info.uri + '/templates/' + newsletter.template_plain + '?' + newsletter.bond_type + '=' + newsletter.bond_id;
 
     download(html_url, function (err, html_email, headers) {
 
@@ -435,21 +403,24 @@ function scheduledNewsletter (request, reply) {
           list = 'mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id,
           name = 'mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id + '_' + Date.now();
 
-      addSendGridMarketingEmail(newsletter.identity, name, subject, 'TODO add text version', html_email, function (err, result) {
-        console.log('addSendGridMarketingEmail', err, result);
-        if (err) return reply(err);
+      download(plain_url, function (err, plain_email) {
 
-        addSendGridRecipients(list, name, function (err, result) {
-          console.log('addSendGridRecipients', err, result);
+        addSendGridMarketingEmail(newsletter.identity, name, subject, plain_email, html_email, function (err, result) {
+          console.log('addSendGridMarketingEmail', err, result);
           if (err) return reply(err);
 
-          addSendGridSchedule(name, function (err, result) {
-            console.log('addSendGridSchedule', err, result);
+          addSendGridRecipients(list, name, function (err, result) {
+            console.log('addSendGridRecipients', err, result);
             if (err) return reply(err);
 
-            reply({message: 'Email sent.', name: name});
-          });
-        })
+            addSendGridSchedule(name, function (err, result) {
+              console.log('addSendGridSchedule', err, result);
+              if (err) return reply(err);
+
+              reply({message: 'Email sent.', name: name});
+            });
+          })
+        });
       });
     });
   });

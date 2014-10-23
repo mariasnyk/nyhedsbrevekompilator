@@ -34,11 +34,39 @@ module.exports.register = function (plugin, options, next) {
   //     }));
   //   }
   },{
+    method: 'OPTIONS',
+    path: '/',
+    handler: function (request, reply) {
+
+      if (request.query.node) {
+        bond_client.getNode(request.query.node, function (err, node) {
+          if (node === null) {
+            return reply().code(404);
+          }
+
+          reply()
+          .header('Transfer-Encoding', 'chunked')
+          .header('X-Subject-Suggestion', encodeURIComponent(emailSubjectSuggestion(node)));
+        });
+      } else if (request.query.nodequeue) {
+        bond_client.getNodequeue(request.query.nodequeue, function (err, nodequeue) {
+          if (nodequeue.title === null) {
+            return reply().code(404);
+          }
+
+          reply()
+          .header('Transfer-Encoding', 'chunked')
+          .header('X-Subject-Suggestion', encodeURIComponent(emailSubjectSuggestion(nodequeue)));
+        });
+      } else {
+        reply().code(404);
+      }
+    }
+  },{
     method: 'GET',
     path: '/{template*}',
     handler: function (request, reply) {
       var templatePath = __dirname + '/templates';
-
 
       if (request.params.template === undefined) {
         var filter = request.query.filter;

@@ -42,12 +42,8 @@ app.service('userdbService', ['apiVersion', '$http',
       return $http.post(baseUrl + 'newsletters/send', data);
     };
 
-    this.draftAdhocNewsletter = function (data) {
-      return $http.post(baseUrl + 'newsletters/draft', data);
-    };
-
-    this.getNewsletterSubjectSuggestion = function (url) {
-      return $http.head(url);
+    this.getNewsletterSubjectSuggestion = function (bond_type, bond_id) {
+      return $http({method: 'OPTIONS', url: '/templates?' + bond_type + "=" + bond_id});
     };
 
     this.getNewsletterContent = function (url) {

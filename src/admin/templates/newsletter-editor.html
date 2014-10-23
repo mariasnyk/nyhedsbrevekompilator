@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="row">
+  <div class="row" ng-hide="adhocNewsletter">
     <div class="col-xs-2">
       <a href="#/newsletters"><span class="glyphicon glyphicon-arrow-left"></span> Tilbage til oversigt</a>
     </div>
@@ -7,38 +7,29 @@
       <a href="#/newsletters/{{newsletter.nyhedsbrev_id}}/preview">Preview <span class="glyphicon glyphicon-arrow-right"></span></a>
     </div> -->
   </div>
-  <div class="row">
-    <div class="col-xs-8">
-      <h2><small>Navn:</small> {{newsletter.nyhedsbrev_navn}}</h2>
+  <div ng-hide="adhocNewsletter">
+    <div class="row">
+      <div class="col-xs-8">
+        <h2><small>Navn:</small> {{newsletter.nyhedsbrev_navn}}</h2>
+      </div>
+      <div class="col-xs-4">
+        <span ng-show="newsletter.enabled" class="label label-success">Aktiv</span>
+        <span ng-show="!newsletter.enabled" class="label label-danger">Inaktiv</span>
+        <span ng-show="newsletter.hidden" class="label label-warning">Hidden</span>
+        <span ng-show="newsletter.nyt" class="label label-default">Nyt</span>
+        <div>ID: {{newsletter.nyhedsbrev_id}}</div>
+      </div>
+      <div class="col-xs-6">
+        <p>Udgiver: {{newsletter.publisher_navn}}</p>
+        <p>Tidligere sendt fra: {{newsletter.publisher_sendfrom}}</p>
+        <p>Link til hjulet: <a href="{{newsletter.publisher_url}}">{{newsletter.publisher_url}}</a></p>
+      </div>
+      <div class="col-xs-6">
+        <img class="img-responsive" src="{{newsletter.publisher_toppic}}" alt="{{newsletter.publisher_toppic}}" title="{{newsletter.publisher_toppic}}" />
+      </div>
     </div>
-    <div class="col-xs-4">
-      <span ng-show="newsletter.enabled" class="label label-success">Aktiv</span>
-      <span ng-show="!newsletter.enabled" class="label label-danger">Inaktiv</span>
-      <span ng-show="newsletter.hidden" class="label label-warning">Hidden</span>
-      <span ng-show="newsletter.nyt" class="label label-default">Nyt</span>
-      <div>ID: {{newsletter.nyhedsbrev_id}}</div>
-    </div>
+    <hr>
   </div>
-  <div class="row">
-    <div class="col-xs-12">
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
-      <div class="alert alert-danger" role="alert" ng-show="showError">{{errorMessage}}</div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-6">
-      <p>Udgiver: {{newsletter.publisher_navn}}</p>
-      <p>Tidligere sendt fra: {{newsletter.publisher_sendfrom}}</p>
-      <p>Link til hjulet: <a href="{{newsletter.publisher_url}}">{{newsletter.publisher_url}}</a></p>
-    </div>
-    <div class="col-xs-6">
-      <img class="img-responsive" src="{{newsletter.publisher_toppic}}" alt="{{newsletter.publisher_toppic}}" title="{{newsletter.publisher_toppic}}" />
-    </div>
-  </div>
-  <hr>
   <div class="row">
     <div class="col-xs-2">
       <div class="form-group">
@@ -77,7 +68,7 @@
           ng-model="newsletter.template_html"
           ng-options="template_html.name as template_html.name for template_html in html_templates"
           ng-required="true"
-          ng-change="updatePreview()">
+          ng-change="updateHtmlPreview()">
         </select>
       </div>
     </div>
@@ -90,85 +81,71 @@
           ng-model="newsletter.template_plain"
           ng-options="template_plain.name as template_plain.name for template_plain in plain_templates"
           ng-required="true"
-          ng-change="updatePreview()">
+          ng-change="updatePlainPreview()">
         </select>
       </div>
     </div>
-    <div class="col-xs-2 text-right" style="padding-top: 25px;">
-      <button type="button" class="btn btn-primary" ng-click="save()">
+    <div class="col-xs-2">
+      <div class="form-group" ng-show="adhocNewsletter">
+        <label for="list">Modtagere</label>
+        <select
+          id="list"
+          class="form-control"
+          ng-model="newsletter.list"
+          ng-options="list for list in lists"
+          ng-required="true">
+          <option value=""></option>
+        </select>
+      </div>
+      <div ng-hide="adhocNewsletter">
+        <label for="list">Modtagere</label>
+        <input type="text" id="list" class="form-control" disabled="disabled" placeholder="mdb_nyhedsbrev_{{newsletter.nyhedsbrev_id}}">
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-hide="adhocNewsletter">
+    <div class="col-xs-2">
+      <button type="button" class="btn btn-success" ng-click="save()">
         Save <span class="glyphicon glyphicon-save"></span>
       </button>
     </div>
-  </div>
-<!--   <div class="row" style="padding-top: 10px;">
-    <div class="col-xs-6">
-      <a target="_blank" href="{{html_url}}">{{html_url}}</a>
-    </div>
-    <div class="col-xs-6 text-right" ng-show="newsletter.bond_type == 'node'">
-      <a href="http://edit.berlingskemedia.net/{{newsletter.bond_type}}/{{newsletter.bond_id}}/edit">http://edit.berlingskemedia.net/{{newsletter.bond_type}}/{{newsletter.bond_id}}/edit</a>
-    </div>
-  </div> -->
-  <div class="row">
     <div class="col-xs-1">
       <p style="font-size:30px; color: rgb(152, 152, 152);"><span class="glyphicon glyphicon-info-sign"></span></p>
     </div>
-    <div class="col-xs-11">
+    <div class="col-xs-9">
       <p>Udsendes ved at lave en HTTP POST til <strong>{{newsletter_post_url}}</strong></em></p>
-      <p>Modtager liste er <em>mdb_nyhedsbrev_{{newsletter.nyhedsbrev_id}}</em></p>
+    </div>
+  </div>
+  <div class="row" ng-show="adhocNewsletter">
+    <div class="col-xs-12">
+      <button type="button" class="btn btn-success" ng-click="sendAdhocNewsletter(true)">
+        Opret kladde <span class="glyphicon glyphicon-inbox"></span>
+      </button>
+      <button type="button" class="btn btn-danger" ng-click="sendAdhocNewsletter()">
+        Send <span class="glyphicon glyphicon-envelope"></span>
+      </button>
     </div>
   </div>
   <hr>
-<!--   <div class="row">
-    <div class="col-xs-12">
-      <div class="form-horizontal">
-        <div class="form-group">
-          <div class="col-xs-5">
-            <h4><span class="glyphicon glyphicon-info-sign"></span> Til adhoc udsendelse til f&oslash;lgende liste</h4>
-          </div>
-          <label for="list" class="col-xs-2 control-label">Liste (modtagere)</label>
-          <div class="col-xs-3">
-            <select
-              id="list"
-              class="form-control"
-              ng-model="newsletter.list"
-              ng-options="list for list in lists"
-              ng-required="true">
-              <option value=""></option>
-            </select>
-          </div>
-          <div class="col-xs-2 text-right">
-            <button type="button" class="btn btn-default" ng-click="draft()">
-              Draft <span class="glyphicon glyphicon-inbox"></span>
-            </button>
-            <button type="button" class="btn btn-warning" ng-click="send()">
-              Send <span class="glyphicon glyphicon-envelope"></span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <hr> -->
 
   <!-- PREVIEW -->
-  <div class="row" ng-show="loadingNewsletter">
+  <div class="row">
     <div class="col-xs-12">
-      <p class="text-center"><img src="img/loading.gif"></p>
+      <div class="alert alert-danger" role="alert" ng-show="previewError">Fejl ved indlæsning af data fra BOND.</div>
     </div>
-  </div>
-  <div class="row" ng-hide="loadingNewsletter">
-    <div class="col-xs-12" ng-show="adhocNewsletter">
-      <label for="subject">Emne</label>
-      <input type="text" id="subject" class="form-control" ng-model="subject">
-    </div>
-    <div class="col-xs-12" ng-hide="adhocNewsletter">
+    <div class="col-xs-12">
       <div class="panel panel-primary">
         <div class="panel-heading">Emnefelt</div>
-        <div class="panel-body">
-          {{subject}}
+        <div class="panel-body" ng-show="adhocNewsletter">
+          <input type="text" class="form-control" ng-model="newsletter.subject">
+        </div>
+        <div class="panel-body" ng-hide="adhocNewsletter">
+          {{newsletter.subject}}
         </div>
       </div>
     </div>
+  </div>
+  <div class="row">
     <div class="col-xs-12">
       <div class="panel panel-primary">
         <div class="panel-heading">HTML indhold</div>
@@ -177,7 +154,9 @@
         </div>
       </div>
     </div>
-    <div class="col-xs-12" ng-hide="loadingNewsletter">
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
       <div class="panel panel-primary">
         <div class="panel-heading">Text indhold</div>
         <div class="panel-body">

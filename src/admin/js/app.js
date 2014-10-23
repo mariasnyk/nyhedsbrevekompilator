@@ -25,6 +25,9 @@ app.config(['$routeProvider', function ($routeProvider) {
     .when( '/newsletters/:id', {
       templateUrl: 'templates/newsletter-editor.html',
       controller: 'NewsletterCtrl' })
+    .when( '/adhoc', {
+      templateUrl: 'templates/newsletter-editor.html',
+      controller: 'NewsletterCtrl' })
     // .when( '/newsletters/:id/preview', {
     //   templateUrl: 'templates/newsletter-preview.html',
     //   controller: 'NewsletterCtrl' })
@@ -58,6 +61,9 @@ app.controller('MenuCtrl', ['$scope', '$location', '$rootScope', function ($scop
     //   name: 'Publishers',
     //   href: '/publishers'
     // },{
+      name: 'Adhoc',
+      href: '/adhoc'
+    },{
       name: 'Newsletters',
       href: '/newsletters'
     // },{

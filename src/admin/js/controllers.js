@@ -64,6 +64,10 @@ app.controller('PublisherCtrl', ['$scope', '$routeParams', '$location', 'userdbS
 
 app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdbService', '$resource', '$sce', 'notifications',
   function ($scope, $routeParams, $location, userdbService, $resource, $sce, notifications) {
+
+    // A global toggle to show/hide controls in the view
+    $scope.adhocNewsletter = $location.path() === '/adhoc'; // This is atupid. Must be done better than hardcoding to $$path. TODO
+
     var Newsletters = $resource('/apis/v0/newsletters/:id', { id: '@id' });
     var Identities = $resource('/apis/v0/sendgrid/identities');
     var Lists = $resource('/apis/v0/sendgrid/lists');
@@ -72,97 +76,84 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
     if ($routeParams.id) {
       Newsletters.get({id: $routeParams.id}, function (newsletter, headers) {
         $scope.newsletter = newsletter;
-        // $scope.html_url = '/templates' + $scope.newsletter.template + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id;
-        // $scope.iframe_src = $sce.trustAsResourceUrl($scope.html_url);
         $scope.updatePreview();
 
         $scope.newsletter_post_url = $location.$$protocol + '://' + $location.$$host + ':' + $location.$$port + userdbService.getBaseUrl() + 'newsletters/' + newsletter.nyhedsbrev_id + '/send';
       });
-      // userdbService.get('/newsletters/' + $routeParams.id)
-      // .success( function (data, status, headers) {
-      //   $scope.newsletter = data;
-      // }).error( function (data, status) {
-      //   $location.path('/newsletters');
-      // });
-    } else {
+    } else if ($location.path() === '/newsletters') { // Again, this is stupid! TODO: Make this better.
       $scope.newsletters = Newsletters.query();
-      // userdbService.get('/newsletters')
-      // .success( function (data, status, headers) {
-      //   $scope.newsletters = data;
-      // }).error( function (data, status) {
-      //   $location.path('/');
-      // });
     }
 
     $scope.identities = Identities.query();
+    $scope.lists = Lists.query();
     $scope.html_templates = Templates.query({filter:'.html'});
     $scope.plain_templates = Templates.query({filter:'.plain'});
-    $scope.lists = Lists.query();
-
-
-
-    if ($location.path().indexOf('preview') > 0) {
-      userdbService.get('/newsletters/' + $routeParams.id + '/subscribers/count')
-      .success(function (data) {
-        console.log('data', data);
-        $scope.subscribersCount = data.count;
-      }).error( function (data, status) {
-        $location.path('/newsletters/' + $routeParams.id);
-      });
-    }
 
 
     $scope.updatePreview = function () {
-      $scope.loadingNewsletter = true;
+      if ($scope.newsletter.bond_type === undefined ||
+          $scope.newsletter.bond_id === undefined) {
+        return;
+      }
 
-      updateHtmlPreview();
-      updatePlainPreview();
+      $scope.previewError = false;
+
+      $scope.updateHtmlPreview();
+      $scope.updatePlainPreview();
 
       // Getting the subject suggestion
-      userdbService.getNewsletterSubjectSuggestion($scope.html_url)
+      userdbService.getNewsletterSubjectSuggestion($scope.newsletter.bond_type, $scope.newsletter.bond_id)
       .success(function (data, status, getHeaders) {
         var headers = getHeaders();
-        $scope.subject = decodeURIComponent(headers['x-subject-suggestion']);
-        $scope.loadingNewsletter = false;
+        $scope.previewError = false;
+        $scope.newsletter.subject = decodeURIComponent(headers['x-subject-suggestion']);
       }).error(function (data, status) {
         console.log('Error when heading for subject suggestion', data, status);
-        $scope.loadingNewsletter = false;
+        $scope.previewError = true;
+        $scope.newsletter.subject = null;
+        $scope.iframe_html_preview = null;
+        $scope.iframe_plain_preview = null;
       });
     };
 
-    function updateHtmlPreview () {
+    $scope.updateHtmlPreview = function () {
+      if ($scope.newsletter.template_html === undefined) {
+        return;
+      }
+
       var template = $scope.html_templates.filter(function (item) {
         return item.name === $scope.newsletter.template_html;
       })[0];
 
       if (template === undefined) {
-        $scope.loadingNewsletter = false;
         return;
       }
 
-      $scope.html_url = template.uri + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id;
-      $scope.iframe_html_preview = $sce.trustAsResourceUrl($scope.html_url);
+      $scope.iframe_html_preview = $sce.trustAsResourceUrl(template.uri + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id);
     }
 
-    function updatePlainPreview () {
+    $scope.updatePlainPreview = function () {
+      if ($scope.newsletter.template_plain === undefined) {
+        return;
+      }
+
+
       var template = $scope.plain_templates.filter(function (item) {
         return item.name === $scope.newsletter.template_plain;
       })[0];
 
       if (template === undefined) {
-        $scope.loadingNewsletter = false;
         return;
       }
 
-      $scope.plain_url = template.uri + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id;
-      $scope.iframe_plain_preview = $sce.trustAsResourceUrl($scope.plain_url);
+      $scope.iframe_plain_preview = $sce.trustAsResourceUrl(template.uri + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id);
     }
 
     $scope.save = function () {
       // console.log($scope.newsletter);
       $scope.newsletter.$save();
       // userdbService.saveNewsletter($scope.newsletter);
-      notifications.showSuccess('Saved');
+      notifications.showSuccess('Gemt');
       // userdbService.saveNewsletter($scope.newsletter)
       // .success(function (data) {
       //   console.log('savedata', data);
@@ -172,31 +163,17 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
       // });
     };
 
-    $scope.draft = function () {
-      var data = {
-        identity: $scope.newsletter.identity,
-        subject: $scope.subject,
-        list: $scope.list,
-        html_url: $scope.html_url
-      };
+    $scope.sendAdhocNewsletter = function (draft) {
+      if (draft !== undefined) {
+        $scope.newsletter.draft = draft
+      }
 
-      userdbService.draftAdhocNewsletter(data)
+      userdbService.sendAdhocNewsletter($scope.newsletter)
       .success(function () {
-        notifications.showSuccess('Done');
-      });
-    };
-
-    $scope.send = function () {
-      var data = {
-        identity: $scope.newsletter.identity,
-        subject: $scope.subject,
-        list: $scope.list,
-        html_url: $scope.html_url
-      };
-
-      userdbService.sendAdhocNewsletter(data)
-      .success(function () {
-        notifications.showSuccess('Done');
+        if (draft)
+          notifications.showSuccess('Kladde oprettet');
+        else
+          notifications.showSuccess('Sendt');
       });
     };
   }]);
