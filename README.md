@@ -44,7 +44,7 @@ First, check out the lastest source code from the GitHub repo.
 Next, to create a build locally run:
 
 ```
-sudo docker build -t bmdako/userdb
+sudo docker build -t bmdako/userdb .
 ``` 
 
 (The source code and the Node modules will be copied onto the Docker image.)
