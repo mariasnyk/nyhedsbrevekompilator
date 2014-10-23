@@ -1,0 +1,20 @@
+
+{% block title %}{{ title }}{% endblock %}
+
+
+
+{% autoescape false %}{{ supertitle }}{% endautoescape %}
+
+Læs mere på http://{{ website }}/node/{{ id }}
+
+
+{% autoescape false %}{{ title }}{% endautoescape %}
+{% autoescape false %}{{ summary }}{% endautoescape %}
+
+Læs også:
+
+{% for rel in related %}
+  {% if rel.relation == 'default' %}
+    {{ rel.title }}: http://{{ website }}/node/{{ rel.id }}
+  {% endif %}
+{% endfor %}

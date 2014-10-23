@@ -4,6 +4,8 @@ userdb
 
 # Run from Docker
 
+**This is for deploying the app (HCL).**
+
 Running this app inside a Docker container is very easy.
 You need to have a Ubuntu/Linux computer with Docker installed.
 
@@ -21,9 +23,6 @@ sudo docker run \
 -e MDB_DATABASE=xxx \
 -e MDB_USERNAME=xxx \
 -e MDB_PASSWORD=nqO94hfrhC \
--e AWS_ACCESS_KEY_ID=xxx \
--e AWS_SECRET_ACCESS_KEY=xxx \
--e AWS_REGION=xxx \
 -e BOND_API=xxx \
 -e SENDGRID_API_USER=xxx \
 -e SENDGRID_API_KEY=xxx \
@@ -37,6 +36,8 @@ The `-p` parameter determines what port the container will bind the app to.
 Visit **http://\<Server DNS/IP\>:\<Port\>** to make sure the app is running. The *Port* is the one you have defined above.
 
 # Build the Docker image
+
+**This is for creating a new release (DevOp / Release Manager).**
 
 First, check out the lastest source code from the GitHub repo.
 
@@ -58,6 +59,8 @@ sudo docker push bmdako/userdb
 
 
 # Run from source
+
+**This is for developing new feature and bug fixing. (Developer).**
 
 If you like to run the app directly from source, you can either clone this repo or download the latest ZIP.
 
@@ -81,9 +84,6 @@ Before you can start the app, the following environment variables need to be set
 - MDB_DATABASE
 - MDB_USERNAME
 - MDB_PASSWORD
-- AWS_ACCESS_KEY_ID
-- AWS_SECRET_ACCESS_KEY
-- AWS_REGION
 - BOND_API
 - SENDGRID_API_USER
 - SENDGRID_API_KEY

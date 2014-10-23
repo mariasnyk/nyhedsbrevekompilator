@@ -6,6 +6,10 @@ app.service('userdbService', ['apiVersion', '$http',
   function (apiVersion, $http) {
     var baseUrl = '/apis/' + apiVersion + '/';
 
+    this.getBaseUrl = function () {
+      return baseUrl;
+    };
+
     this.get = function (relUrl) {
       return $http({method: 'GET', url: baseUrl + removeFirstSlash(relUrl)});
     };
@@ -31,18 +35,15 @@ app.service('userdbService', ['apiVersion', '$http',
     };
 
     this.sendNewsletter = function (newsletterId) {
-      //return $http({method: 'POST', url: baseUrl + 'newsletters/tester'})
       return $http.post(baseUrl + 'newsletters/' + newsletterId + '/send');
     };
 
-    this.sendNewsletterAdhoc = function (data) {
-      //return $http({method: 'POST', url: baseUrl + 'newsletters/tester'})
+    this.sendAdhocNewsletter = function (data) {
       return $http.post(baseUrl + 'newsletters/send', data);
     };
 
-    this.sendTestNewsletter = function (data) {
-      //return $http({method: 'POST', url: baseUrl + 'newsletters/tester'})
-      return $http.post(baseUrl + 'newsletters/tester', data);
+    this.draftAdhocNewsletter = function (data) {
+      return $http.post(baseUrl + 'newsletters/draft', data);
     };
 
     this.getNewsletterSubjectSuggestion = function (url) {

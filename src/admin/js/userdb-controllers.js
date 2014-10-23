@@ -74,7 +74,9 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
         $scope.newsletter = newsletter;
         // $scope.html_url = '/templates' + $scope.newsletter.template + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id;
         // $scope.iframe_src = $sce.trustAsResourceUrl($scope.html_url);
-        $scope.changeNewsletter();
+        $scope.updatePreview();
+
+        $scope.newsletter_post_url = $location.$$protocol + '://' + $location.$$host + ':' + $location.$$port + userdbService.getBaseUrl() + 'newsletters/' + newsletter.nyhedsbrev_id + '/send';
       });
       // userdbService.get('/newsletters/' + $routeParams.id)
       // .success( function (data, status, headers) {
@@ -93,8 +95,10 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
     }
 
     $scope.identities = Identities.query();
-    $scope.templates = Templates.query();
+    $scope.html_templates = Templates.query({filter:'.html'});
+    $scope.plain_templates = Templates.query({filter:'.plain'});
     $scope.lists = Lists.query();
+
 
 
     if ($location.path().indexOf('preview') > 0) {
@@ -108,24 +112,51 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
     }
 
 
-    $scope.changeNewsletter = function () {
+    $scope.updatePreview = function () {
       $scope.loadingNewsletter = true;
-      var template = $scope.templates.filter(function (item) {
-        return item.name === $scope.newsletter.template_html;
-      })[0];
-      $scope.html_url = template.uri + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id;
-      $scope.iframe_src = $sce.trustAsResourceUrl($scope.html_url);
 
+      updateHtmlPreview();
+      updatePlainPreview();
+
+      // Getting the subject suggestion
       userdbService.getNewsletterSubjectSuggestion($scope.html_url)
       .success(function (data, status, getHeaders) {
         var headers = getHeaders();
-        $scope.subject = headers['x-subject-suggestion'];
+        $scope.subject = decodeURIComponent(headers['x-subject-suggestion']);
         $scope.loadingNewsletter = false;
       }).error(function (data, status) {
         console.log('Error when heading for subject suggestion', data, status);
         $scope.loadingNewsletter = false;
       });
     };
+
+    function updateHtmlPreview () {
+      var template = $scope.html_templates.filter(function (item) {
+        return item.name === $scope.newsletter.template_html;
+      })[0];
+
+      if (template === undefined) {
+        $scope.loadingNewsletter = false;
+        return;
+      }
+
+      $scope.html_url = template.uri + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id;
+      $scope.iframe_html_preview = $sce.trustAsResourceUrl($scope.html_url);
+    }
+
+    function updatePlainPreview () {
+      var template = $scope.plain_templates.filter(function (item) {
+        return item.name === $scope.newsletter.template_plain;
+      })[0];
+
+      if (template === undefined) {
+        $scope.loadingNewsletter = false;
+        return;
+      }
+
+      $scope.plain_url = template.uri + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id;
+      $scope.iframe_plain_preview = $sce.trustAsResourceUrl($scope.plain_url);
+    }
 
     $scope.save = function () {
       // console.log($scope.newsletter);
@@ -141,6 +172,20 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
       // });
     };
 
+    $scope.draft = function () {
+      var data = {
+        identity: $scope.newsletter.identity,
+        subject: $scope.subject,
+        list: $scope.list,
+        html_url: $scope.html_url
+      };
+
+      userdbService.draftAdhocNewsletter(data)
+      .success(function () {
+        notifications.showSuccess('Done');
+      });
+    };
+
     $scope.send = function () {
       var data = {
         identity: $scope.newsletter.identity,
@@ -149,7 +194,7 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
         html_url: $scope.html_url
       };
 
-      userdbService.sendNewsletterAdhoc(data)
+      userdbService.sendAdhocNewsletter(data)
       .success(function () {
         notifications.showSuccess('Done');
       });
@@ -194,44 +239,4 @@ app.controller('InterestCtrl', ['$scope', '$routeParams', '$location', 'userdbSe
         $location.path('/');
       });
     }
-  }]);
-
-
-app.controller('TesterCtrl', ['$scope', 'userdbService',
-  function ($scope, userdbService) {
-    // Just to prefill
-    $scope.recipients = ['dako@berlingskemedia.dk'];
-    $scope.from_email = 'kommunikation@berlingskemedia.dk';
-    $scope.from_name = 'Berlingske Media';
-    $scope.subject = 'Super sejt nyhedsbrev';
-    $scope.html_url = 'http://nodeweekly.com/issues/52';
-
-    $scope.addRecipientsKeyUp = function(event) {
-      if (event.keyCode === 13) { /* Enter */
-        $scope.addRecipientClick();
-      }
-    }
-
-    $scope.addRecipientClick = function () {
-      if ($scope.new_recipient !== undefined) {
-        $scope.recipients.unshift($scope.new_recipient);
-        $scope.new_recipient = undefined;
-      }
-    }
-
-    $scope.removeRecipientClick = function (index) {
-      $scope.recipients.splice(index, 1);
-    }
-
-    $scope.sendTestNewsletterEventClick = function () {
-      var data = {
-        from_email: $scope.from_email,
-        from_name: $scope.from_name,
-        subject: $scope.subject,
-        html_url: $scope.html_url,
-        recipients: $scope.recipients
-      };
-
-      userdbService.sendTestNewsletter(data)
-    };
   }]);

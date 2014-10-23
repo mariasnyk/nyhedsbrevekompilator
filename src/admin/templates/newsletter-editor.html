@@ -55,7 +55,7 @@
     <div class="col-xs-2">
       <div class="form-group">
         <label for="bond_type">BOND Data type</label>
-        <select id="bond_type" class="form-control" ng-model="newsletter.bond_type" ng-change="changeNewsletter()">
+        <select id="bond_type" class="form-control" ng-model="newsletter.bond_type" ng-change="updatePreview()">
           <option>node</option>
           <option>nodequeue</option>
         </select>
@@ -64,7 +64,7 @@
     <div class="col-xs-2">
       <div class="form-group">
         <label for="bond_id">ID</label>
-        <input id="bond_id" type="text" class="form-control" placeholder="{{newsletter.bond_type}} ID" ng-model="newsletter.bond_id" ng-change="changeNewsletter()">
+        <input id="bond_id" type="text" class="form-control" placeholder="{{newsletter.bond_type}} ID" ng-model="newsletter.bond_id" ng-change="updatePreview()">
       </div>
     </div>
     <div class="col-xs-2">
@@ -75,20 +75,22 @@
           id="template_html"
           class="form-control"
           ng-model="newsletter.template_html"
-          ng-options="template.name as template.name for template in templates"
+          ng-options="template_html.name as template_html.name for template_html in html_templates"
           ng-required="true"
-          ng-change="changeNewsletter()">
+          ng-change="updatePreview()">
         </select>
       </div>
     </div>
     <div class="col-xs-2">
       <div class="form-group">
-        <label for="text_template">Text Template</label>
+        <label for="template_plain">Text Template</label>
         <select
-          id="text_template"
+          id="template_plain"
           class="form-control"
-          ng-model="newsletter.template_text">
-          <option>Not implemented</option>
+          ng-model="newsletter.template_plain"
+          ng-options="template_plain.name as template_plain.name for template_plain in plain_templates"
+          ng-required="true"
+          ng-change="updatePreview()">
         </select>
       </div>
     </div>
@@ -106,39 +108,63 @@
       <a href="http://edit.berlingskemedia.net/{{newsletter.bond_type}}/{{newsletter.bond_id}}/edit">http://edit.berlingskemedia.net/{{newsletter.bond_type}}/{{newsletter.bond_id}}/edit</a>
     </div>
   </div> -->
-  <hr>
   <div class="row">
-    <div class="col-xs-12">
-    <div class="form-horizontal">
-      <div class="form-group">
-        <div class="col-xs-5">
-        </div>
-        <label for="list" class="col-xs-2 control-label">Liste (modtagere)</label>
-        <div class="col-xs-3">
-      <!-- <input id="list" type="text" class="form-control" ng-model="list"> -->
-          <select
-            id="list"
-            class="form-control"
-            ng-model="newsletter.list"
-            ng-options="list for list in lists"
-            ng-required="true">
-          </select>
-        </div>
-        <div class="col-xs-2 text-right">
-          <!-- <a href="#/newsletters/{{newsletter.nyhedsbrev_id}}/preview">Preview</a> -->
-          <button type="button" class="btn btn-warning" ng-click="send()">
-            Send <span class="glyphicon glyphicon-envelope"></span>
-          </button>
-        </div>
-      </div>
+    <div class="col-xs-1">
+      <p style="font-size:30px; color: rgb(152, 152, 152);"><span class="glyphicon glyphicon-info-sign"></span></p>
     </div>
+    <div class="col-xs-11">
+      <p>Udsendes ved at lave en HTTP POST til <strong>{{newsletter_post_url}}</strong></em></p>
+      <p>Modtager liste er <em>mdb_nyhedsbrev_{{newsletter.nyhedsbrev_id}}</em></p>
     </div>
   </div>
   <hr>
-  <div class="row">
+<!--   <div class="row">
+    <div class="col-xs-12">
+      <div class="form-horizontal">
+        <div class="form-group">
+          <div class="col-xs-5">
+            <h4><span class="glyphicon glyphicon-info-sign"></span> Til adhoc udsendelse til f&oslash;lgende liste</h4>
+          </div>
+          <label for="list" class="col-xs-2 control-label">Liste (modtagere)</label>
+          <div class="col-xs-3">
+            <select
+              id="list"
+              class="form-control"
+              ng-model="newsletter.list"
+              ng-options="list for list in lists"
+              ng-required="true">
+              <option value=""></option>
+            </select>
+          </div>
+          <div class="col-xs-2 text-right">
+            <button type="button" class="btn btn-default" ng-click="draft()">
+              Draft <span class="glyphicon glyphicon-inbox"></span>
+            </button>
+            <button type="button" class="btn btn-warning" ng-click="send()">
+              Send <span class="glyphicon glyphicon-envelope"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr> -->
+
+  <!-- PREVIEW -->
+  <div class="row" ng-show="adhocNewsletter">
     <div class="col-xs-12">
       <label for="subject">Emne</label>
       <input type="text" id="subject" class="form-control" ng-model="subject">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">Emne</div>
+        <div class="panel-body">
+          {{subject}}
+        </div>
+      </div>
     </div>
   </div>
   <div class="row newsletter-preview">
@@ -146,8 +172,16 @@
       <p class="text-center"><img src="img/loading.gif"></p>
     </div>
     <div class="col-xs-12" ng-hide="loadingNewsletter">
-      <label>Indhold</label>
-      <iframe class="form-control" ng-src="{{iframe_src}}"></iframe>
+      <div class="panel panel-default">
+        <div class="panel-heading">HTML Indhold</div>
+        <iframe class="panel-body" ng-src="{{iframe_html_preview}}"></iframe>
+      </div>
+    </div>
+    <div class="col-xs-12" ng-hide="loadingNewsletter">
+      <div class="panel panel-default">
+        <div class="panel-heading">Text Indhold</div>
+        <iframe class="panel-body" ng-src="{{iframe_plain_preview}}"></iframe>
+      </div>
     </div>
   </div>
 </div>

@@ -40,9 +40,6 @@ app.config(['$routeProvider', function ($routeProvider) {
     .when( '/interests/:id', {
       templateUrl: 'templates/interest-editor.html',
       controller: 'InterestCtrl' })
-    .when( '/tester', {
-      templateUrl: 'templates/tester.html',
-      controller: 'TesterCtrl' })
     .otherwise({
       redirectTo: '/' });
 }]);
@@ -63,18 +60,15 @@ app.controller('MenuCtrl', ['$scope', '$location', '$rootScope', function ($scop
     // },{
       name: 'Newsletters',
       href: '/newsletters'
-    },{
+    // },{
     //   name: 'Permissions',
     //   href: '/permissions'
     // },{
     //   name: 'Interests',
     //   href: '/interests'
     // },{
-      name: 'Smartlinks',
-      href: '/smartlinks'
-    },{
-      name: 'Tester',
-      href: '/tester'
+      // name: 'Smartlinks',
+      // href: '/smartlinks'
     }];
 
     $rootScope.$on('$locationChangeSuccess', setActiveMenuitem);

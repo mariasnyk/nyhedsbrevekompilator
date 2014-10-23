@@ -14,7 +14,8 @@ var pack = new Hapi.Pack();
 var serverOptions = {
   views: {
     engines: {
-      html: swig
+      html: swig,
+      plain: swig
     },
     path: 'src/templates',
     isCached: false /* must be turned of when in production*/

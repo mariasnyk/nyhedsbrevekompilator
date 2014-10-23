@@ -16,5 +16,5 @@ table
 .newsletter-preview iframe
 {
   height: 1000px !important;
-  margin-bottom: 30px;
+  width: 100%;
 }
