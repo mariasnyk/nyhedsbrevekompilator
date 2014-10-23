@@ -151,39 +151,37 @@
   <hr> -->
 
   <!-- PREVIEW -->
-  <div class="row" ng-show="adhocNewsletter">
+  <div class="row" ng-show="loadingNewsletter">
     <div class="col-xs-12">
+      <p class="text-center"><img src="img/loading.gif"></p>
+    </div>
+  </div>
+  <div class="row" ng-hide="loadingNewsletter">
+    <div class="col-xs-12" ng-show="adhocNewsletter">
       <label for="subject">Emne</label>
       <input type="text" id="subject" class="form-control" ng-model="subject">
     </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-12" ng-hide="adhocNewsletter">
       <div class="panel panel-primary">
-        <div class="panel-heading">Emne</div>
+        <div class="panel-heading">Emnefelt</div>
         <div class="panel-body">
           {{subject}}
         </div>
       </div>
     </div>
-  </div>
-  <div class="row newsletter-preview">
-    <div class="col-xs-12" ng-show="loadingNewsletter">
-      <p class="text-center"><img src="img/loading.gif"></p>
-    </div>
-    <div class="col-xs-12" ng-hide="loadingNewsletter">
+    <div class="col-xs-12">
       <div class="panel panel-primary">
-        <div class="panel-heading">HTML Indhold</div>
+        <div class="panel-heading">HTML indhold</div>
         <div class="panel-body">
-          <iframe ng-src="{{iframe_html_preview}}"></iframe>
+          <iframe class="newsletter-preview" ng-src="{{iframe_html_preview}}"></iframe>
         </div>
       </div>
     </div>
     <div class="col-xs-12" ng-hide="loadingNewsletter">
       <div class="panel panel-primary">
-        <div class="panel-heading">Text Indhold</div>
+        <div class="panel-heading">Text indhold</div>
         <div class="panel-body">
-          <iframe ng-src="{{iframe_plain_preview}}"></iframe>
+          <iframe class="newsletter-preview" ng-src="{{iframe_plain_preview}}"></iframe>
         </div>
       </div>
     </div>

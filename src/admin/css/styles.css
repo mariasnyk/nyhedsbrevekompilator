@@ -8,12 +8,7 @@ table
   margin-top: 10px;
 }
 
-.newsletter-preview
-{
-  margin-top: 20px;
-}
-
-.newsletter-preview iframe
+iframe.newsletter-preview
 {
   height: 1000px !important;
   width: 100%;

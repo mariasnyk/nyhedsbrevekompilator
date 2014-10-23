@@ -1,0 +1,5 @@
+{% block content %}
+  {% for node in nodes %}
+  >> {{ node.title }} 
+  {% endfor %}
+{% endblock %}
