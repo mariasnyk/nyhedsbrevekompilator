@@ -15,24 +15,6 @@ module.exports.register = function (plugin, options, next) {
         index: false
       }
     }
-  // },{
-  //   method: 'GET',
-  //   path: '/l',
-  //   handler: function (request, reply) {
-  //     var path = __dirname + '/templates';
-  //     reply(fs.readdirSync(path)
-  //     .filter(function (file) {
-  //       return fs.statSync(path + '/' + file).isFile() && file.slice(-5) === '.html';
-  //     })
-  //     .map(function (file) {
-  //       var templateName = file; // file.substring(0, file.lastIndexOf('.'));
-  //       return {
-  //         name: templateName,
-  //         uri: 'http://' + request.info.host + request.path + '/' + templateName
-  //       };
-  //       // return server.info.protocol + '://' + request.info.host + request.path + '/' + file.substring(0, file.lastIndexOf('.'));
-  //     }));
-  //   }
   },{
     method: 'OPTIONS',
     path: '/',

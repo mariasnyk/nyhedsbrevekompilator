@@ -164,85 +164,6 @@ function saveNewsletter (request, reply) {
 };
 
 
-// function selectNewsletterSubscribers (request, reply) {
-//   var sql = ['SELECT member_id',
-//     'FROM subscription_member',
-//     'WHERE active = 1 AND subscription_id = ' + request.params.id].join(' ');
-  
-//   userdb.query(sql, function (err, result) {
-//     if (err) return reply(err);
-//     else {
-//         // Mapping the result down to
-//         //  [107043, 104760, 1657432, 385718]
-//         // instead of 
-//         //  [ { "member_id": 107043 }, { "member_id": 104760 }]
-
-//       reply(result.map(function (member) {
-//         return member.member_id;
-//       })).
-//       header('X-Member-Count', result.length);
-//     }
-//   });
-// };
-
-// function selectNewsletterSubscribersCount (request, reply) {
-//   var sql = ['SELECT count(id) as count',
-//     'FROM subscription_member',
-//     'WHERE active = 1 AND subscription_id = ' + request.params.id].join(' ');
-  
-//   userdb.queryOne(sql, function (err, result) {
-//     if (err) return reply(err);
-//     else reply(result).header('X-Member-Count', result.count);
-//   });
-// };
-
-
-// function sendTestEmail (request, reply) {
-//   var data = request.payload;
-
-//   if (data.from_email === undefined ||
-//       data.from_name === undefined ||
-//       data.subject === undefined ||
-//       data.html_url === undefined ||
-//       data.recipients === undefined) {
-
-//     reply().code(400);
-
-//   } else {
-
-//     var sendTail = request.tail('Send email');
-
-//     download(data.html_url, function (err, html) {
-//       data.subject = 'FAKE';
-//       data.html = html;
-//       sendPreview(data, function (err, data) {
-//         console.log('AWS send', err, data);
-//         sendTail();
-//       });
-//     });
-    
-//     reply().code(200);
-//   }
-// }
-
-
-// function selectNewsletterRecipientEmails (newsletterId, callback) {
-//   var sql = ['SELECT email.email_address',
-//     'FROM subscription_member',
-//     'LEFT JOIN email ON email.id = subscription_member.email_id',
-//     'WHERE subscription_id = ' + newsletterId ].join(' ');
-
-//   userdb.query(sql, function (err, subscription_members) {
-//     if (err) return callback(err);
-
-//     var recipients_email_addresses = subscription_members.map(function (subscription_member) {
-//       return subscription_member.email_address;
-//     });
-//     callback(null, recipients_email_addresses);
-//   });
-// }
-
-
 function download (url, callback) {
   http.get(url, function( response ) {
 
@@ -267,57 +188,6 @@ function download (url, callback) {
     callback(e, null);
   });
 }
-
-
-// function sendPreview (data, callback) {
-
-//   data.text = 'To be filled out.';
-
-//   // We're only accepting @berlingskemedia.dk emails
-//   data.recipients = data.recipients.filter(function (email) {
-//     return email.indexOf("@berlingskemedia.dk") === email.lastIndexOf("@");
-//   });
-
-//   var params = {
-//     Destination: { /* required */
-//       // BccAddresses: [
-//       //   'STRING_VALUE',
-//       //   /* more items */
-//       // ],
-//       // CcAddresses: [
-//       //   'STRING_VALUE',
-//       //   /* more items */
-//       // ],
-//       ToAddresses: data.recipients
-//     },
-//     Message: { /* required */
-//       Body: { /* required */
-//         Html: {
-//           Data: data.html, /* required */
-//           Charset: 'UTF-8'
-//         },
-//         Text: {
-//           Data: data.text, /* required */
-//           Charset: 'UTF-8'
-//         }
-//       },
-//       Subject: { /* required */
-//         Data: data.subject, /* required */
-//         Charset: 'UTF-8'
-//       }
-//     },
-//     Source: 'dako@berlingskemedia.dk', /* required */
-//     ReplyToAddresses: [
-//       'dako@berlingskemedia.dk',
-//       /* more items */
-//     ],
-//     ReturnPath: 'dako@berlingskemedia.dk'
-//   };
-
-//   console.log('SES sendEmail params:', params);
-
-//   ses.sendEmail(params, callback);
-// }
 
 
 function adhocNewsletter (request, reply) {
@@ -354,8 +224,8 @@ function adhocNewsletter (request, reply) {
         typeof data.draft === 'string' ? data.draft === 'true' :
         false
 
-  var html_url  = request.server.info.uri + '/templates/' + data.template_html + '?' + data.bond_type + '=' + data.bond_id,
-      plain_url = request.server.info.uri + '/templates/' + data.template_plain + '?' + data.bond_type + '=' + data.bond_id;
+  var html_url  = 'http://' + request.info.host + '/templates/' + data.template_html + '?' + data.bond_type + '=' + data.bond_id,
+      plain_url = 'http://' + request.info.host + '/templates/' + data.template_plain + '?' + data.bond_type + '=' + data.bond_id;
 
   download(html_url, function (err, html_email) {
     if (err) return reply(err);
@@ -393,8 +263,8 @@ function scheduledNewsletter (request, reply) {
   
   queryOneNewsletter(request.params.id, function (err, newsletter) {
 
-    var html_url  = request.server.info.uri + '/templates/' + newsletter.template_html + '?' + newsletter.bond_type + '=' + newsletter.bond_id,
-        plain_url = request.server.info.uri + '/templates/' + newsletter.template_plain + '?' + newsletter.bond_type + '=' + newsletter.bond_id;
+    var html_url  = 'http://' + request.info.host + '/templates/' + newsletter.template_html + '?' + newsletter.bond_type + '=' + newsletter.bond_id,
+        plain_url = 'http://' + request.info.host + '/templates/' + newsletter.template_plain + '?' + newsletter.bond_type + '=' + newsletter.bond_id;
 
     download(html_url, function (err, html_email, headers) {
 
@@ -425,6 +295,7 @@ function scheduledNewsletter (request, reply) {
     });
   });
 }
+
 
 function getSendGridLists (request, reply) {
   callSendGrid('/api/newsletter/lists/get.json', function (err, data) {

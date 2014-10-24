@@ -12,7 +12,7 @@
   <p><a href="http://{{ website }}/node/{{ id }}">L&aelig;s mere</a></p>
 
   {% for image in images %}
-    <img width="900px" title="{{ image.title }}" src="http://www.bt.dk/{{ image.file.path }}">
+    <img width="100%" title="{{ image.title }}" src="http://www.bt.dk/{{ image.file.path }}">
   {% endfor %}
 
   <p>{% autoescape false %}{{ title }}{% endautoescape %}</p>
