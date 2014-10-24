@@ -13,20 +13,21 @@ Docker will automatically download the image and run the app from just one (but 
 
 ```
 sudo docker run \
--e RDS_HOSTNAME=xxx \
--e RDS_PORT=xxx \
--e RDS_DATABASE=xxx \
--e RDS_USERNAME=xxx \
--e RDS_PASSWORD=xxx \
--e MDB_ADDRESS=xxx \
--e MDB_PORT=xxx \
--e MDB_DATABASE=xxx \
--e MDB_USERNAME=xxx \
--e MDB_PASSWORD=nqO94hfrhC \
--e BOND_API=xxx \
--e SENDGRID_API_USER=xxx \
--e SENDGRID_API_KEY=xxx \
--p xxxx:8000 \
+--env=RDS_HOSTNAME=xxx \
+--env=RDS_PORT=xxx \
+--env=RDS_DATABASE=xxx \
+--env=RDS_USERNAME=xxx \
+--env=RDS_PASSWORD=xxx \
+--env=MDB_ADDRESS=xxx \
+--env=MDB_PORT=xxx \
+--env=MDB_DATABASE=xxx \
+--env=MDB_USERNAME=xxx \
+--env=MDB_PASSWORD=xxx \
+--env=BOND_HOSTNAME=xxx \
+--env=SENDGRID_API_USER=xxx \
+--env=SENDGRID_API_KEY=xxx \
+--dns=80.80.12.242 \
+--publish=xxx:8000 \
 -d bmdako/userdb
 ```
 
@@ -84,11 +85,21 @@ Before you can start the app, the following environment variables need to be set
 - MDB_DATABASE
 - MDB_USERNAME
 - MDB_PASSWORD
-- BOND_API
+- BOND_HOSTNAME
 - SENDGRID_API_USER
 - SENDGRID_API_KEY
 
-Start the app with the following command:
+Set these using a Bash-script eg.:
+
+```
+#!/bin/bash
+
+export RDS_HOSTMAME=xxx
+export RDS_PORT=xxx
+and so on and so on and so on
+```
+
+Now, start the app with the following command:
 
 ```
 node src/app.js
