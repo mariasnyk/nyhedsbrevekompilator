@@ -263,7 +263,7 @@ function download (url, callback) {
       callback(null, data, response.headers);
     });
   }).on('error', function(e) {
-    console.log('Got error while requesting HTML: ' + e.message);
+    console.log('Got error while requesting HTML (' + url + '): ' + e.message);
     callback(e, null);
   });
 }

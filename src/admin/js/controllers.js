@@ -171,11 +171,15 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
       }
 
       userdbService.sendAdhocNewsletter($scope.newsletter)
-      .success(function () {
+      .success(function (data) {
+        console.log(data);
         if (draft)
-          notifications.showSuccess('Kladde oprettet');
+          notifications.showSuccess('Kladde oprettet ' + data.name);
         else
-          notifications.showSuccess('Sendt');
+          notifications.showSuccess('Sendt ' + data.name);
+      })
+      .error(function(data, status) {
+        console.log('Error', status, data);
       });
     };
   }]);
