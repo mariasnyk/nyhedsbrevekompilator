@@ -50,7 +50,7 @@ module.exports.register = function (plugin, options, next) {
         });
       } else if (request.query.nodequeue) {
         bond_client.getNodequeue(request.query.nodequeue, function (err, nodequeue) {
-          if (nodequeue.title === null) {
+          if (nodequeue === null || nodequeue.title === null) {
             return reply().code(404);
           }
 
@@ -102,7 +102,7 @@ module.exports.register = function (plugin, options, next) {
         });
       } else if (request.query.nodequeue) {
         bond_client.getNodequeue(request.query.nodequeue, function (err, nodequeue) {
-          if (nodequeue.title === null) {
+          if (nodequeue === null || nodequeue.title === null) {
             return reply().code(404);
           }
 

@@ -78,7 +78,9 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
         $scope.newsletter = newsletter;
         $scope.updatePreview();
 
-        $scope.newsletter_post_url = $location.$$protocol + '://' + $location.$$host + ':' + $location.$$port + userdbService.getBaseUrl() + 'newsletters/' + newsletter.nyhedsbrev_id + '/send';
+        $scope.newsletter_post_url = $location.$$protocol + '://' + $location.$$host +
+          ($location.$$port !== 80 ? ':' + $location.$$port : '')
+          + userdbService.getBaseUrl() + 'newsletters/' + newsletter.nyhedsbrev_id + '/send';
       });
     } else if ($location.path() === '/newsletters') { // Again, this is stupid! TODO: Make this better.
       $scope.newsletters = Newsletters.query();

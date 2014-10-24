@@ -7,7 +7,7 @@ RUN apt-get update
 RUN apt-get install -y wget python
 
 # Downloading and installing Node.
-RUN wget -O - http://nodejs.org/dist/v0.10.32/node-v0.10.32-linux-x64.tar.gz \
+RUN wget -O - http://nodejs.org/dist/v0.10.29/node-v0.10.29-linux-x64.tar.gz \
     | tar xzf - --strip-components=1 --exclude="README.md" --exclude="LICENSE" \
     --exclude="ChangeLog" -C "/usr/local"
 
