@@ -182,12 +182,14 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
       });
     };
 
+
     $scope.sendNewsletterAction = function () {
       userdbService.sendNewsletter($scope.newsletter.nyhedsbrev_id)
       .success(function (data) {
         notifications.showSuccess('Sendt ' + data.name);
       })
       .error(function (data, status) {
+        notifications.showError('Error');
         console.log('Error', status, data);
       });
     };

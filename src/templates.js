@@ -89,15 +89,17 @@ module.exports.register = function (plugin, options, next) {
             return reply().code(404);
           }
 
-          var checksum = calculateNodequeueChecksum(node),
+          var node_checksum = calculateNodeChecksum(node),
               subject = emailSubjectSuggestion(node);
+
+          node.paywallToken = calculatePaywallToken();
 
           reply
           .view(request.params.template, node)
           .header('Transfer-Encoding', 'chunked')
           .header('Content-Type', ContentTypeHeader(request.params.template))
           .header('X-Subject-Suggestion', encodeURIComponent(subject))
-          .header('X-Content-Checksum', checksum);
+          .header('X-Content-Checksum', node_checksum);
         });
       } else if (request.query.nodequeue) {
         bond_client.getNodequeue(request.query.nodequeue, function (err, nodequeue) {
@@ -105,16 +107,17 @@ module.exports.register = function (plugin, options, next) {
             return reply().code(404);
           }
 
-          var checksum = calculateNodequeueChecksum(nodequeue),
-              subject = emailSubjectSuggestion(nodequeue),
-              paywaqcalculatePaywallToken;
+          var nodequeue_checksum = calculateNodequeueChecksum(nodequeue),
+              subject = emailSubjectSuggestion(nodequeue);
+
+          nodequeue.paywallToken = calculatePaywallToken();
 
           reply
           .view(request.params.template, nodequeue)
           .header('Transfer-Encoding', 'chunked')
           .header('Content-Type', ContentTypeHeader(request.params.template))
           .header('X-Subject-Suggestion', encodeURIComponent(subject))
-          .header('X-Content-Checksum', checksum);
+          .header('X-Content-Checksum', nodequeue_checksum);
         });
       } else {
         reply
@@ -158,12 +161,19 @@ function ContentTypeHeader (template) {
 }
 
 
-function calculateNodequeueChecksum (data) {
-  if (typeof(data) === 'object') {
-    return checksum(JSON.stringify(data));
-  } else {
-    return checksum(data);
-  }
+function calculateNodeChecksum (node) {
+  return checksum(JSON.stringify(node.id));
+}
+
+
+function calculateNodequeueChecksum (nodequeue) {
+  var temp = nodequeue.nodes.map(function (node) {
+    return node.id;
+  });
+
+  console.log('nodequeue checksum', temp);
+
+  return checksum(JSON.stringify(temp));
 }
 
 

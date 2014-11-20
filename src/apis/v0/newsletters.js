@@ -215,8 +215,7 @@ function saveNewsletter (request, reply) {
 
 
 function updateScheduledNyhedsbrevLastChecksum (nyhedsbrev_id, last_checksum, callback) {
-  var sql = 'UPDATE mdb_nyhedsbrev SET last_checksum = ' + last_checksum + ' WHERE nyhedsbrev_id = ' + nyhedsbrev_id;
-
+  var sql = 'UPDATE mdb_nyhedsbrev SET last_checksum = "' + last_checksum + '" WHERE nyhedsbrev_id = ' + nyhedsbrev_id;
   userdb.query(sql, callback);
 }
 
@@ -252,25 +251,25 @@ function adhocNewsletter (request, reply) {
   var data = request.payload;
 
   if (data.list === undefined)
-    return reply( { message: 'Field list is missing.' } );
+    return reply( { message: 'Field list is missing.' } ).code(400);
 
   if (data.identity === undefined)
-    return reply( { message: 'Field identity is missing.' } );
+    return reply( { message: 'Field identity is missing.' } ).code(400);
 
   if (data.subject === undefined)
-    return reply( { message: 'Field subject is missing.' } );
+    return reply( { message: 'Field subject is missing.' } ).code(400);
 
   if (data.bond_type === undefined)
-    return reply( { message: 'Field bond_type is missing.' } );
+    return reply( { message: 'Field bond_type is missing.' } ).code(400);
 
   if (data.bond_id === undefined)
-    return reply( { message: 'Field bond_id is missing.' } );
+    return reply( { message: 'Field bond_id is missing.' } ).code(400);
 
   if (data.template_html === undefined)
-    return reply( { message: 'Field template_html is missing.' } );
+    return reply( { message: 'Field template_html is missing.' } ).code(400);
 
   if (data.template_plain === undefined)
-    return reply( { message: 'Field template_plain is missing.' } );
+    return reply( { message: 'Field template_plain is missing.' } ).code(400);
 
   if (data.name === undefined)
     data.name = 'newsletter_' + Date.now();
@@ -317,6 +316,17 @@ function scheduledNewsletter (request, reply) {
   
   queryOneNewsletter(request.params.id, function (err, newsletter) {
 
+    if (newsletter.template_html === undefined || newsletter.template_html === null ||
+        newsletter.template_plain === undefined || newsletter.template_plain === null ||
+        newsletter.identity === undefined || newsletter.identity === null ||
+        newsletter.bond_type === undefined || newsletter.bond_type === null ||
+        newsletter.bond_id === undefined || newsletter.bond_id === null) {
+
+      return reply( { message: 'Newsletter not configured' } ).code(400);
+    }
+
+    console.log(newsletter);
+
     var html_url  = 'http://' + request.info.host + '/templates/' + newsletter.template_html + '?' + newsletter.bond_type + '=' + newsletter.bond_id,
         plain_url = 'http://' + request.info.host + '/templates/' + newsletter.template_plain + '?' + newsletter.bond_type + '=' + newsletter.bond_id;
 
@@ -328,9 +338,9 @@ function scheduledNewsletter (request, reply) {
           list = 'mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id,
           name = 'mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id + '_' + Date.now();
 
-      console.log('checksum', checksum, last_checksum);
-      if (checksum === newsletter.last_checksum) {
-        console.log('THIS MUST BE STOPPED');
+      console.log('checksum', checksum, newsletter.last_checksum);
+      if (newsletter.last_checksum !== undefined && checksum === newsletter.last_checksum) {
+        return reply({ message: 'Newsletter checksum conflict', checksum: checksum }).code(409);
       }
 
       download(plain_url, function (err, plain_email) {
@@ -339,22 +349,24 @@ function scheduledNewsletter (request, reply) {
           if (err) return reply(err);
 
           // categories: newsletter.publisher_navn newsletter.nyhedsbrev_tag newsletter.nyhedsbrev_id
+          addSendGridCategory('mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id, name);
+          addSendGridCategory(newsletter.nyhedsbrev_navn, name);
           addSendGridCategory(newsletter.publisher_navn, name);
-          addSendGridCategory(newsletter.nyhedsbrev_tag, name);
-          addSendGridCategory(newsletter.nyhedsbrev_id, name);
 
-          list = 'DANIEL'; // TODO: This is for testing
-          console.log(list);
+          list = 'Daniel'; // TODO: This is for testing
+          console.log('WARNING Setting test list', list);
 
           addSendGridRecipients(list, name, function (err, result) {
             if (err) return reply(err);
 
-            // TODO: This is while testing
-            // addSendGridSchedule(name, function (err, result) {
-            //   if (err) return reply(err);
+            addSendGridSchedule(name, function (err, result) {
+              if (err) return reply(err);
+
+              console.log('saving checksum',request.params.id, checksum);
+              updateScheduledNyhedsbrevLastChecksum(request.params.id, checksum);
 
               reply({message: 'Email sent.', name: name});
-            // });
+            });
           })
         });
       });
@@ -375,10 +387,7 @@ function addSendGridCategory (category, name, callback) {
     'category=' + encodeURIComponent(category) +
     '&name=' + encodeURIComponent(name);
 
-  console.log('body', body);
-
   callSendGrid('/api/newsletter/category/add.json', body, function (err, data) {
-    console.log('add', err, data);
 
     if (err) {
       // {"error": "Category donkey1 does not exist"}
