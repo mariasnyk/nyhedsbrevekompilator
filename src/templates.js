@@ -1,10 +1,23 @@
 'use strict';
 
 var fs = require('fs'),
-    bond_client = require('./bond_client');
+    swig = require('swig'),
+    bond_client = require('./bond_client'),
+    checksum = require('checksum');
 
+swig.setDefaults({ cache: false }); /* must be turned of when in production*/
 
 module.exports.register = function (plugin, options, next) {
+
+  plugin.select('templates').views({
+    engines: {
+      html: swig,
+      plain: swig
+    },
+    path: 'src/templates',
+    isCached: false /* must be turned of when in production*/
+  });
+
 
   plugin.route([{
     method: 'GET',
@@ -76,11 +89,15 @@ module.exports.register = function (plugin, options, next) {
             return reply().code(404);
           }
 
+          var checksum = calculateNodequeueChecksum(node),
+              subject = emailSubjectSuggestion(node);
+
           reply
           .view(request.params.template, node)
           .header('Transfer-Encoding', 'chunked')
           .header('Content-Type', ContentTypeHeader(request.params.template))
-          .header('X-Subject-Suggestion', encodeURIComponent(emailSubjectSuggestion(node)));
+          .header('X-Subject-Suggestion', encodeURIComponent(subject))
+          .header('X-Content-Checksum', checksum);
         });
       } else if (request.query.nodequeue) {
         bond_client.getNodequeue(request.query.nodequeue, function (err, nodequeue) {
@@ -88,11 +105,16 @@ module.exports.register = function (plugin, options, next) {
             return reply().code(404);
           }
 
+          var checksum = calculateNodequeueChecksum(nodequeue),
+              subject = emailSubjectSuggestion(nodequeue),
+              paywaqcalculatePaywallToken;
+
           reply
           .view(request.params.template, nodequeue)
           .header('Transfer-Encoding', 'chunked')
           .header('Content-Type', ContentTypeHeader(request.params.template))
-          .header('X-Subject-Suggestion', encodeURIComponent(emailSubjectSuggestion(nodequeue)));
+          .header('X-Subject-Suggestion', encodeURIComponent(subject))
+          .header('X-Content-Checksum', checksum);
         });
       } else {
         reply
@@ -126,10 +148,25 @@ function emailSubjectSuggestion (data) {
   }
 }
 
+
 function ContentTypeHeader (template) {
   if (template.slice(-5) === '.html') {
     return 'text/html; charset=utf-8';
   } else {
     return 'text/plain; charset=utf-8';
   }
+}
+
+
+function calculateNodequeueChecksum (data) {
+  if (typeof(data) === 'object') {
+    return checksum(JSON.stringify(data));
+  } else {
+    return checksum(data);
+  }
+}
+
+
+function calculatePaywallToken () {
+  return checksum('TODO salt' + Date.now());
 }

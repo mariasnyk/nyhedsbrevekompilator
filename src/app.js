@@ -1,31 +1,12 @@
 'use strict';
 
 var Hapi = require('hapi'),
-    //path = require('path'),
-    fs = require('fs'),
-    swig = require('swig'),
     admin = require('./admin'),
     apis = require('./apis'),
     templates = require('./templates');
 
-swig.setDefaults({ cache: false }); /* must be turned of when in production*/
-var pack = new Hapi.Pack();
 
-var serverOptions = {
-  views: {
-    engines: {
-      html: swig,
-      plain: swig
-    },
-    path: 'src/templates',
-    isCached: false /* must be turned of when in production*/
-  },
-  router: {
-    stripTrailingSlash: false
-  }
-  // ,labels: ['admin', 'apis', 'templates']
-};
-
+// A plugin to redirect GET requests on / to /admin
 var redirectRootToAdmin = {
   register: function (plugin, options, next) {
     plugin.route({
@@ -45,12 +26,19 @@ redirectRootToAdmin.register.attributes = {
   version: '1.0.0'
 };
 
-pack.server(8000, serverOptions);
 
+var pack = new Hapi.Pack();
+
+pack.server(8000, {
+  router: {
+    stripTrailingSlash: false
+  }
+});
+
+pack.register(redirectRootToAdmin, cb);
 pack.register(admin, { route: { prefix: '/admin' } }, cb);
 pack.register(apis, { route: { prefix: '/apis' } }, cb);
 pack.register(templates, { route: { prefix: '/templates' } }, cb);
-pack.register(redirectRootToAdmin, cb);
 
 
 if (!module.parent) {
@@ -58,6 +46,7 @@ if (!module.parent) {
     console.log("Pack started.");
   });
 }
+
 
 function cb (err) {
   if (err) {

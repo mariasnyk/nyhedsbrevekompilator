@@ -4,32 +4,78 @@
 
 var http = require('http'),
     https = require('https'),
-    eventEmitter = require('events').EventEmitter,
-    workerEmitter = new eventEmitter(),
+    // eventEmitter = require('events').EventEmitter,
+    // workerEmitter = new eventEmitter(),
     mdb = require('../../mdb_client.js'),
     userdb = require('../../userdb_client.js');
 
 module.exports = [
   {
     method: 'get',
-    path: '/newsletters',
-    handler: selectAllNewsletters
-  },{
-    method: 'get',
     path: '/sendgrid/identities',
-    handler: listSendGridIdentities
+    handler: function (request, reply) {
+      callSendGrid('/api/newsletter/identity/list.json', function (err, data) {
+        if (err) return reply(err).code(500);
+        else reply(data.map(function (identity) {
+          return identity.identity;
+        }));
+      });
+    }
   },{
     method: 'get',
     path: '/sendgrid/identities/{id}',
-    handler: getSendGridIdentity
+    handler: function (request, reply) {
+      callSendGrid('/api/newsletter/identity/get.json', 'identity=' + request.params.id, function (err, data) {
+        if (err) return reply(err).code(500);
+        reply(data);
+      });
+    }
   },{
     method: 'get',
     path: '/sendgrid/lists',
-    handler: getSendGridLists
+    handler: function (request, reply) {
+      callSendGrid('/api/newsletter/lists/get.json', function (err, data) {
+        if (err) return reply(err).code(500);
+        else reply(data.map(function (list) {
+          return list.list;
+        }));
+      });
+    }
   },{
-    method: ['put','post'],
-    path: '/newsletters/send',
-    handler: adhocNewsletter
+    method: 'get',
+    path: '/sendgrid/categories',
+    handler: function (request, reply) {
+      callSendGrid('/api/newsletter/category/list.json', function (err, data) {
+        if (err) return reply(err).code(500);
+        else reply(data.map(function (category) {
+          return category.category;
+        }));
+      });
+    }
+  },{
+    method: 'get',
+    path: '/sendgrid/emails',
+    handler: function (request, reply) {
+      var body = request.query.name ? 'name=' + request.query.name : '';
+
+      callSendGrid('/api/newsletter/newsletter/list.json', body, function (err, data) {
+        if (err) return reply(err).code(500);
+        else reply(data);
+      });
+    }
+  },{
+    method: 'get',
+    path: '/sendgrid/emails/{name}',
+    handler: function (request, reply) {
+      callSendGrid('/api/newsletter/newsletter/get.json', 'name=' + request.params.name, function (err, data) {
+        if (err) return reply(err).code(500);
+        else reply(data);
+      });
+    }
+  },{
+    method: 'get',
+    path: '/newsletters',
+    handler: selectAllNewsletters
   },{
     method: 'get',
     path: '/newsletters/{id}',
@@ -54,6 +100,10 @@ module.exports = [
   //   method: 'get',
   //   path: '/newsletters/{id}/subscribers/count',
   //   handler: selectNewsletterSubscribersCount
+  },{
+    method: ['put','post'],
+    path: '/newsletters/send',
+    handler: adhocNewsletter
   },{
     method: ['put','post'],
     path: '/newsletters/{id}/send',
@@ -161,7 +211,14 @@ function saveNewsletter (request, reply) {
   } else {
     reply().code(501);
   }
-};
+}
+
+
+function updateScheduledNyhedsbrevLastChecksum (nyhedsbrev_id, last_checksum, callback) {
+  var sql = 'UPDATE mdb_nyhedsbrev SET last_checksum = ' + last_checksum + ' WHERE nyhedsbrev_id = ' + nyhedsbrev_id;
+
+  userdb.query(sql, callback);
+}
 
 
 function download (url, callback) {
@@ -234,18 +291,15 @@ function adhocNewsletter (request, reply) {
       if (err) return reply(err);
 
       addSendGridMarketingEmail(data.identity, data.name, data.subject, plain_email, html_email, function (err, result) {
-        console.log('addSendGridMarketingEmail', err, result);
         if (err) return reply(err).code(400);
 
         addSendGridRecipients(data.list, data.name, function (err, result) {
-          console.log('addSendGridRecipients', err, result);
           if (err) return reply(err).code(400);
 
           if (createDraft) {
             reply({message: 'Draft created.', name: data.name});
           } else {
             addSendGridSchedule(data.name, function (err, result) {
-              console.log('addSendGridSchedule', err, result);
               if (err) return reply(err).code(400);
 
               reply({message: 'Email sent.', name: data.name});
@@ -269,26 +323,38 @@ function scheduledNewsletter (request, reply) {
     download(html_url, function (err, html_email, headers) {
 
       var subject = decodeURIComponent(headers['x-subject-suggestion']),
+          checksum = headers['x-content-checksum'],
           identity = newsletter.identity,
           list = 'mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id,
           name = 'mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id + '_' + Date.now();
 
+      console.log('checksum', checksum, last_checksum);
+      if (checksum === newsletter.last_checksum) {
+        console.log('THIS MUST BE STOPPED');
+      }
+
       download(plain_url, function (err, plain_email) {
 
         addSendGridMarketingEmail(newsletter.identity, name, subject, plain_email, html_email, function (err, result) {
-          console.log('addSendGridMarketingEmail', err, result);
           if (err) return reply(err);
 
+          // categories: newsletter.publisher_navn newsletter.nyhedsbrev_tag newsletter.nyhedsbrev_id
+          addSendGridCategory(newsletter.publisher_navn, name);
+          addSendGridCategory(newsletter.nyhedsbrev_tag, name);
+          addSendGridCategory(newsletter.nyhedsbrev_id, name);
+
+          list = 'DANIEL'; // TODO: This is for testing
+          console.log(list);
+
           addSendGridRecipients(list, name, function (err, result) {
-            console.log('addSendGridRecipients', err, result);
             if (err) return reply(err);
 
-            addSendGridSchedule(name, function (err, result) {
-              console.log('addSendGridSchedule', err, result);
-              if (err) return reply(err);
+            // TODO: This is while testing
+            // addSendGridSchedule(name, function (err, result) {
+            //   if (err) return reply(err);
 
               reply({message: 'Email sent.', name: name});
-            });
+            // });
           })
         });
       });
@@ -297,32 +363,40 @@ function scheduledNewsletter (request, reply) {
 }
 
 
-function getSendGridLists (request, reply) {
-  callSendGrid('/api/newsletter/lists/get.json', function (err, data) {
-    if (err) return reply(err).code(500);
-    else reply(data.map(function (list) {
-      return list.list;
-    }));
-  });
+function createSendGridCategory (category, callback) {
+  var body = 'category=' + category;
+
+  callSendGrid('https://api.sendgrid.com/api/newsletter/category/create.json', body, callback);
 }
 
 
-function listSendGridIdentities (request, reply) {
-  callSendGrid('/api/newsletter/identity/list.json', function (err, data) {
-    if (err) return reply(err).code(500);
-    else reply(data.map(function (identity) {
-      return identity.identity;
-    }));
+function addSendGridCategory (category, name, callback) {
+  var body =
+    'category=' + encodeURIComponent(category) +
+    '&name=' + encodeURIComponent(name);
+
+  console.log('body', body);
+
+  callSendGrid('/api/newsletter/category/add.json', body, function (err, data) {
+    console.log('add', err, data);
+
+    if (err) {
+      // {"error": "Category donkey1 does not exist"}
+      if (err.error = 'Category ' + category + ' does not exist') {
+        createSendGridCategory(category, function (err, data) {
+          addSendGridCategory (category, name, callback);
+        });
+      } else {
+        if (callback !== undefined && typeof callback === 'function' ) {
+          callback(err, null);
+        }
+      }
+    }
+
+    if (callback !== undefined && typeof callback === 'function' ) {
+      callback (null, data);
+    }
   });
-}
-
-function getSendGridIdentity (request, reply) {
-  var body = 'identity=' + request.params.id;
-
-  callSendGrid('/api/newsletter/identity/get.json', body, function (err, data) {
-    if (err) return reply(err).code(500);
-    reply(data);
-  }); 
 }
 
 

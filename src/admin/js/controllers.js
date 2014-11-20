@@ -165,20 +165,29 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
       // });
     };
 
-    $scope.sendAdhocNewsletter = function (draft) {
+    $scope.sendAdhocNewsletterAction = function (draft) {
       if (draft !== undefined) {
         $scope.newsletter.draft = draft
       }
 
       userdbService.sendAdhocNewsletter($scope.newsletter)
       .success(function (data) {
-        console.log(data);
         if (draft)
           notifications.showSuccess('Kladde oprettet ' + data.name);
         else
           notifications.showSuccess('Sendt ' + data.name);
       })
-      .error(function(data, status) {
+      .error(function (data, status) {
+        console.log('Error', status, data);
+      });
+    };
+
+    $scope.sendNewsletterAction = function () {
+      userdbService.sendNewsletter($scope.newsletter.nyhedsbrev_id)
+      .success(function (data) {
+        notifications.showSuccess('Sendt ' + data.name);
+      })
+      .error(function (data, status) {
         console.log('Error', status, data);
       });
     };

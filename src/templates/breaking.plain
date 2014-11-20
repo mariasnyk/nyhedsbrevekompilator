@@ -1,20 +1,18 @@
-
 {% block title %}{{ title }}{% endblock %}
 
+{%- if supertitle %}
+  {% autoescape false %}{{ supertitle }}{% endautoescape %}
+{%- endif %}
 
-
-{% autoescape false %}{{ supertitle }}{% endautoescape %}
-
-Læs mere på http://{{ website }}/node/{{ id }}
-
-
-{% autoescape false %}{{ title }}{% endautoescape %}
 {% autoescape false %}{{ summary }}{% endautoescape %}
 
-Læs også:
+Læs mere på:
+{{ url }}
 
-{% for rel in related %}
+Læs også:
+{% for rel in related -%}
   {% if rel.relation == 'default' %}
-    {{ rel.title }}: http://{{ website }}/node/{{ rel.id }}
-  {% endif %}
-{% endfor %}
+    {{ rel.title }}
+    http://{{ website }}/node/{{ rel.id }}
+  {%- endif %}
+{%- endfor %}

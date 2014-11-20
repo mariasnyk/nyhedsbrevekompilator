@@ -9,7 +9,6 @@
 {% block content %}
 
   <p>{% autoescape false %}{{ supertitle }}{% endautoescape %}</p>
-  <p><a href="http://{{ website }}/node/{{ id }}">L&aelig;s mere</a></p>
 
   {% for image in images %}
     <img width="100%" title="{{ image.title }}" src="http://www.bt.dk/{{ image.file.path }}">
@@ -18,7 +17,9 @@
   <p>{% autoescape false %}{{ title }}{% endautoescape %}</p>
   <p>{% autoescape false %}{{ summary }}{% endautoescape %}</p>
 
-  <p>L&aelig;s ogs&aring;</p>
+  <p><a href="{{ url }}">L&aelig;s mere</a></p>
+
+  <p>L&aelig;s ogs&aring;:</p>
   <ul>
   {% for rel in related %}
     {% if rel.relation == 'default' %}

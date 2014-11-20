@@ -14,6 +14,7 @@
   {% for image in node.images %}
     <img width="300px" title="{{ image.title }}" src="http://www.bt.dk/{{ image.file.path }}">
   {% endfor %}
+  <p><a href="{{ node.url }}">L&aelig;s mere</a></p>
   <p>Dato: {{ node.dateCreated }}</p>
 
   
