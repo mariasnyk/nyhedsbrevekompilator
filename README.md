@@ -17,24 +17,15 @@ Docker will automatically download the image and run the app from just one (but 
 sudo docker run \
 --env=RDS_HOSTNAME=xxx \
 --env=RDS_PORT=xxx \
---env=RDS_DATABASE=xxx \
---env=RDS_USERNAME=xxx \
---env=RDS_PASSWORD=xxx \
---env=MDB_ADDRESS=xxx \
---env=MDB_PORT=xxx \
---env=MDB_DATABASE=xxx \
---env=MDB_USERNAME=xxx \
---env=MDB_PASSWORD=xxx \
---env=BOND_HOSTNAME=xxx \
---env=SENDGRID_API_USER=xxx \
---env=SENDGRID_API_KEY=xxx \
---env=PAYWALL_TOKEN_SALT=xxx \
---dns=80.80.12.242 \
+    [...]
+--dns=xx.xx.xx.xxx \
 --publish=xxx:8000 \
 -d bmdako/userdb
 ```
 
 All the `--env` parameters are the environent variables to allow the app to connect to dependent services eg. SendGrid. These will be supplied separately.
+
+Note: See internal document for details on the environment variables.
 
 The `--dns` parameter specifies what DNS-server should be used. (Necessary for reaching BOND.)
 
@@ -86,22 +77,8 @@ First, install the application dependencies by running:
 npm install
 ```
 
-Before you can start the app, the following environment variables need to be set:
-
-- RDS_HOSTNAME
-- RDS_PORT
-- RDS_DATABASE
-- RDS_USERNAME
-- RDS_PASSWORD
-- MDB_ADDRESS
-- MDB_PORT
-- MDB_DATABASE
-- MDB_USERNAME
-- MDB_PASSWORD
-- BOND_HOSTNAME
-- SENDGRID_API_USER
-- SENDGRID_API_KEY
-- PAYWALL_TOKEN_SALT
+Before you can start the app, the following environment variables need to be set.
+See internal document for details on the environment variables.
 
 You can set these by using a Bash-script eg.:
 
