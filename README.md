@@ -58,6 +58,8 @@ Lastly, to upload the newly built version of the image to Docker Hub, run (You m
 sudo docker push bmdako/userdb
 ```
 
+Now the images is ready to deployed. See section *Run from Docker*.
+
 
 ## Run from source
 
