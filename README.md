@@ -31,7 +31,7 @@ The `--dns` parameter specifies what DNS-server should be used. (Necessary for r
 
 The `--publish` parameter determines what port the container will bind the app to.
 
-Visit [http://<server>:<port>](http://<server>:<port>) to make sure the app is running. The *port* is either 8000 or the one you have defined using the `--publish` parameter above.
+Visit `http://<server>:<port>` to make sure the app is running. The *port* is either 8000 or the one you have defined using the `--publish` parameter above.
 
 ## Build the Docker image
 
