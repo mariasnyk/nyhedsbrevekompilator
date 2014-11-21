@@ -31,7 +31,7 @@ The `--dns` parameter specifies what DNS-server should be used. (Necessary for r
 
 The `--publish` parameter determines what port the container will bind the app to.
 
-Visit **http://\<Server DNS/IP\>:\<Port\>** to make sure the app is running. The *Port* is the one you have defined above.
+Visit `http://<server>:<port>` to make sure the app is running. The *port* is either 8000 or the one you have defined using the `--publish` parameter above.
 
 ## Build the Docker image
 
@@ -77,7 +77,7 @@ First, install the application dependencies by running:
 npm install
 ```
 
-Before you can start the app, the following environment variables need to be set.
+*Important*: Before you can start the app, the following environment variables need to be set.
 See internal document for details on the environment variables.
 
 You can set these by using a Bash-script eg.:
@@ -90,7 +90,7 @@ export RDS_PORT=xxx
 and so on and so on and so on
 ```
 
-Make the script executable by ```chmod +x config.sh``` and set the environment variables by running ```. ./config.sh```. (Yes, the extra dot and space in the beginning is necessary.)
+Make the config script executable with `chmod +x config.sh` and set the environment variables by running `. ./config.sh`. (Yes, the extra dot and space in the beginning is necessary.)
 
 
 Start the app with the following command:
@@ -99,15 +99,15 @@ Start the app with the following command:
 ../node/bin/node src/app.js
 ```
 
-'Or, if you have installed *gulp* (using `npm install -g gulp`), just with the command `gulp`.
+Or, if you have installed *gulp* (using `npm install -g gulp`), just with the command `gulp`.
 
 Now visit [http://localhost:8000/](http://localhost:8000/) if you get no error after startup to see the app.
 
 # Templating
 
-The templates are located in **src/templates** and can be previewed by following URL: **http://\<server\>/templates/\<template_filename\>**.
+The templates are located in `src/templates` and can be previewed by following URL: `http://<server>/templates/<template_filename>`.
 
-The data to be injected into the template is defined by query params ***node*** and **nodequeue**
+The data to be injected into the template is defined by query params **node** and **nodequeue**
 
 E.g.:
 
