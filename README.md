@@ -26,6 +26,7 @@ sudo docker run \
 --env=BOND_HOSTNAME=xxx \
 --env=SENDGRID_API_USER=xxx \
 --env=SENDGRID_API_KEY=xxx \
+--env=PAYWALL_TOKEN_SALT=xxx \
 --dns=80.80.12.242 \
 --publish=xxx:8000 \
 -d bmdako/userdb
@@ -88,6 +89,7 @@ Before you can start the app, the following environment variables need to be set
 - BOND_HOSTNAME
 - SENDGRID_API_USER
 - SENDGRID_API_KEY
+- PAYWALL_TOKEN_SALT
 
 Set these using a Bash-script eg.:
 

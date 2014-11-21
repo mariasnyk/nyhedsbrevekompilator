@@ -178,5 +178,5 @@ function calculateNodequeueChecksum (nodequeue) {
 
 
 function calculatePaywallToken () {
-  return checksum('TODO salt' + Date.now());
+  return checksum(new Date().toISOString() + process.env.PAYWALL_TOKEN_SALT, { algorithm: 'sha256' });
 }
