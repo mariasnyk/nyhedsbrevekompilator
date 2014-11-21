@@ -1,6 +1,8 @@
 =======
-userdb
+Email Marketing and UserDB platform
 ======
+
+This is the application for Email Marketing with an API and a web interface to admin the newsletters, preview the content, initiate the send out. The application will be built in Node.js and the web framework Hapijs. The application will be run through a Docker container.
 
 # Run from Docker
 
