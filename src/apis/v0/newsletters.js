@@ -325,20 +325,24 @@ function scheduledNewsletter (request, reply) {
       return reply( { message: 'Newsletter not configured' } ).code(400);
     }
 
-    console.log(newsletter);
-
-    var html_url  = 'http://' + request.info.host + '/templates/' + newsletter.template_html + '?' + newsletter.bond_type + '=' + newsletter.bond_id,
+    var list = '',
+        name = 'mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id + '_' + Date.now(),
+        html_url  = 'http://' + request.info.host + '/templates/' + newsletter.template_html + '?' + newsletter.bond_type + '=' + newsletter.bond_id,
         plain_url = 'http://' + request.info.host + '/templates/' + newsletter.template_plain + '?' + newsletter.bond_type + '=' + newsletter.bond_id;
+
+    if (process.env.LIVE === 'true') {
+      list = 'mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id;
+    } else if (process.env.TEST_LIST) {
+      list = process.env.TEST_LIST;
+    } else {
+      list = 'Daniel'; // TODO: This is for testing
+    }
 
     download(html_url, function (err, html_email, headers) {
 
       var subject = decodeURIComponent(headers['x-subject-suggestion']),
-          checksum = headers['x-content-checksum'],
-          identity = newsletter.identity,
-          list = 'mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id,
-          name = 'mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id + '_' + Date.now();
+          checksum = headers['x-content-checksum'];
 
-      console.log('checksum', checksum, newsletter.last_checksum);
       if (newsletter.last_checksum !== undefined && checksum === newsletter.last_checksum) {
         return reply({ message: 'Newsletter checksum conflict', checksum: checksum }).code(409);
       }
@@ -348,13 +352,10 @@ function scheduledNewsletter (request, reply) {
         addSendGridMarketingEmail(newsletter.identity, name, subject, plain_email, html_email, function (err, result) {
           if (err) return reply(err);
 
-          // categories: newsletter.publisher_navn newsletter.nyhedsbrev_tag newsletter.nyhedsbrev_id
           addSendGridCategory('mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id, name);
           addSendGridCategory(newsletter.nyhedsbrev_navn, name);
           addSendGridCategory(newsletter.publisher_navn, name);
 
-          list = 'Daniel'; // TODO: This is for testing
-          console.log('WARNING Setting test list', list);
 
           addSendGridRecipients(list, name, function (err, result) {
             if (err) return reply(err);
@@ -362,7 +363,6 @@ function scheduledNewsletter (request, reply) {
             addSendGridSchedule(name, function (err, result) {
               if (err) return reply(err);
 
-              console.log('saving checksum',request.params.id, checksum);
               updateScheduledNyhedsbrevLastChecksum(request.params.id, checksum);
 
               reply({message: 'Email sent.', name: name});
