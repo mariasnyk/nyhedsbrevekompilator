@@ -39,14 +39,18 @@
           class="form-control"
           ng-model="newsletter.identity"
           ng-options="identity for identity in identities"
-          ng-required="true">
+          ng-required="true"
+          ng-change="identityChanged()">
         </select>
       </div>
     </div>
     <div class="col-xs-2">
       <div class="form-group">
         <label for="bond_type">BOND Data type</label>
-        <select id="bond_type" class="form-control" ng-model="newsletter.bond_type" ng-change="updatePreview()">
+        <select id="bond_type"
+          class="form-control"
+          ng-model="newsletter.bond_type"
+          ng-change="updatePreview()">
           <option>node</option>
           <option>nodequeue</option>
         </select>
@@ -55,7 +59,13 @@
     <div class="col-xs-2">
       <div class="form-group">
         <label for="bond_id">ID</label>
-        <input id="bond_id" type="text" class="form-control" placeholder="{{newsletter.bond_type}} ID" ng-model="newsletter.bond_id" ng-change="updatePreview()">
+        <input
+          id="bond_id"
+          type="text"
+          class="form-control"
+          placeholder="{{newsletter.bond_type}} ID"
+          ng-model="newsletter.bond_id"
+          ng-change="updatePreview()">
       </div>
     </div>
     <div class="col-xs-2">
@@ -93,13 +103,19 @@
           class="form-control"
           ng-model="newsletter.list"
           ng-options="list for list in lists"
-          ng-required="true">
+          ng-required="true"
+          ng-change="listChanged()">
           <option value=""></option>
         </select>
       </div>
       <div ng-hide="adhocNewsletter">
         <label for="list">Modtagere</label>
-        <input type="text" id="list" class="form-control" disabled="disabled" placeholder="mdb_nyhedsbrev_{{newsletter.nyhedsbrev_id}}">
+        <input
+          id="list"
+          type="text"
+          class="form-control"
+          disabled="disabled"
+          placeholder="mdb_nyhedsbrev_{{newsletter.nyhedsbrev_id}}">
       </div>
     </div>
   </div>
@@ -120,7 +136,7 @@
       <p>Kan udsendes ved at lave en HTTP POST til <strong>{{newsletter_post_url}}</strong></em></p>
     </div>
     <div class="col-xs-2">
-      <button type="button" class="btn btn-danger" ng-click="sendNewsletterAction()">
+      <button type="button" class="btn btn-danger" ng-click="sendNewsletterAction()" ng-disabled="unsavedChanges">
         Send <span class="glyphicon glyphicon-envelope"></span>
       </button>
     </div>

@@ -72,7 +72,7 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
     var Identities = $resource('/apis/v0/sendgrid/identities');
     var Lists = $resource('/apis/v0/sendgrid/lists');
     var Templates = $resource('/templates/');
-    
+
     if ($routeParams.id) {
       Newsletters.get({id: $routeParams.id}, function (newsletter, headers) {
         $scope.newsletter = newsletter;
@@ -81,6 +81,8 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
         $scope.newsletter_post_url = $location.$$protocol + '://' + $location.$$host +
           ($location.$$port !== 80 ? ':' + $location.$$port : '')
           + userdbService.getBaseUrl() + 'newsletters/' + newsletter.nyhedsbrev_id + '/send';
+
+          $scope.unsavedChanges = false;
       });
     } else if ($location.path() === '/newsletters') { // Again, this is stupid! TODO: Make this better.
       $scope.newsletters = Newsletters.query();
@@ -118,6 +120,10 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
       });
     };
 
+    $scope.identityChanged = function () {
+      $scope.unsavedChanges = true;
+    }
+
     $scope.updateHtmlPreview = function () {
       if ($scope.newsletter.template_html === undefined) {
         return;
@@ -132,6 +138,8 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
       }
 
       $scope.iframe_html_preview = $sce.trustAsResourceUrl(template.uri + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id);
+
+      $scope.unsavedChanges = true;
     }
 
     $scope.updatePlainPreview = function () {
@@ -149,6 +157,12 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
       }
 
       $scope.iframe_plain_preview = $sce.trustAsResourceUrl(template.uri + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id);
+
+      $scope.unsavedChanges = true;
+    }
+
+    $scope.listChanged = function () {
+      $scope.unsavedChanges = true;
     }
 
     $scope.save = function () {
@@ -156,6 +170,8 @@ app.controller('NewsletterCtrl', ['$scope', '$routeParams', '$location', 'userdb
       $scope.newsletter.$save();
       // userdbService.saveNewsletter($scope.newsletter);
       notifications.showSuccess('Gemt');
+
+      $scope.unsavedChanges = false;
       // userdbService.saveNewsletter($scope.newsletter)
       // .success(function (data) {
       //   console.log('savedata', data);
