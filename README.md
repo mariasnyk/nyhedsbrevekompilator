@@ -4,7 +4,7 @@ userdb
 
 # Run from Docker
 
-**This is for deploying the app (HCL).**
+*This is for deploying the app (HCL).*
 
 Running this app inside a Docker container is very easy.
 You need to have a Ubuntu/Linux computer with Docker installed.
@@ -32,51 +32,56 @@ sudo docker run \
 -d bmdako/userdb
 ```
 
-All the `-e` parameters are the environent variables to allow the app to connect to dependent services eg. SendGrid. These will be supplied seperatly
-The `-p` parameter determines what port the container will bind the app to.
+All the `--env` parameters are the environent variables to allow the app to connect to dependent services eg. SendGrid. These will be supplied separately.
+
+The `--dns` parameter specifies what DNS-server should be used. (Necessary for reaching BOND.)
+
+The `--publish` parameter determines what port the container will bind the app to.
 
 Visit **http://\<Server DNS/IP\>:\<Port\>** to make sure the app is running. The *Port* is the one you have defined above.
 
 # Build the Docker image
 
-**This is for creating a new release (DevOp / Release Manager).**
+*This is for creating a new release (DevOp / Release Manager).*
 
-First, check out the lastest source code from the GitHub repo.
+First, check out the lastest source code from the GitHub repo or download the ZIP archive.
 
-Next, to create a build locally run:
+Next, make sure the application dependencies are installed by running:
+
+```
+npm install --production
+```
+
+Next, to create a build run (The source code and the Node modules will be copied onto the Docker image.):
 
 ```
 sudo docker build -t bmdako/userdb .
 ``` 
 
-(The source code and the Node modules will be copied onto the Docker image.)
 
-Lastly, to upload the newly built version of the image to Docker Hub, run:
+Lastly, to upload the newly built version of the image to Docker Hub, run (You must have been granted permissions.): 
 
 ```
 sudo docker push bmdako/userdb
 ```
 
-(You need the right credentials on the Docker Hub to push the image.)
-
 
 # Run from source
 
-**This is for developing new feature and bug fixing. (Developer).**
+*This is for developing new feature and bug fixing. (Developer).*
 
-If you like to run the app directly from source, you can either clone this repo or download the latest ZIP. It's possible to run the app from a directory and not install anything outside - no systemwide dependencies desides Python (for PostgreSQL client). Python is already installed on a Mac.
+If you like to run the app directly from source, you can either clone this repo or download the latest ZIP. It's possible to install and run the app from a directory - no systemwide installation or dependencies desides Python (for PostgreSQL client). Python is already installed on a Mac.
 
-First, you need Node (incl. NPM). Download Node (The zipped Binaries - Not the installer!) from [http://nodejs.org/download/](http://nodejs.org/download/). I'm currently running v0.10.29 but v0.10.32 should also work fine.
+First, you need Node (incl. NPM). Download Node (The zipped Binaries - not the installer!) from [http://nodejs.org/download/](http://nodejs.org/download/). I'm currently running v0.10.29 but v0.10.32 should also work fine.
+
 Unpack the ZIP into a directory.
 
-Download userdb source from git (either using git or zip from [https://github.com/bmdako/userdb/archive/master.zip](https://github.com/bmdako/userdb/archive/master.zip)). Place the userdb source in a folder next to node.
+Download userdb source from git (either using git or zip from [https://github.com/bmdako/userdb/archive/master.zip](https://github.com/bmdako/userdb/archive/master.zip)). Place the userdb source in a folder next to node. Open a terminal and change directory to it.
 
-Open a terminal and change directory to userdb.
-
-First, install the userdb dependencies by running: 
+First, install the application dependencies by running: 
 
 ```
-npm install --production
+npm install
 ```
 
 Before you can start the app, the following environment variables need to be set:
@@ -96,7 +101,7 @@ Before you can start the app, the following environment variables need to be set
 - SENDGRID_API_KEY
 - PAYWALL_TOKEN_SALT
 
-Set these using a Bash-script eg.:
+You can set these by using a Bash-script eg.:
 
 ```
 #!/bin/bash
@@ -106,32 +111,36 @@ export RDS_PORT=xxx
 and so on and so on and so on
 ```
 
-Make the script executable by ```chmod +x config.sh```
-Set the environment variables ```. ./config.sh``` (Yes, the extra dot and space in the beginning is neccesary.)
+Make the script executable by ```chmod +x config.sh``` and set the environment variables by running ```. ./config.sh```. (Yes, the extra dot and space in the beginning is necessary.)
 
 
-Now, start the app with the following command:
+Start the app with the following command:
 
 ```
-node src/app.js
+../node/bin/node src/app.js
 ```
 
 'Or, if you have installed *gulp* (using `npm install -g gulp`), just with the command `gulp`.
 
-Visit [http://localhost:8000/](http://localhost:8000/) if you get no error after startup.
+Now visit [http://localhost:8000/](http://localhost:8000/) if you get no error after startup to see the app.
 
 # Templating
 
-The templates are located in **userdb/src/templates** and can be previewed by following URL: **http://<server>/templates/<template_filename>**
+The templates are located in **src/templates** and can be previewed by following URL: **http://\<server\>/templates/\<template_filename\>**.
+
 The data to be injected into the template is defined by query params ***node*** and **nodequeue**
 
 E.g.:
-    http://localhost:8000/templates/breaking.html?node=29660614
-    http://localhost:8000/templates/overview.html?nodequeue=31 
 
-Note: Changes to the templates does not require the application to be restarted. The templates are not cached.
+```
+http://localhost:8000/templates/breaking.html?node=29660614
+http://localhost:8000/templates/overview.html?nodequeue=31 
+```
+
+Note: Changes to the templates does not require the application to be restarted since the templates are not cached nor compiled.
 
 The templates are written in Swig. See the documentation on [http://paularmstrong.github.io/swig/docs/](http://paularmstrong.github.io/swig/docs/).
+
 Also, SendGrid Email Tags are placeholders that will be used when sending the email. See [https://sendgrid.com/docs/Marketing_Emails/tags.html](https://sendgrid.com/docs/Marketing_Emails/tags.html) 
 
 
