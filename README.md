@@ -64,14 +64,19 @@ sudo docker push bmdako/userdb
 
 **This is for developing new feature and bug fixing. (Developer).**
 
-If you like to run the app directly from source, you can either clone this repo or download the latest ZIP.
+If you like to run the app directly from source, you can either clone this repo or download the latest ZIP. It's possible to run the app from a directory and not install anything outside - no systemwide dependencies desides Python (for PostgreSQL client). Python is already installed on a Mac.
 
-You need Node (incl. NPM) and Python (for PostgreSQL client) installed.
+First, you need Node (incl. NPM). Download Node (The zipped Binaries - Not the installer!) from [http://nodejs.org/download/](http://nodejs.org/download/). I'm currently running v0.10.29 but v0.10.32 should also work fine.
+Unpack the ZIP into a directory.
 
-First, install the depencdencies by running: 
+Download userdb source from git (either using git or zip from [https://github.com/bmdako/userdb/archive/master.zip](https://github.com/bmdako/userdb/archive/master.zip)). Place the userdb source in a folder next to node.
+
+Open a terminal and change directory to userdb.
+
+First, install the userdb dependencies by running: 
 
 ```
-npm install
+npm install --production
 ```
 
 Before you can start the app, the following environment variables need to be set:
@@ -101,6 +106,10 @@ export RDS_PORT=xxx
 and so on and so on and so on
 ```
 
+Make the script executable by ```chmod +x config.sh```
+Set the environment variables ```. ./config.sh``` (Yes, the extra dot and space in the beginning is neccesary.)
+
+
 Now, start the app with the following command:
 
 ```
@@ -110,6 +119,21 @@ node src/app.js
 'Or, if you have installed *gulp* (using `npm install -g gulp`), just with the command `gulp`.
 
 Visit [http://localhost:8000/](http://localhost:8000/) if you get no error after startup.
+
+# Templating
+
+The templates are located in **userdb/src/templates** and can be previewed by following URL: **http://<server>/templates/<template_filename>**
+The data to be injected into the template is defined by query params ***node*** and **nodequeue**
+
+E.g.:
+    http://localhost:8000/templates/breaking.html?node=29660614
+    http://localhost:8000/templates/overview.html?nodequeue=31 
+
+Note: Changes to the templates does not require the application to be restarted. The templates are not cached.
+
+The templates are written in Swig. See the documentation on [http://paularmstrong.github.io/swig/docs/](http://paularmstrong.github.io/swig/docs/).
+Also, SendGrid Email Tags are placeholders that will be used when sending the email. See [https://sendgrid.com/docs/Marketing_Emails/tags.html](https://sendgrid.com/docs/Marketing_Emails/tags.html) 
+
 
 # API
 
