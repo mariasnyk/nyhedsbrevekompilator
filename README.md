@@ -4,9 +4,9 @@ Email Marketing and UserDB platform
 
 This is the application for Email Marketing with an API and a web interface to admin the newsletters, preview the content, initiate the send out. The application will be built in Node.js and the web framework Hapijs. The application will be run through a Docker container.
 
-# Run from Docker
+## Run from Docker
 
-*This is for deploying the app (HCL).*
+*This sections describes the details for deploying the app (HCL).*
 
 Running this app inside a Docker container is very easy.
 You need to have a Ubuntu/Linux computer with Docker installed.
@@ -42,9 +42,9 @@ The `--publish` parameter determines what port the container will bind the app t
 
 Visit **http://\<Server DNS/IP\>:\<Port\>** to make sure the app is running. The *Port* is the one you have defined above.
 
-# Build the Docker image
+## Build the Docker image
 
-*This is for creating a new release (DevOp / Release Manager).*
+*This sections describes the details for creating a new release (DevOp / Release Manager).*
 
 First, check out the lastest source code from the GitHub repo or download the ZIP archive.
 
@@ -68,9 +68,9 @@ sudo docker push bmdako/userdb
 ```
 
 
-# Run from source
+## Run from source
 
-*This is for developing new feature and bug fixing. (Developer).*
+*This sections describes the details for developing new feature and bug fixing. (Developer).*
 
 If you like to run the app directly from source, you can either clone this repo or download the latest ZIP. It's possible to install and run the app from a directory - no systemwide installation or dependencies desides Python (for PostgreSQL client). Python is already installed on a Mac.
 
