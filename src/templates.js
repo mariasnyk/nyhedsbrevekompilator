@@ -171,8 +171,6 @@ function calculateNodequeueChecksum (nodequeue) {
     return node.id;
   });
 
-  console.log('nodequeue checksum', temp);
-
   return checksum(JSON.stringify(temp));
 }
 
