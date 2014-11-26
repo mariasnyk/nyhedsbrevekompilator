@@ -127,6 +127,17 @@ module.exports.register = function (plugin, options, next) {
     }
   }]);
 
+  plugin.route({
+    method: 'POST',
+    path: '/{template}',
+    handler: function (request, reply) {
+      fs.writeFile(__dirname + '/templates/' + request.params.template, JSON.stringify(request.payload, null, 2), function (err) {
+        if (err) reply().code(500);
+        else reply();
+      });
+    }
+  });
+
   next();
 };
 

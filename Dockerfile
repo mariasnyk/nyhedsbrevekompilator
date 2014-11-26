@@ -17,8 +17,6 @@ WORKDIR /userdb
 # Copying the code into image. Be aware no config files are including.
 COPY ./src /userdb/src
 COPY ./node_modules /userdb/node_modules
-# COPY ./package.json /userdb
-# COPY ./gulpfile.js /userdb
 
 # Installing node modules.
 # Actually, we don't need this because we copy everything onto the image including node_modules directory.
@@ -28,4 +26,4 @@ COPY ./node_modules /userdb/node_modules
 EXPOSE  8000
 
 # When starting a container with our image, this command will be run.
-CMD ["node", "/userdb/src/app.js"]
+CMD ["node", "src/app.js"]
