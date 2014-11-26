@@ -5,17 +5,6 @@ var fs = require('fs');
 
 module.exports.register = function (plugin, options, next) {
 
-  plugin.route({
-    method: 'GET',
-    path: '/{param*}',
-    handler: {
-      directory: {
-        path: 'src/admin',
-        index: true
-      }
-    }
-  });
-
   walk(__dirname + '/apis');
   next();
 
