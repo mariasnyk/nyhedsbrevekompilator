@@ -3,7 +3,8 @@
 var fs = require('fs'),
     swig = require('swig'),
     bond_client = require('./bond_client'),
-    checksum = require('checksum');
+    checksum = require('checksum'),
+    templateDir = __dirname + '/templates';
 
 swig.setDefaults({ cache: false }); /* must be turned of when in production*/
 
@@ -69,7 +70,7 @@ module.exports.register = function (plugin, options, next) {
     method: 'GET',
     path: '/{template*}',
     handler: function (request, reply) {
-      var templatePath = __dirname + '/templates' +
+      var templatePath = templateDir +
           (request.params.template !== undefined ? '/' + request.params.template : '');
 
       if (!fs.existsSync(templatePath))
@@ -157,12 +158,20 @@ module.exports.register = function (plugin, options, next) {
     method: 'POST',
     path: '/{template*}',
     handler: function (request, reply) {
-      console.log(request.params.template);
-      console.log(request.payload);
-      //fs.writeFile(__dirname + '/templates/' + request.params.template, JSON.stringify(request.payload, null, 2), function (err) {
-      // TODO: Maybe we need to create directory if if needed
-      fs.writeFile(__dirname + '/templates/' + request.params.template, request.payload, function (err) {
-        console.log(err);
+
+      // If the request URL ends without a filename
+      if (request.params.template.charAt(request.params.template.length - 1) === '/')
+        reply().code(400);
+
+      // Creating all directories in the request URL recursive
+      var dirs = request.params.template.split('/').slice(0,-1);
+      dirs.forEach(function (dir, index) {
+        var newDir = templateDir + '/' + dirs.slice(0, index + 1).join('/');
+        if (!fs.existsSync(newDir))
+          fs.mkdirSync(newDir);
+      });
+
+      fs.writeFile(templateDir + '/' + request.params.template, request.payload, function (err) {
         if (err) reply().code(500);
         else reply();
       });
