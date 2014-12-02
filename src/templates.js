@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 var fs = require('fs'),
     swig = require('swig'),
@@ -39,9 +39,13 @@ module.exports.register = function (plugin, options, next) {
             return reply().code(404);
           }
 
+          var node_checksum = calculateNodeChecksum(node),
+              subject = emailSubjectSuggestion(node);
+
           reply()
           .header('Transfer-Encoding', 'chunked')
-          .header('X-Subject-Suggestion', encodeURIComponent(emailSubjectSuggestion(node)));
+          .header('X-Subject-Suggestion', encodeURIComponent(subject))
+          .header('X-Content-Checksum', node_checksum);
         });
       } else if (request.query.nodequeue) {
         bond_client.getNodequeue(request.query.nodequeue, function (err, nodequeue) {
@@ -49,9 +53,13 @@ module.exports.register = function (plugin, options, next) {
             return reply().code(404);
           }
 
+          var nodequeue_checksum = calculateNodequeueChecksum(nodequeue),
+              subject = emailSubjectSuggestion(nodequeue);
+
           reply()
           .header('Transfer-Encoding', 'chunked')
-          .header('X-Subject-Suggestion', encodeURIComponent(emailSubjectSuggestion(nodequeue)));
+          .header('X-Subject-Suggestion', encodeURIComponent(subject))
+          .header('X-Content-Checksum', nodequeue_checksum);
         });
       } else {
         reply().code(404);
@@ -61,18 +69,16 @@ module.exports.register = function (plugin, options, next) {
     method: 'GET',
     path: '/{template*}',
     handler: function (request, reply) {
-      var templatePath = fs.realpathSync(__dirname + '/templates' +
-          (request.params.template !== undefined ? '/' + request.params.template : ''));
+      var templatePath = __dirname + '/templates' +
+          (request.params.template !== undefined ? '/' + request.params.template : '');
 
-      if (!fs.existsSync(templatePath)) {
-        reply().code(404);
+      if (!fs.existsSync(templatePath))
+        return reply().code(404);
 
-      // Requesting a list of templates
-      } else {
+      templatePath = fs.realpathSync(templatePath);
 
-        var stat = fs.statSync(templatePath);
-
-        console.log('stat', stat.isFile(), stat.isDirectory());
+      fs.stat(templatePath, function (err, stat) {
+        if (err) return reply().code(404);
 
         // Requesting a specific template
         if (stat.isFile()) {
@@ -121,6 +127,8 @@ module.exports.register = function (plugin, options, next) {
             .view(request.params.template)
             .header('Content-Type', ContentTypeHeader(request.params.template))
           }
+
+        // Requesting af list of templates
         } else if (stat.isDirectory()) {
           fs.readdir(templatePath, function (err, files) {
             reply(files
@@ -141,7 +149,7 @@ module.exports.register = function (plugin, options, next) {
           // Will this ever happen??? That the file/directory exists but is not a file nor a directory hehe!
           reply().code(404);            
         }
-      }
+      });
     }
   }]);
 
