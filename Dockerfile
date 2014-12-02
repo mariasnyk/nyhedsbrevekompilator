@@ -18,10 +18,6 @@ WORKDIR /userdb
 COPY ./src /userdb/src
 COPY ./node_modules /userdb/node_modules
 
-# Installing node modules.
-# Actually, we don't need this because we copy everything onto the image including node_modules directory.
-# RUN npm install --production
-
 # Exposing our endpoint to Docker.
 EXPOSE  8000
 

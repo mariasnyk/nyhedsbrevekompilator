@@ -178,6 +178,28 @@ module.exports.register = function (plugin, options, next) {
     }
   });
 
+  plugin.route({
+    method: 'DELETE',
+    path: '/{template*}',
+    handler: function (request, reply) {
+
+      if (request.params.template === undefined || request.params.template.charAt(request.params.template.length - 1) === '/')
+        reply().code(400);
+
+      var templatePath = fs.realpathSync(templateDir + '/' + request.params.template);
+
+      if (fs.existsSync(templatePath)) {
+        fs.unlink(templatePath, function (err) {
+          if (err) reply().code(500);
+          else reply();
+        });
+      } else {
+        reply().code(404);
+      }
+    }
+  });
+
+
   next();
 };
 
