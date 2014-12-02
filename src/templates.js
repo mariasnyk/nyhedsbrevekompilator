@@ -20,15 +20,15 @@ module.exports.register = function (plugin, options, next) {
 
 
   plugin.route([{
-    method: 'GET',
-    path: '/static/{param*}',
-    handler: {
-      directory: {
-        path: 'src/templates/static',
-        index: false
-      }
-    }
-  },{
+    // method: 'GET',
+    // path: '/static/{param*}',
+    // handler: {
+    //   directory: {
+    //     path: 'src/templates/static',
+    //     index: false
+    //   }
+    // }
+  // },{
     method: 'OPTIONS',
     path: '/',
     handler: function (request, reply) {
@@ -61,77 +61,100 @@ module.exports.register = function (plugin, options, next) {
     method: 'GET',
     path: '/{template*}',
     handler: function (request, reply) {
-      var templatePath = __dirname + '/templates';
+      var templatePath = fs.realpathSync(__dirname + '/templates' +
+          (request.params.template !== undefined ? '/' + request.params.template : ''));
 
-      if (request.params.template === undefined) {
-        var filter = request.query.filter;
-
-        reply(fs.readdirSync(templatePath)
-        .filter(function (file) {
-          return fs.statSync(templatePath + '/' + file).isFile() &&
-            (filter !== undefined ?
-              //file.slice(-(filter.length + 1)) === '.' + filter :
-              //file.slice(-filter.length) === filter :
-              file.indexOf(filter) > -1 :
-              true);
-        })
-        .map(function (templateName) {
-          return {
-            name: templateName,
-            uri: 'http://' + request.info.host + request.path + '/' + templateName
-          };
-        }));
-      } else if (!fs.existsSync(templatePath + '/' + request.params.template)) {
+      if (!fs.existsSync(templatePath)) {
         reply().code(404);
-      } else if (request.query.node) {
-        bond_client.getNode(request.query.node, function (err, node) {
-          if (node === null) {
-            return reply().code(404);
-          }
 
-          var node_checksum = calculateNodeChecksum(node),
-              subject = emailSubjectSuggestion(node);
-
-          node.paywallToken = calculatePaywallToken();
-
-          reply
-          .view(request.params.template, node)
-          .header('Transfer-Encoding', 'chunked')
-          .header('Content-Type', ContentTypeHeader(request.params.template))
-          .header('X-Subject-Suggestion', encodeURIComponent(subject))
-          .header('X-Content-Checksum', node_checksum);
-        });
-      } else if (request.query.nodequeue) {
-        bond_client.getNodequeue(request.query.nodequeue, function (err, nodequeue) {
-          if (nodequeue === null || nodequeue.title === null) {
-            return reply().code(404);
-          }
-
-          var nodequeue_checksum = calculateNodequeueChecksum(nodequeue),
-              subject = emailSubjectSuggestion(nodequeue);
-
-          nodequeue.paywallToken = calculatePaywallToken();
-
-          reply
-          .view(request.params.template, nodequeue)
-          .header('Transfer-Encoding', 'chunked')
-          .header('Content-Type', ContentTypeHeader(request.params.template))
-          .header('X-Subject-Suggestion', encodeURIComponent(subject))
-          .header('X-Content-Checksum', nodequeue_checksum);
-        });
+      // Requesting a list of templates
       } else {
-        reply
-        .view(request.params.template)
-        .header('Content-Type', ContentTypeHeader(request.params.template))
+
+        var stat = fs.statSync(templatePath);
+
+        console.log('stat', stat.isFile(), stat.isDirectory());
+
+        // Requesting a specific template
+        if (stat.isFile()) {
+
+          // Requesting a specific template with a BOND node as data input
+          if (request.query.node) {
+            bond_client.getNode(request.query.node, function (err, node) {
+              if (node === null) {
+                return reply().code(404);
+              }
+
+              var node_checksum = calculateNodeChecksum(node),
+                  subject = emailSubjectSuggestion(node);
+
+              node.paywallToken = calculatePaywallToken();
+
+              reply
+              .view(request.params.template, node)
+              .header('Transfer-Encoding', 'chunked')
+              .header('Content-Type', ContentTypeHeader(request.params.template))
+              .header('X-Subject-Suggestion', encodeURIComponent(subject))
+              .header('X-Content-Checksum', node_checksum);
+            });
+
+          // Requesting a specific template with a BOND nodequeue as data input
+          } else if (request.query.nodequeue) {
+            bond_client.getNodequeue(request.query.nodequeue, function (err, nodequeue) {
+              if (nodequeue === null || nodequeue.title === null) {
+                return reply().code(404);
+              }
+
+              var nodequeue_checksum = calculateNodequeueChecksum(nodequeue),
+                  subject = emailSubjectSuggestion(nodequeue);
+
+              nodequeue.paywallToken = calculatePaywallToken();
+
+              reply
+              .view(request.params.template, nodequeue)
+              .header('Transfer-Encoding', 'chunked')
+              .header('Content-Type', ContentTypeHeader(request.params.template))
+              .header('X-Subject-Suggestion', encodeURIComponent(subject))
+              .header('X-Content-Checksum', nodequeue_checksum);
+            });
+          } else {
+            reply
+            .view(request.params.template)
+            .header('Content-Type', ContentTypeHeader(request.params.template))
+          }
+        } else if (stat.isDirectory()) {
+          fs.readdir(templatePath, function (err, files) {
+            reply(files
+              .filter(function (file) {
+                return fs.statSync(templatePath + '/' + file).isFile() &&
+                  (request.query.filter !== undefined ?
+                    file.indexOf(request.query.filter) > -1 :
+                    true);
+              })
+              .map(function (file) {
+                return {
+                  name: file,
+                  uri: 'http://' + request.info.host + templatePath.replace(__dirname, '') + '/' + file
+                };
+              }));
+          });
+        } else {
+          // Will this ever happen??? That the file/directory exists but is not a file nor a directory hehe!
+          reply().code(404);            
+        }
       }
     }
   }]);
 
   plugin.route({
     method: 'POST',
-    path: '/{template}',
+    path: '/{template*}',
     handler: function (request, reply) {
-      fs.writeFile(__dirname + '/templates/' + request.params.template, JSON.stringify(request.payload, null, 2), function (err) {
+      console.log(request.params.template);
+      console.log(request.payload);
+      //fs.writeFile(__dirname + '/templates/' + request.params.template, JSON.stringify(request.payload, null, 2), function (err) {
+      // TODO: Maybe we need to create directory if if needed
+      fs.writeFile(__dirname + '/templates/' + request.params.template, request.payload, function (err) {
+        console.log(err);
         if (err) reply().code(500);
         else reply();
       });
