@@ -27,23 +27,21 @@ redirectRootToAdmin.register.attributes = {
 };
 
 
-var pack = new Hapi.Pack();
-
-pack.server(8000, {
+var server = new Hapi.Server(8000, {
   router: {
     stripTrailingSlash: false
   }
 });
 
-pack.register(redirectRootToAdmin, cb);
-pack.register(admin, { route: { prefix: '/admin' } }, cb);
-pack.register(apis, { route: { prefix: '/apis' } }, cb);
-pack.register(templates, { route: { prefix: '/templates' } }, cb);
+server.pack.register(redirectRootToAdmin, cb);
+server.pack.register(admin, { route: { prefix: '/admin' } }, cb);
+server.pack.register(apis, { route: { prefix: '/apis' } }, cb);
+server.pack.register(templates, { route: { prefix: '/templates' } }, cb);
 
 
 if (!module.parent) {
-  pack.start(function() {
-    console.log("Pack started.");
+  server.start(function() {
+    console.log("Server started.");
   });
 }
 
@@ -51,9 +49,9 @@ if (!module.parent) {
 function cb (err) {
   if (err) {
     console.log('Error when loading plugin', err);
-    pack.stop();
+    server.stop();
   }
 }
 
 
-module.exports = pack;
+module.exports = server;

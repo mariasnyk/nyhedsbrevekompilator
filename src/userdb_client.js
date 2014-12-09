@@ -12,13 +12,14 @@ var pool = mysql.createPool({
 
 // Testing we can connect to database
 console.log('Connecting to ' + process.env.RDS_HOSTNAME +' as ' + process.env.RDS_USERNAME + '...');
+console.log('Using database ' + process.env.RDS_DATABASE);
 pool.getConnection(function(err, connection) {
   if (err) {
     console.log('Connection to RDS failed: ', err);
     if (err.code === 'ECONNREFUSED') {
       console.log('Maybe the ENV config is missing.');
     }
-    process.exit(1);
+    // process.exit(1);
   } else {
     connection.release();
   }
