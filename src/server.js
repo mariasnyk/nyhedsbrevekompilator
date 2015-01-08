@@ -27,16 +27,20 @@ redirectRootToAdmin.register.attributes = {
 };
 
 
-var server = new Hapi.Server(8000, {
-  router: {
-    stripTrailingSlash: false
+var server = new Hapi.Server({
+  connections: {
+    router: {
+      stripTrailingSlash: false
+    }
   }
 });
 
-server.pack.register(redirectRootToAdmin, cb);
-server.pack.register(admin, { route: { prefix: '/admin' } }, cb);
-server.pack.register(apis, { route: { prefix: '/apis' } }, cb);
-server.pack.register(templates, { route: { prefix: '/templates' } }, cb);
+server.connection({ port: 8000 });
+
+server.register(redirectRootToAdmin, cb);
+server.register(admin, { routes: { prefix: '/admin' } }, cb);
+server.register(apis, { routes: { prefix: '/apis' } }, cb);
+server.register(templates, { routes: { prefix: '/templates' } }, cb);
 
 
 if (!module.parent) {
