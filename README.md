@@ -98,7 +98,7 @@ Make the config script executable with `chmod +x config.sh` and set the environm
 Start the app with the following command:
 
 ```
-../node/bin/node src/app.js
+../node/bin/node src/server.js
 ```
 
 Or, if you have installed *gulp* (using `npm install -g gulp`), just with the command `gulp`.
