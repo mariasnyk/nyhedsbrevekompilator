@@ -6,6 +6,9 @@
 
   {% for node in nodes %}
   <h2>{{ node.title }}</h2>
+  {% if node.images[0] %}
+    <img title="{{ node.images[0].title }}" src="http://www.bt.dk/{{ node.images[0].file.path }}">
+  {% endif %}
   {% for image in node.images %}
     <img width="300px" title="{{ image.title }}" src="http://www.bt.dk/{{ image.file.path }}">
   {% endfor %}

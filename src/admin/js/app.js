@@ -173,7 +173,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
 
     function bindFieldToSearch (field) {
       $scope.$watch(field, function (value) {
-        $location.search(field, encodeURIComponent(value));
+        $location.search(field, value);
       });
     }
 
