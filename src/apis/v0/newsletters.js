@@ -278,10 +278,18 @@ function adhocNewsletter (request, reply) {
   var createDraft = data.draft !== undefined &&
         typeof data.draft === 'boolean' ? data.draft : 
         typeof data.draft === 'string' ? data.draft === 'true' :
-        false
+        false;
 
   var html_url  = 'http://' + request.info.host + '/templates/' + data.template_html + '?' + data.bond_type + '=' + data.bond_id,
       plain_url = 'http://' + request.info.host + '/templates/' + data.template_plain + '?' + data.bond_type + '=' + data.bond_id;
+
+  if (process.env.LIVE === 'true') {
+    // Leave it
+  } else if (process.env.TEST_LIST) {
+    data.list = process.env.TEST_LIST;
+  } else {
+    data.list = 'Daniel'; // TODO: This is for testing
+  }
 
   download(html_url, function (err, html_email) {
     if (err) return reply(err);
