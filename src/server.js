@@ -2,7 +2,8 @@
 
 var Hapi = require('hapi'),
     admin = require('./admin'),
-    apis = require('./apis'),
+    //apis = require('./apis'),
+    newsletters = require('./newsletters'),
     templates = require('./templates');
 
 
@@ -37,10 +38,11 @@ var server = new Hapi.Server({
 
 server.connection({ port: 8000 });
 
-server.register(redirectRootToAdmin, cb);
-server.register(admin, { routes: { prefix: '/admin' } }, cb);
-server.register(apis, { routes: { prefix: '/apis' } }, cb);
+//server.register(redirectRootToAdmin, cb);
+server.register(admin, cb);
+//server.register(apis, { routes: { prefix: '/apis' } }, cb);
 server.register(templates, { routes: { prefix: '/templates' } }, cb);
+server.register(newsletters, { routes: { prefix: '/newsletters' } }, cb);
 
 
 if (!module.parent) {

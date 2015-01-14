@@ -19,8 +19,7 @@ module.exports.register = function (plugin, options, next) {
     isCached: false /* must be turned of when in production*/
   });
 
-
-  plugin.route([{
+  //plugin.route({
     // method: 'GET',
     // path: '/static/{param*}',
     // handler: {
@@ -29,7 +28,9 @@ module.exports.register = function (plugin, options, next) {
     //     index: false
     //   }
     // }
-  // },{
+  // });
+
+  plugin.route({
     method: 'OPTIONS',
     path: '/',
     handler: function (request, reply) {
@@ -66,7 +67,9 @@ module.exports.register = function (plugin, options, next) {
         reply().code(404);
       }
     }
-  },{
+  });
+
+  plugin.route({
     method: 'GET',
     path: '/{template*}',
     handler: function (request, reply) {
@@ -152,7 +155,7 @@ module.exports.register = function (plugin, options, next) {
         }
       });
     }
-  }]);
+  });
 
   plugin.route({
     method: 'POST',
@@ -198,7 +201,6 @@ module.exports.register = function (plugin, options, next) {
       }
     }
   });
-
 
   next();
 };

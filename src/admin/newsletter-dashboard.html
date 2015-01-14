@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-6">
+      <input
+        class="form-control input-sm"
+        placeholder="Filter"
+        type="text"
+        ng-model="newsletterFilter">
+    </div>
+    <div class="col-xs-3">
+      <input
+        class="form-control input-sm"
+        type="text"
+        ng-model="name"
+        ng-keyup="addCategory($event, name)"
+        placeholder="Create new"/>
+    </div>
+    <div class="col-xs-3">
+      <button type="button" class="btn btn-default btn-sm" ng-click="createNewsletter(name)">
+        Ny <span class="glyphicon glyphicon-plus"></span>
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <table class="table table-hover">
+        <tr>
+          <th>Name</th>
+          <th></th>
+          <th></th>
+        </tr>
+        <tr ng-repeat="newsletter in newsletters | filter: newsletterFilter" ng-class="{'warning' : newsletter.enabled === 0}">
+          <td><a ng-href="#/{{newsletter.name}}">{{newsletter.name}}</td>
+          <td>
+            <a class="btn btn-default btn-sm" ng-href="#/{{newsletter.name}}/edit">
+              Edit  <span class="glyphicon glyphicon-edit"></span>
+            </a></td>
+          <td>
+            <button type="button" class="btn btn-danger btn-sm" ng-click="deleteNewsletter(newsletter.name)">
+              Slet <span class="glyphicon glyphicon-remove"></span>
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,52 +1,24 @@
 //(function(window, angular, undefined) {'use strict';
 
-var app = angular.module('userdb', ['ngRoute', 'ngSanitize', 'ngResource', 'ngCookies', 'ui.bootstrap', 'ngNotificationsBar'])
+var app = angular.module('userdb', ['ngRoute', 'ngSanitize', 'ngResource', 'ngCookies', 'ui.bootstrap', 'ngNotificationsBar']);
 
-// app.config(['$routeProvider', function ($routeProvider) {
+app.config(['$routeProvider', function ($routeProvider) {
 
-//   $routeProvider
-//     .when( '/', {
-//       redirectTo: '/newsletters' })
-//     .when( '/members', {
-//       templateUrl: 'templates/member-dashboard.html',
-//       controller: 'MemberCtrl' })
-//     .when( '/members/:id', {
-//       templateUrl: 'templates/member-editor.html',
-//       controller: 'MemberCtrl' })
-//     .when( '/publishers', {
-//       templateUrl: 'templates/publisher-dashboard.html',
-//       controller: 'PublisherCtrl' })
-//     .when( '/publishers/:id', {
-//       templateUrl: 'templates/publisher-editor.html',
-//       controller: 'PublisherCtrl' })
-//     .when( '/newsletters', {
-//       templateUrl: 'templates/newsletter-dashboard.html',
-//       controller: 'NewsletterCtrl' })
-//     .when( '/newsletters/:id', {
-//       templateUrl: 'templates/newsletter-editor.html',
-//       controller: 'NewsletterCtrl' })
-//     .when( '/adhoc', {
-//       templateUrl: 'templates/newsletter-editor.html',
-//       controller: 'NewsletterCtrl',
-//       reloadOnSearch: false })
-//     // .when( '/newsletters/:id/preview', {
-//     //   templateUrl: 'templates/newsletter-preview.html',
-//     //   controller: 'NewsletterCtrl' })
-//     .when( '/permissions', {
-//       templateUrl: 'templates/permission-dashboard.html',
-//       controller: 'PermissionCtrl' })
-//     .when( '/permissions/:id', {
-//       templateUrl: 'templates/permission-editor.html',
-//       controller: 'PermissionCtrl' })
-//     .when( '/interests', {
-//       templateUrl: 'templates/interest-dashboard.html',
-//       controller: 'InterestCtrl' })
-//     .when( '/interests/:id', {
-//       templateUrl: 'templates/interest-editor.html',
-//       controller: 'InterestCtrl' })
-//     .otherwise({
-//       redirectTo: '/' });
-// }]);
+  $routeProvider
+    .when( '/', {
+      redirectTo: '/' })
+    .when( '/', {
+      templateUrl: 'newsletter-dashboard.html',
+      controller: 'DashboardController' })
+    .when( '/:name', {
+      templateUrl: 'newsletter-editor.html',
+      controller: 'NewsletterController' })
+    .when( '/:name/:operator', {
+      templateUrl: 'newsletter-editor.html',
+      controller: 'NewsletterController' })
+    .otherwise({
+      redirectTo: '/' });
+}]);
 
 app.config(['$resourceProvider',
   function ($resourceProvider) {
@@ -54,207 +26,208 @@ app.config(['$resourceProvider',
     //$resourceProvider.defaults.stripTrailingSlashes = false;
   }]);
 
-// app.controller('MenuCtrl', ['$scope', '$location', '$rootScope',
-//   function ($scope, $location, $rootScope) {
-//     $scope.menuitems = [
-//     {
-//     //   name: 'Members',
-//     //   href: '/members'
-//     // },{
-//     //   name: 'Publishers',
-//     //   href: '/publishers'
-//     // },{
-//       name: 'Adhoc',
-//       href: '/adhoc'
-//     },{
-//       name: 'Newsletters',
-//       href: '/newsletters'
-//     // },{
-//     //   name: 'Permissions',
-//     //   href: '/permissions'
-//     // },{
-//     //   name: 'Interests',
-//     //   href: '/interests'
-//     // },{
-//       // name: 'Smartlinks',
-//       // href: '/smartlinks'
-//     }];
 
-//     $rootScope.$on('$locationChangeSuccess', setActiveMenuitem);
-//     setActiveMenuitem();
+app.controller('DashboardController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications',
+  function ($scope, $routeParams, $location, $resource, $sce, $http, notifications) {
 
-//     function setActiveMenuitem () {
-//       $scope.menuitems.forEach(function (menuitem) {
-//         if ($location.path().indexOf(menuitem.href) === 0)
-//           menuitem.active = true;
-//         else
-//           menuitem.active = false;
-//       });
-//     }
-//   }]);
+    var Newsletters = $resource('/newsletters/:name', { name: '@name' });
+    $scope.newsletters = Newsletters.query();
+
+    $scope.createNewsletter = function (name) {
+      Newsletters.save({ name: name }, function () {
+        $scope.name = '';
+        $scope.newsletters = Newsletters.query();
+      });
+    };
+
+    $scope.deleteNewsletter = function (name) {
+      Newsletters.delete({ name: name }, function () {
+        $scope.newsletters = Newsletters.query();
+      });
+    };
+
+    $scope.addCategory = function (clickEvent, name) {
+      if (clickEvent.keyCode === 13) {
+        $scope.createNewsletter(name);
+      }
+    };
+
+  }]);
 
 
-app.controller('NewsletterController', ['$scope', '$routeParams', '$location', 'userdbService', '$resource', '$sce', 'notifications',
-  function ($scope, $routeParams, $location, userdbService, $resource, $sce, notifications) {
+app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications',
+  function ($scope, $routeParams, $location, $resource, $sce, $http, notifications) {
 
-    //var Newsletters = $resource('/apis/v0/newsletters/:id', { id: '@id' });
-    var Identities = $resource('/apis/v0/sendgrid/identities');
-    var Lists = $resource('/apis/v0/sendgrid/lists');
+    $scope.edit = $routeParams.operator === 'edit';
+    console.log('$scope.edit', $scope.edit);
+
+    var Newsletters = $resource('/newsletters/:name', { name: '@name' });
+    var Identities = $resource('/newsletters/identities');
+    var Lists = $resource('/newsletters/lists');
     var Templates = $resource('/templates/');
 
-    // if ($routeParams.id) {
-    //   Newsletters.get({id: $routeParams.id}, function (newsletter, headers) {
-    //     $scope.newsletter = newsletter;
-    //     $scope.updatePreview();
-
-    //     $scope.newsletter_post_url = $location.$$protocol + '://' + $location.$$host +
-    //       ($location.$$port !== 80 ? ':' + $location.$$port : '')
-    //       + userdbService.getBaseUrl() + 'newsletters/' + newsletter.nyhedsbrev_id + '/send';
-
-    //   });
-    // } else if ($location.path() === '/newsletters') { // Again, this is stupid! TODO: Make this better.
-    //   $scope.newsletters = Newsletters.query();
-    // }
-
-    $scope.identities = Identities.query();
-    $scope.lists = Lists.query();
-    $scope.html_templates = Templates.query({filter:'.html'});
-    $scope.plain_templates = Templates.query({filter:'.plain'});
-
-
-    $scope.$watch(function () { return $location.search(); }, function () {
-      var temp = $location.search();
-      $scope.identity = temp['identity'] || '';
-      $scope.bond_type = temp['bond_type'] || '';
-      $scope.bond_id = temp['bond_id'] || '';
-      $scope.template_html = temp['template_html'] || '';
-      $scope.template_plain = temp['template_plain'] || '';
-      $scope.list = temp['list'] || '';
-    });
-
-    // $scope.$watch('identity', function (identity) {
-    //    setQuerystring('identity', identity);
+    // $scope.newsletter = Newsletters.get({name: $routeParams.name}, function () {
+    //   console.log('$scope.newsletter', $scope.newsletter);
     // });
 
+    if ($scope.edit) {
+      
+      $scope.identities = Identities.query(function (){console.log('identities')});
+      $scope.lists = Lists.query(function (){console.log('lists')});
+      $scope.html_templates = Templates.query({filter:'.html'}, function (){console.log('html_templates')});
+      $scope.plain_templates = Templates.query({filter:'.plain'}, function (){console.log('plain_templates')});
+
+      $scope.$watch('identities', function () {
+        console.log ($scope.identities.length, $scope.lists.length, $scope.html_templates.length, $scope.plain_templates.length );
+        if ($scope.identities.length > 0 && $scope.lists.length > 0 && $scope.html_templates.length > 0 && $scope.plain_templates.length > 0) {
+          $scope.newsletter = Newsletters.get({name: $routeParams.name}, function (){console.log('newsletter')});
+        }
+      });
+
+      $scope.$watch('lists', function () {
+        console.log ($scope.identities.length, $scope.lists.length, $scope.html_templates.length, $scope.plain_templates.length );
+        if ($scope.identities.length > 0 && $scope.lists.length > 0 && $scope.html_templates.length > 0 && $scope.plain_templates.length > 0) {
+          $scope.newsletter = Newsletters.get({name: $routeParams.name}, function (){console.log('newsletter')});
+        }
+      });
+
+      $scope.$watch('html_templates', function () {
+        console.log ($scope.identities.length, $scope.lists.length, $scope.html_templates.length, $scope.plain_templates.length );
+        if ($scope.identities.length > 0 && $scope.lists.length > 0 && $scope.html_templates.length > 0 && $scope.plain_templates.length > 0) {
+          $scope.newsletter = Newsletters.get({name: $routeParams.name}, function (){console.log('newsletter')});
+        }
+      });
+
+      $scope.$watch('plain_templates', function () {
+        console.log ($scope.identities.length, $scope.lists.length, $scope.html_templates.length, $scope.plain_templates.length );
+        if ($scope.identities.length > 0 && $scope.lists.length > 0 && $scope.html_templates.length > 0 && $scope.plain_templates.length > 0) {
+          $scope.newsletter = Newsletters.get({name: $routeParams.name}, function (){console.log('newsletter')});
+        }
+      });
+    } else {
+      $scope.newsletter = Newsletters.get({name: $routeParams.name});
+    }
+
+
     // $scope.$watch('bond_type', function (bond_type) {
-    //   setQuerystring('bond_type', bond_type);
+    //   $scope.updatePreview();
+    // });
+
+    // Todo: 
+    $scope.at = new Date();
+
+    // $scope.$watch('bond_type', function (bond_type) {
     //   $scope.updatePreview();
     // });
 
     // $scope.$watch('bond_id', function (bond_id) {
-    //   setQuerystring('bond_id', bond_id);
     //   $scope.updatePreview();
     // });
 
     // $scope.$watch('template_html', function (template_html) {
-    //   setQuerystring('template_html', template_html);
     //   $scope.updateHtmlPreview();
     // });
 
     // $scope.$watch('template_plain', function (template_plain) {
-    //   setQuerystring('template_plain', template_plain);
     //   $scope.updatePlainPreview();
     // });
 
-    // $scope.$watch('list', function (list) {
-    //   setQuerystring('list', list);
-    // });
+    $scope.addCategory = function (clickEvent) {
+      if ($scope.newsletter.categories == undefined) {
+        $scope.newsletter.categories = [];
+      }
 
-    // function setQuerystring (field, value) {
-    //   $location.search(field, encodeURIComponent(value));
-    // }
+      if (clickEvent.keyCode === 13) {
+        // TODO: Split on comma, remove whitespace etc.
+        if ($scope.newCategory !== '') {
+          $scope.newsletter.categories.push($scope.newCategory);
+          $scope.newCategory = '';
+        }
+      }
+    };
 
-    bindFieldToSearch('identity');
-    bindFieldToSearch('bond_type');
-    bindFieldToSearch('bond_id');
-    bindFieldToSearch('template_html');
-    bindFieldToSearch('template_plain');
-    bindFieldToSearch('list');
+    $scope.removeCategory = function (categoryIndex) {
+      $scope.newsletter.categories.splice(categoryIndex, 1);
+    };
 
-    function bindFieldToSearch (field) {
-      $scope.$watch(field, function (value) {
-        $location.search(field, value);
+    $scope.saveNewsletter = function () {
+      $http.post('/newsletters', $scope.newsletter)
+      .success(function () {
+        console.log('Success saving template.');
+      }).error(function (data, status) {
+        console.log('Error saving template.', data, status);
       });
-    }
+    };
 
     $scope.updatePreview = function () {
       console.log('UPDATING');
-      if ($scope.bond_type === undefined ||
-          $scope.bond_id === undefined) {
+      if ($scope.newsletter.bond_type === undefined ||
+          $scope.newsletter.bond_id === undefined) {
+        console.log('UPDATING');
         return;
       }
 
       $scope.previewError = false;
 
+      $scope.updateSubjectPreview();
       $scope.updateHtmlPreview();
       $scope.updatePlainPreview();
-      $scope.updateSubjectPreview();
     };
 
     $scope.updateSubjectPreview = function () {
       // Getting the subject suggestion
-      userdbService.getNewsletterSubjectSuggestion($scope.bond_type, $scope.bond_id)
+      $http({method: 'OPTIONS', url: '/templates?' + $scope.newsletter.bond_type + "=" + $scope.newsletter.bond_id})
       .success(function (data, status, getHeaders) {
         var headers = getHeaders();
-        $scope.subject = decodeURIComponent(headers['x-subject-suggestion']);
+        $scope.newsletter.subject = decodeURIComponent(headers['x-subject-suggestion']);
         $scope.previewError = false;
       }).error(function (data, status) {
         console.log('Error when heading for subject suggestion', data, status);
         $scope.previewError = true;
         $scope.subject = null;
-        $scope.iframe_html_preview = null;
-        $scope.iframe_plain_preview = null;
       });
     };
 
     $scope.updateHtmlPreview = function () {
-      if ($scope.template_html === undefined) {
+      if ($scope.newsletter.template_html === undefined) {
         return;
       }
 
-      var template = $scope.html_templates.filter(function (item) {
-        return item.name === $scope.template_html;
-      })[0];
-
-      if (template === undefined) {
-        return;
-      }
-
-      $scope.iframe_html_preview = $sce.trustAsResourceUrl(template.uri + '?' + $scope.bond_type + '=' + $scope.bond_id);
-    }
+      $http.get($scope.newsletter.template_html.uri + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
+      .success(function (data) {
+        $scope.newsletter.email_html = data;
+      });
+    };
 
     $scope.updatePlainPreview = function () {
-      if ($scope.template_plain === undefined) {
+      if ($scope.newsletter.template_plain === undefined) {
         return;
       }
 
+      $http.get($scope.newsletter.template_plain.uri + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
+      .success(function (data) {
+        $scope.newsletter.email_plain = data;
+      });
+    };
 
-      var template = $scope.plain_templates.filter(function (item) {
-        return item.name === $scope.template_plain;
-      })[0];
+    $scope.sendNewsletter = function (draft) {
 
-      if (template === undefined) {
-        return;
-      }
+      console.log($scope.newsletter);
+      return;
 
-      $scope.iframe_plain_preview = $sce.trustAsResourceUrl(template.uri + '?' + $scope.bond_type + '=' + $scope.bond_id);
-    }
-
-    $scope.sendAdhocNewsletterAction = function (draft) {
       if (draft !== undefined) {
         $scope.draft = draft
       }
 
-      // TODO: Update the data that we send
-      userdbService.sendAdhocNewsletter($scope.newsletter)
-      .success(function (data) {
-        if (draft)
-          notifications.showSuccess('Kladde oprettet ' + data.name);
-        else
-          notifications.showSuccess('Sendt ' + data.name);
-      })
-      .error(function (data, status) {
-        console.log('Error', status, data);
-      });
+      // $http.post('/newsletters/send', data)
+      // .success(function (data) {
+      //   if (draft)
+      //     notifications.showSuccess('Kladde oprettet ' + data.name);
+      //   else
+      //     notifications.showSuccess('Sendt ' + data.name);
+      // })
+      // .error(function (data, status) {
+      //   console.log('Error', status, data);
+      // });
     };
   }]);

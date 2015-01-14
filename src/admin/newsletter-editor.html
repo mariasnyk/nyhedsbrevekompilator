@@ -1,0 +1,165 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-2">
+      <div class="form-group">
+        <label for="name_control">Name</label>
+        <input
+          id="name_control"
+          class="form-control"
+          type="text"
+          ng-model="newsletter.name"
+          ng-disabled="!edit"
+          placeholder="Insert name"/>
+      </div>
+    </div>
+    <div class="col-xs-2">
+      <div class="form-group">
+        <label for="bond_type_control">BOND Data type</label>
+        <select
+          id="bond_type_control"
+          class="form-control"
+          ng-model="newsletter.bond_type"
+          ng-disabled="!edit">
+          <option>node</option>
+          <option>nodequeue</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-2">
+      <div class="form-group">
+        <label for="bond_id_control">ID</label>
+        <input
+          id="bond_id_control"
+          type="text"
+          class="form-control"
+          placeholder="Insert {{newsletter.bond_type}} ID"
+          ng-model="newsletter.bond_id"
+          ng-disabled="!edit">
+      </div>
+    </div>
+    <div class="col-xs-2">
+      <div class="form-group">
+        <label for="template_html_control">HTML Template</label>
+        <select
+          id="template_html_control"
+          class="form-control"
+          ng-model="newsletter.template_html"
+          ng-options="template_html as template_html.name for template_html in html_templates"
+          ng-disabled="!edit"
+          ng-required="true">
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-2">
+      <div class="form-group">
+        <label for="template_plain_control">Text Template</label>
+        <select
+          id="template_plain_control"
+          class="form-control"
+          ng-model="newsletter.template_plain"
+          ng-options="template_plain as template_plain.name for template_plain in plain_templates"
+          ng-disabled="!edit"
+          ng-required="true">
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-2">
+      <div class="form-group">
+        <label for="category_control">Add category</label>
+        <input id="category_control" class="form-control" type="text" ng-model="newCategory" ng-keyup="addCategory($event)" placeholder="Category"/>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-2 col-xs-offset-10">
+      <ul class="list-inline">
+        <li ng-repeat="category in newsletter.categories track by $index">
+          <span id="category-{{category}}" class="label label-info">{{category}} <span class="glyphicon glyphicon-remove" ng-click="removeCategory($index)"></span>&nbsp;</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-4">
+      <button type="button" class="btn btn-info" ng-click="updatePreview()">
+        Preview <span class="glyphicon glyphicon-refresh"></span>
+      </button>
+      <button type="button" class="btn btn-success" ng-click="saveNewsletter()" ng-show="edit">
+        Gem <span class="glyphicon glyphicon-check"></span>
+      </button>
+      <a class="btn btn-default" ng-show="edit">
+        Luk edit <span class="glyphicon glyphicon-chevron-left"></span>
+      </a>
+    </div>
+    <div class="col-xs-8 form-inline">
+      <div class="form-group">
+        <label for="identity_control">Identity (afsender)</label>
+        <select
+          id="identity_control"
+          class="form-control"
+          ng-model="newsletter.identity"
+          ng-options="identity for identity in identities"
+          ng-show="edit"
+          ng-required="true">
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="list_control">Modtagere</label>
+        <select
+          id="list_control"
+          class="form-control"
+          ng-model="newsletter.list"
+          ng-options="list for list in lists"
+          ng-show="edit"
+          ng-required="true">
+          <option value=""></option>
+        </select>
+      </div>
+      <button type="button" class="btn btn-success" ng-click="sendNewsletter(true)" ng-hide="edit">
+        Opret kladde <span class="glyphicon glyphicon-inbox"></span>
+      </button>
+      <span>eller</span>
+      <button type="button" class="btn btn-danger" ng-click="sendNewsletter()" ng-hide="edit">
+        Send <span class="glyphicon glyphicon-envelope"></span>
+      </button>
+      <input class="form-control" type="datetime-local" ng-model="newsletter.at" ng-hide="edit"
+        placeholder="yyyy-MM-ddTHH:mm:ss" min="2001-01-01T00:00:00" max="2099-12-31T00:00:00" required />
+    </div>
+</div>
+
+  <hr>
+  <!-- PREVIEW -->
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="alert alert-danger" role="alert" ng-show="previewError">Fejl ved indlæsning af data fra BOND.</div>
+    </div>
+    <div class="col-xs-12">
+      <div class="panel panel-primary">
+        <div class="panel-heading">Emnefelt</div>
+        <div class="panel-body">
+          <input type="text" class="form-control" ng-model="newsletter.subject">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 col-lg-6">
+      <div class="panel panel-primary">
+        <div class="panel-heading">HTML indhold</div>
+        <div class="panel-body">
+          <iframe class="newsletter-preview" srcdoc="{{newsletter.email_html}}"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-12 col-lg-6">
+      <div class="panel panel-primary">
+        <div class="panel-heading">Text indhold</div>
+        <div class="panel-body">
+          <textarea class="newsletter-preview" disabled="disabled" style="background-color: white;">{{newsletter.email_plain}}</textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

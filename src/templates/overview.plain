@@ -1,6 +1,4 @@
-{% block content %}
-  {% for node in nodes %}
-  >> {{ node.title }}
+{% block content %}{% for node in nodes %}  >> {{ node.title }}
    > {{ node.url }}
-  {% endfor %}
-{% endblock %}
+
+{% endfor %}{% endblock %}

@@ -4,15 +4,16 @@
 
 var http = require('http'),
     https = require('https'),
-    // eventEmitter = require('events').EventEmitter,
-    // workerEmitter = new eventEmitter(),
-    mdb = require('../../mdb_client.js'),
-    userdb = require('../../userdb_client.js');
+    mdb = require('./mdb_client.js'),
+    //mongodb = require('../../mongodb.js'),
+    userdb = require('./userdb_client.js');
 
-module.exports = [
-  {
+
+module.exports.register = function (plugin, options, next) {
+
+  plugin.route({
     method: 'get',
-    path: '/sendgrid/identities',
+    path: '/identities',
     handler: function (request, reply) {
       callSendGrid('/api/newsletter/identity/list.json', function (err, data) {
         if (err) return reply(err).code(500);
@@ -21,18 +22,22 @@ module.exports = [
         }));
       });
     }
-  },{
+  });
+
+  plugin.route({
     method: 'get',
-    path: '/sendgrid/identities/{id}',
+    path: '/identities/{id}',
     handler: function (request, reply) {
       callSendGrid('/api/newsletter/identity/get.json', 'identity=' + request.params.id, function (err, data) {
         if (err) return reply(err).code(500);
         reply(data);
       });
     }
-  },{
+  });
+
+  plugin.route({
     method: 'get',
-    path: '/sendgrid/lists',
+    path: '/lists',
     handler: function (request, reply) {
       callSendGrid('/api/newsletter/lists/get.json', function (err, data) {
         if (err) return reply(err).code(500);
@@ -41,9 +46,11 @@ module.exports = [
         }));
       });
     }
-  },{
+  });
+
+  plugin.route({
     method: 'get',
-    path: '/sendgrid/categories',
+    path: '/categories',
     handler: function (request, reply) {
       callSendGrid('/api/newsletter/category/list.json', function (err, data) {
         if (err) return reply(err).code(500);
@@ -52,9 +59,11 @@ module.exports = [
         }));
       });
     }
-  },{
+  });
+
+  plugin.route({
     method: 'get',
-    path: '/sendgrid/emails',
+    path: '/emails',
     handler: function (request, reply) {
       var body = request.query.name ? 'name=' + request.query.name : '';
 
@@ -63,164 +72,168 @@ module.exports = [
         else reply(data);
       });
     }
-  },{
+  });
+
+  plugin.route({
     method: 'get',
-    path: '/sendgrid/emails/{name}',
+    path: '/emails/{name}',
     handler: function (request, reply) {
       callSendGrid('/api/newsletter/newsletter/get.json', 'name=' + request.params.name, function (err, data) {
         if (err) return reply(err).code(500);
         else reply(data);
       });
     }
-  },{
-    method: 'get',
-    path: '/newsletters',
-    handler: selectAllNewsletters
-  },{
-    method: 'get',
-    path: '/newsletters/{id}',
-    handler: selectNewsletter
-  },{
-    method: 'post',
-    path: '/newsletters',
-    handler: saveNewsletter
-  },{
-    method: ['post','put'],
-    path: '/newsletters/{id}',
-    handler: saveNewsletter
-  // },{
-  //   method: 'get',
-  //   path: '/newsletters/{id}/subscribers',
-  //   handler: selectNewsletterSubscribers
-  // },{
-  //   method: 'options',
-  //   path: '/newsletters/{id}/subscribers',
-  //   handler: selectNewsletterSubscribersCount
-  // },{
-  //   method: 'get',
-  //   path: '/newsletters/{id}/subscribers/count',
-  //   handler: selectNewsletterSubscribersCount
-  },{
-    method: ['put','post'],
-    path: '/newsletters/send',
-    handler: adhocNewsletter
-  },{
-    method: ['put','post'],
-    path: '/newsletters/{id}/send',
-    handler: scheduledNewsletter
-  // },{
-  //   method: 'get',
-  //   path: '/newsletters/templates',
-  //   handler: listNewsletterTemplates
-  }
-];
-
-function selectAllNewsletters (request, reply) {
-  var sql = [
-    'SELECT tbl_nyhedsbrev.*, tbl_publisher.publisher_navn',
-    'FROM tbl_nyhedsbrev',
-    'LEFT JOIN tbl_publisher ON tbl_publisher.publisher_id = tbl_nyhedsbrev.publisher_id'].join(' ');
-
-  mdb.query(sql, function (err, result) {
-    if (err) return reply(err);
-    reply(result.rows);
   });
+
+  plugin.route({
+    method: 'get',
+    path: '/',
+    handler: function (request, reply) {
+      userdb.query('SELECT id, name FROM mashed_composer', function (err, result) {
+        if (err) return reply(err);
+        reply(result);
+      });
+    }
+  });
+
+  plugin.route({
+    method: 'get',
+    path: '/{name}',
+    handler: function (request, reply) {
+      queryOneNewsletter(request.params.name, function (err, newsletter) {
+        if (err) return reply(err).code(500);
+        else if (newsletter === null)
+          reply().code(404);
+        else
+          reply(newsletter);
+      });
+    }
+  });
+
+  plugin.route({
+    method: 'post',
+    path: '/',
+    handler: saveNewsletter
+  });
+
+  plugin.route({
+    method: ['post','put'],
+    path: '/{name}',
+    handler: saveNewsletter
+  });
+
+  plugin.route({
+    method: 'post',
+    path: '/send',
+    handler: sendNewsletter
+  });
+
+  plugin.route({
+    method: 'delete',
+    path: '/{name}',
+    handler: deleteNewsletter
+  });
+
+  next();
 };
 
-function selectNewsletter (request, reply) {
+module.exports.register.attributes = {
+    name: 'newsletters',
+    version: '1.0.0'
+};
 
-  // TODO: Validate request.params.id
-  // Because a GET http://localhost:8000/v0/newsletters/zxc
-  // will throw database error: Uncaught error: column "zxc" does not exists
 
-  queryOneNewsletter(request.params.id, function (err, newsletter) {
-    if (err) return reply(err).code(509);
-    else if (newsletter === null)
-      reply().code(404);
-    else
-      reply(newsletter);
-  });
-}
+function queryOneNewsletter (name, callback) {
 
-function queryOneNewsletter (newsletterId, callback) {
   var sql = [
-    'SELECT *',
-    'FROM tbl_nyhedsbrev',
-    'LEFT JOIN tbl_publisher ON tbl_publisher.publisher_id = tbl_nyhedsbrev.publisher_id',
-    'WHERE nyhedsbrev_id = ' + newsletterId].join(' ');
+    'SELECT data',
+    'FROM mashed_composer',
+    'WHERE name = ' + userdb.escape(name)].join(' ');
 
-  mdb.queryOne(sql, function (err, tbl_nyhedsbrev) {
+  userdb.queryOne(sql, function (err, result) {
     if (err) return callback(err);
-    else if (tbl_nyhedsbrev === null)
+    else if (result === null)
       callback(null, null);
     else {
-      var sql = 'SELECT * FROM mdb_nyhedsbrev WHERE nyhedsbrev_id='+tbl_nyhedsbrev.nyhedsbrev_id;
-      userdb.queryOne(sql, function (err, mdb_nyhedsbrev) {
-
-        // Merging results
-        if (mdb_nyhedsbrev) {
-          Object.keys(mdb_nyhedsbrev).forEach(function (key) {
-            tbl_nyhedsbrev[key] = mdb_nyhedsbrev[key];
-          });
-        }
-
-        if (tbl_nyhedsbrev.list === undefined || tbl_nyhedsbrev.list === null) {
-          tbl_nyhedsbrev.list = 'mdb_nyhedsbrev_' + tbl_nyhedsbrev.nyhedsbrev_id;
-        }
-
-        callback(null, tbl_nyhedsbrev);
-      });
+      var newsletter = JSON.parse(new Buffer(result.data, 'base64').toString('utf8'));
+      newsletter.name = name;
+      callback(null, newsletter);
     }
   });
 }
 
 
 function saveNewsletter (request, reply) {
-  var newsletter = request.payload;
 
-  if (request.params.id) {
-    newsletter.nyhedsbrev_id = request.params.id;
-  } 
+  var name = request.params.name ? request.params.name : request.payload.name;
 
-  if (newsletter.nyhedsbrev_id) {
-    // This is when we save the temporary newsletter attributes for use in Fase 1 of Email Marketing.
-    
-    var sql = [
-      'INSERT INTO mdb_nyhedsbrev',
-      '(nyhedsbrev_id, identity, bond_type, bond_id, template_html, template_plain)',
-      'VALUES (',
-      userdb.escape(newsletter.nyhedsbrev_id) + ',',
-      userdb.escape(newsletter.identity) + ',',
-      userdb.escape(newsletter.bond_type) + ',',
-      userdb.escape(newsletter.bond_id) + ',',
-      userdb.escape(newsletter.template_html) + ',',
-      userdb.escape(newsletter.template_plain) + ')',
-      'ON DUPLICATE KEY UPDATE',
-      'identity = VALUES(identity),',
-      'bond_type = VALUES(bond_type),',
-      'bond_id = VALUES(bond_id),',
-      'template_html = VALUES(template_html),',
-      'template_plain = VALUES(template_plain)'].join (' ');
+  if (name === undefined || name === null || name === '') {
+    return reply('Field name missing').code(400);
+  }
+
+  var newsletter = {
+    name: name,
+    identity: request.payload.identity,
+    bond_id: request.payload.bond_id,
+    bond_type: request.payload.bond_type,
+    template_html: request.payload.template_html,
+    template_plain: request.payload.template_plain,
+    categories: request.payload.categories,
+    list: request.payload.list
+  };
+
+  var data = new Buffer(JSON.stringify(newsletter)).toString('base64')
+
+  var findExisting = 'SELECT id FROM mashed_composer WHERE name = ' + userdb.escape(name),
+      sql = '';
+
+  userdb.queryOne(findExisting, function (err, result) {
+    if (err) {
+      console.log(err);
+      reply().code(500);
+      return;
+
+    } else if (result === null) {
+
+      sql = [
+        'INSERT INTO mashed_composer',
+        '(name, data)',
+        'VALUES (',
+        userdb.escape(name) + ',',
+        userdb.escape(data) + ')'].join (' ');
+
+    } else {
+
+      sql = [
+        'UPDATE mashed_composer',
+        'SET data = ' + userdb.escape(data),
+        'WHERE id = ' + result.id].join (' ');
+    }
 
     userdb.query(sql, function (err, result) {
       if (err) {
         console.log(err);
-        reply().code(509);
-      } else reply();
+        reply().code(500);
+      } else {
+        if (result.insertId === 0)
+          reply({ message: 'Updated'});
+        else
+          reply({ message: 'Inserted', id: result.insertId});
+      }
     });
-  } else {
-    reply().code(501);
-  }
+  });
 }
 
 
 function updateScheduledNyhedsbrevLastChecksum (nyhedsbrev_id, last_checksum, callback) {
+
   var sql = 'UPDATE mdb_nyhedsbrev SET last_checksum = "' + last_checksum + '" WHERE nyhedsbrev_id = ' + nyhedsbrev_id;
   userdb.query(sql, callback);
 }
 
 
 function download (url, callback) {
+
   http.get(url, function( response ) {
 
     if (response.statusCode === 401) {
@@ -383,14 +396,91 @@ function scheduledNewsletter (request, reply) {
 }
 
 
-function createSendGridCategory (category, callback) {
-  var body = 'category=' + category;
 
+function sendNewsletter (request, reply) {
+
+  var data = request.payload;
+
+  if (data.list === undefined)
+    return reply( { message: 'Field list is missing.' } ).code(400);
+
+  if (data.identity === undefined)
+    return reply( { message: 'Field identity is missing.' } ).code(400);
+
+  if (data.subject === undefined)
+    return reply( { message: 'Field subject is missing.' } ).code(400);
+
+  if (data.email_html === undefined)
+    return reply( { message: 'Field email_html is missing.' } ).code(400);
+
+  if (data.email_plain === undefined)
+    return reply( { message: 'Field email_plain is missing.' } ).code(400);
+
+  if (data.name === undefined)
+    data.name = 'newsletter_' + Date.now();
+
+  var createDraft = data.draft !== undefined &&
+    typeof data.draft === 'boolean' ? data.draft : 
+    typeof data.draft === 'string' ? data.draft === 'true' :
+    false;
+
+  if (process.env.LIVE === 'true') {
+    // Leave it
+  } else if (process.env.TEST_LIST) {
+    data.list = process.env.TEST_LIST;
+  } else {
+    data.list = 'Daniel'; // TODO: This is for testing
+  }
+
+  addSendGridMarketingEmail(data.identity, data.name, data.subject, email_plain, email_html, function (err, result) {
+    if (err) return reply(err).code(400);
+
+    data.categories.forEach(function (value) {
+      addSendGridCategory(value, data.name);
+    });
+
+    addSendGridRecipients(data.list, data.name, function (err, result) {
+      if (err) return reply(err).code(400);
+
+      if (createDraft) {
+        reply({message: 'Draft created.', name: data.name});
+      } else {
+        addSendGridSchedule(data.name, function (err, result) {
+          if (err) return reply(err).code(400);
+
+          reply({message: 'Email sent.', name: data.name});
+        });
+      }
+    })
+  });
+}
+
+function deleteNewsletter (request, reply) {
+
+  var sql = 'DELETE FROM mashed_composer WHERE name = ' + userdb.escape(request.params.name);
+
+  userdb.query(sql, function (err, result) {
+    if (err) {
+      console.log(err);
+      reply().code(500);
+    } else if (result.affectedRows === 0) {
+      reply().code(404);
+    } else {
+      reply();
+    }
+  });
+}
+
+
+function createSendGridCategory (category, callback) {
+
+  var body = 'category=' + category;
   callSendGrid('https://api.sendgrid.com/api/newsletter/category/create.json', body, callback);
 }
 
 
 function addSendGridCategory (category, name, callback) {
+
   var body =
     'category=' + encodeURIComponent(category) +
     '&name=' + encodeURIComponent(name);
@@ -438,11 +528,17 @@ function addSendGridRecipients (list, name, callback) {
 }
 
 
-function addSendGridSchedule (name, callback) {
-  // TODO: 'at' and 'after' are possible values but not used right now
-  // See https://sendgrid.com/docs/API_Reference/Marketing_Emails_API/schedule.html#-add
+function addSendGridSchedule (name, at, callback) {
+  if (typeof at === 'function' && callback === undefined) {
+    callback = at;
+    at = null;
+  }
 
-  callSendGrid('/api/newsletter/schedule/add.json', 'name=' + name, callback)
+  var body =
+    'name=' + name +
+    (at !== undefined && at !== null && at !== '') ? '&at=' + at : '';
+
+  callSendGrid('/api/newsletter/schedule/add.json', body, callback)
 }
 
 
