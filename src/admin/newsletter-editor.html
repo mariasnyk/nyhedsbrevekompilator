@@ -14,6 +14,49 @@
     </div>
     <div class="col-xs-2">
       <div class="form-group">
+        <label for="identity_control">Identity (afsender)</label>
+        <select
+          id="identity_control"
+          class="form-control"
+          ng-model="newsletter.identity"
+          ng-options="identity for identity in identities"
+          ng-disabled="!edit"
+          ng-required="true">
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-2">
+      <div class="form-group">
+        <label for="list_control">Modtagere</label>
+        <select
+          id="list_control"
+          class="form-control"
+          ng-model="newsletter.list"
+          ng-options="list for list in lists"
+          ng-disabled="!edit"
+          ng-required="true">
+          <option value=""></option>
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-2 col-xs-offset-2">
+      <div class="form-group">
+        <label for="category_control">Add category</label>
+        <input id="category_control" class="form-control" type="text" ng-model="newCategory" ng-keyup="addCategory($event)" ng-disabled="!edit" placeholder="Add"/>
+      </div>
+    </div>
+    <div class="col-xs-2">
+      <label for="category_control">Categories</label>
+      <ul class="list-inline">
+        <li ng-repeat="category in newsletter.categories track by $index">
+          <span id="category-{{category}}" class="label label-info">{{category}} <span class="glyphicon glyphicon-remove" ng-show="edit" ng-click="removeCategory($index)"></span>&nbsp;</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="row" ng-show="edit">
+    <div class="col-xs-2">
+      <div class="form-group">
         <label for="bond_type_control">BOND Data type</label>
         <select
           id="bond_type_control"
@@ -63,25 +106,12 @@
         </select>
       </div>
     </div>
-    <div class="col-xs-2">
-      <div class="form-group">
-        <label for="category_control">Add category</label>
-        <input id="category_control" class="form-control" type="text" ng-model="newCategory" ng-keyup="addCategory($event)" ng-disabled="!edit" placeholder="Category"/>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-2 col-xs-offset-10">
-      <ul class="list-inline">
-        <li ng-repeat="category in newsletter.categories track by $index">
-          <span id="category-{{category}}" class="label label-info">{{category}} <span class="glyphicon glyphicon-remove" ng-show="edit" ng-click="removeCategory($index)"></span>&nbsp;</span>
-        </li>
-      </ul>
-    </div>
   </div>
 
+  <hr>
+
   <div class="row">
-    <div class="col-xs-3">
+    <div class="col-xs-12 form-inline">
       <button type="button" class="btn btn-info" ng-click="updatePreview()">
         Preview <span class="glyphicon glyphicon-refresh"></span>
       </button>
@@ -91,31 +121,6 @@
       <a class="btn btn-default" ng-href="#/{{newsletter.name}}" ng-show="edit">
         Luk edit <span class="glyphicon glyphicon-chevron-left"></span>
       </a>
-    </div>
-    <div class="col-xs-9 form-inline">
-      <div class="form-group">
-        <label for="identity_control">Identity (afsender)</label>
-        <select
-          id="identity_control"
-          class="form-control"
-          ng-model="newsletter.identity"
-          ng-options="identity for identity in identities"
-          ng-disabled="!edit"
-          ng-required="true">
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="list_control">Modtagere</label>
-        <select
-          id="list_control"
-          class="form-control"
-          ng-model="newsletter.list"
-          ng-options="list for list in lists"
-          ng-disabled="!edit"
-          ng-required="true">
-          <option value=""></option>
-        </select>
-      </div>
       <div class="form-group" ng-hide="edit">
         <button type="button" class="btn btn-success" ng-click="sendNewsletter(true)">
           Opret kladde <span class="glyphicon glyphicon-inbox"></span>

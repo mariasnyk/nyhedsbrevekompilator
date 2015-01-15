@@ -141,10 +141,8 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
     };
 
     $scope.updatePreview = function () {
-      console.log('UPDATING');
       if ($scope.newsletter.bond_type === undefined ||
           $scope.newsletter.bond_id === undefined) {
-        console.log('UPDATING');
         return;
       }
 
@@ -154,11 +152,13 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
     };
 
     function updateSubjectPreview () {
+      console.log("Update subject preview.");
       // Getting the subject suggestion
       $http({method: 'OPTIONS', url: '/templates?' + $scope.newsletter.bond_type + "=" + $scope.newsletter.bond_id})
       .success(function (data, status, getHeaders) {
         var headers = getHeaders();
         $scope.newsletter.subject = decodeURIComponent(headers['x-subject-suggestion']);
+        console.log("Update subject preview done.");
       }).error(function (data, status) {
         console.log('Error when heading for subject suggestion', data, status);
         $scope.subject = null;
@@ -170,9 +170,12 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
         return;
       }
 
+      console.log("Update html preview.");
+
       $http.get($scope.newsletter.template_html.uri + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
       .success(function (data) {
         $scope.newsletter.email_html = data;
+        console.log("Update html preview done.");
       });
     };
 
@@ -181,9 +184,12 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
         return;
       }
 
+      console.log("Update text preview.");
+
       $http.get($scope.newsletter.template_plain.uri + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
       .success(function (data) {
         $scope.newsletter.email_plain = data;
+        console.log("Update text preview done.");
       });
     };
 
