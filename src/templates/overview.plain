@@ -1,4 +1,4 @@
 {% block content %}{% for node in nodes %}  >> {{ node.title }}
-   > {{ node.url }}
+   > {{ node.url }}?newsl_access={{node.newsl_access}}
 
 {% endfor %}{% endblock %}

@@ -7,7 +7,7 @@
   {% if node.images[0] %}
     <img title="{{ node.images[0].title }}" src="http://www.bt.dk/{{ node.images[0].file.path }}" width="600px">
   {% endif %}
-  <p><a href="{{ node.url }}">L&aelig;s mere</a></p>
+  <p><a href="{{ node.url }}?newsl_access={{node.newsl_access}}">L&aelig;s mere</a></p>
   <p>Dato: {{ node.dateCreated }}</p>
 
   {% endfor %}

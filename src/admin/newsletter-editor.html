@@ -66,7 +66,7 @@
     <div class="col-xs-2">
       <div class="form-group">
         <label for="category_control">Add category</label>
-        <input id="category_control" class="form-control" type="text" ng-model="newCategory" ng-keyup="addCategory($event)" placeholder="Category"/>
+        <input id="category_control" class="form-control" type="text" ng-model="newCategory" ng-keyup="addCategory($event)" ng-disabled="!edit" placeholder="Category"/>
       </div>
     </div>
   </div>
@@ -74,25 +74,25 @@
     <div class="col-xs-2 col-xs-offset-10">
       <ul class="list-inline">
         <li ng-repeat="category in newsletter.categories track by $index">
-          <span id="category-{{category}}" class="label label-info">{{category}} <span class="glyphicon glyphicon-remove" ng-click="removeCategory($index)"></span>&nbsp;</span>
+          <span id="category-{{category}}" class="label label-info">{{category}} <span class="glyphicon glyphicon-remove" ng-show="edit" ng-click="removeCategory($index)"></span>&nbsp;</span>
         </li>
       </ul>
     </div>
   </div>
 
   <div class="row">
-    <div class="col-xs-4">
+    <div class="col-xs-3">
       <button type="button" class="btn btn-info" ng-click="updatePreview()">
         Preview <span class="glyphicon glyphicon-refresh"></span>
       </button>
       <button type="button" class="btn btn-success" ng-click="saveNewsletter()" ng-show="edit">
         Gem <span class="glyphicon glyphicon-check"></span>
       </button>
-      <a class="btn btn-default" ng-show="edit">
+      <a class="btn btn-default" ng-href="#/{{newsletter.name}}" ng-show="edit">
         Luk edit <span class="glyphicon glyphicon-chevron-left"></span>
       </a>
     </div>
-    <div class="col-xs-8 form-inline">
+    <div class="col-xs-9 form-inline">
       <div class="form-group">
         <label for="identity_control">Identity (afsender)</label>
         <select
@@ -100,7 +100,7 @@
           class="form-control"
           ng-model="newsletter.identity"
           ng-options="identity for identity in identities"
-          ng-show="edit"
+          ng-disabled="!edit"
           ng-required="true">
         </select>
       </div>
@@ -111,24 +111,27 @@
           class="form-control"
           ng-model="newsletter.list"
           ng-options="list for list in lists"
-          ng-show="edit"
+          ng-disabled="!edit"
           ng-required="true">
           <option value=""></option>
         </select>
       </div>
-      <button type="button" class="btn btn-success" ng-click="sendNewsletter(true)" ng-hide="edit">
-        Opret kladde <span class="glyphicon glyphicon-inbox"></span>
-      </button>
-      <span>eller</span>
-      <button type="button" class="btn btn-danger" ng-click="sendNewsletter()" ng-hide="edit">
-        Send <span class="glyphicon glyphicon-envelope"></span>
-      </button>
-      <input class="form-control" type="datetime-local" ng-model="newsletter.at" ng-hide="edit"
-        placeholder="yyyy-MM-ddTHH:mm:ss" min="2001-01-01T00:00:00" max="2099-12-31T00:00:00" required />
+      <div class="form-group" ng-hide="edit">
+        <button type="button" class="btn btn-success" ng-click="sendNewsletter(true)">
+          Opret kladde <span class="glyphicon glyphicon-inbox"></span>
+        </button>
+        <span>eller</span>
+        <button type="button" class="btn btn-danger" ng-click="sendNewsletter()">
+          Send <span class="glyphicon glyphicon-envelope"></span>
+        </button>
+        <input class="form-control" type="datetime-local" ng-model="at"
+          placeholder="yyyy-MM-ddTHH:mm:ss" min="2001-01-01T00:00:00" max="2099-12-31T00:00:00" required />
+      </div>
     </div>
-</div>
+  </div>
 
   <hr>
+
   <!-- PREVIEW -->
   <div class="row">
     <div class="col-xs-12">

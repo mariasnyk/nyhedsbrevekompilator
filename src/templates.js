@@ -97,7 +97,7 @@ module.exports.register = function (plugin, options, next) {
               var node_checksum = calculateNodeChecksum(node),
                   subject = emailSubjectSuggestion(node);
 
-              node.paywallToken = calculatePaywallToken();
+              node.newsl_access = calculatePaywallToken(node.id);
 
               reply
               .view(request.params.template, node)
@@ -117,7 +117,9 @@ module.exports.register = function (plugin, options, next) {
               var nodequeue_checksum = calculateNodequeueChecksum(nodequeue),
                   subject = emailSubjectSuggestion(nodequeue);
 
-              nodequeue.paywallToken = calculatePaywallToken();
+              nodequeue.nodes.forEach(function (node) {
+                node.newsl_access = calculatePaywallToken(node.id);
+              });
 
               reply
               .view(request.params.template, nodequeue)
@@ -250,6 +252,9 @@ function calculateNodequeueChecksum (nodequeue) {
 }
 
 
-function calculatePaywallToken () {
-  return checksum(new Date().toISOString() + process.env.PAYWALL_TOKEN_SALT, { algorithm: 'sha256' });
+function calculatePaywallToken (nid) {
+  var timestamp = Date.now();
+  var token = checksum(nid.toString() + timestamp + process.env.PAYWALL_TOKEN_SALT, { algorithm: 'sha256' });
+  var newsl_access = new Buffer(nid.toString() + timestamp + token).toString('base64');
+  return newsl_access;
 }

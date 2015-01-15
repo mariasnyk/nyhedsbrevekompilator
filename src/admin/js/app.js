@@ -55,82 +55,59 @@ app.controller('DashboardController', ['$scope', '$routeParams', '$location', '$
   }]);
 
 
-app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications',
-  function ($scope, $routeParams, $location, $resource, $sce, $http, notifications) {
+app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', '$q', 'notifications',
+  function ($scope, $routeParams, $location, $resource, $sce, $http, $q, notifications) {
 
     $scope.edit = $routeParams.operator === 'edit';
     console.log('$scope.edit', $scope.edit);
+
+    $scope.at = new Date();
 
     var Newsletters = $resource('/newsletters/:name', { name: '@name' });
     var Identities = $resource('/newsletters/identities');
     var Lists = $resource('/newsletters/lists');
     var Templates = $resource('/templates/');
 
-    // $scope.newsletter = Newsletters.get({name: $routeParams.name}, function () {
-    //   console.log('$scope.newsletter', $scope.newsletter);
-    // });
-
     if ($scope.edit) {
       
-      $scope.identities = Identities.query(function (){console.log('identities')});
-      $scope.lists = Lists.query(function (){console.log('lists')});
-      $scope.html_templates = Templates.query({filter:'.html'}, function (){console.log('html_templates')});
-      $scope.plain_templates = Templates.query({filter:'.plain'}, function (){console.log('plain_templates')});
+      $scope.identities = Identities.query();
+      $scope.lists = Lists.query();
+      $scope.html_templates = Templates.query({filter:'.html'});
+      $scope.plain_templates = Templates.query({filter:'.plain'});
 
-      $scope.$watch('identities', function () {
-        console.log ($scope.identities.length, $scope.lists.length, $scope.html_templates.length, $scope.plain_templates.length );
-        if ($scope.identities.length > 0 && $scope.lists.length > 0 && $scope.html_templates.length > 0 && $scope.plain_templates.length > 0) {
-          $scope.newsletter = Newsletters.get({name: $routeParams.name}, function (){console.log('newsletter')});
-        }
+      // Waiting for the drop-down data to be fetched before we query the newsletter.
+      // This is done so that drop-downs are populated and the equivalent newsletter value is selected in the drop-down.
+      $q.all([$scope.identities.$promise, $scope.lists.$promise, $scope.html_templates.$promise, $scope.plain_templates.$promise]).then(function () {
+        $scope.newsletter = Newsletters.get({name: $routeParams.name}, function () {
+
+          // Pre-selecting the templates ind the drop downs.
+          // This has be done by direct assignment because Angular won't automatically match the Objects - like it's able to do on String e.g. identity.
+          $scope.newsletter.template_plain = $scope.plain_templates.filter(function (template) {
+            return template.name === $scope.newsletter.template_plain.name;
+          })[0];
+
+          $scope.newsletter.template_html = $scope.html_templates.filter(function (template) {
+            return template.name === $scope.newsletter.template_html.name;
+          })[0];
+        });
       });
 
-      $scope.$watch('lists', function () {
-        console.log ($scope.identities.length, $scope.lists.length, $scope.html_templates.length, $scope.plain_templates.length );
-        if ($scope.identities.length > 0 && $scope.lists.length > 0 && $scope.html_templates.length > 0 && $scope.plain_templates.length > 0) {
-          $scope.newsletter = Newsletters.get({name: $routeParams.name}, function (){console.log('newsletter')});
-        }
-      });
 
-      $scope.$watch('html_templates', function () {
-        console.log ($scope.identities.length, $scope.lists.length, $scope.html_templates.length, $scope.plain_templates.length );
-        if ($scope.identities.length > 0 && $scope.lists.length > 0 && $scope.html_templates.length > 0 && $scope.plain_templates.length > 0) {
-          $scope.newsletter = Newsletters.get({name: $routeParams.name}, function (){console.log('newsletter')});
-        }
-      });
-
-      $scope.$watch('plain_templates', function () {
-        console.log ($scope.identities.length, $scope.lists.length, $scope.html_templates.length, $scope.plain_templates.length );
-        if ($scope.identities.length > 0 && $scope.lists.length > 0 && $scope.html_templates.length > 0 && $scope.plain_templates.length > 0) {
-          $scope.newsletter = Newsletters.get({name: $routeParams.name}, function (){console.log('newsletter')});
-        }
-      });
     } else {
-      $scope.newsletter = Newsletters.get({name: $routeParams.name});
+
+      // If we're not editing the newsletter, we don't need to fetch the dop-down data from e.g. SendGrid
+      $scope.newsletter = Newsletters.get({name: $routeParams.name}, function () {
+        // Populating the drop downs so newsletter values are visible
+        $scope.identities = [$scope.newsletter.identity];
+        $scope.lists = [$scope.newsletter.list];
+        $scope.html_templates = [$scope.newsletter.template_html];
+        $scope.plain_templates = [$scope.newsletter.template_plain];
+        $scope.updatePreview();
+      });
     }
 
-
-    // $scope.$watch('bond_type', function (bond_type) {
-    //   $scope.updatePreview();
-    // });
-
     // Todo: 
-    $scope.at = new Date();
-
-    // $scope.$watch('bond_type', function (bond_type) {
-    //   $scope.updatePreview();
-    // });
-
-    // $scope.$watch('bond_id', function (bond_id) {
-    //   $scope.updatePreview();
-    // });
-
-    // $scope.$watch('template_html', function (template_html) {
-    //   $scope.updateHtmlPreview();
-    // });
-
-    // $scope.$watch('template_plain', function (template_plain) {
-    //   $scope.updatePlainPreview();
-    // });
+    //$scope.at = new Date();
 
     $scope.addCategory = function (clickEvent) {
       if ($scope.newsletter.categories == undefined) {
@@ -138,9 +115,13 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
       }
 
       if (clickEvent.keyCode === 13) {
-        // TODO: Split on comma, remove whitespace etc.
         if ($scope.newCategory !== '') {
-          $scope.newsletter.categories.push($scope.newCategory);
+          $scope.newCategory.split(',').forEach( function (category) {
+            category = category.trim();
+            if ($scope.newsletter.categories.indexOf(category) === -1) {
+              $scope.newsletter.categories.push(category);
+            }
+          });
           $scope.newCategory = '';
         }
       }
@@ -167,28 +148,24 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
         return;
       }
 
-      $scope.previewError = false;
-
-      $scope.updateSubjectPreview();
-      $scope.updateHtmlPreview();
-      $scope.updatePlainPreview();
+      updateSubjectPreview();
+      updateHtmlPreview();
+      updatePlainPreview();
     };
 
-    $scope.updateSubjectPreview = function () {
+    function updateSubjectPreview () {
       // Getting the subject suggestion
       $http({method: 'OPTIONS', url: '/templates?' + $scope.newsletter.bond_type + "=" + $scope.newsletter.bond_id})
       .success(function (data, status, getHeaders) {
         var headers = getHeaders();
         $scope.newsletter.subject = decodeURIComponent(headers['x-subject-suggestion']);
-        $scope.previewError = false;
       }).error(function (data, status) {
         console.log('Error when heading for subject suggestion', data, status);
-        $scope.previewError = true;
         $scope.subject = null;
       });
     };
 
-    $scope.updateHtmlPreview = function () {
+    function updateHtmlPreview () {
       if ($scope.newsletter.template_html === undefined) {
         return;
       }
@@ -199,7 +176,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
       });
     };
 
-    $scope.updatePlainPreview = function () {
+    function updatePlainPreview () {
       if ($scope.newsletter.template_plain === undefined) {
         return;
       }
@@ -213,12 +190,16 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
     $scope.sendNewsletter = function (draft) {
 
       console.log($scope.newsletter);
+      console.log($scope.at);
+      $scope.draft = draft === true;
+      console.log($scope.draft);
       return;
 
-      if (draft !== undefined) {
-        $scope.draft = draft
-      }
+      // if (draft !== undefined) {
+      //   $scope.draft = draft
+      // }
 
+      // TODO:
       // $http.post('/newsletters/send', data)
       // .success(function (data) {
       //   if (draft)
