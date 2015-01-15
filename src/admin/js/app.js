@@ -59,7 +59,6 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
   function ($scope, $routeParams, $location, $resource, $sce, $http, $q, notifications) {
 
     $scope.edit = $routeParams.operator === 'edit';
-    console.log('$scope.edit', $scope.edit);
 
     $scope.at = new Date();
 
