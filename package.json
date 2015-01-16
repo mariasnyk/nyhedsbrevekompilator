@@ -18,7 +18,8 @@
     "hapi": "^8.1.0",
     "mysql": "^2.4.2",
     "pg": "^3.5.0",
-    "swig": "^1.4.2"
+    "swig": "^1.4.2",
+    "swig-extras": "0.0.1"
   },
   "devDependencies": {
     "gulp": "^3.8.7",

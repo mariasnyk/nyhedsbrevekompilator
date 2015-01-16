@@ -2,10 +2,12 @@
 
 var fs = require('fs'),
     swig = require('swig'),
+    extras = require('swig-extras'),
     bond_client = require('./bond_client'),
     checksum = require('checksum'),
     templateDir = __dirname + '/templates';
 
+extras.useFilter(swig, 'truncate')
 swig.setDefaults({ cache: false }); /* must be turned of when in production*/
 
 module.exports.register = function (plugin, options, next) {
