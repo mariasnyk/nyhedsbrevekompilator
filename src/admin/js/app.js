@@ -88,7 +88,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
           $scope.newsletter.template_html = $scope.html_templates.filter(function (template) {
             return template.name === $scope.newsletter.template_html.name;
           })[0];
-        });
+        }, resourceErrorHandler);
       });
 
 
@@ -102,7 +102,14 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
         $scope.html_templates = [$scope.newsletter.template_html];
         $scope.plain_templates = [$scope.newsletter.template_plain];
         $scope.updatePreview();
-      });
+      }, resourceErrorHandler);
+    }
+
+    function resourceErrorHandler (response) {
+      console.log('Error fetching ' + $routeParams.name, response);
+      if (response.status === 404) {
+        $location.url('/');
+      }
     }
 
     $scope.addCategory = function (clickEvent) {
