@@ -5,7 +5,6 @@
 var http = require('http'),
     https = require('https'),
     mdb = require('./mdb_client.js'),
-    //mongodb = require('../../mongodb.js'),
     userdb = require('./userdb_client.js');
 
 

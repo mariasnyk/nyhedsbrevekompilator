@@ -13,6 +13,7 @@ extras.useFilter(swig, 'truncate');
 
 swig.setDefaults({ cache: false }); /* must be turned of when in production*/
 
+
 module.exports.register = function (plugin, options, next) {
 
   plugin.select('templates').views({
@@ -20,20 +21,9 @@ module.exports.register = function (plugin, options, next) {
       html: swig,
       plain: swig
     },
-    path: 'src/templates',
+    path: templateDir,
     isCached: false /* must be turned of when in production*/
   });
-
-  //plugin.route({
-    // method: 'GET',
-    // path: '/static/{param*}',
-    // handler: {
-    //   directory: {
-    //     path: 'src/templates/static',
-    //     index: false
-    //   }
-    // }
-  // });
 
   plugin.route({
     method: 'OPTIONS',
