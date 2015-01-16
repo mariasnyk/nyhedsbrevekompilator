@@ -1,4 +1,5 @@
 <div class="container-fluid">
+
   <div class="row">
     <div class="col-xs-2">
       <div class="form-group">
@@ -54,6 +55,50 @@
       </ul>
     </div>
   </div>
+
+  <div class="row" ng-show="edit">
+    <div class="col-xs-2">
+      <a class="btn btn-default" ng-href="#/{{newsletter.name}}">
+        Luk edit <span class="glyphicon glyphicon-eject"></span>
+      </a>
+    </div>
+    <div class="col-xs-10">
+      <button type="button" class="btn btn-info" ng-click="updatePreview()">
+        Preview <span class="glyphicon glyphicon-refresh"></span>
+      </button>
+      <button type="button" class="btn btn-success" ng-click="saveNewsletter()">
+        Gem <span class="glyphicon glyphicon-check"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="row" ng-hide="edit">
+    <div class="col-xs-2">
+      <a class="btn btn-default" ng-href="#/">
+        Til oversigt <span class="glyphicon glyphicon-chevron-left"></span>
+      </a>
+    </div>
+    <div class="col-xs-10">
+      <div class="form-inline">
+        <button type="button" class="btn btn-info" ng-click="updatePreview()">
+          Preview <span class="glyphicon glyphicon-refresh"></span>
+        </button>
+        <button type="button" class="btn btn-success" ng-click="sendNewsletter(true)">
+          Opret kladde <span class="glyphicon glyphicon-inbox"></span>
+        </button>
+        <div class="input-group">
+          <input class="form-control" type="datetime-local" ng-model="at"
+            placeholder="yyyy-MM-ddTHH:mm:ss" min="2001-01-01T00:00:00" max="2099-12-31T00:00:00" required />
+          <span class="input-group-btn"><button type="button" class="btn btn-danger" ng-click="sendNewsletter()">
+            Send <span class="glyphicon glyphicon-envelope"></span>
+          </button></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>  
+
   <div class="row" ng-show="edit">
     <div class="col-xs-2">
       <div class="form-group">
@@ -107,44 +152,6 @@
       </div>
     </div>
   </div>
-
-  <hr>
-
-  <div class="row">
-    <div class="col-xs-12 form-inline">
-      <div ng-show="edit">
-        <a class="btn btn-default" ng-href="#/{{newsletter.name}}">
-          Luk edit <span class="glyphicon glyphicon-chevron-left"></span>
-        </a>
-        <button type="button" class="btn btn-info" ng-click="updatePreview()">
-          Preview <span class="glyphicon glyphicon-refresh"></span>
-        </button>
-        <button type="button" class="btn btn-success" ng-click="saveNewsletter()">
-          Gem <span class="glyphicon glyphicon-check"></span>
-        </button>
-      </div>
-      <div ng-hide="edit">
-        <a class="btn btn-default" ng-href="#/">
-          Luk <span class="glyphicon glyphicon-chevron-left"></span>
-        </a>
-        <button type="button" class="btn btn-info" ng-click="updatePreview()">
-          Preview <span class="glyphicon glyphicon-refresh"></span>
-        </button>
-        <button type="button" class="btn btn-success" ng-click="sendNewsletter(true)">
-          Opret kladde <span class="glyphicon glyphicon-inbox"></span>
-        </button>
-        <div class="input-group">
-          <input class="form-control" type="datetime-local" ng-model="at"
-            placeholder="yyyy-MM-ddTHH:mm:ss" min="2001-01-01T00:00:00" max="2099-12-31T00:00:00" required />
-          <span class="input-group-btn"><button type="button" class="btn btn-danger" ng-click="sendNewsletter()">
-            Send <span class="glyphicon glyphicon-envelope"></span>
-          </button></span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <hr>
 
   <!-- PREVIEW -->
   <div class="row">
