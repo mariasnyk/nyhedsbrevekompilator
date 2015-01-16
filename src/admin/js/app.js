@@ -178,6 +178,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
       $http.get($scope.newsletter.template_html.uri + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
       .success(function (data) {
         $scope.newsletter.email_html = data;
+        $scope.trusted_html_email_preview = $sce.trustAsHtml(data);
         console.log("Update html preview done.");
       });
     };
