@@ -142,7 +142,7 @@ module.exports.register = function (plugin, options, next) {
               .map(function (file) {
                 return {
                   name: file,
-                  uri: 'http://' + request.info.host + templatePath.replace(__dirname, '') + '/' + file
+                  uri: 'http://' + request.info.host + '/templates/' + file
                 };
               }));
           });

@@ -17,6 +17,7 @@ WORKDIR /userdb
 # Copying the code into image. Be aware no config files are including.
 COPY ./src /userdb/src
 COPY ./node_modules /userdb/node_modules
+COPY ./templates /userdb/templates
 
 # Exposing our endpoint to Docker.
 EXPOSE  8000
