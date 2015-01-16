@@ -7,7 +7,10 @@ var fs = require('fs'),
     checksum = require('checksum'),
     templateDir = __dirname + '/templates';
 
-extras.useFilter(swig, 'truncate')
+extras.useFilter(swig, 'split');
+extras.useFilter(swig, 'trim');
+extras.useFilter(swig, 'truncate');
+
 swig.setDefaults({ cache: false }); /* must be turned of when in production*/
 
 module.exports.register = function (plugin, options, next) {
