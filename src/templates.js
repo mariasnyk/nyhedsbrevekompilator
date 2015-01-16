@@ -5,7 +5,7 @@ var fs = require('fs'),
     extras = require('swig-extras'),
     bond_client = require('./bond_client'),
     checksum = require('checksum'),
-    templateDir = __dirname + '/templates';
+    templateDir = __dirname + '/../templates';
 
 extras.useFilter(swig, 'split');
 extras.useFilter(swig, 'trim');
