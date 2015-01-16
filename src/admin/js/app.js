@@ -105,9 +105,6 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
       });
     }
 
-    // Todo: 
-    //$scope.at = new Date();
-
     $scope.addCategory = function (clickEvent) {
       if ($scope.newsletter.categories == undefined) {
         $scope.newsletter.categories = [];
