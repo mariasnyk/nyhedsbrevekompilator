@@ -66,7 +66,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
     var Newsletters = $resource('/newsletters/:name', { name: '@name' });
     var Identities = $resource('/newsletters/identities');
     var Lists = $resource('/newsletters/lists');
-    var Templates = $resource('/templates/');
+    var Templates = $resource('/templates/:name', { name: '@name' });
 
     if ($scope.edit) {
       
@@ -78,20 +78,8 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
       // Waiting for the drop-down data to be fetched before we query the newsletter.
       // This is done so that drop-downs are populated and the equivalent newsletter value is selected in the drop-down.
       $q.all([$scope.identities.$promise, $scope.lists.$promise, $scope.html_templates.$promise, $scope.plain_templates.$promise]).then(function () {
-        $scope.newsletter = Newsletters.get({name: $routeParams.name}, function () {
-
-          // Pre-selecting the templates ind the drop downs.
-          // This has be done by direct assignment because Angular won't automatically match the Objects - like it's able to do on String e.g. identity.
-          $scope.newsletter.template_plain = $scope.plain_templates.filter(function (template) {
-            return template.name === $scope.newsletter.template_plain.name;
-          })[0];
-
-          $scope.newsletter.template_html = $scope.html_templates.filter(function (template) {
-            return template.name === $scope.newsletter.template_html.name;
-          })[0];
-        }, resourceErrorHandler);
+        $scope.newsletter = Newsletters.get({ name: $routeParams.name }, null, resourceErrorHandler);
       });
-
 
     } else {
 
@@ -182,7 +170,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
 
       console.log("Update html preview.");
 
-      $http.get($scope.newsletter.template_html.uri + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
+      $http.get('/templates/' + $scope.newsletter.template_html + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
       .success(function (data) {
         $scope.newsletter.email_html = data;
         $scope.trusted_html_email_preview = $sce.trustAsHtml(data);
@@ -198,7 +186,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
 
       console.log("Update text preview.");
 
-      $http.get($scope.newsletter.template_plain.uri + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
+      $http.get('/templates/' + $scope.newsletter.template_plain + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
       .success(function (data) {
         $scope.newsletter.email_plain = data;
         console.log("Update text preview done.");

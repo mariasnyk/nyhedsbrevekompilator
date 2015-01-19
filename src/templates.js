@@ -140,10 +140,7 @@ module.exports.register = function (plugin, options, next) {
                     true);
               })
               .map(function (file) {
-                return {
-                  name: file,
-                  uri: 'http://' + request.info.host + '/templates/' + file
-                };
+                return file;
               }));
           });
         } else {

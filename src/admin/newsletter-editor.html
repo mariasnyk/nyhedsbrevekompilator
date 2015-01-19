@@ -132,7 +132,7 @@
           id="template_html_control"
           class="form-control"
           ng-model="newsletter.template_html"
-          ng-options="template_html as template_html.name for template_html in html_templates"
+          ng-options="template_html for template_html in html_templates"
           ng-disabled="!edit"
           ng-required="true">
         </select>
@@ -145,7 +145,7 @@
           id="template_plain_control"
           class="form-control"
           ng-model="newsletter.template_plain"
-          ng-options="template_plain as template_plain.name for template_plain in plain_templates"
+          ng-options="template_plain for template_plain in plain_templates"
           ng-disabled="!edit"
           ng-required="true">
         </select>
@@ -172,7 +172,7 @@
       <div class="panel panel-primary">
         <div class="panel-heading">HTML indhold</div>
         <div class="panel-body">
-          <iframe class="newsletter-preview" _src="http://localhost:8000/templates/template1.html?nodequeue=210" srcdoc="{{trusted_html_email_preview}}"></iframe>
+          <iframe class="newsletter-preview" srcdoc="{{trusted_html_email_preview}}"></iframe>
         </div>
       </div>
     </div>
