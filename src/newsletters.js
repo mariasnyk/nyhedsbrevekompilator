@@ -122,15 +122,21 @@ module.exports.register = function (plugin, options, next) {
   });
 
   plugin.route({
-    method: 'post',
-    path: '/send',
-    handler: sendNewsletter
-  });
-
-  plugin.route({
     method: 'delete',
     path: '/{name}',
     handler: deleteNewsletter
+  });
+
+  plugin.route({
+    method: 'post',
+    path: '/draft',
+    handler: draftNewsletter
+  });
+
+  plugin.route({
+    method: 'post',
+    path: '/send',
+    handler: sendNewsletter
   });
 
   next();
@@ -224,6 +230,23 @@ function saveNewsletter (request, reply) {
 }
 
 
+function deleteNewsletter (request, reply) {
+
+  var sql = 'DELETE FROM mashed_composer WHERE name = ' + userdb.escape(request.params.name);
+
+  userdb.query(sql, function (err, result) {
+    if (err) {
+      console.log(err);
+      reply().code(500);
+    } else if (result.affectedRows === 0) {
+      reply().code(404);
+    } else {
+      reply();
+    }
+  });
+}
+
+
 function updateScheduledNyhedsbrevLastChecksum (nyhedsbrev_id, last_checksum, callback) {
 
   var sql = 'UPDATE mdb_nyhedsbrev SET last_checksum = "' + last_checksum + '" WHERE nyhedsbrev_id = ' + nyhedsbrev_id;
@@ -258,216 +281,227 @@ function download (url, callback) {
 }
 
 
-function adhocNewsletter (request, reply) {
+// function adhocNewsletter (request, reply) {
+
+//   var data = request.payload;
+
+//   if (data.list === undefined)
+//     return reply( { message: 'Field list is missing.' } ).code(400);
+
+//   if (data.identity === undefined)
+//     return reply( { message: 'Field identity is missing.' } ).code(400);
+
+//   if (data.subject === undefined)
+//     return reply( { message: 'Field subject is missing.' } ).code(400);
+
+//   if (data.bond_type === undefined)
+//     return reply( { message: 'Field bond_type is missing.' } ).code(400);
+
+//   if (data.bond_id === undefined)
+//     return reply( { message: 'Field bond_id is missing.' } ).code(400);
+
+//   if (data.template_html === undefined)
+//     return reply( { message: 'Field template_html is missing.' } ).code(400);
+
+//   if (data.template_plain === undefined)
+//     return reply( { message: 'Field template_plain is missing.' } ).code(400);
+
+//   if (data.name === undefined)
+//     data.name = 'newsletter_' + Date.now();
+
+
+//   var createDraft = data.draft !== undefined &&
+//         typeof data.draft === 'boolean' ? data.draft : 
+//         typeof data.draft === 'string' ? data.draft === 'true' :
+//         false;
+
+//   var html_url  = 'http://' + request.info.host + '/templates/' + data.template_html + '?' + data.bond_type + '=' + data.bond_id,
+//       plain_url = 'http://' + request.info.host + '/templates/' + data.template_plain + '?' + data.bond_type + '=' + data.bond_id;
+
+//   if (process.env.LIVE === 'true') {
+//     // Leave it
+//   } else if (process.env.TEST_LIST) {
+//     data.list = process.env.TEST_LIST;
+//   } else {
+//     data.list = 'Daniel'; // TODO: This is for testing
+//   }
+
+//   download(html_url, function (err, html_email) {
+//     if (err) return reply(err);
+
+//     download(plain_url, function (err, plain_email) {
+//       if (err) return reply(err);
+
+//       addSendGridMarketingEmail(data.identity, data.name, data.subject, plain_email, html_email, function (err, result) {
+//         if (err) return reply(err).code(400);
+
+//         addSendGridRecipients(data.list, data.name, function (err, result) {
+//           if (err) return reply(err).code(400);
+
+//           if (createDraft) {
+//             reply({message: 'Draft created.', name: data.name});
+//           } else {
+//             addSendGridSchedule(data.name, function (err, result) {
+//               if (err) return reply(err).code(400);
+
+//               reply({message: 'Email sent.', name: data.name});
+//             });
+//           }
+//         })
+//       });
+//     })
+//   });
+// }
+
+
+
+// function scheduledNewsletter (request, reply) {
+  
+//   queryOneNewsletter(request.params.id, function (err, newsletter) {
+
+//     if (newsletter.template_html === undefined || newsletter.template_html === null ||
+//         newsletter.template_plain === undefined || newsletter.template_plain === null ||
+//         newsletter.identity === undefined || newsletter.identity === null ||
+//         newsletter.bond_type === undefined || newsletter.bond_type === null ||
+//         newsletter.bond_id === undefined || newsletter.bond_id === null) {
+
+//       return reply( { message: 'Newsletter not configured' } ).code(400);
+//     }
+
+//     var list = '',
+//         name = 'mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id + '_' + Date.now(),
+//         html_url  = 'http://' + request.info.host + '/templates/' + newsletter.template_html + '?' + newsletter.bond_type + '=' + newsletter.bond_id,
+//         plain_url = 'http://' + request.info.host + '/templates/' + newsletter.template_plain + '?' + newsletter.bond_type + '=' + newsletter.bond_id;
+
+//     if (process.env.LIVE === 'true') {
+//       list = 'mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id;
+//     } else if (process.env.TEST_LIST) {
+//       list = process.env.TEST_LIST;
+//     } else {
+//       list = 'Daniel'; // TODO: This is for testing
+//     }
+
+//     download(html_url, function (err, html_email, headers) {
+
+//       var subject = decodeURIComponent(headers['x-subject-suggestion']),
+//           checksum = headers['x-content-checksum'];
+
+//       if (newsletter.last_checksum !== undefined && checksum === newsletter.last_checksum) {
+//         return reply({ message: 'Newsletter checksum conflict', checksum: checksum }).code(409);
+//       }
+
+//       download(plain_url, function (err, plain_email) {
+
+//         addSendGridMarketingEmail(newsletter.identity, name, subject, plain_email, html_email, function (err, result) {
+//           if (err) return reply(err);
+
+//           addSendGridCategory('mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id, name);
+//           addSendGridCategory(newsletter.nyhedsbrev_navn, name);
+//           addSendGridCategory(newsletter.publisher_navn, name);
+
+
+//           addSendGridRecipients(list, name, function (err, result) {
+//             if (err) return reply(err);
+
+//             addSendGridSchedule(name, function (err, result) {
+//               if (err) return reply(err);
+
+//               updateScheduledNyhedsbrevLastChecksum(request.params.id, checksum);
+
+//               reply({message: 'Email sent.', name: name});
+//             });
+//           })
+//         });
+//       });
+//     });
+//   });
+// }
+
+
+function draftNewsletter (request, reply) {
 
   var data = request.payload;
 
-  if (data.list === undefined)
-    return reply( { message: 'Field list is missing.' } ).code(400);
+  doTheLifting (data, function (err, result) {
+    if (err) return reply(err).code(400);
 
-  if (data.identity === undefined)
-    return reply( { message: 'Field identity is missing.' } ).code(400);
-
-  if (data.subject === undefined)
-    return reply( { message: 'Field subject is missing.' } ).code(400);
-
-  if (data.bond_type === undefined)
-    return reply( { message: 'Field bond_type is missing.' } ).code(400);
-
-  if (data.bond_id === undefined)
-    return reply( { message: 'Field bond_id is missing.' } ).code(400);
-
-  if (data.template_html === undefined)
-    return reply( { message: 'Field template_html is missing.' } ).code(400);
-
-  if (data.template_plain === undefined)
-    return reply( { message: 'Field template_plain is missing.' } ).code(400);
-
-  if (data.name === undefined)
-    data.name = 'newsletter_' + Date.now();
-
-
-  var createDraft = data.draft !== undefined &&
-        typeof data.draft === 'boolean' ? data.draft : 
-        typeof data.draft === 'string' ? data.draft === 'true' :
-        false;
-
-  var html_url  = 'http://' + request.info.host + '/templates/' + data.template_html + '?' + data.bond_type + '=' + data.bond_id,
-      plain_url = 'http://' + request.info.host + '/templates/' + data.template_plain + '?' + data.bond_type + '=' + data.bond_id;
-
-  if (process.env.LIVE === 'true') {
-    // Leave it
-  } else if (process.env.TEST_LIST) {
-    data.list = process.env.TEST_LIST;
-  } else {
-    data.list = 'Daniel'; // TODO: This is for testing
-  }
-
-  download(html_url, function (err, html_email) {
-    if (err) return reply(err);
-
-    download(plain_url, function (err, plain_email) {
-      if (err) return reply(err);
-
-      addSendGridMarketingEmail(data.identity, data.name, data.subject, plain_email, html_email, function (err, result) {
-        if (err) return reply(err).code(400);
-
-        addSendGridRecipients(data.list, data.name, function (err, result) {
-          if (err) return reply(err).code(400);
-
-          if (createDraft) {
-            reply({message: 'Draft created.', name: data.name});
-          } else {
-            addSendGridSchedule(data.name, function (err, result) {
-              if (err) return reply(err).code(400);
-
-              reply({message: 'Email sent.', name: data.name});
-            });
-          }
-        })
-      });
-    })
+    reply(result);
   });
 }
-
-
-
-function scheduledNewsletter (request, reply) {
-  
-  queryOneNewsletter(request.params.id, function (err, newsletter) {
-
-    if (newsletter.template_html === undefined || newsletter.template_html === null ||
-        newsletter.template_plain === undefined || newsletter.template_plain === null ||
-        newsletter.identity === undefined || newsletter.identity === null ||
-        newsletter.bond_type === undefined || newsletter.bond_type === null ||
-        newsletter.bond_id === undefined || newsletter.bond_id === null) {
-
-      return reply( { message: 'Newsletter not configured' } ).code(400);
-    }
-
-    var list = '',
-        name = 'mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id + '_' + Date.now(),
-        html_url  = 'http://' + request.info.host + '/templates/' + newsletter.template_html + '?' + newsletter.bond_type + '=' + newsletter.bond_id,
-        plain_url = 'http://' + request.info.host + '/templates/' + newsletter.template_plain + '?' + newsletter.bond_type + '=' + newsletter.bond_id;
-
-    if (process.env.LIVE === 'true') {
-      list = 'mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id;
-    } else if (process.env.TEST_LIST) {
-      list = process.env.TEST_LIST;
-    } else {
-      list = 'Daniel'; // TODO: This is for testing
-    }
-
-    download(html_url, function (err, html_email, headers) {
-
-      var subject = decodeURIComponent(headers['x-subject-suggestion']),
-          checksum = headers['x-content-checksum'];
-
-      if (newsletter.last_checksum !== undefined && checksum === newsletter.last_checksum) {
-        return reply({ message: 'Newsletter checksum conflict', checksum: checksum }).code(409);
-      }
-
-      download(plain_url, function (err, plain_email) {
-
-        addSendGridMarketingEmail(newsletter.identity, name, subject, plain_email, html_email, function (err, result) {
-          if (err) return reply(err);
-
-          addSendGridCategory('mdb_nyhedsbrev_' + newsletter.nyhedsbrev_id, name);
-          addSendGridCategory(newsletter.nyhedsbrev_navn, name);
-          addSendGridCategory(newsletter.publisher_navn, name);
-
-
-          addSendGridRecipients(list, name, function (err, result) {
-            if (err) return reply(err);
-
-            addSendGridSchedule(name, function (err, result) {
-              if (err) return reply(err);
-
-              updateScheduledNyhedsbrevLastChecksum(request.params.id, checksum);
-
-              reply({message: 'Email sent.', name: name});
-            });
-          })
-        });
-      });
-    });
-  });
-}
-
 
 
 function sendNewsletter (request, reply) {
 
   var data = request.payload;
 
-  if (data.list === undefined)
-    return reply( { message: 'Field list is missing.' } ).code(400);
-
-  if (data.identity === undefined)
-    return reply( { message: 'Field identity is missing.' } ).code(400);
-
-  if (data.subject === undefined)
-    return reply( { message: 'Field subject is missing.' } ).code(400);
-
-  if (data.email_html === undefined)
-    return reply( { message: 'Field email_html is missing.' } ).code(400);
-
-  if (data.email_plain === undefined)
-    return reply( { message: 'Field email_plain is missing.' } ).code(400);
-
-  if (data.name === undefined)
-    data.name = 'newsletter_' + Date.now();
-
-  var createDraft = data.draft !== undefined &&
-    typeof data.draft === 'boolean' ? data.draft : 
-    typeof data.draft === 'string' ? data.draft === 'true' :
-    false;
-
-  if (process.env.LIVE === 'true') {
-    // Leave it
-  } else if (process.env.TEST_LIST) {
-    data.list = process.env.TEST_LIST;
-  } else {
-    data.list = 'Daniel'; // TODO: This is for testing
-  }
-
-  addSendGridMarketingEmail(data.identity, data.name, data.subject, email_plain, email_html, function (err, result) {
+  doTheLifting (data, function (err, result) {
     if (err) return reply(err).code(400);
 
-    data.categories.forEach(function (value) {
-      addSendGridCategory(value, data.name);
-    });
-
-    addSendGridRecipients(data.list, data.name, function (err, result) {
+    addSendGridSchedule(result.name, data.at, function (err) {
       if (err) return reply(err).code(400);
 
-      if (createDraft) {
-        reply({message: 'Draft created.', name: data.name});
-      } else {
-        addSendGridSchedule(data.name, function (err, result) {
-          if (err) return reply(err).code(400);
-
-          reply({message: 'Email sent.', name: data.name});
-        });
-      }
-    })
+      reply(result);
+    });
   });
 }
 
-function deleteNewsletter (request, reply) {
 
-  var sql = 'DELETE FROM mashed_composer WHERE name = ' + userdb.escape(request.params.name);
+function doTheLifting (data, callback) {
 
-  userdb.query(sql, function (err, result) {
-    if (err) {
-      console.log(err);
-      reply().code(500);
-    } else if (result.affectedRows === 0) {
-      reply().code(404);
+  if (process.env.LIVE !== 'true') {
+    if (!process.env.TEST_LIST) {
+      return callback("No TEST recipient list in env.")
     } else {
-      reply();
+      data.list = process.env.TEST_LIST;
     }
+  }
+
+  validateNewsletterInputData(data, function (err) {
+    if (err) return callback(err);
+
+    data.name = data.name + '_' + Date.now();
+
+    addSendGridMarketingEmail(data.identity, data.name, data.subject, data.email_plain, data.email_html, function (err, result) {
+      if (err) return callback(err);
+
+      data.categories.forEach(function (category) {
+        addSendGridCategory(category, data.name);
+      });
+
+      addSendGridRecipients(data.list, data.name, function (err, result) {
+        if (err) return callback(err);
+
+        result.name = data.name;
+        callback(null, result);
+      });
+    });
   });
+}
+
+
+function validateNewsletterInputData (data, callback) {
+  var errors = [];
+
+  if (data.list === undefined)
+    errors.push('Field list is missing.');
+
+  if (data.identity === undefined)
+    errors.push('Field identity is missing.');
+
+  if (data.subject === undefined)
+    errors.push('Field subject is missing.');
+
+  if (data.email_html === undefined)
+    errors.push('Field email_html is missing.');
+
+  if (data.email_plain === undefined)
+    errors.push('Field email_plain is missing.');
+
+  if (callback !== undefined && typeof callback === 'function') {
+    callback(errors.length > 0 ? {errors: errors} : null);
+  }
+
+  return errors.length === 0;
 }
 
 
@@ -507,10 +541,11 @@ function addSendGridCategory (category, name, callback) {
 
 
 function addSendGridMarketingEmail (identity, name, subject, text, html, callback) {
+
   var body =
     'identity=' + identity +
     '&name=' + encodeURIComponent(name) +
-    '&subject=' + subject +
+    '&subject=' + encodeURIComponent(subject) +
     '&text=' + encodeURIComponent(text) +
     '&html=' + encodeURIComponent(html);
 
@@ -519,6 +554,7 @@ function addSendGridMarketingEmail (identity, name, subject, text, html, callbac
 
 
 function addSendGridRecipients (list, name, callback) {
+
   var body =
     'list=' + encodeURIComponent(list) +
     '&name=' + encodeURIComponent(name);
@@ -528,14 +564,25 @@ function addSendGridRecipients (list, name, callback) {
 
 
 function addSendGridSchedule (name, at, callback) {
+
   if (typeof at === 'function' && callback === undefined) {
     callback = at;
     at = null;
   }
 
+  if (at !== null) {
+    try {
+      if (Date.parse(at) === NaN) {
+        return callback({ message: 'Field at (' + at + ') is not a valid date.' });
+      }
+    } catch (ex) {
+      return callback({ message: 'Field at (' + at + ') is not a valid date.' });
+    }
+  }
+
   var body =
-    'name=' + name +
-    (at !== undefined && at !== null && at !== '') ? '&at=' + at : '';
+    'name=' + encodeURIComponent(name) +
+    (at !== undefined && at !== null && at !== '' ? '&at=' + at : '');
 
   callSendGrid('/api/newsletter/schedule/add.json', body, callback)
 }

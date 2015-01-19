@@ -58,9 +58,10 @@ app.controller('DashboardController', ['$scope', '$routeParams', '$location', '$
 app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', '$q', 'notifications',
   function ($scope, $routeParams, $location, $resource, $sce, $http, $q, notifications) {
 
-    $scope.edit = $routeParams.operator === 'edit';
+    $scope.edit = $routeParams.operator !== undefined;
 
-    $scope.at = new Date();
+    // Defaulting the schedule with an added 15 minuttes
+    $scope.at = new Date(new Date().getTime() + 15*60000);
 
     var Newsletters = $resource('/newsletters/:name', { name: '@name' });
     var Identities = $resource('/newsletters/identities');
@@ -105,12 +106,14 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
       }, resourceErrorHandler);
     }
 
+
     function resourceErrorHandler (response) {
       console.log('Error fetching ' + $routeParams.name, response);
       if (response.status === 404) {
         $location.url('/');
       }
     }
+
 
     $scope.addCategory = function (clickEvent) {
       if ($scope.newsletter.categories == undefined) {
@@ -130,9 +133,11 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
       }
     };
 
+
     $scope.removeCategory = function (categoryIndex) {
       $scope.newsletter.categories.splice(categoryIndex, 1);
     };
+
 
     $scope.saveNewsletter = function () {
       $http.post('/newsletters', $scope.newsletter)
@@ -154,6 +159,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
       updatePlainPreview();
     };
 
+
     function updateSubjectPreview () {
       console.log("Update subject preview.");
       // Getting the subject suggestion
@@ -167,6 +173,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
         $scope.subject = null;
       });
     };
+
 
     function updateHtmlPreview () {
       if ($scope.newsletter.template_html === undefined) {
@@ -183,6 +190,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
       });
     };
 
+
     function updatePlainPreview () {
       if ($scope.newsletter.template_plain === undefined) {
         return;
@@ -197,28 +205,31 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
       });
     };
 
-    $scope.sendNewsletter = function (draft) {
 
-      console.log($scope.newsletter);
-      console.log($scope.at);
-      $scope.draft = draft === true;
-      console.log($scope.draft);
-      return;
+    $scope.sendNewsletter = function () {
 
-      // if (draft !== undefined) {
-      //   $scope.draft = draft
-      // }
+      if($scope.at > Date.now()) {
+        $scope.newsletter.at = $scope.at;
+      }
 
-      // TODO:
-      // $http.post('/newsletters/send', data)
-      // .success(function (data) {
-      //   if (draft)
-      //     notifications.showSuccess('Kladde oprettet ' + data.name);
-      //   else
-      //     notifications.showSuccess('Sendt ' + data.name);
-      // })
-      // .error(function (data, status) {
-      //   console.log('Error', status, data);
-      // });
+      $http.post('/newsletters/send', $scope.newsletter)
+      .success(function (data) {
+        notifications.showSuccess('Sendt ' + data.name);
+      })
+      .error(function (data, status) {
+        console.log('Error', status, data);
+      });
+    };
+
+
+    $scope.draftNewsletter = function () {
+
+      $http.post('/newsletters/draft', $scope.newsletter)
+      .success(function (data) {
+        notifications.showSuccess('Kladde oprettet ' + data.name);
+      })
+      .error(function (data, status) {
+        console.log('Error', status, data);
+      });
     };
   }]);
