@@ -1,7 +1,10 @@
 'use strict';
 
 var http = require('http'),
-    bondHost = process.env.BOND_HOSTNAME;
+    bondHost = process.env.BOND_HOSTNAME,
+    bondQuery = process.env.BOND_QUERYSTRING;
+
+
 
 module.exports.getNode = function (id, callback) {
   getFromBond('node', id, callback);
@@ -20,7 +23,7 @@ function getFromBond ( type, id, callback ) {
 
   var options = {
     host: bondHost,
-    path: '/bondapi/' + type + '/' + id + '.ave-json',
+    path: '/bondapi/' + type + '/' + id + '.ave-json' + bondQuery,
     method: 'GET'
   };
 

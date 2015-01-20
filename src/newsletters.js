@@ -12,6 +12,17 @@ module.exports.register = function (plugin, options, next) {
 
   plugin.route({
     method: 'get',
+    path: '/admin/{param*}',
+    handler: {
+      directory: {
+        path: 'src/admin',
+        index: true
+      }
+    }
+  });
+
+  plugin.route({
+    method: 'get',
     path: '/identities',
     handler: function (request, reply) {
       callSendGrid('/api/newsletter/identity/list.json', function (err, data) {
@@ -88,9 +99,12 @@ module.exports.register = function (plugin, options, next) {
     method: 'get',
     path: '/',
     handler: function (request, reply) {
-      userdb.query('SELECT id, name FROM mashed_composer', function (err, result) {
+      userdb.query('SELECT id, name FROM mashed_composer ORDER BY name ASC', function (err, result) {
         if (err) return reply(err);
-        reply(result);
+
+        reply(result.map(function (newsletter) {
+          return newsletter.name;
+        }));
       });
     }
   });
@@ -459,19 +473,25 @@ function doTheLifting (data, callback) {
   validateNewsletterInputData(data, function (err) {
     if (err) return callback(err);
 
-    data.name = data.name + '_' + Date.now();
+    var name = data.name + '_' + Date.now();
 
-    addSendGridMarketingEmail(data.identity, data.name, data.subject, data.email_plain, data.email_html, function (err, result) {
+
+    addSendGridMarketingEmail(data.identity, name, data.subject, data.email_plain, data.email_html, function (err, result) {
       if (err) return callback(err);
 
+      // Adding the newsletter name as a mandatory category
+      if (data.categories.indexOf(data.name) === -1) {
+        data.categories.push(data.name);
+      }
+
       data.categories.forEach(function (category) {
-        addSendGridCategory(category, data.name);
+        addSendGridCategory(category, name);
       });
 
-      addSendGridRecipients(data.list, data.name, function (err, result) {
+      addSendGridRecipients(data.list, name, function (err, result) {
         if (err) return callback(err);
 
-        result.name = data.name;
+        result.name = name;
         callback(null, result);
       });
     });

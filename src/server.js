@@ -1,20 +1,18 @@
 'use strict';
 
 var Hapi = require('hapi'),
-    admin = require('./admin'),
-    //apis = require('./apis'),
     newsletters = require('./newsletters'),
     templates = require('./templates');
 
 
-// A plugin to redirect GET requests on / to /admin
+// A plugin to redirect GET requests on / to admin interface
 var redirectRootToAdmin = {
   register: function (plugin, options, next) {
     plugin.route({
-      method: 'GET',
+      method: 'get',
       path: '/',
       handler: function (request, reply) {
-        reply.redirect('/admin');
+        reply.redirect('/newsletters/admin');
       }
     });
 
@@ -38,9 +36,7 @@ var server = new Hapi.Server({
 
 server.connection({ port: 8000 });
 
-//server.register(redirectRootToAdmin, cb);
-server.register(admin, cb);
-//server.register(apis, { routes: { prefix: '/apis' } }, cb);
+server.register(redirectRootToAdmin, cb);
 server.register(templates, { routes: { prefix: '/templates' } }, cb);
 server.register(newsletters, { routes: { prefix: '/newsletters' } }, cb);
 
