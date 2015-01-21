@@ -58,8 +58,6 @@ app.controller('DashboardController', ['$scope', '$routeParams', '$location', '$
 app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', '$q', 'notifications',
   function ($scope, $routeParams, $location, $resource, $sce, $http, $q, notifications) {
 
-    $scope.edit = $routeParams.operator === "edit";
-
     // Defaulting the schedule with an added 15 minuttes
     $scope.at = new Date(new Date().getTime() + 15*60000);
 
@@ -67,6 +65,8 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
     var Identities = $resource('/newsletters/identities');
     var Lists = $resource('/newsletters/lists');
     var Templates = $resource('/templates/:name', { name: '@name' });
+
+    $scope.edit = $routeParams.operator === 'edit';
 
     if ($scope.edit) {
       
@@ -90,7 +90,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
         $scope.lists = [$scope.newsletter.list];
         $scope.html_templates = [$scope.newsletter.template_html];
         $scope.plain_templates = [$scope.newsletter.template_plain];
-        $scope.updatePreview();
+        updatePreview();
         updateControlroomIframe();
       }, resourceErrorHandler);
     }
@@ -137,42 +137,32 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
       });
     };
 
-    $scope.updatePreview = function () {
-      if ($scope.newsletter.bond_type === undefined ||
-          $scope.newsletter.bond_id === undefined) {
-        return;
-      }
 
-      updateSubjectPreview();
-      updateHtmlPreview();
-      updatePlainPreview();
+    $scope.updatePreviewClickEvent = function () {
+      updatePreview();
     };
 
-    function updateControlroomIframe () {
+
+    function updatePreview () {
       if ($scope.newsletter.bond_type === undefined ||
           $scope.newsletter.bond_id === undefined) {
         return;
       }
 
-      $http.get('/templates/controlroom?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
-      .success(function (data) {
-        $scope.controlroom_url = $sce.trustAsResourceUrl(data.url);
+      console.log('Updating previews...');
+      $scope.loading_previews = true;
+
+      var a = updateHtmlPreview();
+      var b = updatePlainPreview();
+
+      $q.all([a,b]).then(function (result) {
+        $scope.loading_previews = false;
+        console.log('Updating previews done.');
+      },function (reason) {
+        $scope.loading_previews = false;
+        console.log('====Updating previews done.', reason);
       });
     }
-
-    function updateSubjectPreview () {
-      console.log("Update subject preview.");
-      // Getting the subject suggestion
-      $http({method: 'OPTIONS', url: '/templates?' + $scope.newsletter.bond_type + "=" + $scope.newsletter.bond_id})
-      .success(function (data, status, getHeaders) {
-        var headers = getHeaders();
-        $scope.newsletter.subject = decodeURIComponent(headers['x-subject-suggestion']);
-        console.log("Update subject preview done.");
-      }).error(function (data, status) {
-        console.log('Error when heading for subject suggestion', data, status);
-        $scope.subject = null;
-      });
-    };
 
 
     function updateHtmlPreview () {
@@ -180,13 +170,21 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
         return;
       }
 
-      console.log("Update html preview.");
+      console.log('Updating html preview...');
+      $scope.loading_html_preview = true;
 
-      $http.get('/templates/' + $scope.newsletter.template_html + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
-      .success(function (data) {
+      return $http.get('/templates/' + $scope.newsletter.template_html + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
+      .success(function (data, status, getHeaders) {
+        var headers = getHeaders();
+        $scope.newsletter.subject = decodeURIComponent(headers['x-subject-suggestion']);
         $scope.newsletter.email_html = data;
         $scope.trusted_html_email_preview = $sce.trustAsHtml(data);
-        console.log("Update html preview done.");
+        console.log('Updating html preview done.');
+        $scope.loading_html_preview = false;
+      })
+      .error(function (data, status, headers, config) {
+        console.log('Updating html preview error.', data);
+        $scope.loading_html_preview = false;
       });
     };
 
@@ -196,12 +194,18 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
         return;
       }
 
-      console.log("Update text preview.");
+      console.log('Updating text preview...');
+      $scope.loading_plain_preview = true;
 
-      $http.get('/templates/' + $scope.newsletter.template_plain + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
+      return $http.get('/templates/' + $scope.newsletter.template_plain + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
       .success(function (data) {
         $scope.newsletter.email_plain = data;
-        console.log("Update text preview done.");
+        console.log('Updating text preview done.');
+        $scope.loading_plain_preview = false;
+      })
+      .error(function (data, status, headers, config) {
+        console.log('Updating plain preview error.', data);
+        $scope.loading_plain_preview = false;
       });
     };
 
@@ -232,4 +236,17 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
         console.log('Error', status, data);
       });
     };
+
+
+    function updateControlroomIframe () {
+      if ($scope.newsletter.bond_type === undefined ||
+          $scope.newsletter.bond_id === undefined) {
+        return;
+      }
+
+      $http.get('/templates/controlroom?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
+      .success(function (data) {
+        $scope.controlroom_url = $sce.trustAsResourceUrl(data.url);
+      });
+    }
   }]);

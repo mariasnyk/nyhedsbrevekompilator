@@ -64,10 +64,10 @@
       </a>
     </div>
     <div class="col-xs-10">
-      <button type="button" class="btn btn-info" ng-click="updatePreview()">
+      <button type="button" class="btn btn-info" ng-click="updatePreviewClickEvent()" ng-disabled="loading_previews">
         Preview <span class="glyphicon glyphicon-refresh"></span>
       </button>
-      <button type="button" class="btn btn-success" ng-click="saveNewsletter()">
+      <button type="button" class="btn btn-success" ng-click="saveNewsletter()" ng-disabled="loading_previews">
         Gem <span class="glyphicon glyphicon-check"></span>
       </button>
     </div>
@@ -81,16 +81,16 @@
     </div>
     <div class="col-xs-10">
       <div class="form-inline">
-        <button type="button" class="btn btn-info" ng-click="updatePreview()">
+        <button type="button" class="btn btn-info" ng-click="updatePreviewClickEvent()" ng-disabled="loading_previews">
           Preview <span class="glyphicon glyphicon-refresh"></span>
         </button>
-        <button type="button" class="btn btn-success" ng-click="draftNewsletter()">
+        <button type="button" class="btn btn-success" ng-click="draftNewsletter()" ng-disabled="loading_previews">
           Opret kladde <span class="glyphicon glyphicon-inbox"></span>
         </button>
         <div class="input-group">
           <input class="form-control" type="datetime-local" ng-model="at"
             placeholder="yyyy-MM-ddTHH:mm:ss" min="2001-01-01T00:00:00" max="2099-12-31T00:00:00" required />
-          <span class="input-group-btn"><button type="button" class="btn btn-danger" ng-click="sendNewsletter()">
+          <span class="input-group-btn"><button type="button" class="btn btn-danger" ng-click="sendNewsletter()" ng-disabled="loading_previews">
             Send <span class="glyphicon glyphicon-envelope"></span>
           </button></span>
         </div>
@@ -163,7 +163,8 @@
       <div class="panel panel-primary">
         <div class="panel-heading">Emnefelt</div>
         <div class="panel-body">
-          <input type="text" class="form-control" ng-model="newsletter.subject">
+          <p ng-show="loading_html_preview">Loading...</p>
+          <input ng-hide="loading_html_preview" type="text" class="form-control" ng-model="newsletter.subject">
         </div>
       </div>
     </div>
@@ -173,7 +174,8 @@
       <div class="panel panel-primary">
         <div class="panel-heading">HTML indhold</div>
         <div class="panel-body">
-          <iframe class="newsletter-preview" srcdoc="{{trusted_html_email_preview}}"></iframe>
+          <p ng-show="loading_html_preview">Loading...</p>
+          <iframe ng-hide="loading_html_preview" class="newsletter-preview" srcdoc="{{trusted_html_email_preview}}"></iframe>
         </div>
       </div>
     </div>
@@ -191,7 +193,8 @@
       <div class="panel panel-primary">
         <div class="panel-heading">Text indhold</div>
         <div class="panel-body">
-          <textarea class="newsletter-preview" style="background-color: white;" ng-model="newsletter.email_plain"></textarea>
+          <p ng-show="loading_plain_preview">Loading...</p>
+          <textarea ng-hide="loading_plain_preview" class="newsletter-preview" style="background-color: white;" ng-model="newsletter.email_plain"></textarea>
         </div>
       </div>
     </div>
