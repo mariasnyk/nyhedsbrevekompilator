@@ -26,45 +26,6 @@ module.exports.register = function (plugin, options, next) {
   });
 
   plugin.route({
-    method: 'OPTIONS',
-    path: '/',
-    handler: function (request, reply) {
-
-      if (request.query.node) {
-        bond_client.getNode(request.query.node, function (err, node) {
-          if (node === null) {
-            return reply().code(404);
-          }
-
-          var node_checksum = calculateNodeChecksum(node),
-              subject = emailSubjectSuggestion(node);
-
-          reply()
-          .header('Transfer-Encoding', 'chunked')
-          .header('X-Subject-Suggestion', encodeURIComponent(subject))
-          .header('X-Content-Checksum', node_checksum);
-        });
-      } else if (request.query.nodequeue) {
-        bond_client.getNodequeue(request.query.nodequeue, function (err, nodequeue) {
-          if (nodequeue === null || nodequeue.title === null) {
-            return reply().code(404);
-          }
-
-          var nodequeue_checksum = calculateNodequeueChecksum(nodequeue),
-              subject = emailSubjectSuggestion(nodequeue);
-
-          reply()
-          .header('Transfer-Encoding', 'chunked')
-          .header('X-Subject-Suggestion', encodeURIComponent(subject))
-          .header('X-Content-Checksum', nodequeue_checksum);
-        });
-      } else {
-        reply().code(404);
-      }
-    }
-  });
-
-  plugin.route({
     method: 'GET',
     path: '/{template*}',
     handler: function (request, reply) {

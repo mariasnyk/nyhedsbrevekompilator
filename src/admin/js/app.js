@@ -177,6 +177,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
       .success(function (data, status, getHeaders) {
         var headers = getHeaders();
         $scope.newsletter.subject = decodeURIComponent(headers['x-subject-suggestion']);
+        $scope.newsletter.checksum = headers['x-content-checksum'];
         $scope.newsletter.email_html = data;
         $scope.trusted_html_email_preview = $sce.trustAsHtml(data);
         console.log('Updating html preview done.');
@@ -222,6 +223,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
       })
       .error(function (data, status) {
         console.log('Error', status, data);
+        notifications.showError('Error: ' + data.message);
       });
     };
 

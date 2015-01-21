@@ -261,9 +261,23 @@ function deleteNewsletter (request, reply) {
 }
 
 
-function updateScheduledNyhedsbrevLastChecksum (nyhedsbrev_id, last_checksum, callback) {
+function validateLastChecksum (name, checksum, callback) {
 
-  var sql = 'UPDATE mdb_nyhedsbrev SET last_checksum = "' + last_checksum + '" WHERE nyhedsbrev_id = ' + nyhedsbrev_id;
+  var sql = 'SELECT last_checksum FROM mashed_composer WHERE name = ' + userdb.escape(name);
+
+  userdb.queryOne(sql, function (err, result) {
+    if (result.last_checksum === checksum) {
+      callback({message: 'Last checksum is identical.'});
+    } else {
+      updateLastChecksum(name, checksum, callback);
+    }
+  });
+}
+
+
+function updateLastChecksum (name, checksum, callback) {
+
+  var sql = 'UPDATE mashed_composer SET last_checksum = ' + userdb.escape(checksum) + ' WHERE name = ' + userdb.escape(name);
   userdb.query(sql, callback);
 }
 
@@ -448,13 +462,17 @@ function sendNewsletter (request, reply) {
 
   var data = request.payload;
 
-  doTheLifting (data, function (err, result) {
+  validateLastChecksum(data.name, data.checksum, function (err) {
     if (err) return reply(err).code(400);
 
-    addSendGridSchedule(result.name, data.at, function (err) {
+    doTheLifting (data, function (err, result) {
       if (err) return reply(err).code(400);
 
-      reply(result);
+      addSendGridSchedule(result.name, data.at, function (err) {
+        if (err) return reply(err).code(400);
+
+        reply(result);
+      });
     });
   });
 }
