@@ -8,12 +8,20 @@ var http = require('http'),
 
 module.exports.getNode = function (id, callback) {
   getFromBond('node', id, callback);
-}
+};
 
 
 module.exports.getNodequeue = function (id, callback) {
   getFromBond('nodequeue', id, callback);
-}
+};
+
+module.exports.getNodequeueControlroomUrl = function (id) {
+  return 'http://' + bondHost + '/admin/content/nodequeue/' + id + '/view';
+};
+
+module.exports.getNodeControlroomUrl = function (id) {
+  return 'http://' + bondHost + '/node/' + id + '/edit';
+};
 
 
 function getFromBond ( type, id, callback ) {

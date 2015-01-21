@@ -49,6 +49,7 @@
     <div class="col-xs-2">
       <label for="category_control">Categories</label>
       <ul class="list-inline">
+        <li><span class="label label-default">{{newsletter.name}}</span></li>
         <li ng-repeat="category in newsletter.categories track by $index">
           <span id="category-{{category}}" class="label label-info">{{category}} <span class="glyphicon glyphicon-remove" ng-show="edit" ng-click="removeCategory($index)"></span>&nbsp;</span>
         </li>
@@ -177,11 +178,20 @@
       </div>
     </div>
 
+    <div class="col-md-12 col-lg-6" ng-hide="edit">
+      <div class="panel panel-primary">
+        <div class="panel-heading">BOND Controlroom</div>
+        <div class="panel-body">
+          <iframe class="newsletter-preview" ng-src="{{controlroom_url}}">please upgrade your browser if you see the message</iframe>
+        </div>
+      </div>
+    </div>
+
     <div class="col-md-12 col-lg-6">
       <div class="panel panel-primary">
         <div class="panel-heading">Text indhold</div>
         <div class="panel-body">
-          <textarea class="newsletter-preview" disabled="disabled" style="background-color: white;">{{newsletter.email_plain}}</textarea>
+          <textarea class="newsletter-preview" style="background-color: white;" ng-model="newsletter.email_plain"></textarea>
         </div>
       </div>
     </div>

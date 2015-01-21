@@ -58,7 +58,7 @@ app.controller('DashboardController', ['$scope', '$routeParams', '$location', '$
 app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', '$q', 'notifications',
   function ($scope, $routeParams, $location, $resource, $sce, $http, $q, notifications) {
 
-    $scope.edit = $routeParams.operator !== undefined;
+    $scope.edit = $routeParams.operator === "edit";
 
     // Defaulting the schedule with an added 15 minuttes
     $scope.at = new Date(new Date().getTime() + 15*60000);
@@ -91,6 +91,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
         $scope.html_templates = [$scope.newsletter.template_html];
         $scope.plain_templates = [$scope.newsletter.template_plain];
         $scope.updatePreview();
+        updateControlroomIframe();
       }, resourceErrorHandler);
     }
 
@@ -112,7 +113,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
         if ($scope.newCategory !== '') {
           $scope.newCategory.split(',').forEach( function (category) {
             category = category.trim();
-            if ($scope.newsletter.categories.indexOf(category) === -1) {
+            if ($scope.newsletter.categories.indexOf(category) === -1 && category !== $scope.newsletter.name) {
               $scope.newsletter.categories.push(category);
             }
           });
@@ -147,6 +148,17 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
       updatePlainPreview();
     };
 
+    function updateControlroomIframe () {
+      if ($scope.newsletter.bond_type === undefined ||
+          $scope.newsletter.bond_id === undefined) {
+        return;
+      }
+
+      $http.get('/templates/controlroom?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
+      .success(function (data) {
+        $scope.controlroom_url = $sce.trustAsResourceUrl(data.url);
+      });
+    }
 
     function updateSubjectPreview () {
       console.log("Update subject preview.");

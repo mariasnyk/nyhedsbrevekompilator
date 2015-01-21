@@ -196,6 +196,23 @@ module.exports.register = function (plugin, options, next) {
     }
   });
 
+  plugin.route({
+    method: 'get',
+    path: '/controlroom',
+    handler: function (request, reply) {
+      if (request.query.node) {
+        var url = bond_client.getNodeControlroomUrl(request.query.node);
+      } else if (request.query.nodequeue) {
+        var url = bond_client.getNodequeueControlroomUrl(request.query.nodequeue);
+      } else {
+        return reply().code(404);
+      }
+
+      reply({url: url})
+      .header('X-Controlroom-url', encodeURIComponent(url));
+    }
+  });
+
   next();
 };
 
