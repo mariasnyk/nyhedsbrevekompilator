@@ -149,7 +149,6 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
         return;
       }
 
-      console.log('Updating previews...');
       $scope.loading_previews = true;
 
       var a = updateHtmlPreview();
@@ -157,10 +156,8 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
 
       $q.all([a,b]).then(function (result) {
         $scope.loading_previews = false;
-        console.log('Updating previews done.');
       },function (reason) {
         $scope.loading_previews = false;
-        console.log('====Updating previews done.', reason);
       });
     }
 
@@ -170,7 +167,6 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
         return;
       }
 
-      console.log('Updating html preview...');
       $scope.loading_html_preview = true;
 
       return $http.get('/templates/' + $scope.newsletter.template_html + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
@@ -180,11 +176,9 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
         $scope.newsletter.checksum = headers['x-content-checksum'];
         $scope.newsletter.email_html = data;
         $scope.trusted_html_email_preview = $sce.trustAsHtml(data);
-        console.log('Updating html preview done.');
         $scope.loading_html_preview = false;
       })
       .error(function (data, status, headers, config) {
-        console.log('Updating html preview error.', data);
         $scope.loading_html_preview = false;
       });
     };
@@ -195,17 +189,14 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
         return;
       }
 
-      console.log('Updating text preview...');
       $scope.loading_plain_preview = true;
 
       return $http.get('/templates/' + $scope.newsletter.template_plain + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
       .success(function (data) {
         $scope.newsletter.email_plain = data;
-        console.log('Updating text preview done.');
         $scope.loading_plain_preview = false;
       })
       .error(function (data, status, headers, config) {
-        console.log('Updating plain preview error.', data);
         $scope.loading_plain_preview = false;
       });
     };
