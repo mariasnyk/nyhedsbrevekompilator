@@ -225,6 +225,6 @@ function calculateNodequeueChecksum (nodequeue) {
 function calculatePaywallToken (nid) {
   var timestamp = Date.now();
   var token = checksum(nid.toString() + timestamp + process.env.PAYWALL_TOKEN_SALT, { algorithm: 'sha256' });
-  var newsl_access = new Buffer(nid.toString() + timestamp + token).toString('base64');
+  var newsl_access = new Buffer(nid.toString() + '|' + timestamp + '|' + token).toString('base64');
   return newsl_access;
 }
