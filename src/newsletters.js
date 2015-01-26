@@ -144,19 +144,39 @@ module.exports.register = function (plugin, options, next) {
   plugin.route({
     method: 'post',
     path: '/draft',
-    handler: draftNewsletter
+    handler: function (request, reply) {
+      createMarketingEmail (request.payload, function (err, result) {
+        if (err) reply(err).code(400);
+        else reply(result);
+      });
+    }
   });
 
   plugin.route({
     method: 'post',
     path: '/send',
-    handler: sendNewsletter
+    handler: function (request, reply) {
+      sendNewsletter(request.payload, function (err, result) {
+        if (err) reply(err).code(400);
+        else reply(result);
+      });
+    }
   });
 
   plugin.route({
     method: 'post',
     path: '/{name}/send',
-    handler: autoSendNewsletter
+    handler: function (request, reply) {
+      queryOneNewsletter(request.params.name, function (err, newsletter) {
+        if (err) return reply(err).code(500);
+        if (newsletter === null) return reply().code(404);
+
+        autoSendNewsletter(newsletter, function (err, result) {
+          if (err) reply(err).code(500);
+          else reply(result);
+        });
+      });
+    }
   });
 
   next();
@@ -315,76 +335,49 @@ function download (url, callback) {
 }
 
 
-function autoSendNewsletter (request, reply) {
+function autoSendNewsletter (newsletter, callback) {
 
-  queryOneNewsletter(request.params.name, function (err, newsletter) {
-    if (err) return reply(err).code(400);
-    if (newsletter === null) return reply().code(404);
+  newsletter.at = new Date(new Date().getTime() + 15*60000);
 
-    var at = new Date(new Date().getTime() + 15*60000);
+  var html_url  = 'http://' + request.info.host + '/templates/' + newsletter.template_html + '?' + newsletter.bond_type + '=' + newsletter.bond_id,
+      plain_url = 'http://' + request.info.host + '/templates/' + newsletter.template_plain + '?' + newsletter.bond_type + '=' + newsletter.bond_id;
 
-    var html_url  = 'http://' + request.info.host + '/templates/' + newsletter.template_html + '?' + newsletter.bond_type + '=' + newsletter.bond_id,
-        plain_url = 'http://' + request.info.host + '/templates/' + newsletter.template_plain + '?' + newsletter.bond_type + '=' + newsletter.bond_id;
+  download(html_url, function (err, email_html, headers) {
+    if (err) return callback(err);
 
-    download(html_url, function (err, email_html, headers) {
-      if (err) return reply(err).code(400);
+    newsletter.subject = decodeURIComponent(headers['x-subject-suggestion']);
+    newsletter.email_html = email_html;
 
-      newsletter.subject = decodeURIComponent(headers['x-subject-suggestion']);
-      newsletter.email_html = email_html;
+    download(plain_url, function (err, email_plain) {
+      if (err) return callback(err);
 
-      download(plain_url, function (err, email_plain) {
-        if (err) return reply(err).code(400);
+      newsletter.email_plain = email_plain;
 
-        newsletter.email_plain = email_plain;
+      sendNewsletter(newsletter, callback);
+    });
+  });
+}
 
-        doTheLifting (newsletter, function (err, result) {
-          if (err) return reply(err).code(400);
 
-          addSendGridSchedule(result.name, at, function (err) {
-            if (err) return reply(err).code(400);
+function sendNewsletter (newsletter, callback) {
 
-            reply(result);
-          });
-        });
+  validateLastChecksum(newsletter.name, newsletter.checksum, function (err) {
+    if (err) return callback(err);
+
+    createMarketingEmail (newsletter, function (err, result) {
+      if (err) return callback(err);
+
+      addSendGridSchedule(result.name, newsletter.at, function (err) {
+        if (err) return callback(err);
+
+        callback(null, result);
       });
     });
   });
 }
 
 
-function draftNewsletter (request, reply) {
-
-  var data = request.payload;
-
-  doTheLifting (data, function (err, result) {
-    if (err) return reply(err).code(400);
-
-    reply(result);
-  });
-}
-
-
-function sendNewsletter (request, reply) {
-
-  var data = request.payload;
-
-  validateLastChecksum(data.name, data.checksum, function (err) {
-    if (err) return reply(err).code(400);
-
-    doTheLifting (data, function (err, result) {
-      if (err) return reply(err).code(400);
-
-      addSendGridSchedule(result.name, data.at, function (err) {
-        if (err) return reply(err).code(400);
-
-        reply(result);
-      });
-    });
-  });
-}
-
-
-function doTheLifting (data, callback) {
+function createMarketingEmail (data, callback) {
 
   if (process.env.LIVE !== 'true') {
     if (!process.env.TEST_LIST) {
