@@ -153,6 +153,12 @@ module.exports.register = function (plugin, options, next) {
     handler: sendNewsletter
   });
 
+  plugin.route({
+    method: 'post',
+    path: '/{name}/send',
+    handler: autoSendNewsletter
+  });
+
   next();
 };
 
@@ -444,6 +450,42 @@ function download (url, callback) {
 //     });
 //   });
 // }
+
+function autoSendNewsletter (request, reply) {
+
+  queryOneNewsletter(request.params.name, function (err, newsletter) {
+    if (err) return reply(err).code(400);
+    if (newsletter === null) return reply().code(404);
+
+    var at = new Date(new Date().getTime() + 15*60000);
+
+    var html_url  = 'http://' + request.info.host + '/templates/' + newsletter.template_html + '?' + newsletter.bond_type + '=' + newsletter.bond_id,
+        plain_url = 'http://' + request.info.host + '/templates/' + newsletter.template_plain + '?' + newsletter.bond_type + '=' + newsletter.bond_id;
+
+    download(html_url, function (err, email_html, headers) {
+      if (err) return reply(err).code(400);
+
+      newsletter.subject = decodeURIComponent(headers['x-subject-suggestion']);
+      newsletter.email_html = email_html;
+
+      download(plain_url, function (err, email_plain) {
+        if (err) return reply(err).code(400);
+
+        newsletter.email_plain = email_plain;
+
+        doTheLifting (newsletter, function (err, result) {
+          if (err) return reply(err).code(400);
+
+          addSendGridSchedule(result.name, at, function (err) {
+            if (err) return reply(err).code(400);
+
+            reply(result);
+          });
+        });
+      });
+    });
+  });
+}
 
 
 function draftNewsletter (request, reply) {
