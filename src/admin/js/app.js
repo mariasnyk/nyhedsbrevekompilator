@@ -180,6 +180,8 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
       })
       .error(function (data, status, headers, config) {
         $scope.loading_html_preview = false;
+        $scope.newsletter.email_html = '';
+        $scope.trusted_html_email_preview = '<p>Error</p>';
       });
     };
 

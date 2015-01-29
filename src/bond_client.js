@@ -50,6 +50,7 @@ function getFromBond ( type, id, callback ) {
     });
 
     response.on('end', function() {
+      console.log('BOND request ' + options.path + ' successful.');
       callback(null, JSON.parse( data ) );
     });
   }).on('error', function(e) {
