@@ -26,7 +26,7 @@ module.exports.getNodeControlroomUrl = function (id) {
 
 function getFromBond ( type, id, callback ) {
   if (!isValidId(id)) {
-    return callback(null,null);
+    return callback(null,null); // Results in "404 Not found" responses
   }
 
   var options = {
@@ -36,10 +36,13 @@ function getFromBond ( type, id, callback ) {
   };
 
   http.get(options, function( response ) {
+
+    console.log('BOND response (' + options.host + options.path + ') status: ' + response.statusCode);
+
     if (response.statusCode === 401) {
       return callback (null, null);
-    } else if (response.statusCode !== 200) {
-      return callback (response.statusCode, null);
+    } else if (response.statusCode !== 200 && response.statusCode !== 304) {
+      return callback ({ status: response.statusCode }, null);
     }
 
     var data = '';
@@ -50,11 +53,10 @@ function getFromBond ( type, id, callback ) {
     });
 
     response.on('end', function() {
-      console.log('BOND request ' + options.path + ' successful.');
       callback(null, JSON.parse( data ) );
     });
   }).on('error', function(e) {
-    console.log('Got error while requesting BOND ('+ options.host + options.path + '): ' + e.message);
+    console.log('BOND request ' + options.host + options.path + ' error: ' + e.message);
     callback(e, null);
   });
 }

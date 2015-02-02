@@ -46,6 +46,8 @@ module.exports.register = function (plugin, options, next) {
           // Requesting a specific template with a BOND node as data input
           if (request.query.node) {
             bond_client.getNode(request.query.node, function (err, node) {
+              if (err) return reply(err).code(500);
+
               if (node === null) {
                 return reply().code(404);
               }
@@ -66,6 +68,8 @@ module.exports.register = function (plugin, options, next) {
           // Requesting a specific template with a BOND nodequeue as data input
           } else if (request.query.nodequeue) {
             bond_client.getNodequeue(request.query.nodequeue, function (err, nodequeue) {
+              if (err) return reply(err).code(500);
+
               if (nodequeue === null || nodequeue.title === null) {
                 return reply().code(404);
               }
