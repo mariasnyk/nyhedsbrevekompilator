@@ -57,6 +57,8 @@ module.exports.register = function (plugin, options, next) {
 
               node.newsl_access = calculatePaywallToken(node.id);
 
+              node.dates = getDates();
+
               reply
               .view(request.params.template, node)
               .header('Transfer-Encoding', 'chunked')
@@ -80,6 +82,8 @@ module.exports.register = function (plugin, options, next) {
               nodequeue.nodes.forEach(function (node) {
                 node.newsl_access = calculatePaywallToken(node.id);
               });
+
+              nodequeue.dates = getDates();
 
               reply
               .view(request.params.template, nodequeue)
@@ -231,4 +235,48 @@ function calculatePaywallToken (nid) {
   var token = checksum(nid.toString() + timestamp + process.env.PAYWALL_TOKEN_SALT, { algorithm: 'sha256' });
   var newsl_access = new Buffer(nid.toString() + '|' + timestamp + '|' + token).toString('base64');
   return newsl_access;
+}
+
+function getDates () {
+  var temp = new Date();
+  return {
+    year: temp.getFullYear(),
+    month: (temp.getMonth() + 1).toString(),
+    date: temp.getDate().toString(),
+    yyyymmdd: temp.getFullYear() +
+              ('0' + (temp.getMonth() + 1)).slice(-2) +
+              ('0' + temp.getDate()).slice(-2),
+    day: danishWeekdayName(temp.getDay()),
+    month: danishMonthName(temp.getMonth() + 1),
+    unix_timestap: temp.getTime()
+  }
+}
+
+function danishWeekdayName (day) {
+  switch (day) {
+    case 1: return 'Mandag';
+    case 2: return 'Tirsdag';
+    case 3: return 'Onsdag';
+    case 4: return 'Torsdag';
+    case 5: return 'Fredag';
+    case 6: return 'Lørdag';
+    case 7: return 'Søndag';
+  }
+}
+
+function danishMonthName (month) {
+  switch (month) {
+    case 1: return 'Januar';
+    case 2: return 'Februar';
+    case 3: return 'Marts';
+    case 4: return 'April';
+    case 5: return 'Maj';
+    case 6: return 'Juni';
+    case 7: return 'Juli';
+    case 7: return 'August';
+    case 7: return 'September';
+    case 7: return 'Oktober';
+    case 7: return 'November';
+    case 7: return 'December';
+  }
 }

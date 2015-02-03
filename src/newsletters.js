@@ -392,7 +392,6 @@ function createMarketingEmail (data, callback) {
 
     var name = data.name + '_' + Date.now();
 
-
     addSendGridMarketingEmail(data.identity, name, data.subject, data.email_plain, data.email_html, function (err, result) {
       if (err) return callback(err);
 
