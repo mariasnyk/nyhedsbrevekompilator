@@ -388,15 +388,21 @@ function createMarketingEmail (data, callback) {
   }
 
   validateNewsletterInputData(data, function (err) {
-    if (err) return callback(err);
+    if (err) {
+      console.log(err);
+      return callback({ error: 'Error when validating input for marketing email.', errors: err.errors });
+    }
 
     var name = data.name + '_' + Date.now();
 
     addSendGridMarketingEmail(data.identity, name, data.subject, data.email_plain, data.email_html, function (err, result) {
-      if (err) return callback(err);
+      if (err) {
+        console.log(err);
+        return callback({ error: 'Error when creating new marketing email.' });
+      }
 
       // Adding the newsletter name as a mandatory category
-      if (data.categories.indexOf(data.name) === -1) {
+      if (data.categories !== undefined && data.categories !== null && data.categories.indexOf(data.name) === -1) {
         data.categories.push(data.name);
       }
 
@@ -405,7 +411,10 @@ function createMarketingEmail (data, callback) {
       });
 
       addSendGridRecipients(data.list, name, function (err, result) {
-        if (err) return callback(err);
+        if (err) {
+          console.log(err);
+          return callback({ error: 'Error when adding recipients to marketing email.' });
+        }
 
         result.name = name;
         callback(null, result);
@@ -443,7 +452,7 @@ function validateNewsletterInputData (data, callback) {
 
 function createSendGridCategory (category, callback) {
 
-  var body = 'category=' + category;
+  var body = 'category=' + encodeURIComponent(category);
   callSendGrid('https://api.sendgrid.com/api/newsletter/category/create.json', body, callback);
 }
 
@@ -457,19 +466,15 @@ function addSendGridCategory (category, name, callback) {
   callSendGrid('/api/newsletter/category/add.json', body, function (err, data) {
 
     if (err) {
-      // {"error": "Category donkey1 does not exist"}
-      if (err.error = 'Category ' + category + ' does not exist') {
+      // Example: {"error": "Category donkey1 does not exist"}
+      if (err.error == 'Category ' + category + ' does not exist') {
         createSendGridCategory(category, function (err, data) {
           addSendGridCategory (category, name, callback);
         });
-      } else {
-        if (callback !== undefined && typeof callback === 'function' ) {
-          callback(err, null);
-        }
+      } else if (callback !== undefined && typeof callback === 'function' ) {
+        callback(err, null);
       }
-    }
-
-    if (callback !== undefined && typeof callback === 'function' ) {
+    } else if (callback !== undefined && typeof callback === 'function' ) {
       callback (null, data);
     }
   });
@@ -549,13 +554,13 @@ function callSendGrid (path, body, callback) {
     }
   };
 
-  var req = https.request(options, function(res) {
+  var req = https.request(options, function (res) {
 
     res.on('data', function(d) {
       data = data + d;
     });
 
-    res.on('end', function() {
+    res.on('end', function () {
       data = JSON.parse(data);
       if (data.error || res.statusCode > 300)
         callback(data, null);
@@ -567,7 +572,7 @@ function callSendGrid (path, body, callback) {
   req.write(body);
   req.end();
 
-  req.on('error', function(e) {
+  req.on('error', function (e) {
     callback(e);
   });
 }

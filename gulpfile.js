@@ -24,7 +24,7 @@ gulp.task('debug', function() {
   if (node_inspector) {
     node_inspector.kill();
   }
-  node_inspector = spawn('node-inspector', ['--web-port=8000'], {stdio: 'inherit'});
+  node_inspector = spawn('node-inspector', ['--web-port=8080'], {stdio: 'inherit'});
 });
 
 gulp.task('serve', ['start'], function () {
