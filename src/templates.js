@@ -241,7 +241,6 @@ function getDates () {
   var temp = new Date();
   return {
     year: temp.getFullYear(),
-    month: (temp.getMonth() + 1).toString(),
     date: temp.getDate().toString(),
     yyyymmdd: temp.getFullYear() +
               ('0' + (temp.getMonth() + 1)).slice(-2) +
