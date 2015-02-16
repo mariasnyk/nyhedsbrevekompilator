@@ -1,0 +1,26 @@
+{% spaceless %}
+{% set image_count = 0; %}
+<a href="{{ node.urlAliases[0] }}" title="{{ node.title }}" style="display: block; text-decoration: none; line-height: 23px; text-align: left" target="_blank">  
+
+  {% for image in node.images %}
+    {% set image_count = loop.index; %}
+    {% if loop.last %}
+      <img width="100%" alt="{{ image.title }}" src="{{ image.image }}" border="0" />
+    {% endif %}
+  {% endfor %}
+
+  <div style="text-align: left; line-height:100%;">
+    <font color="#000000" style="font-family:'bt_bold', Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 30px; line-height: 30px; font-weight: bold; text-rendering: optimizeLegibility;">
+      {{ node.title }}
+    </font>
+  </div>
+
+  {% if node.type === 'image_gallery' %}
+  <div style="text-align: left; line-height:100%;">
+    <font color="#d00000" style="font-family:'bt_bold', Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; text-decoration: underline; font-size: 16px; line-height: 60px; text-rendering: optimizeLegibility;">
+      Se <span>{{ image_count }}</span> billeder
+    </font>
+  </div>
+  {% endif %}
+</a>
+{% endspaceless %}
