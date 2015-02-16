@@ -5,7 +5,22 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title></title>
-  <style>
+  <style type="text/css">
+      /* From  https://github.com/mailchimp/email-blueprints/blob/master/responsive-templates/base_boxed_body_image_2column_query.html */
+
+      /* /\/\/\/\/\/\/\/\/ CLIENT-SPECIFIC STYLES /\/\/\/\/\/\/\/\/ */
+      #outlook a{padding:0;} /* Force Outlook to provide a "view in browser" message */
+      .ReadMsgBody{width:100%;} .ExternalClass{width:100%;} /* Force Hotmail to display emails at full width */
+      .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;} /* Force Hotmail to display normal line spacing */
+      body, table, td, p, a, li, blockquote{-webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;} /* Prevent WebKit and Windows mobile changing default text sizes */
+      table, td{mso-table-lspace:0pt; mso-table-rspace:0pt;} /* Remove spacing between tables in Outlook 2007 and up */
+      img{-ms-interpolation-mode:bicubic;} /* Allow smoother rendering of resized image in Internet Explorer */
+      /* /\/\/\/\/\/\/\/\/ RESET STYLES /\/\/\/\/\/\/\/\/ */
+      body{margin:0; padding:0;}
+      img{border:0; height:auto; line-height:100%; outline:none; text-decoration:none;}
+      table{border-collapse:collapse !important;}
+      body, #bodyTable, #bodyCell{height:100% !important; margin:0; padding:0; width:100% !important;}
+
     @font-face {
       font-family: 'bt_normal';
         src: url('http://nlstatic.berlingskemedia.dk/fonts/bt_one-bold-webfont.eot');
@@ -35,6 +50,12 @@
   {% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + dates.yyyymmdd + "&ns_linkname=bt_modeskonhed"; %}
 
   {% set logo_url = "www.bt.dk/sektion/modeogskonhed"; %}
+
+  <!--[if (gte mso 9)|(IE)]>
+  <table width="654" align="center" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+          <td>
+  <![endif]-->
 
   <!-- The almighty table -->
   <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="white" style="margin: auto; max-width: 654px;">
@@ -85,24 +106,46 @@
 
       </td>
     </tr>
+
+    <tr>
+      <td width="100%" height="14" style="font-size: 0px; line-height:0px;">&nbsp;</td>
+    </tr>
+
     {% for node in nodes %}
-      {% if loop.index < 11 && loop.index % 2 === 0 %}
+      {% if loop.index < 9 && loop.index % 2 === 0 %}
       <tr>
         <td align="center" valing="top">
 
           <!-- Two-column stories -->
-          <div style="padding: 13px; background-color: #ffffff; font-size: 0;">
+          <div style="padding: 0px 13px; background-color: #ffffff; font-size: 0;">
+            <!--[if (gte mso 9)|(IE)]>
+            <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                    <td>
+            <![endif]-->
+
             <!-- Right story -->
-            <div style="width: 300px; padding: 7px; vertical-align: top; display: inline-block; border: none;">
+            <div style="width: 300px; padding: 5px 7px; vertical-align: top; display: inline-block; border: none;">
               {% set node = nodes[loop.index]; %}
               {% include "partials/bt_mode_article.html" with node %}
             </div>
 
+            <!--[if (gte mso 9)|(IE)]>
+            </td>
+            <td>
+            <![endif]-->
+
             <!-- Left story -->
-            <div style="width: 300px; padding: 7px; vertical-align: top; display: inline-block; border: none;">
+            <div style="width: 300px; padding: 5px 7px; vertical-align: top; display: inline-block; border: none;">
               {% set node = nodes[loop.index + 1]; %}
               {% include "partials/bt_mode_article.html" with node %}
             </div>
+
+            <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]-->
           </div>
           <!-- Two-column stories END -->
 
@@ -144,16 +187,23 @@
     </tr>
 
     <tr>
+      <td width="100%" height="14" style="font-size: 0px; line-height:0px;">&nbsp;</td>
+    </tr>
+
+    <tr>
       <td align="center" valing="top">
         <!-- Second 4:3 beerbox banner -->
-        <div style="margin: 20px 0px;">
-          {% set banner_a_href = "http://ad1.emediate.dk/eas?cu=27672;ty=ct;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_3"; %}                                  
-          {% set banner_img_src = "http://ad1.emediate.dk/eas?cu=27672;cre=img;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_3"; %}
-          {% include "partials/banner.html" with banner_a_href and banner_img_src %}
-        </div>
+        {% set banner_a_href = "http://ad1.emediate.dk/eas?cu=27672;ty=ct;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_3"; %}
+        {% set banner_img_src = "http://ad1.emediate.dk/eas?cu=27672;cre=img;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_3"; %}
+        {% include "partials/banner.html" with banner_a_href and banner_img_src %}
         <!-- 4:3 beerbox banner END -->
       </td>
     </tr>
+
+    <tr>
+      <td width="100%" height="14" style="font-size: 0px; line-height:0px;">&nbsp;</td>
+    </tr>
+
     <tr>
       <td align="center" valing="top">
         <!-- Andre newsletters -->
@@ -339,4 +389,10 @@
       <td width="100%" height="14" style="font-size:0px; line-height:0px;">&nbsp;</td>
     </tr>
   </table>
+
+  <!--[if (gte mso 9)|(IE)]>
+  </td>
+  </tr>
+  </table>
+  <![endif]-->
 </body>
