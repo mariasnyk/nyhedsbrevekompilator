@@ -1,18 +1,16 @@
 {% spaceless %}
-<div style="padding: 10px 20px 20px 20px; background-color: #ececec;">
+<div style="background-color: #ececec;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr>
-      <td align="left" valign="top">
-        <font color="#333333" style="font-family: Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 10px; line-height: 10px;  text-rendering: optimizeLegibility;">
-          ANNONCE
-        </font>
-      </td>
-    </tr>
-    <tr>
       <td align="center" valign="top">
-        <a target="_blank" href="{{ banner_a_href }}" title="">
-          <img class="full" src="{{ banner_img_src }}" alt="" border="0" style="max-width: 100%; display: block;" />
-        </a>
+        <div style="max-width: {{width}}px; padding: 10px 0 20px 0; text-align: left">
+          <font color="#333333" style="font-family: Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 10px; line-height: 10px;  text-rendering: optimizeLegibility;">
+            ANNONCE
+          </font>
+          <a target="_blank" href="{{ banner_a_href }}" title="">
+            <img class="full" src="{{ banner_img_src }}" alt="" border="0" style="max-width: 100%; display: block;" width="{{ width }}" />
+          </a>
+        </div>
       </td>
     </tr>
   </table>

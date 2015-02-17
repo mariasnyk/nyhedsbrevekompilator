@@ -5,7 +5,7 @@
   {% for image in node.images %}
     {% set image_count = loop.index; %}
     {% if loop.last %}
-      <img width="100%" alt="{{ image.title }}" src="{{ image.image }}" border="0" />
+      <img style="width: {{ width }}px;" alt="{{ image.title }}" src="{{ image.image }}" border="0" />
     {% endif %}
   {% endfor %}
 

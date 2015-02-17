@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title></title>
+  <title>{{ subject }}</title>
   <style type="text/css">
       /* From  https://github.com/mailchimp/email-blueprints/blob/master/responsive-templates/base_boxed_body_image_2column_query.html */
 
@@ -66,7 +66,7 @@
         <table width="100%" cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td align="center" valign="top">
-              <div style="padding: 0px 0px 20px 0px; background-color: #ffffff;">
+              <div style="margin: 0 0 20px 0; background-color: #ffffff;">
                 <div style="border: none; text-align: center;">
                   <p>
                     <font color="#333333" style="font-family: Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size:11px; line-height: 11px; text-rendering: optimizeLegibility;">
@@ -74,7 +74,7 @@
                     </font>
                   </p>
                 </div>
-                <img width="100%" src="http://nlstatic.berlingskemedia.dk/images/bt_logo2.png">
+                <img style="width: 100%;" src="http://nlstatic.berlingskemedia.dk/images/bt_logo2.png">
               </div>
             </td>
           </tr>
@@ -87,7 +87,8 @@
       <td align="center" valing="top">
 
         <!-- Big story -->
-        <div style="padding: 0px 20px 20px 20px; display: inline-block;  background-color: #ffffff; font-size; 0;">
+        <div style="max-width: 614px; margin: 0px 20px 20px 20px; display: inline-block;  background-color: #ffffff; font-size; 0;">
+          {% set width="614" %}
           {% set node = nodes[0]; %}
           {% include "partials/bt_mode_article.html" with node %}
         </div>
@@ -99,6 +100,7 @@
       <td align="center" valing="top">
 
         <!-- Wide banner -->
+        {% set width="614" %}
         {% set banner_a_href = "http://ad1.emediate.dk/eas?cu=27669;ty=ct;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_1"; %}                                  
         {% set banner_img_src = "http://ad1.emediate.dk/eas?cu=27669;cre=img;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_1"; %}
         {% include "partials/banner.html" with banner_a_href and banner_img_src %}
@@ -117,7 +119,7 @@
         <td align="center" valing="top">
 
           <!-- Two-column stories -->
-          <div style="padding: 0px 13px; background-color: #ffffff; font-size: 0;">
+          <div style="margin: 0px 13px; background-color: #ffffff; font-size: 0;">
             <!--[if (gte mso 9)|(IE)]>
             <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
                 <tr>
@@ -125,7 +127,8 @@
             <![endif]-->
 
             <!-- Right story -->
-            <div style="width: 300px; padding: 5px 7px; vertical-align: top; display: inline-block; border: none;">
+            <div style="width: 300px; margin: 5px 7px; vertical-align: top; display: inline-block; border: none;">
+              {% set width="300" %}
               {% set node = nodes[loop.index]; %}
               {% include "partials/bt_mode_article.html" with node %}
             </div>
@@ -136,7 +139,8 @@
             <![endif]-->
 
             <!-- Left story -->
-            <div style="width: 300px; padding: 5px 7px; vertical-align: top; display: inline-block; border: none;">
+            <div style="width: 300px; margin: 5px 7px; vertical-align: top; display: inline-block; border: none;">
+              {% set width="300" %}
               {% set node = nodes[loop.index + 1]; %}
               {% include "partials/bt_mode_article.html" with node %}
             </div>
@@ -158,6 +162,7 @@
 
           <!-- First 4:3 beerbox banner -->
           <div style="margin: 20px 0px;">
+            {% set width="300" %}
             {% set banner_a_href = "http://ad1.emediate.dk/eas?cu=27671;ty=ct;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_2"; %}                                  
             {% set banner_img_src = "http://ad1.emediate.dk/eas?cu=27671;cre=img;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_2"; %}
             {% include "partials/banner.html" with banner_a_href and banner_img_src %}
@@ -166,8 +171,6 @@
 
         </td>
       </tr>
-      {% endif %}
-      {% if loop.index === 8 %}
       {% endif %}
     {% endfor %}
 
@@ -193,6 +196,7 @@
     <tr>
       <td align="center" valing="top">
         <!-- Second 4:3 beerbox banner -->
+        {% set width="300" %}
         {% set banner_a_href = "http://ad1.emediate.dk/eas?cu=27672;ty=ct;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_3"; %}
         {% set banner_img_src = "http://ad1.emediate.dk/eas?cu=27672;cre=img;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_3"; %}
         {% include "partials/banner.html" with banner_a_href and banner_img_src %}
@@ -213,29 +217,31 @@
               Tilmeld dig vores andre nyhedsbreve
             </font>
           </div>
-          <table width="100%" style="background-color: #f9f9f9; padding: 20px;">
+          <table width="100%" style="background-color: #f9f9f9;">
             <tr>
-              <td align="center" valing="top" width="50%">
-                <div style="text-align: left; margin: 10px 0px;">
-                  <font color="#000000" style="font-family: 'bt_bold', Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 20px; line-height: 20px; text-rendering: optimizeLegibility;">
-                    TILBUD FRA SWEETDEAL
-                  </font>
-                </div>
-                <div style="text-align: left; margin: 10px 0px;">
-                  <font color="#000000" style="font-family:' Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
-                    F&aring; attraktive tilbud der matcher dine interesser f&oslash;r andre direkte i din mailboks.
-                  </font>
-                </div>
-                <div style="text-align: left; margin: 10px 0px;">
-                  <a target="_blank" href="">
-                    <font color="#CC0000" style="font-family: 'bt_bold', Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
-                      Tilmeld dig nyhedsbrev
+              <td align="center" valing="top">
+                <div style="width: 300px; display: inline-block; border: none;">
+                  <div style="text-align: left; margin: 10px 0px; padding: 0px 10px;">
+                    <font color="#000000" style="font-family: 'bt_bold', Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 20px; line-height: 20px; text-rendering: optimizeLegibility;">
+                      TILBUD FRA SWEETDEAL
                     </font>
-                  </a>
+                  </div>
+                  <div style="text-align: left; margin: 10px 0px; padding: 0px 10px;">
+                    <font color="#000000" style="font-family:' Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
+                      F&aring; attraktive tilbud der matcher dine interesser f&oslash;r andre direkte i din mailboks.
+                    </font>
+                  </div>
+                  <div style="text-align: left; margin: 10px 0px; padding: 0px 10px;">
+                    <a target="_blank" href="">
+                      <font color="#CC0000" style="font-family: 'bt_bold', Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
+                        Tilmeld dig nyhedsbrev
+                      </font>
+                    </a>
+                  </div>
                 </div>
-              </td>
-              <td align="center" valing="top" width="50%">
-                <img src="http://nlstatic.berlingskemedia.dk/images/sweetdeal.png" />
+                <div style="width: 300px; display: inline-block; border: none;">
+                  <img src="http://nlstatic.berlingskemedia.dk/images/sweetdeal.png" style="width: 100%;" />
+                </div>
               </td>
             </tr>
           </table>
@@ -244,29 +250,31 @@
               <td width="100%" height="14" style="font-size:0px; line-height:0px;">&nbsp;</td>
             </tr>
           </table>
-          <table width="100%" style="background-color: #f9f9f9; padding: 20px;">
+          <table width="100%" style="background-color: #f9f9f9;">
             <tr>
-              <td align="center" valing="top" width="50%">
-                <div style="text-align: left; margin: 10px 0px;">
-                  <font color="#000000" style="font-family: 'bt_bold', Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 20px; line-height: 20px; text-rendering: optimizeLegibility;">
-                    NYHEDER FRA BT SPORT
-                  </font>
-                </div>
-                <div style="text-align: left; margin: 10px 0px;">
-                  <font color="#000000" style="font-family: Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
-                    BT Sportens nyhedsbrev opdaterer dig dagligt med hvad der r&oslash;r sig inde for sportens verden.
-                  </font>
-                </div>
-                <div style="text-align: left; margin: 10px 0px;">
-                  <a target="_blank" href="">
-                    <font color="#CC0000" style="font-family: 'bt_bold', Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
-                      Tilmeld dig nyhedsbrev
+              <td align="center" valing="top">
+                <div style="width: 300px; display: inline-block; border: none;">
+                  <div style="text-align: left; margin: 10px 0px; padding: 0px 10px;">
+                    <font color="#000000" style="font-family: 'bt_bold', Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 20px; line-height: 20px; text-rendering: optimizeLegibility;">
+                      NYHEDER FRA BT SPORT
                     </font>
-                  </a>
+                  </div>
+                  <div style="text-align: left; margin: 10px 0px; padding: 0px 10px;">
+                    <font color="#000000" style="font-family: Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
+                      BT Sportens nyhedsbrev opdaterer dig dagligt med hvad der r&oslash;r sig inde for sportens verden.
+                    </font>
+                  </div>
+                  <div style="text-align: left; margin: 10px 0px; padding: 0px 10px;">
+                    <a target="_blank" href="">
+                      <font color="#CC0000" style="font-family: 'bt_bold', Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
+                        Tilmeld dig nyhedsbrev
+                      </font>
+                    </a>
+                  </div>
                 </div>
-              </td>
-              <td align="center" valing="top" width="50%">
-                <img src="http://nlstatic.berlingskemedia.dk/images/BT_sport.png" />
+                <div style="width: 300px; display: inline-block; border: none;">
+                  <img src="http://nlstatic.berlingskemedia.dk/images/BT_sport.png" style="width: 100%;" />
+                </div>
               </td>
             </tr>
           </table>
@@ -277,6 +285,7 @@
     <tr>
       <td align="center" valing="top">
         <!-- Wide banner -->
+        {% set width="614" %}
         {% set banner_a_href = "http://ad1.emediate.dk/eas?cu=27670;ty=ct;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_4"; %}                                  
         {% set banner_img_src = "http://ad1.emediate.dk/eas?cu=27670;cre=img;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_4"; %}
         {% include "partials/banner.html" with banner_a_href and banner_img_src %}
@@ -287,29 +296,25 @@
     <tr>
       <td align="center" valing="top">
         <!-- Køb BT -->
-        <div style="margin: 30px 0px 20px 0px">
-          <table width="100%">
-            <tr>
-              <td align="center" valing="top" width="50%">
-                <img src="http://nlstatic.berlingskemedia.dk/images/BT_avis.png" />
-              </td>
-              <td align="center" valing="top" width="50%">
-                <p>
-                  <font color="#000000" style="font-family: 'bt_bold', Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 30px; line-height: 36px; text-rendering: optimizeLegibility;">
-                    Abonnement på BT
-                  </font>
-                </p>
-                <p style="padding: 0px 10px; margin: 24px;">
-                  <font color="#000000" style="font-family: 'bt_bold', Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
-                    F&aring; BT hver dag i 3 m&aring;neder for kun 199,- pr m&aring;ned. Samlet pris 597,-
-                  </font>
-                </p>
-                <a target="_blank" href="http://sjma.dk/lpcms/landingpage/bt1.php?cid=BT-140218-CP-MALEDIT1NB&ns_campaign=_abonnementnyhedsbreve_toplink&ns_mchannel=na&ns_source=nyhedsbreve&ns_linkname=nl_uspecificeret&ns_fee=0">
-                  <img src="http://nlstatic.berlingskemedia.dk/images/koeb-abo.png" />
-                </a>
-              </td>
-            </tr>
-          </table>
+        <div style="margin: 30px 0 20px 0">
+          <div style="width: 300px; display: inline-block; border: none;">
+            <img src="http://nlstatic.berlingskemedia.dk/images/BT_avis.png" />
+          </div>
+          <div style="width: 300px; display: inline-block; border: none;">
+            <p>
+              <font color="#000000" style="font-family: 'bt_bold', Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 30px; line-height: 36px; text-rendering: optimizeLegibility;">
+                Abonnement på BT
+              </font>
+            </p>
+            <p style="padding: 0px 10px; margin: 24px;">
+              <font color="#000000" style="font-family: 'bt_bold', Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+                F&aring; BT hver dag i 3 m&aring;neder for kun 199,- pr m&aring;ned. Samlet pris 597,-
+              </font>
+            </p>
+            <a target="_blank" href="http://sjma.dk/lpcms/landingpage/bt1.php?cid=BT-140218-CP-MALEDIT1NB&ns_campaign=_abonnementnyhedsbreve_toplink&ns_mchannel=na&ns_source=nyhedsbreve&ns_linkname=nl_uspecificeret&ns_fee=0">
+              <img src="http://nlstatic.berlingskemedia.dk/images/koeb-abo.png" />
+            </a>
+          </div>
         </div>
         <!-- Køb BT END -->
       </td>

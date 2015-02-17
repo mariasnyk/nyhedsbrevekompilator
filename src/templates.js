@@ -7,6 +7,9 @@ var fs = require('fs'),
     checksum = require('checksum'),
     templateDir = __dirname + '/../templates';
 
+
+    // templateDir = '/home/dako/Code/sii-newsletter/templates';
+
 extras.useFilter(swig, 'split');
 extras.useFilter(swig, 'trim');
 extras.useFilter(swig, 'truncate');
@@ -52,18 +55,18 @@ module.exports.register = function (plugin, options, next) {
                 return reply().code(404);
               }
 
-              var node_checksum = calculateNodeChecksum(node),
-                  subject = emailSubjectSuggestion(node);
+              var node_checksum = calculateNodeChecksum(node);
 
               node.newsl_access = calculatePaywallToken(node.id);
 
+              node.subject = emailSubjectSuggestion(nodequeue);
               node.dates = getDates();
 
               reply
               .view(request.params.template, node)
               .header('Transfer-Encoding', 'chunked')
               .header('Content-Type', ContentTypeHeader(request.params.template))
-              .header('X-Subject-Suggestion', encodeURIComponent(subject))
+              .header('X-Subject-Suggestion', encodeURIComponent(node.subject))
               .header('X-Content-Checksum', node_checksum);
             });
 
@@ -76,20 +79,20 @@ module.exports.register = function (plugin, options, next) {
                 return reply().code(404);
               }
 
-              var nodequeue_checksum = calculateNodequeueChecksum(nodequeue),
-                  subject = emailSubjectSuggestion(nodequeue);
+              var nodequeue_checksum = calculateNodequeueChecksum(nodequeue);
 
               nodequeue.nodes.forEach(function (node) {
                 node.newsl_access = calculatePaywallToken(node.id);
               });
 
+              nodequeue.subject = emailSubjectSuggestion(nodequeue);
               nodequeue.dates = getDates();
 
               reply
               .view(request.params.template, nodequeue)
               .header('Transfer-Encoding', 'chunked')
               .header('Content-Type', ContentTypeHeader(request.params.template))
-              .header('X-Subject-Suggestion', encodeURIComponent(subject))
+              .header('X-Subject-Suggestion', encodeURIComponent(nodequeue.subject))
               .header('X-Content-Checksum', nodequeue_checksum);
             });
           } else {
