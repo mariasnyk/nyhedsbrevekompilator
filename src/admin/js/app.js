@@ -207,6 +207,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
     $scope.sendNewsletter = function () {
 
       if($scope.at > Date.now()) {
+        console.log('$scope.at > Date.now()', $scope.at, Date.now());
         $scope.newsletter.at = $scope.at;
       }
 

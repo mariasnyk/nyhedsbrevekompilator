@@ -58,7 +58,6 @@ module.exports.register = function (plugin, options, next) {
               var node_checksum = calculateNodeChecksum(node);
 
               node.newsl_access = calculatePaywallToken(node.id);
-
               node.subject = emailSubjectSuggestion(nodequeue);
               node.dates = getDates();
 
