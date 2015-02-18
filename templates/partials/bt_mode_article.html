@@ -1,4 +1,3 @@
-{% spaceless %}
 {% set image_count = 0; %}
 <a href="{{ node.urlAliases[0] }}" title="{{ node.title }}" style="display: block; text-decoration: none; line-height: 23px; text-align: left" target="_blank">  
 
@@ -9,7 +8,7 @@
     {% endif %}
   {% endfor %}
 
-  <div style="text-align: left; line-height: 100%;">
+  <div style="width: {{ width }}px; text-align: left; line-height: 100%;">
     <font color="#000000" style="font-family:'bt_bold', Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 30px; line-height: 30px; font-weight: bold; text-rendering: optimizeLegibility;">
       {{ node.title }}
     </font>
@@ -23,4 +22,3 @@
   </div>
   {% endif %}
 </a>
-{% endspaceless %}
