@@ -97,6 +97,9 @@
       </td>
     </tr>
     <tr>
+      <td width="100%" height="14" style="font-size: 0px; line-height: 0px;">&nbsp;</td>
+    </tr>
+    <tr>
       <td align="center" valing="top" bgcolor="#ececec">
 
         <!-- Wide banner -->
@@ -159,17 +162,16 @@
       {% if loop.index === 4 %}
       <tr>
         <td align="center" valing="top" bgcolor="#ececec">
-
           <!-- First 4:3 beerbox banner -->
-          <div style="margin: 20px 0px;">
-            {% set width="300" %}
-            {% set banner_a_href = "http://ad1.emediate.dk/eas?cu=27671;ty=ct;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_2"; %}
-            {% set banner_img_src = "http://ad1.emediate.dk/eas?cu=27671;cre=img;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_2"; %}
-            {% include "partials/banner.html" with banner_a_href and banner_img_src %}
-          </div>
+          {% set width="300" %}
+          {% set banner_a_href = "http://ad1.emediate.dk/eas?cu=27671;ty=ct;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_2"; %}
+          {% set banner_img_src = "http://ad1.emediate.dk/eas?cu=27671;cre=img;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_2"; %}
+          {% include "partials/banner.html" with banner_a_href and banner_img_src %}
           <!-- 4:3 beerbox banner END -->
-
         </td>
+      </tr>
+      <tr>
+        <td width="100%" height="14" style="font-size: 0px; line-height: 0px;">&nbsp;</td>
       </tr>
       {% endif %}
     {% endfor %}
