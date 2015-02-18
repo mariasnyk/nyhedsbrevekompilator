@@ -70,7 +70,7 @@
                 <div style="border: none; text-align: center;">
                   <p>
                     <font color="#333333" style="font-family: Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size:11px; line-height: 11px; text-rendering: optimizeLegibility;">
-                      Problemer med at l&aelig;se nyhedsbrevet? <a href="#" style="text-decoration: none;">Klik her</a>
+                      Problemer med at l&aelig;se nyhedsbrevet? <a href="[weblink]" style="text-decoration: none;">Klik her</a>
                     </font>
                   </p>
                 </div>
@@ -112,7 +112,7 @@
     <tr>
       <td width="100%" height="14" style="font-size: 0px; line-height:0px;">&nbsp;</td>
     </tr>
-
+    {% spaceless %}
     {% for node in nodes %}
       {% if loop.index < 9 && loop.index % 2 === 0 %}
       <tr>
@@ -173,6 +173,7 @@
       </tr>
       {% endif %}
     {% endfor %}
+    {% endspaceless %}
 
     <tr>
       <td align="center" valing="top">
@@ -334,18 +335,26 @@
           </font>
         </div>
         <div style="margin: 20px 0px;">
-          <a target="_blank" href="#" style="margin: 0px 15px; text-decoration: none;">
-            <img src="http://nlstatic.berlingskemedia.dk/images/facebook.png" />
-          </a>
-          <a target="_blank" href="#" style="margin: 0px 15px; text-decoration: none;">
-            <img src="http://nlstatic.berlingskemedia.dk/images/twitter.png" />
-          </a>
-          <a target="_blank" href="#" style="margin: 0px 15px; text-decoration: none;">
-            <img src="http://nlstatic.berlingskemedia.dk/images/instagram.png" />
-          </a>
-          <a target="_blank" href="#" style="margin: 0px 15px; text-decoration: none;">
-            <img src="http://nlstatic.berlingskemedia.dk/images/google_plus.png" />
-          </a>
+          <div style="margin: 0px 15px;">
+            <a target="_blank" href="http://facebook.com/ditbt" style="text-decoration: none;">
+              <img src="http://nlstatic.berlingskemedia.dk/images/facebook.png" />
+            </a>
+          </div>
+          <div style="margin: 0px 15px;">
+            <a target="_blank" href="https://twitter.com/btdk" style="text-decoration: none;">
+              <img src="http://nlstatic.berlingskemedia.dk/images/twitter.png" />
+            </a>
+          </div>
+          <div style="margin: 0px 15px;">
+            <a target="_blank" href="http://instagram.com/bt.dk½" style="text-decoration: none;">
+              <img src="http://nlstatic.berlingskemedia.dk/images/instagram.png" />
+            </a>
+          </div>
+          <div style="margin: 0px 15px;">
+            <a target="_blank" href="https://plus.google.com/+BTDK" style="text-decoration: none;">
+              <img src="http://nlstatic.berlingskemedia.dk/images/google_plus.png" />
+            </a>
+          </div>
         </div>
         <!-- Følg BT END -->
       </td>
@@ -400,4 +409,9 @@
   </tr>
   </table>
   <![endif]-->
+
+  <!-- Litmus -->
+  <style>@media print{ #_t { background-image: url('https://eq1o05ge.emltrk.com/eq1o05ge?p&d=[Email Address]');}} div.OutlookMessageHeader {background-image:url('https://eq1o05ge.emltrk.com/eq1o05ge?f&d=[Email Address]')} table.moz-email-headers-table {background-image:url('https://eq1o05ge.emltrk.com/eq1o05ge?f&d=[Email Address]')} blockquote #_t {background-image:url('https://eq1o05ge.emltrk.com/eq1o05ge?f&d=[Email Address]')} #MailContainerBody #_t {background-image:url('https://eq1o05ge.emltrk.com/eq1o05ge?f&d=[Email Address]')}</style><div id="_t"></div>
+  <img src="https://eq1o05ge.emltrk.com/eq1o05ge?d=[Email Address]" width="1" height="1" border="0" />
 </body>
+</html>
