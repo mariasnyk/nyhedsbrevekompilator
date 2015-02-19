@@ -60,6 +60,17 @@ module.exports.register = function (plugin, options, next) {
 
   plugin.route({
     method: 'get',
+    path: '/lists/{list}',
+    handler: function (request, reply) {
+      callSendGrid('/api/newsletter/lists/get.json', 'list=' + request.params.list, function (err, data) {
+        if (err) return reply(err).code(500);
+        else reply(data);
+      });
+    }
+  });
+
+  plugin.route({
+    method: 'get',
     path: '/categories',
     handler: function (request, reply) {
       callSendGrid('/api/newsletter/category/list.json', function (err, data) {
@@ -378,14 +389,6 @@ function sendNewsletter (newsletter, callback) {
 
 
 function createMarketingEmail (data, callback) {
-
-  if (process.env.LIVE !== 'true') {
-    if (!process.env.TEST_LIST) {
-      return callback("No TEST recipient list in env.")
-    } else {
-      data.list = process.env.TEST_LIST;
-    }
-  }
 
   validateNewsletterInputData(data, function (err) {
     if (err) {

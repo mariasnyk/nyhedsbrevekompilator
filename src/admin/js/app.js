@@ -63,7 +63,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
 
     var Newsletters = $resource('/newsletters/:name', { name: '@name' });
     var Identities = $resource('/newsletters/identities');
-    var Lists = $resource('/newsletters/lists');
+    var Lists = $resource('/newsletters/lists/:list', { list: '@list' });
     var Templates = $resource('/templates/:name', { name: '@name' });
 
     $scope.edit = $routeParams.operator === 'edit';
@@ -132,6 +132,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
       $http.post('/newsletters', $scope.newsletter)
       .success(function () {
         console.log('Success saving template.');
+        $location.url('/' + $scope.newsletter.name );
       }).error(function (data, status) {
         console.log('Error saving template.', data, status);
       });

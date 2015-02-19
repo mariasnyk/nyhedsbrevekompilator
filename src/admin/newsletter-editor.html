@@ -28,7 +28,7 @@
     </div>
     <div class="col-xs-2">
       <div class="form-group">
-        <label for="list_control">Modtagere</label>
+        <label for="list_control">Modtagerliste</label>
         <select
           id="list_control"
           class="form-control"
@@ -60,15 +60,15 @@
   <div class="row" ng-show="edit">
     <div class="col-xs-2">
       <a class="btn btn-default" ng-href="#/{{newsletter.name}}">
-        Luk edit <span class="glyphicon glyphicon-eject"></span>
+        Annuller <span class="glyphicon glyphicon-chevron-left"></span>
       </a>
+      <button type="button" class="btn btn-success" ng-click="saveNewsletter()" ng-disabled="loading_previews">
+        Gem <span class="glyphicon glyphicon-check"></span>
+      </button>
     </div>
     <div class="col-xs-10">
       <button type="button" class="btn btn-info" ng-click="updatePreviewClickEvent()" ng-disabled="loading_previews">
         Preview <span class="glyphicon glyphicon-refresh"></span>
-      </button>
-      <button type="button" class="btn btn-success" ng-click="saveNewsletter()" ng-disabled="loading_previews">
-        Gem <span class="glyphicon glyphicon-check"></span>
       </button>
     </div>
   </div>
