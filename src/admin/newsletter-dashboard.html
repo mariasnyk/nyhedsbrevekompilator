@@ -27,19 +27,22 @@
         <tr>
           <th>Navn</th>
           <th></th>
-          <th></th>
+          <!-- <th></th> -->
         </tr>
         <tr ng-repeat="newsletter in newsletters | filter: newsletterFilter">
-          <td><a ng-href="#/{{newsletter}}">{{newsletter}}</td>
+          <td>
+            <a ng-href="#/{{newsletter}}">{{newsletter}}</a>
+          </td>
           <td>
             <a class="btn btn-default btn-sm" ng-href="#/{{newsletter}}/edit">
               Edit  <span class="glyphicon glyphicon-edit"></span>
-            </a></td>
-          <td>
+            </a>
+          </td>
+<!--           <td>
             <button type="button" class="btn btn-danger btn-sm" ng-click="deleteNewsletter(newsletter)">
               Slet <span class="glyphicon glyphicon-remove"></span>
             </button>
-          </td>
+          </td> -->
         </tr>
       </table>
     </div>
