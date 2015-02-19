@@ -1,0 +1,4 @@
+{% block content %}{% for node in nodes %}  {{ node.title | safe }}
+   > {{ node.url }}
+
+{% endfor %}{% endblock %}
