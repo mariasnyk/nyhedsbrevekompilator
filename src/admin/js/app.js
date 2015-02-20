@@ -10,6 +10,9 @@ app.config(['$routeProvider', function ($routeProvider) {
     .when( '/', {
       templateUrl: 'newsletter-dashboard.html',
       controller: 'DashboardController' })
+    .when( '/stats', {
+      templateUrl: 'stats.html',
+      controller: 'StatsController' })
     .when( '/:name', {
       templateUrl: 'newsletter-editor.html',
       controller: 'NewsletterController' })
@@ -46,7 +49,7 @@ app.controller('DashboardController', ['$scope', '$routeParams', '$location', '$
       });
     };
 
-    $scope.addCategory = function (clickEvent, name) {
+    $scope.createNewsletterKeyUp = function (clickEvent, name) {
       if (clickEvent.keyCode === 13) {
         $scope.createNewsletter(name);
       }
@@ -86,10 +89,19 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
       // If we're not editing the newsletter, we don't need to fetch the dop-down data from e.g. SendGrid
       $scope.newsletter = Newsletters.get({name: $routeParams.name}, function () {
         // Populating the drop downs so newsletter values are visible
-        $scope.identities = [$scope.newsletter.identity];
-        $scope.lists = [$scope.newsletter.list];
         $scope.html_templates = [$scope.newsletter.template_html];
         $scope.plain_templates = [$scope.newsletter.template_plain];
+        $scope.identities = [$scope.newsletter.identity];
+        $scope.lists = [$scope.newsletter.list];
+
+        // Validating the list still exists in SendGrid
+        Lists.query({ list: $scope.newsletter.list}, function (response) {
+          if (response[0] === undefined || response[0].list !== $scope.newsletter.list) {
+            console.log('Couldn\'t find list ' + $scope.newsletter.list + ' in SendGrid.')
+            $scope.lists = ['ERROR'];
+          }
+        }, resourceErrorHandler);
+
         updatePreview();
         updateControlroomIframe();
       }, resourceErrorHandler);
@@ -246,4 +258,15 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
         $scope.controlroom_url = $sce.trustAsResourceUrl(data.url);
       });
     }
+  }]);
+
+app.controller('StatsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications',
+  function ($scope, $routeParams, $location, $resource, $sce, $http, notifications) {
+    var Newsletters = $resource('/newsletters/emails', { name: '@name' });
+    var Categories = $resource('/newsletters/categories');
+
+    $scope.newsletters = Newsletters.query();
+    $scope.categories = Categories.query();
+    console.log('$scope.newsletters', $scope.newsletters);
+    console.log('$scope.categories', $scope.categories);
   }]);

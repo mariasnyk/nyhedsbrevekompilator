@@ -82,6 +82,18 @@ module.exports.register = function (plugin, options, next) {
     }
   });
 
+  // E.g. /categories/stats?start_date=2015-01-01&end_date=2015-01-02&categories=cat1&categories=cat2
+  plugin.route({
+    method: 'get',
+    path: '/categories/stats',
+    handler: function (request, reply) {
+      callSendGridV3('GET', '/v3/categories/stats?' + request.url.search, function (err, data) {
+        if (err) return reply(err).code(500);
+        else reply(data);
+      });
+    }
+  });
+
   plugin.route({
     method: 'get',
     path: '/emails',
@@ -456,7 +468,7 @@ function validateNewsletterInputData (data, callback) {
 function createSendGridCategory (category, callback) {
 
   var body = 'category=' + encodeURIComponent(category);
-  callSendGrid('https://api.sendgrid.com/api/newsletter/category/create.json', body, callback);
+  callSendGrid('/api/newsletter/category/create.json', body, callback);
 }
 
 
@@ -533,7 +545,6 @@ function addSendGridSchedule (name, at, callback) {
 
 
 function callSendGrid (path, body, callback) {
-  var data = '';
 
   if (callback === undefined && typeof body === 'function') {
     callback = body;
@@ -557,20 +568,7 @@ function callSendGrid (path, body, callback) {
     }
   };
 
-  var req = https.request(options, function (res) {
-
-    res.on('data', function(d) {
-      data = data + d;
-    });
-
-    res.on('end', function () {
-      data = JSON.parse(data);
-      if (data.error || res.statusCode > 300)
-        callback(data, null);
-      else
-        callback(null, data);
-    });
-  });
+  var req = https.request(options, parseReponse(callback));
 
   req.write(body);
   req.end();
@@ -578,4 +576,59 @@ function callSendGrid (path, body, callback) {
   req.on('error', function (e) {
     callback(e);
   });
+}
+
+
+function callSendGridV3 (method, path, body, callback) {
+
+  if (callback === undefined && typeof body === 'function') {
+    callback = body;
+    body = '';
+  }
+
+  var authorization = new Buffer(process.env.SENDGRID_API_USER + ':' + process.env.SENDGRID_API_KEY).toString('base64');
+
+  var options = {
+    hostname: 'api.sendgrid.com',
+    port: 443,
+    path: path,
+    method: method,
+    headers: {
+      'Authorization': 'Basic ' + authorization
+    }
+  };
+
+  var req = https.request(options, parseReponse(callback));
+
+  req.write(body === null ? '' : body);
+  req.end();
+
+  req.on('error', function (e) {
+    callback(e);
+  });
+}
+
+
+function parseReponse (callback) {
+  return function (res) {
+    var data = '';
+
+    res.on('data', function(d) {
+      data = data + d;
+    });
+
+    res.on('end', function () {
+      try {
+        data = JSON.parse(data);
+      } catch (ex) {
+        console.log('JSON parse error on: ', data);
+        throw ex;
+      }
+
+      if (data.error || res.statusCode > 300)
+        callback(data, null);
+      else
+        callback(null, data);
+    });
+  };
 }

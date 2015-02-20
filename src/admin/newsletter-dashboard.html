@@ -13,7 +13,7 @@
           class="form-control input-sm"
           type="text"
           ng-model="name"
-          ng-keyup="addCategory($event, name)"
+          ng-keyup="createNewsletterKeyUp($event, name)"
           placeholder="Indtast navn"/>
         <span class="input-group-btn"><button type="button" class="btn btn-default btn-sm" ng-click="createNewsletter(name)">
           Opret ny <span class="glyphicon glyphicon-plus"></span>

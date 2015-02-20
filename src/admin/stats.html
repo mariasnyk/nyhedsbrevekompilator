@@ -1,0 +1,51 @@
+<div class="container">
+  <h2>Sendte nyhedsbreve</h2>
+  <div class="row">
+    <div class="col-xs-6">
+      <input
+        class="form-control input-sm"
+        placeholder="Filter"
+        type="text"
+        ng-model="newsletterFilter">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <table class="table table-hover">
+        <tr>
+          <th>ID</th>
+          <th>Navn</th>
+        </tr>
+        <tr ng-repeat="newsletter in newsletters | filter: newsletterFilter">
+          <td>
+            <a ng-href="#/stats/{{ newsletter.newsletter_id }}">{{ newsletter.newsletter_id }}</a>
+          </td>
+          <td>{{ newsletter.name }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <h2>Categorier</h2>
+  <div class="row">
+    <div class="col-xs-6">
+      <input
+        class="form-control input-sm"
+        placeholder="Filter"
+        type="text"
+        ng-model="categoryFilter">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <table class="table table-hover">
+        <tr>
+          <th>Navn</th>
+        </tr>
+        <tr ng-repeat="category in categories | filter: categoryFilter">
+          <td>{{ category }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  </div>
+</div>
