@@ -1,5 +1,5 @@
 {% set image_count = 0; %}
-<a href="{{ node.urlAliases[0] }}" title="{{ node.title }}" style="display: block; text-decoration: none; line-height: 23px; text-align: left" target="_blank">  
+<a href="{{ node.urlAliases[0] }}?{{ tracking }}" title="{{ node.title }}" style="display: block; text-decoration: none; line-height: 23px; text-align: left" target="_blank">
 
   {% for image in node.images %}
     {% set image_count = loop.index; %}

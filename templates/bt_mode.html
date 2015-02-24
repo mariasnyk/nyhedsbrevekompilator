@@ -48,7 +48,6 @@
 </head>
 <body style="background-color: #f9f9f9; margin: 0px;">
   {% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + dates.yyyymmdd + "&ns_linkname=bt_modeskonhed"; %}
-  {% set logo_url = "www.bt.dk/sektion/modeogskonhed"; %}
 
   <!--[if (gte mso 9)|(IE)]>
   <table width="654" align="center" cellpadding="0" cellspacing="0" border="0">
@@ -158,7 +157,7 @@
       <td align="center" valign="top">
         <!-- Read more -->
         <hr style="height: 1px; border: 0; background: #dddddd">
-        <a href="http://www.bt.dk/sektion/modeogskonhed" style="text-decoration: none;">
+        <a href="http://www.bt.dk/sektion/modeogskonhed?{{ tracking }}" style="text-decoration: none;">
           <div style="margin: 20px; background-color: #939393; padding: 10px; border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; -opera-border-radius: 4px;">
             <font color="#ffffff" style="font-family: 'bt_bold', Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
               Se flere historier
