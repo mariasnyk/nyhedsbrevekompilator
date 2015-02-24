@@ -1,6 +1,7 @@
 'use strict';
 
 var fs = require('fs'),
+    http = require('http'),
     swig = require('swig'),
     extras = require('swig-extras'),
     bond_client = require('./bond_client'),
@@ -47,53 +48,81 @@ module.exports.register = function (plugin, options, next) {
         if (stat.isFile()) {
 
           // Requesting a specific template with a BOND node as data input
-          if (request.query.node) {
-            bond_client.getNode(request.query.node, function (err, node) {
+          if (request.query.u) {
+
+            console.log('request.query.u', request.query.u);
+
+            download(request.query.u, function (err, data) {
               if (err) return reply(err).code(500);
 
-              if (node === null) {
+              // Example of a response from a nodequeue that doesn't exist
+              //   { type: 'nodequeue',
+              //     id: '4222222626',
+              //     loadType: 'fullNode',
+              //     title: null,
+              //     nodes: [] }
+
+              if (data === null || ( data.type === 'nodequeue' && data.nodes.length === 0 )) {
                 return reply().code(404);
               }
 
-              var node_checksum = calculateNodeChecksum(node);
-
-              node.newsl_access = calculatePaywallToken(node.id);
-              node.subject = emailSubjectSuggestion(nodequeue);
-              node.dates = getDates();
+              data.subject = emailSubjectSuggestion(data);
 
               reply
-              .view(request.params.template, node)
+              .view(request.params.template, data)
               .header('Transfer-Encoding', 'chunked')
               .header('Content-Type', ContentTypeHeader(request.params.template))
-              .header('X-Subject-Suggestion', encodeURIComponent(node.subject))
-              .header('X-Content-Checksum', node_checksum);
+              .header('X-Subject-Suggestion', encodeURIComponent(data.subject))
+              .header('X-Content-Checksum', calculateChecksum(data));
             });
 
-          // Requesting a specific template with a BOND nodequeue as data input
-          } else if (request.query.nodequeue) {
-            bond_client.getNodequeue(request.query.nodequeue, function (err, nodequeue) {
-              if (err) return reply(err).code(500);
+          // } else if (request.query.node) {
+          //   bond_client.getNode(request.query.node, function (err, node) {
+          //     if (err) return reply(err).code(500);
 
-              if (nodequeue === null || nodequeue.title === null) {
-                return reply().code(404);
-              }
+          //     if (node === null) {
+          //       return reply().code(404);
+          //     }
 
-              var nodequeue_checksum = calculateNodequeueChecksum(nodequeue);
+          //     var node_checksum = calculateChecksum(node);
 
-              nodequeue.nodes.forEach(function (node) {
-                node.newsl_access = calculatePaywallToken(node.id);
-              });
+          //     node.newsl_access = calculatePaywallToken(node.id);
+          //     node.subject = emailSubjectSuggestion(nodequeue);
+          //     node.dates = getDates();
 
-              nodequeue.subject = emailSubjectSuggestion(nodequeue);
-              nodequeue.dates = getDates();
+          //     reply
+          //     .view(request.params.template, node)
+          //     .header('Transfer-Encoding', 'chunked')
+          //     .header('Content-Type', ContentTypeHeader(request.params.template))
+          //     .header('X-Subject-Suggestion', encodeURIComponent(node.subject))
+          //     .header('X-Content-Checksum', node_checksum);
+          //   });
 
-              reply
-              .view(request.params.template, nodequeue)
-              .header('Transfer-Encoding', 'chunked')
-              .header('Content-Type', ContentTypeHeader(request.params.template))
-              .header('X-Subject-Suggestion', encodeURIComponent(nodequeue.subject))
-              .header('X-Content-Checksum', nodequeue_checksum);
-            });
+          // // Requesting a specific template with a BOND nodequeue as data input
+          // } else if (request.query.nodequeue) {
+          //   bond_client.getNodequeue(request.query.nodequeue, function (err, nodequeue) {
+          //     if (err) return reply(err).code(500);
+
+          //     if (nodequeue === null || nodequeue.title === null) {
+          //       return reply().code(404);
+          //     }
+
+          //     var nodequeue_checksum = calculateChecksum(nodequeue);
+
+          //     nodequeue.nodes.forEach(function (node) {
+          //       node.newsl_access = calculatePaywallToken(node.id);
+          //     });
+
+          //     nodequeue.subject = emailSubjectSuggestion(nodequeue);
+          //     nodequeue.dates = getDates();
+
+          //     reply
+          //     .view(request.params.template, nodequeue)
+          //     .header('Transfer-Encoding', 'chunked')
+          //     .header('Content-Type', ContentTypeHeader(request.params.template))
+          //     .header('X-Subject-Suggestion', encodeURIComponent(nodequeue.subject))
+          //     .header('X-Content-Checksum', nodequeue_checksum);
+          //   });
           } else {
             reply
             .view(request.params.template)
@@ -193,6 +222,33 @@ module.exports.register.attributes = {
 };
 
 
+function download (url, callback) {
+
+  http.get(url, function( response ) {
+
+    if (response.statusCode === 401) {
+      return callback (null, null);
+    } else if (response.statusCode !== 200) {
+      return callback (response.statusCode, null);
+    }
+
+    var data = '';
+    response.setEncoding('utf8');
+
+    response.on('data', function ( chunk ) {
+      data += chunk;
+    });
+
+    response.on('end', function() {
+      callback(null, JSON.parse(data), response.headers);
+    });
+  }).on('error', function(e) {
+    console.log('Got error while requesting HTML (' + url + '): ' + e.message);
+    callback(e, null);
+  });
+}
+
+
 function emailSubjectSuggestion (data) {
   if (data === null) return '';
   var maxLength = 255;
@@ -218,17 +274,19 @@ function ContentTypeHeader (template) {
 }
 
 
-function calculateNodeChecksum (node) {
-  return checksum(JSON.stringify(node.id));
-}
+function calculateChecksum (data) {
+  if (data === null) return '';
+  if (data.type === 'nodequeue') {
 
+    var temp = data.nodes.map(function (node) {
+      return node.id;
+    });
 
-function calculateNodequeueChecksum (nodequeue) {
-  var temp = nodequeue.nodes.map(function (node) {
-    return node.id;
-  });
+    return checksum(JSON.stringify(temp));
 
-  return checksum(JSON.stringify(temp));
+  } else {
+    return checksum(JSON.stringify(data.id));
+  }
 }
 
 

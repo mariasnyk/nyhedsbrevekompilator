@@ -10,6 +10,9 @@ app.config(['$routeProvider', function ($routeProvider) {
     .when( '/', {
       templateUrl: 'newsletter-dashboard.html',
       controller: 'DashboardController' })
+    .when( '/emails', {
+      templateUrl: 'emails.html',
+      controller: 'EmailsController' })
     .when( '/stats', {
       templateUrl: 'stats.html',
       controller: 'StatsController' })
@@ -39,12 +42,6 @@ app.controller('DashboardController', ['$scope', '$routeParams', '$location', '$
     $scope.createNewsletter = function (name) {
       Newsletters.save({ name: name }, function () {
         $scope.name = '';
-        $scope.newsletters = Newsletters.query();
-      });
-    };
-
-    $scope.deleteNewsletter = function (name) {
-      Newsletters.delete({ name: name }, function () {
         $scope.newsletters = Newsletters.query();
       });
     };
@@ -150,6 +147,11 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
       });
     };
 
+    $scope.deleteNewsletter = function () {
+      Newsletters.delete({ name: $scope.newsletter.name }, function () {
+        $location.url('/');
+      });
+    };
 
     $scope.updatePreviewClickEvent = function () {
       updatePreview();
@@ -157,8 +159,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
 
 
     function updatePreview () {
-      if ($scope.newsletter.bond_type === undefined ||
-          $scope.newsletter.bond_id === undefined) {
+      if ($scope.newsletter.bond_url === undefined) {
         return;
       }
 
@@ -182,7 +183,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
 
       $scope.loading_html_preview = true;
 
-      return $http.get('/templates/' + $scope.newsletter.template_html + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
+      return $http.get('/templates/' + $scope.newsletter.template_html + '?u=' + encodeURIComponent($scope.newsletter.bond_url))
       .success(function (data, status, getHeaders) {
         var headers = getHeaders();
         $scope.newsletter.subject = decodeURIComponent(headers['x-subject-suggestion']);
@@ -206,7 +207,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
 
       $scope.loading_plain_preview = true;
 
-      return $http.get('/templates/' + $scope.newsletter.template_plain + '?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
+      return $http.get('/templates/' + $scope.newsletter.template_plain + '?u=' + encodeURIComponent($scope.newsletter.bond_url))
       .success(function (data) {
         $scope.newsletter.email_plain = data;
         $scope.loading_plain_preview = false;
@@ -260,13 +261,88 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
     }
   }]);
 
-app.controller('StatsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications',
+app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications',
   function ($scope, $routeParams, $location, $resource, $sce, $http, notifications) {
-    var Newsletters = $resource('/newsletters/emails', { name: '@name' });
-    var Categories = $resource('/newsletters/categories');
-
+    var Newsletters = $resource('/newsletters/emails/:name', { name: '@name' });
     $scope.newsletters = Newsletters.query();
+
+    $scope.getNewsletterData = function (name, index) {
+      $scope.newsletter = Newsletters.get({name: name}, function (data) {
+        $scope.newsletters[index].subject = data.subject;
+        $scope.newsletters[index].identity = data.identity;
+        $scope.newsletters[index].total_recipients = data.total_recipients;
+        $scope.newsletters[index].date_schedule = data.date_schedule;
+      });
+    };
+  }]);
+
+app.controller('StatsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications', '$filter',
+  function ($scope, $routeParams, $location, $resource, $sce, $http, notifications, $filter) {
+    var Categories = $resource('/newsletters/categories');
+    var Stats = $resource('/newsletters/categories/stats');
+
+    $scope.start_date = new Date(Date.now() - 2592000000); // 30 days = 1000 * 60 * 60 * 24 * 30  (milliseconds * seconds * minutes * hours * days)
+    $scope.end_date = new Date();
+
+    $scope.stats_parameters = {
+      aggregated_by: "month", //day|week|month
+      categories: []
+    }
+
     $scope.categories = Categories.query();
-    console.log('$scope.newsletters', $scope.newsletters);
-    console.log('$scope.categories', $scope.categories);
+
+    $scope.getData = function () {
+      if ($scope.stats_parameters.categories.length === 0) {
+        return;
+      }
+
+      $scope.stats_parameters.start_date = $filter('date')($scope.start_date, "yyyy-MM-dd");
+      $scope.stats_parameters.end_date = $filter('date')($scope.end_date, "yyyy-MM-dd");
+
+      console.log($scope.stats_parameters);
+      $scope.statsData = [];
+
+      Stats.query($scope.stats_parameters,
+      function (data) {
+        console.log('data', data);
+        data.forEach(function (value) {
+          value.stats.forEach(function (stat) {
+            $scope.statsData.push({
+              date: value.date,
+              name: stat.name,
+              type: stat.type,
+              metrics: stat.metrics
+            });
+          });
+        });
+        console.log($scope.statsData);
+      },
+      function (err) {
+        console.log('err', err);
+      });
+    };
+
+  //0: e
+  // date: "2015-01-01"
+  // stats: Array[1]
+  //   0: Object
+  //     metrics: Object
+  //       blocks: 0
+  //       bounce_drops: 0
+  //       bounces: 0
+  //       clicks: 0
+  //       deferred: 0
+  //       delivered: 0
+  //       invalid_emails: 0
+  //       opens: 0
+  //       processed: 0
+  //       requests: 0
+  //       spam_report_drops: 0
+  //       spam_reports: 0
+  //       unique_clicks: 0
+  //       unique_opens: 0
+  //       unsubscribe_drops: 0
+  //       unsubscribes: 0
+  //     name: "BT Mode "
+  //     type: "category"
   }]);

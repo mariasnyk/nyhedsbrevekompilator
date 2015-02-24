@@ -43,7 +43,7 @@ server.register(newsletters, { routes: { prefix: '/newsletters' } }, cb);
 
 if (!module.parent) {
   server.start(function() {
-    console.log("Server started.");
+    console.log('Server started on port 8000.');
   });
 }
 

@@ -1,5 +1,4 @@
 <div class="container-fluid">
-
   <div class="row">
     <div class="col-xs-2">
       <div class="form-group">
@@ -58,28 +57,33 @@
   </div>
 
   <div class="row" ng-show="edit">
-    <div class="col-xs-2">
+    <div class="col-xs-4">
       <a class="btn btn-default" ng-href="#/{{newsletter.name}}">
         Annuller <span class="glyphicon glyphicon-chevron-left"></span>
       </a>
       <button type="button" class="btn btn-success" ng-click="saveNewsletter()" ng-disabled="loading_previews">
-        Gem <span class="glyphicon glyphicon-check"></span>
+        Gem og luk <span class="glyphicon glyphicon-check"></span>
       </button>
     </div>
-    <div class="col-xs-10">
+    <div class="col-xs-6">
       <button type="button" class="btn btn-info" ng-click="updatePreviewClickEvent()" ng-disabled="loading_previews">
         Preview <span class="glyphicon glyphicon-refresh"></span>
+      </button>
+    </div>
+    <div class="col-xs-2">
+      <button type="button" class="btn btn-danger btn-sm" ng-click="deleteNewsletter()">
+        Slet <span class="glyphicon glyphicon-remove"></span>
       </button>
     </div>
   </div>
 
   <div class="row" ng-hide="edit">
-    <div class="col-xs-2">
+    <div class="col-xs-4">
       <a class="btn btn-default" ng-href="#/">
         Til oversigt <span class="glyphicon glyphicon-chevron-left"></span>
       </a>
     </div>
-    <div class="col-xs-10">
+    <div class="col-xs-8">
       <div class="form-inline">
         <button type="button" class="btn btn-info" ng-click="updatePreviewClickEvent()" ng-disabled="loading_previews">
           Preview <span class="glyphicon glyphicon-refresh"></span>
@@ -99,6 +103,49 @@
   </div>
 
   <hr>  
+
+  <div class="row" ng-show="edit">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label for="bond_url_control">BOND URL</label>
+        <input
+          id="bond_url_control"
+          type="text"
+          class="form-control"
+          placeholder="Insert BOND root URL"
+          ng-model="newsletter.bond_url"
+          ng-disabled="!edit">
+      </div>
+    </div>
+    <div class="col-xs-3">
+      <div class="form-group">
+        <label for="template_html_control">HTML Template</label>
+        <select
+          id="template_html_control"
+          class="form-control"
+          ng-model="newsletter.template_html"
+          ng-options="template_html for template_html in html_templates"
+          ng-disabled="!edit"
+          ng-required="true">
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-3">
+      <div class="form-group">
+        <label for="template_plain_control">Text Template</label>
+        <select
+          id="template_plain_control"
+          class="form-control"
+          ng-model="newsletter.template_plain"
+          ng-options="template_plain for template_plain in plain_templates"
+          ng-disabled="!edit"
+          ng-required="true">
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <hr>
 
   <div class="row" ng-show="edit">
     <div class="col-xs-2">
@@ -124,32 +171,6 @@
           placeholder="Insert {{newsletter.bond_type}} ID"
           ng-model="newsletter.bond_id"
           ng-disabled="!edit">
-      </div>
-    </div>
-    <div class="col-xs-2">
-      <div class="form-group">
-        <label for="template_html_control">HTML Template</label>
-        <select
-          id="template_html_control"
-          class="form-control"
-          ng-model="newsletter.template_html"
-          ng-options="template_html for template_html in html_templates"
-          ng-disabled="!edit"
-          ng-required="true">
-        </select>
-      </div>
-    </div>
-    <div class="col-xs-2">
-      <div class="form-group">
-        <label for="template_plain_control">Text Template</label>
-        <select
-          id="template_plain_control"
-          class="form-control"
-          ng-model="newsletter.template_plain"
-          ng-options="template_plain for template_plain in plain_templates"
-          ng-disabled="!edit"
-          ng-required="true">
-        </select>
       </div>
     </div>
   </div>
@@ -181,7 +202,7 @@
       </div>
     </div>
 
-    <div class="col-md-12 col-lg-12">
+    <div class="col-md-12 col-lg-12" ng-show="newsletter.bond_type">
       <div class="panel panel-primary">
         <div class="panel-heading">BOND Controlroom</div>
         <div class="panel-body">

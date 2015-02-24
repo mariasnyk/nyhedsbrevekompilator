@@ -1,51 +1,80 @@
-<div class="container">
-  <h2>Sendte nyhedsbreve</h2>
-  <div class="row">
-    <div class="col-xs-6">
-      <input
-        class="form-control input-sm"
-        placeholder="Filter"
-        type="text"
-        ng-model="newsletterFilter">
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
-      <table class="table table-hover">
-        <tr>
-          <th>ID</th>
-          <th>Navn</th>
-        </tr>
-        <tr ng-repeat="newsletter in newsletters | filter: newsletterFilter">
-          <td>
-            <a ng-href="#/stats/{{ newsletter.newsletter_id }}">{{ newsletter.newsletter_id }}</a>
-          </td>
-          <td>{{ newsletter.name }}</td>
-        </tr>
-      </table>
-    </div>
-  </div>
+<div class="container-fluid">
   <h2>Categorier</h2>
   <div class="row">
-    <div class="col-xs-6">
-      <input
-        class="form-control input-sm"
-        placeholder="Filter"
-        type="text"
-        ng-model="categoryFilter">
+    <div class="col-xs-3">
+      <select
+        multiple
+        class="form-control"
+        ng-model="stats_parameters.categories"
+        ng-options="category for category in categories">
+      </select>
+      <p>Valgte kategorier: <span ng-repeat="category in stats_parameters.categories"><span class="label label-default">{{category}}</span>&nbsp;</span></p>
+    </div>
+    <div class="col-xs-2">
+      <input type="date" class="form-control" ng-model="start_date"
+        placeholder="yyyy-MM-dd" min="2015-01-01" max="2099-12-31" required />
+    </div>
+    <div class="col-xs-2">
+      <input type="date" class="form-control" ng-model="end_date"
+        placeholder="yyyy-MM-dd" min="2015-01-01" max="2099-12-31" required />
+    </div>
+    <div class="col-xs-2">
+      <select
+        class="form-control"
+        ng-model="stats_parameters.aggregated_by">
+        <option value="day">Dag</option>
+        <option value="week">Uge</option>
+        <option value="month">M&aring;ned</option>
+      </select>
+    </div>
+    <div class="col-xs-1">
+      <button class="btn btn-default" ng-click="getData()">Hent data</button>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12">
-      <table class="table table-hover">
+      <table class="table">
         <tr>
-          <th>Navn</th>
+          <th>Date</th>
+          <th>Category</th>
+          <th>blocks</th>
+          <th>bounce_drops</th>
+          <th>bounces</th>
+          <th>clicks</th>
+          <th>deferred</th>
+          <th>delivered</th>
+          <th>invalid_emails</th>
+          <th>opens</th>
+          <th>processed</th>
+          <th>requests</th>
+          <th>spam_report_drops</th>
+          <th>spam_reports</th>
+          <th>unique_clicks</th>
+          <th>unique_opens</th>
+          <th>unsubscribe_drops</th>
+          <th>unsubscribes</th>
         </tr>
-        <tr ng-repeat="category in categories | filter: categoryFilter">
-          <td>{{ category }}</td>
+        <tr ng-repeat="data in statsData">
+          <td>{{ data.date }}</td>
+          <td>{{ data.name }}</td>
+          <td>{{ data.metrics.blocks }}</td>
+          <td>{{ data.metrics.bounce_drops }}</td>
+          <td>{{ data.metrics.bounces }}</td>
+          <td>{{ data.metrics.clicks }}</td>
+          <td>{{ data.metrics.deferred }}</td>
+          <td>{{ data.metrics.delivered }}</td>
+          <td>{{ data.metrics.invalid_emails }}</td>
+          <td>{{ data.metrics.opens }}</td>
+          <td>{{ data.metrics.processed }}</td>
+          <td>{{ data.metrics.requests }}</td>
+          <td>{{ data.metrics.spam_report_drops }}</td>
+          <td>{{ data.metrics.spam_reports }}</td>
+          <td>{{ data.metrics.unique_clicks }}</td>
+          <td>{{ data.metrics.unique_opens }}</td>
+          <td>{{ data.metrics.unsubscribe_drops }}</td>
+          <td>{{ data.metrics.unsubscribes }}</td>
         </tr>
       </table>
     </div>
-  </div>
   </div>
 </div>

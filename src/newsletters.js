@@ -87,7 +87,7 @@ module.exports.register = function (plugin, options, next) {
     method: 'get',
     path: '/categories/stats',
     handler: function (request, reply) {
-      callSendGridV3('GET', '/v3/categories/stats?' + request.url.search, function (err, data) {
+      callSendGridV3('GET', '/v3/categories/stats' + request.url.search, function (err, data) {
         if (err) return reply(err).code(500);
         else reply(data);
       });
@@ -242,6 +242,7 @@ function saveNewsletter (request, reply) {
   var newsletter = {
     name: name,
     identity: request.payload.identity,
+    bond_url: request.payload.bond_url,
     bond_id: request.payload.bond_id,
     bond_type: request.payload.bond_type,
     template_html: request.payload.template_html,
@@ -362,8 +363,8 @@ function autoSendNewsletter (newsletter, callback) {
 
   newsletter.at = new Date(new Date().getTime() + 15*60000);
 
-  var html_url  = 'http://' + request.info.host + '/templates/' + newsletter.template_html + '?' + newsletter.bond_type + '=' + newsletter.bond_id,
-      plain_url = 'http://' + request.info.host + '/templates/' + newsletter.template_plain + '?' + newsletter.bond_type + '=' + newsletter.bond_id;
+  var html_url  = 'http://' + request.info.host + '/templates/' + newsletter.template_html + '?u=' + encodeURIComponent(newsletter.bond_url),
+      plain_url = 'http://' + request.info.host + '/templates/' + newsletter.template_plain + '?u=' + encodeURIComponent(newsletter.bond_url);
 
   download(html_url, function (err, email_html, headers) {
     if (err) return callback(err);
@@ -598,6 +599,10 @@ function callSendGridV3 (method, path, body, callback) {
     }
   };
 
+  console.log('Basic ' + authorization);
+  console.log('path', path);
+//https://api.sendgrid.com/v3/categories/stats?aggregated_by=month&categories=BT+Mode+%26+Sk%C3%B8nhed&end_date=2015-02-23&start_date=2015-01-24
+//                                            ?aggregated_by=month&categories=BT+Mode+%26+Sk%C3%B8nhed&end_date=2015-02-23&start_date=2015-01-24
   var req = https.request(options, parseReponse(callback));
 
   req.write(body === null ? '' : body);
