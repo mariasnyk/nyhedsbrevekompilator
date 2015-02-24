@@ -261,6 +261,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
     }
   }]);
 
+
 app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications',
   function ($scope, $routeParams, $location, $resource, $sce, $http, notifications) {
     var Newsletters = $resource('/newsletters/emails/:name', { name: '@name' });
@@ -275,6 +276,7 @@ app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$res
       });
     };
   }]);
+
 
 app.controller('StatsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications', '$filter',
   function ($scope, $routeParams, $location, $resource, $sce, $http, notifications, $filter) {
@@ -321,28 +323,4 @@ app.controller('StatsController', ['$scope', '$routeParams', '$location', '$reso
         console.log('err', err);
       });
     };
-
-  //0: e
-  // date: "2015-01-01"
-  // stats: Array[1]
-  //   0: Object
-  //     metrics: Object
-  //       blocks: 0
-  //       bounce_drops: 0
-  //       bounces: 0
-  //       clicks: 0
-  //       deferred: 0
-  //       delivered: 0
-  //       invalid_emails: 0
-  //       opens: 0
-  //       processed: 0
-  //       requests: 0
-  //       spam_report_drops: 0
-  //       spam_reports: 0
-  //       unique_clicks: 0
-  //       unique_opens: 0
-  //       unsubscribe_drops: 0
-  //       unsubscribes: 0
-  //     name: "BT Mode "
-  //     type: "category"
   }]);
