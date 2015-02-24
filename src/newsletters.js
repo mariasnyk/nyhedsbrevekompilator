@@ -27,8 +27,10 @@ module.exports.register = function (plugin, options, next) {
     path: '/identities',
     handler: function (request, reply) {
       callSendGrid('/api/newsletter/identity/list.json', function (err, data) {
-        if (err) return reply(err).code(500);
-        else reply(data.map(function (identity) {
+        if (err) {
+          console.log(err)
+          reply(err).code(500);
+        } else reply(data.map(function (identity) {
           return identity.identity;
         }));
       });
@@ -40,8 +42,10 @@ module.exports.register = function (plugin, options, next) {
     path: '/identities/{id}',
     handler: function (request, reply) {
       callSendGrid('/api/newsletter/identity/get.json', 'identity=' + request.params.id, function (err, data) {
-        if (err) return reply(err).code(500);
-        reply(data);
+        if (err) {
+          console.log(err)
+          reply(err).code(500);
+        } else reply(data);
       });
     }
   });
@@ -75,8 +79,10 @@ module.exports.register = function (plugin, options, next) {
     path: '/categories',
     handler: function (request, reply) {
       callSendGrid('/api/newsletter/category/list.json', function (err, data) {
-        if (err) return reply(err).code(500);
-        else reply(data.map(function (category) {
+        if (err) {
+          console.log(err)
+          reply(err).code(500);
+        } else reply(data.map(function (category) {
           return category.category;
         }));
       });
@@ -89,8 +95,10 @@ module.exports.register = function (plugin, options, next) {
     path: '/categories/stats',
     handler: function (request, reply) {
       callSendGridV3('GET', '/v3/categories/stats' + request.url.search, function (err, data) {
-        if (err) return reply(err).code(500);
-        else reply(data);
+        if (err) {
+          console.log(err)
+          reply(err).code(500);
+        } else reply(data);
       });
     }
   });
@@ -102,8 +110,10 @@ module.exports.register = function (plugin, options, next) {
       var body = request.query.name ? 'name=' + request.query.name : '';
 
       callSendGrid('/api/newsletter/newsletter/list.json', body, function (err, data) {
-        if (err) return reply(err).code(500);
-        else reply(data);
+        if (err) {
+          console.log(err)
+          reply(err).code(500);
+        } else reply(data);
       });
     }
   });
@@ -113,8 +123,10 @@ module.exports.register = function (plugin, options, next) {
     path: '/emails/{name}',
     handler: function (request, reply) {
       callSendGrid('/api/newsletter/newsletter/get.json', 'name=' + request.params.name, function (err, data) {
-        if (err) return reply(err).code(500);
-        else reply(data);
+        if (err) {
+          console.log(err)
+          reply(err).code(500);
+        } else reply(data);
       });
     }
   });
@@ -409,7 +421,7 @@ function createMarketingEmail (data, callback) {
       return callback({ error: 'Error when validating input for marketing email.', errors: err.errors });
     }
 
-    var name = data.name + '_' + Date.now();
+    var name = data.name + ' ' + new Date().toISOString();
 
     addSendGridMarketingEmail(data.identity, name, data.subject, data.email_plain, data.email_html, function (err, result) {
       if (err) {
@@ -603,8 +615,7 @@ function callSendGridV3 (method, path, body, callback) {
     }
   };
 
-  console.log('Basic ' + authorization);
-  console.log('path', path);
+//  console.log('Basic ' + authorization);
 //https://api.sendgrid.com/v3/categories/stats?aggregated_by=month&categories=BT+Mode+%26+Sk%C3%B8nhed&end_date=2015-02-23&start_date=2015-01-24
 //                                            ?aggregated_by=month&categories=BT+Mode+%26+Sk%C3%B8nhed&end_date=2015-02-23&start_date=2015-01-24
   var req = https.request(options, parseReponse(callback));

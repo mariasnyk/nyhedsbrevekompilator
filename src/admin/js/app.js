@@ -33,8 +33,8 @@ app.config(['$resourceProvider',
   }]);
 
 
-app.controller('DashboardController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications',
-  function ($scope, $routeParams, $location, $resource, $sce, $http, notifications) {
+app.controller('DashboardController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http',
+  function ($scope, $routeParams, $location, $resource, $sce, $http) {
 
     var Newsletters = $resource('/newsletters/:name', { name: '@name' });
     $scope.newsletters = Newsletters.query();
@@ -220,10 +220,11 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
 
 
     $scope.sendNewsletter = function () {
-
       if($scope.at > Date.now()) {
-        console.log('$scope.at > Date.now()', $scope.at, Date.now());
-        $scope.newsletter.at = $scope.at;
+        $scope.newsletter.at = $scope.at.toISOString();
+        console.log('Scheduled to', $scope.newsletter.at);
+      } else {
+        console.log('Sending straight away');
       }
 
       $http.post('/newsletters/send', $scope.newsletter)
@@ -262,10 +263,13 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
   }]);
 
 
-app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications',
-  function ($scope, $routeParams, $location, $resource, $sce, $http, notifications) {
+app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http',
+  function ($scope, $routeParams, $location, $resource, $sce, $http) {
     var Newsletters = $resource('/newsletters/emails/:name', { name: '@name' });
-    $scope.newsletters = Newsletters.query();
+    $scope.newsletters = Newsletters.query(function () {
+      // Reversing to ordre chronically
+      $scope.newsletters.reverse();
+    });
 
     $scope.getNewsletterData = function (name, index) {
       $scope.newsletter = Newsletters.get({name: name}, function (data) {
@@ -278,12 +282,12 @@ app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$res
   }]);
 
 
-app.controller('StatsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications', '$filter',
-  function ($scope, $routeParams, $location, $resource, $sce, $http, notifications, $filter) {
+app.controller('StatsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', '$filter',
+  function ($scope, $routeParams, $location, $resource, $sce, $http, $filter) {
     var Categories = $resource('/newsletters/categories');
     var Stats = $resource('/newsletters/categories/stats');
 
-    $scope.start_date = new Date(Date.now() - 2592000000); // 30 days = 1000 * 60 * 60 * 24 * 30  (milliseconds * seconds * minutes * hours * days)
+    $scope.start_date = new Date(Date.now() - 604800000); // 7 days = 1000 * 60 * 60 * 24 * 7  (milliseconds * seconds * minutes * hours * days)
     $scope.end_date = new Date();
 
     $scope.stats_parameters = {
