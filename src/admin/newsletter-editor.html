@@ -98,6 +98,9 @@
             Send <span class="glyphicon glyphicon-envelope"></span>
           </button></span>
         </div>
+        <a ng-href="{{ controlroom_url }}" target="_blank" class="btn btn-link" ng-disabled="loading_previews">
+          &Aring;bn Controlroom
+        </a>
       </div>
     </div>
   </div>
@@ -145,36 +148,6 @@
     </div>
   </div>
 
-  <hr>
-
-  <div class="row" ng-show="edit">
-    <div class="col-xs-2">
-      <div class="form-group">
-        <label for="bond_type_control">BOND Data type</label>
-        <select
-          id="bond_type_control"
-          class="form-control"
-          ng-model="newsletter.bond_type"
-          ng-disabled="!edit">
-          <option>node</option>
-          <option>nodequeue</option>
-        </select>
-      </div>
-    </div>
-    <div class="col-xs-2">
-      <div class="form-group">
-        <label for="bond_id_control">ID</label>
-        <input
-          id="bond_id_control"
-          type="text"
-          class="form-control"
-          placeholder="Insert {{newsletter.bond_type}} ID"
-          ng-model="newsletter.bond_id"
-          ng-disabled="!edit">
-      </div>
-    </div>
-  </div>
-
   <!-- PREVIEW -->
   <div class="row">
     <div class="col-xs-12">
@@ -202,14 +175,14 @@
       </div>
     </div>
 
-    <div class="col-md-12 col-lg-12" ng-show="newsletter.bond_type">
+<!--     <div class="col-md-12 col-lg-12">
       <div class="panel panel-primary">
         <div class="panel-heading">BOND Controlroom</div>
         <div class="panel-body">
           <iframe class="newsletter-preview" ng-src="{{controlroom_url}}">please upgrade your browser if you see the message</iframe>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div class="col-md-12 col-lg-12">
       <div class="panel panel-primary">

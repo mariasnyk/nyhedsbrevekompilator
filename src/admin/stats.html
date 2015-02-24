@@ -8,7 +8,6 @@
         ng-model="stats_parameters.categories"
         ng-options="category for category in categories">
       </select>
-      <p>Valgte kategorier: <span ng-repeat="category in stats_parameters.categories"><span class="label label-default">{{category}}</span>&nbsp;</span></p>
     </div>
     <div class="col-xs-2">
       <input type="date" class="form-control" ng-model="start_date"
@@ -29,6 +28,12 @@
     </div>
     <div class="col-xs-1">
       <button class="btn btn-default" ng-click="getData()">Hent data</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <br>
+      <p>Valgte kategorier: <span ng-repeat="category in stats_parameters.categories"><span class="label label-default">{{category}}</span>&nbsp;</span></p>
     </div>
   </div>
   <div class="row">

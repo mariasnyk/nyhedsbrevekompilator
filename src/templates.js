@@ -2,9 +2,9 @@
 
 var fs = require('fs'),
     http = require('http'),
+    url = require('url'),
     swig = require('swig'),
     extras = require('swig-extras'),
-    bond_client = require('./bond_client'),
     checksum = require('checksum'),
     templateDir = __dirname + '/../templates';
 
@@ -50,7 +50,7 @@ module.exports.register = function (plugin, options, next) {
           // Requesting a specific template with a BOND node as data input
           if (request.query.u) {
 
-            console.log('request.query.u', request.query.u);
+            var controlroom_url = getControlroomUrl(request.query.u);
 
             download(request.query.u, function (err, data) {
               if (err) return reply(err).code(500);
@@ -73,56 +73,10 @@ module.exports.register = function (plugin, options, next) {
               .header('Transfer-Encoding', 'chunked')
               .header('Content-Type', ContentTypeHeader(request.params.template))
               .header('X-Subject-Suggestion', encodeURIComponent(data.subject))
-              .header('X-Content-Checksum', calculateChecksum(data));
+              .header('X-Content-Checksum', calculateChecksum(data))
+              .header('X-Controlroom-url', encodeURIComponent(controlroom_url));
             });
 
-          // } else if (request.query.node) {
-          //   bond_client.getNode(request.query.node, function (err, node) {
-          //     if (err) return reply(err).code(500);
-
-          //     if (node === null) {
-          //       return reply().code(404);
-          //     }
-
-          //     var node_checksum = calculateChecksum(node);
-
-          //     node.newsl_access = calculatePaywallToken(node.id);
-          //     node.subject = emailSubjectSuggestion(nodequeue);
-          //     node.dates = getDates();
-
-          //     reply
-          //     .view(request.params.template, node)
-          //     .header('Transfer-Encoding', 'chunked')
-          //     .header('Content-Type', ContentTypeHeader(request.params.template))
-          //     .header('X-Subject-Suggestion', encodeURIComponent(node.subject))
-          //     .header('X-Content-Checksum', node_checksum);
-          //   });
-
-          // // Requesting a specific template with a BOND nodequeue as data input
-          // } else if (request.query.nodequeue) {
-          //   bond_client.getNodequeue(request.query.nodequeue, function (err, nodequeue) {
-          //     if (err) return reply(err).code(500);
-
-          //     if (nodequeue === null || nodequeue.title === null) {
-          //       return reply().code(404);
-          //     }
-
-          //     var nodequeue_checksum = calculateChecksum(nodequeue);
-
-          //     nodequeue.nodes.forEach(function (node) {
-          //       node.newsl_access = calculatePaywallToken(node.id);
-          //     });
-
-          //     nodequeue.subject = emailSubjectSuggestion(nodequeue);
-          //     nodequeue.dates = getDates();
-
-          //     reply
-          //     .view(request.params.template, nodequeue)
-          //     .header('Transfer-Encoding', 'chunked')
-          //     .header('Content-Type', ContentTypeHeader(request.params.template))
-          //     .header('X-Subject-Suggestion', encodeURIComponent(nodequeue.subject))
-          //     .header('X-Content-Checksum', nodequeue_checksum);
-          //   });
           } else {
             reply
             .view(request.params.template)
@@ -200,16 +154,38 @@ module.exports.register = function (plugin, options, next) {
     method: 'get',
     path: '/controlroom',
     handler: function (request, reply) {
-      if (request.query.node) {
-        var url = bond_client.getNodeControlroomUrl(request.query.node);
-      } else if (request.query.nodequeue) {
-        var url = bond_client.getNodequeueControlroomUrl(request.query.nodequeue);
+      if (request.query.u) {
+
+        var url = getControlroomUrl(request.query.u);
+
+        reply({ url: url })
+        .header('X-Controlroom-url', encodeURIComponent(url));
+
       } else {
-        return reply().code(404);
+        return reply().code(400);
       }
 
-      reply({url: url})
-      .header('X-Controlroom-url', encodeURIComponent(url));
+// { protocol: 'http:',
+//   slashes: true,
+//   auth: null,
+//   host: 'edit.berlingskemedia.net.white.bond.u.net',
+//   port: null,
+//   hostname: 'edit.berlingskemedia.net.white.bond.u.net',
+//   hash: null,
+//   search: '?image_preset=620x355-c',
+//   query: { image_preset: '620x355-c' },
+//   pathname: '/bondapi/nodequeue/4626.ave-json',
+//   path: '/bondapi/nodequeue/4626.ave-json?image_preset=620x355-c',
+//   href: 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/4626.ave-json?image_preset=620x355-c' }
+
+// module.exports.getNodequeueControlroomUrl = function (id) {
+//   return 'http://' + bondHost + '/admin/content/nodequeue/' + id + '/view';
+// };
+
+// module.exports.getNodeControlroomUrl = function (id) {
+//   return 'http://' + bondHost + '/node/' + id + '/edit';
+// };
+
     }
   });
 
@@ -295,6 +271,27 @@ function calculatePaywallToken (nid) {
   var token = checksum(nid.toString() + timestamp + process.env.PAYWALL_TOKEN_SALT, { algorithm: 'sha256' });
   var newsl_access = new Buffer(nid.toString() + '|' + timestamp + '|' + token).toString('base64');
   return newsl_access;
+}
+
+function getControlroomUrl (u) {
+  var bond = url.parse(u),
+      bond_base_url = '';
+
+  if (bond.host.indexOf('edit.') === 0) {
+    bond_base_url = bond.protocol + '//' + bond.host;
+  } else if (bond.host.substr(-3) === '.dk') {
+    bond_base_url = bond.protocol + '//edit.berlingskemedia.net';
+  }
+
+  var id = bond.path.substring(bond.path.lastIndexOf('/') + 1, bond.path.indexOf('.ave-json'));
+
+  if (bond.path.indexOf("/bondapi/nodequeue/") === 0) {
+    return bond_base_url + '/admin/content/nodequeue/' + id + '/view';
+  } else if (bond.path.indexOf("/bondapi/node/") === 0) {
+    return bond_base_url + '/node/' + id + '/view';
+  } else {
+    return '';
+  }
 }
 
 function getDates () {

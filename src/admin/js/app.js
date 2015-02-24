@@ -100,7 +100,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
         }, resourceErrorHandler);
 
         updatePreview();
-        updateControlroomIframe();
+        //updateControlroomIframe();
       }, resourceErrorHandler);
     }
 
@@ -188,6 +188,7 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
         var headers = getHeaders();
         $scope.newsletter.subject = decodeURIComponent(headers['x-subject-suggestion']);
         $scope.newsletter.checksum = headers['x-content-checksum'];
+        $scope.controlroom_url = $sce.trustAsUrl(decodeURIComponent(headers['x-controlroom-url']));
         $scope.newsletter.email_html = data;
         $scope.trusted_html_email_preview = $sce.trustAsHtml(data);
         $scope.loading_html_preview = false;
@@ -249,12 +250,11 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
 
 
     function updateControlroomIframe () {
-      if ($scope.newsletter.bond_type === undefined ||
-          $scope.newsletter.bond_id === undefined) {
+      if ($scope.newsletter.bond_url === undefined) {
         return;
       }
 
-      $http.get('/templates/controlroom?' + $scope.newsletter.bond_type + '=' + $scope.newsletter.bond_id)
+      $http.get('/templates/controlroom?u=' + encodeURIComponent($scope.newsletter.bond_url))
       .success(function (data) {
         $scope.controlroom_url = $sce.trustAsResourceUrl(data.url);
       });

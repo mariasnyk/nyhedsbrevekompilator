@@ -4,6 +4,7 @@
 
 var http = require('http'),
     https = require('https'),
+    url = require('url'),
     mdb = require('./mdb_client.js'),
     userdb = require('./userdb_client.js');
 
@@ -243,8 +244,7 @@ function saveNewsletter (request, reply) {
     name: name,
     identity: request.payload.identity,
     bond_url: request.payload.bond_url,
-    bond_id: request.payload.bond_id,
-    bond_type: request.payload.bond_type,
+    bond: url.parse(request.payload.bond_url, true),
     template_html: request.payload.template_html,
     template_plain: request.payload.template_plain,
     categories: request.payload.categories,
