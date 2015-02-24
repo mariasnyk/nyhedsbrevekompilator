@@ -1,6 +1,6 @@
 //(function(window, angular, undefined) {'use strict';
 
-var app = angular.module('userdb', ['ngRoute', 'ngSanitize', 'ngResource', 'ngCookies', 'ui.bootstrap', 'ngNotificationsBar']);
+var app = angular.module('userdb', ['ngRoute', 'ngSanitize', 'ngResource', 'ngCookies', 'ngNotificationsBar']);
 
 app.config(['$routeProvider', function ($routeProvider) {
 

@@ -418,7 +418,11 @@ function createMarketingEmail (data, callback) {
       }
 
       // Adding the newsletter name as a mandatory category
-      if (data.categories !== undefined && data.categories !== null && data.categories.indexOf(data.name) === -1) {
+      if (data.categories === undefined || data.categories === null) {
+        data.categories = [];
+      }
+
+      if (data.categories.indexOf(data.name) === -1) {
         data.categories.push(data.name);
       }
 
