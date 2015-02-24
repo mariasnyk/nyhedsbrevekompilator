@@ -267,9 +267,17 @@ app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$res
   function ($scope, $routeParams, $location, $resource, $sce, $http) {
     var Newsletters = $resource('/newsletters/emails/:name', { name: '@name' });
     $scope.newsletters = Newsletters.query(function () {
-      // Reversing to ordre chronically
-      $scope.newsletters.reverse();
+      // Sorting by id for chronically order
+      $scope.newsletters.sort(compare);
     });
+
+    function compare(a,b) {
+      if (a.newsletter_id < b.newsletter_id)
+         return 1;
+      if (a.newsletter_id > b.newsletter_id)
+        return -1;
+      return 0;
+    }
 
     $scope.getNewsletterData = function (name, index) {
       $scope.newsletter = Newsletters.get({name: name}, function (data) {
