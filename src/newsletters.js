@@ -122,7 +122,7 @@ module.exports.register = function (plugin, options, next) {
     method: 'get',
     path: '/emails/{name}',
     handler: function (request, reply) {
-      callSendGrid('/api/newsletter/newsletter/get.json', 'name=' + request.params.name, function (err, data) {
+      callSendGrid('/api/newsletter/newsletter/get.json', 'name=' + encodeURIComponent(request.params.name), function (err, data) {
         if (err) {
           console.log(err)
           reply(err).code(500);
