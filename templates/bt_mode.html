@@ -49,6 +49,10 @@
 </head>
 <body style="background-color: #f9f9f9; margin: 0px;">
   {% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + dates.yyyymmdd + "&ns_linkname=bt_modeskonhed"; %}
+  {% set buy_subscription_href = "http://sjma.dk/lpcms/landingpage/bt1.php?cid=BT-140218-CP-MALEDIT1NB&ns_campaign=_abonnementnyhedsbreve_toplink_btmode&ns_mchannel=na&ns_source=nyhedsbreve&ns_linkname=nl_uspecificeret&ns_fee=0" %}
+  {% set sweetdeal_permission_href = "http://www.sweetdeal.dk?ns_campaign=_sweetdeal_signuprednl&ns_mchannel=na&ns_source=nyhedsbreve&ns_linkname=nl_uspecificeret&ns_fee=0" %}
+  {% set btsport_permission_href = "http://apps.adlifter.com/plugin/?application_key=70c4dd8af56f5dad9d5483513f049eb6&command=cmd_berlingske_quicksignup&customer_key=a40e4703a823d1d11977928620c6ead0&nlids=24,25,26&intids=&stack_key=fb5a0951e1258db8ca686b837e16e09e&lid=1660&mid=4&rtype=1&url=http://pm2.adlifter.com/landing/?page=MjA2Lmh0bWw=&email=[email]&action=1" %}
+  {% set unsubscribe_href = "http://nyhedsbreve.btdk-mail.dk/index.php?eksternid=[ekstern_id]&medieid=4" %}
 
   <!--[if (gte mso 9)|(IE)]>
   <table width="654" align="center" cellpadding="0" cellspacing="0" border="0">
@@ -76,7 +80,7 @@
         <a href="http://www.bt.dk/sektion/modeogskonhed?{{ tracking }}" target="_blank">
           <img src="http://nlstatic.berlingskemedia.dk/images/bt_mode_part_header_logo.png" width="491">
         </a>
-        <a href="http://sjma.dk/lpcms/landingpage/bt1.php?cid=BT-140218-CP-MALEDIT1NB&ns_campaign=_abonnementnyhedsbreve_toplink&ns_mchannel=na&ns_source=nyhedsbreve&ns_linkname=nl_uspecificeret&ns_fee=0" target="_blank">
+        <a target="_blank" href="{{ buy_subscription_href }}">
           <img src="http://nlstatic.berlingskemedia.dk/images/bt_mode_part_header_buy.png" width="163">
         </a>
       </td>
@@ -213,7 +217,7 @@
                     </font>
                   </div>
                   <div style="text-align: left; margin: 10px 0px;">
-                    <a target="_blank" href="http://www.sweetdeal.dk?ns_campaign=_sweetdeal_signuprednl&ns_mchannel=na&ns_source=nyhedsbreve&ns_linkname=nl_uspecificeret&ns_fee=0">
+                    <a target="_blank" href="{{ sweetdeal_permission_href }}">
                       <font color="#CC0000" style="font-family: 'bt_bold', Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 16px; line-height: 20px; text-rendering: optimizeLegibility;">
                         Tilmeld dig nyhedsbrev
                       </font>
@@ -246,7 +250,7 @@
                     </font>
                   </div>
                   <div style="text-align: left; margin: 10px 0px;">
-                    <a target="_blank" href="http://apps.adlifter.com/plugin/?application_key=70c4dd8af56f5dad9d5483513f049eb6&command=cmd_berlingske_quicksignup&customer_key=a40e4703a823d1d11977928620c6ead0&nlids=24,25,26&intids=&stack_key=fb5a0951e1258db8ca686b837e16e09e&lid=1660&mid=4&rtype=1&url=http://pm2.adlifter.com/landing/?page=MjA2Lmh0bWw=&email=[email]&action=1">
+                    <a target="_blank" href="{{ btsport_permission_href }}">
                       <font color="#CC0000" style="font-family: 'bt_bold', Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 16px; line-height: 20px; text-rendering: optimizeLegibility;">
                         Tilmeld dig nyhedsbrev
                       </font>
@@ -334,7 +338,7 @@
             </a>
           </div>
           <div style="margin: 0px 15px; display: inline-block;">
-            <a target="_blank" href="http://instagram.com/bt.dk½" style="text-decoration: none;">
+            <a target="_blank" href="http://instagram.com/bt.dk" style="text-decoration: none;">
               <img src="http://nlstatic.berlingskemedia.dk/images/instagram.png" width="24" />
             </a>
           </div>
@@ -371,7 +375,7 @@
           <font color="#666666" style="font-family: Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
             &middot;
           </font>
-          <a target="_blank" href="http://nyhedsbreve.btdk-mail.dk/index.php?eksternid=[ekstern_id]&medieid=4" style="margin: 0px 10px;  text-decoration: none;">
+          <a target="_blank" href="{{ unsubscribe_href }}" style="margin: 0px 10px;  text-decoration: none;">
             <font color="#666666" style="font-family: Helvetica Neue, Helvetica, Arial Black, Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
               Afmeld nyhedsbrev
             </font>

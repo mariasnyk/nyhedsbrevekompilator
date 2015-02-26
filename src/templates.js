@@ -67,6 +67,7 @@ module.exports.register = function (plugin, options, next) {
               }
 
               data.subject = emailSubjectSuggestion(data);
+              data.dates = getDates();
 
               reply
               .view(request.params.template, data)
