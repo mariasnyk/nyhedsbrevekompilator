@@ -239,7 +239,6 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
 
 
     $scope.draftNewsletter = function () {
-
       $http.post('/newsletters/draft', $scope.newsletter)
       .success(function (data) {
         notifications.showSuccess('Kladde oprettet ' + data.name);
@@ -263,8 +262,8 @@ app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '
   }]);
 
 
-app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http',
-  function ($scope, $routeParams, $location, $resource, $sce, $http) {
+app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications',
+  function ($scope, $routeParams, $location, $resource, $sce, $http, notifications) {
     var Newsletters = $resource('/newsletters/emails/:name', { name: '@name' });
     $scope.newsletters = Newsletters.query(function () {
       // Sorting by id for chronically order
@@ -285,13 +284,15 @@ app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$res
         $scope.newsletters[index].identity = data.identity;
         $scope.newsletters[index].total_recipients = data.total_recipients;
         $scope.newsletters[index].date_schedule = data.date_schedule;
+      }, function (err) {
+        notifications.showError(err);
       });
     };
   }]);
 
 
-app.controller('StatsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', '$filter',
-  function ($scope, $routeParams, $location, $resource, $sce, $http, $filter) {
+app.controller('StatsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', '$filter', 'notifications',
+  function ($scope, $routeParams, $location, $resource, $sce, $http, $filter, notifications) {
     var Categories = $resource('/newsletters/categories');
     var Stats = $resource('/newsletters/categories/stats');
 
@@ -309,6 +310,7 @@ app.controller('StatsController', ['$scope', '$routeParams', '$location', '$reso
       if ($scope.stats_parameters.categories.length === 0) {
         return;
       }
+      $scope.loading = true;
 
       $scope.stats_parameters.start_date = $filter('date')($scope.start_date, "yyyy-MM-dd");
       $scope.stats_parameters.end_date = $filter('date')($scope.end_date, "yyyy-MM-dd");
@@ -330,9 +332,12 @@ app.controller('StatsController', ['$scope', '$routeParams', '$location', '$reso
           });
         });
         console.log($scope.statsData);
+        $scope.loading = false;
       },
       function (err) {
         console.log('err', err);
+        $scope.loading = false;
+        notifications.showError(err.statusText);
       });
     };
   }]);
