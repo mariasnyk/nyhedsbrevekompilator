@@ -2,12 +2,12 @@ FROM ubuntu:14.04
 
 MAINTAINER Daniel Kokott <dako@berlingskemedia.dk>
 
-# Installing wget and python. Python is needed to Postgress support.
+# Installing wget - needed to download node.js
 RUN apt-get update
-RUN apt-get install -y wget python
+RUN apt-get install -y wget
 
 # Downloading and installing Node.
-RUN wget -O - http://nodejs.org/dist/v0.10.29/node-v0.10.29-linux-x64.tar.gz \
+RUN wget -O - http://nodejs.org/dist/v0.12.0/node-v0.12.0-linux-x64.tar.gz \
     | tar xzf - --strip-components=1 --exclude="README.md" --exclude="LICENSE" \
     --exclude="ChangeLog" -C "/usr/local"
 
