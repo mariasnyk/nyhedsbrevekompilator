@@ -308,7 +308,10 @@ app.controller('StatsController', ['$scope', '$routeParams', '$location', '$reso
 
     $scope.getData = function () {
       if ($scope.stats_parameters.categories.length === 0) {
+        $scope.missing_category = true;
         return;
+      } else {
+        $scope.missing_category = false;
       }
       $scope.loading = true;
 
