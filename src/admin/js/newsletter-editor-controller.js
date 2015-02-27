@@ -1,5 +1,5 @@
-app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', '$q', 'notifications',
-  function ($scope, $routeParams, $location, $resource, $sce, $http, $q, notifications) {
+app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', '$q', 'notifications', 'loadingSwitch',
+  function ($scope, $routeParams, $location, $resource, $sce, $http, $q, notifications, loadingSwitch) {
 
     // Defaulting the schedule with an added 15 minuttes
     $scope.at = new Date(new Date().getTime() + 15*60000);
@@ -9,10 +9,12 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     var Lists = $resource('/newsletters/lists/:list', { list: '@list' });
     var Templates = $resource('/templates/:name', { name: '@name' });
 
+    loadingSwitch.turnOn();
+
     $scope.edit = $routeParams.operator === 'edit';
 
     if ($scope.edit) {
-      
+
       $scope.identities = Identities.query();
       $scope.lists = Lists.query();
       $scope.html_templates = Templates.query({filter:'.html'});
@@ -21,7 +23,9 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       // Waiting for the drop-down data to be fetched before we query the newsletter.
       // This is done so that drop-downs are populated and the equivalent newsletter value is selected in the drop-down.
       $q.all([$scope.identities.$promise, $scope.lists.$promise, $scope.html_templates.$promise, $scope.plain_templates.$promise]).then(function () {
-        $scope.newsletter = Newsletters.get({ name: $routeParams.name }, null, resourceErrorHandler);
+        $scope.newsletter = Newsletters.get({ name: $routeParams.name }, function () { /* All OK. */ }, resourceErrorHandler);
+
+        loadingSwitch.turnOff();
       });
 
     } else {
@@ -44,6 +48,8 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
         updatePreview();
         //updateControlroomIframe();
+
+        //loadingSwitch.turnOff();
       }, resourceErrorHandler);
     }
 
@@ -80,14 +86,21 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     };
 
 
-    $scope.saveNewsletter = function () {
-      $http.post('/newsletters', $scope.newsletter)
-      .success(function () {
+    $scope.saveNewsletter = function (close) {
+      Newsletters.save($scope.newsletter, function (success) {
         console.log('Success saving template.');
-        $location.url('/' + $scope.newsletter.name );
-      }).error(function (data, status) {
-        console.log('Error saving template.', data, status);
+        if (close === true) {
+          $location.url('/' + $scope.newsletter.name );        
+        } else {
+          notifications.showSuccess('Saved');
+        }
       });
+      //console.log('n', $scope.newsletter);
+      // $http.post('/newsletters', $scope.newsletter)
+      // .success(function () {
+      // }).error(function (data, status) {
+      //   console.log('Error saving template.', data, status);
+      // });
     };
 
     $scope.deleteNewsletter = function () {
@@ -103,8 +116,11 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
     function updatePreview () {
       if ($scope.newsletter.bond_url === undefined) {
+        notifications.showWarning('Missing BOND Url');
         return;
       }
+
+      loadingSwitch.turnOn();
 
       $scope.loading_previews = true;
 
@@ -113,14 +129,17 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
       $q.all([a,b]).then(function (result) {
         $scope.loading_previews = false;
+        loadingSwitch.turnOff();
       },function (reason) {
         $scope.loading_previews = false;
+        loadingSwitch.turnOff();
       });
     }
 
 
     function updateHtmlPreview () {
       if ($scope.newsletter.template_html === undefined) {
+        notifications.showWarning('Missing HTML template');
         return;
       }
 
@@ -137,6 +156,12 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         $scope.loading_html_preview = false;
       })
       .error(function (data, status, headers, config) {
+        console.log('updateHtmlPreview error', data);
+        if (data.message) {
+          notifications.showError(data.message);
+        } else {
+          notifications.showError('Error');
+        }
         $scope.loading_html_preview = false;
         $scope.newsletter.email_html = '';
         $scope.trusted_html_email_preview = '<p>Error</p>';
@@ -146,6 +171,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
     function updatePlainPreview () {
       if ($scope.newsletter.template_plain === undefined) {
+        notifications.showWarning('Missing Text template');
         return;
       }
 

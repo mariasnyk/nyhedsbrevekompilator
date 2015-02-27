@@ -245,6 +245,8 @@ function queryOneNewsletter (name, callback) {
 
 function saveNewsletter (request, reply) {
 
+  // If the request was made with the exact route (/newsletter/{name}), we'll overwrite the newsletter data.
+  var overwriteInDB = request.params.name !== undefined;
   var name = request.params.name ? request.params.name : request.payload.name;
 
   if (name === undefined || name === null || name === '') {
@@ -255,61 +257,73 @@ function saveNewsletter (request, reply) {
     name: name,
     identity: request.payload.identity,
     bond_url: request.payload.bond_url,
-    bond: url.parse(request.payload.bond_url, true),
+    bond: url.parse(request.payload.bond_url !== undefined ? request.payload.bond_url : '', true),
     template_html: request.payload.template_html,
     template_plain: request.payload.template_plain,
     categories: request.payload.categories,
     list: request.payload.list
   };
 
-  var data = new Buffer(JSON.stringify(newsletter)).toString('base64')
+  var data = new Buffer(JSON.stringify(newsletter)).toString('base64');
 
-  var findExisting = 'SELECT id FROM mashed_composer WHERE name = ' + userdb.escape(name),
-      sql = '';
-
-  userdb.queryOne(findExisting, function (err, result) {
+  selectDB(name, function (err, result) {
     if (err) {
       console.log(err);
-      reply().code(500);
-      return;
+      reply(err).code(500);
 
     } else if (result === null) {
-
-      sql = [
-        'INSERT INTO mashed_composer',
-        '(name, data)',
-        'VALUES (',
-        userdb.escape(name) + ',',
-        userdb.escape(data) + ')'].join (' ');
-
+      insertDB(name, data, handler);
+    } else if (overwriteInDB) {
+      updateDB(result.id, data, handler);
     } else {
-
-      sql = [
-        'UPDATE mashed_composer',
-        'SET data = ' + userdb.escape(data),
-        'WHERE id = ' + result.id].join (' ');
+      reply({ message: 'Newsletter ' + name + ' exists'}).code(403);
     }
-
-    userdb.query(sql, function (err, result) {
-      if (err) {
-        console.log(err);
-        reply().code(500);
-      } else {
-        if (result.insertId === 0)
-          reply({ message: 'Updated'});
-        else
-          reply({ message: 'Inserted', id: result.insertId});
-      }
-    });
   });
+
+  function handler (err, result) {
+    if (err) {
+      console.log(err);
+      reply(err).code(500);
+    } else {
+      if (result.insertId === 0)
+        reply({ message: 'Updated' });
+      else
+        reply({ message: 'Inserted', id: result.insertId });
+    }
+  }
+}
+
+
+
+function selectDB (name, callback) {
+  var sql = 'SELECT id FROM mashed_composer WHERE name = ' + userdb.escape(name);
+
+  userdb.queryOne(sql, callback);
+}
+
+function insertDB (name, data, callback) {
+  var sql = [
+    'INSERT INTO mashed_composer',
+    '(name, data)',
+    'VALUES (',
+    userdb.escape(name) + ',',
+    userdb.escape(data) + ')'].join (' ');
+
+  userdb.query(sql, callback);
+}
+
+function updateDB (id, data, callback) {
+  var sql = [
+    'UPDATE mashed_composer',
+    'SET data = ' + userdb.escape(data),
+    'WHERE id = ' + userdb.escape(id)].join (' ');
+
+  userdb.query(sql, callback);
 }
 
 
 function deleteNewsletter (request, reply) {
-
-  var sql = 'DELETE FROM mashed_composer WHERE name = ' + userdb.escape(request.params.name);
-
-  userdb.query(sql, function (err, result) {
+  deleteFromDB(request.params.name, function (err, result) {
     if (err) {
       console.log(err);
       reply().code(500);
@@ -319,6 +333,13 @@ function deleteNewsletter (request, reply) {
       reply();
     }
   });
+}
+
+
+function deleteFromDB (name, callback) {
+  var sql = 'DELETE FROM mashed_composer WHERE name = ' + userdb.escape(name);
+
+  userdb.query(sql, callback);
 }
 
 

@@ -1,5 +1,5 @@
-app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications',
-  function ($scope, $routeParams, $location, $resource, $sce, $http, notifications) {
+app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications', 'loadingSwitch',
+  function ($scope, $routeParams, $location, $resource, $sce, $http, notifications, loadingSwitch) {
     var Newsletters = $resource('/newsletters/emails/:name', { name: '@name' });
     $scope.newsletters = Newsletters.query(function () {
       // Sorting by id for chronically order
@@ -15,6 +15,7 @@ app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$res
     }
 
     $scope.getNewsletterData = function (name, index) {
+      loadingSwitch.turnOn();
       $scope.newsletter = Newsletters.get({name: name}, function (data) {
         $scope.newsletters[index].subject = data.subject;
         $scope.newsletters[index].identity = data.identity;
@@ -22,6 +23,7 @@ app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$res
         $scope.newsletters[index].date_schedule = data.date_schedule;
       }, function (err) {
         notifications.showError(err);
+        loadingSwitch.turnOff();
       });
     };
   }]);

@@ -1,5 +1,5 @@
-app.controller('StatsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', '$filter', 'notifications',
-  function ($scope, $routeParams, $location, $resource, $sce, $http, $filter, notifications) {
+app.controller('StatsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', '$filter', 'notifications', 'loadingSwitch',
+  function ($scope, $routeParams, $location, $resource, $sce, $http, $filter, notifications, loadingSwitch) {
     var Categories = $resource('/newsletters/categories');
     var Stats = $resource('/newsletters/categories/stats');
 
@@ -20,7 +20,8 @@ app.controller('StatsController', ['$scope', '$routeParams', '$location', '$reso
       } else {
         $scope.missing_category = false;
       }
-      $scope.loading = true;
+
+      loadingSwitch.turnOn();
 
       $scope.stats_parameters.start_date = $filter('date')($scope.start_date, "yyyy-MM-dd");
       $scope.stats_parameters.end_date = $filter('date')($scope.end_date, "yyyy-MM-dd");
@@ -42,12 +43,46 @@ app.controller('StatsController', ['$scope', '$routeParams', '$location', '$reso
           });
         });
         console.log($scope.statsData);
-        $scope.loading = false;
+        loadingSwitch.turnOff();
       },
       function (err) {
         console.log('err', err);
-        $scope.loading = false;
+        loadingSwitch.turnOff();
         notifications.showError(err.statusText);
       });
     };
   }]);
+
+
+app.directive('chart', function() {
+    return {
+      restrict: 'A',
+      link: function($scope, $elm, $attr) {
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+          ['Mushrooms', 3],
+          ['Onions', 1],
+          ['Olives', 1],
+          ['Zucchini', 1],
+          ['Pepperoni', 2]
+        ]);
+
+        // Set chart options
+        var options = {'title':'How Much Pizza I Ate Last Night',
+                       'width':400,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart($elm[0]);
+        chart.draw(data, options);
+      }
+  }
+});
+
+// google.setOnLoadCallback(function() {
+//     angular.bootstrap(document.body, ['myApp']);
+// });
+google.load('visualization', '1', {packages: ['corechart']});

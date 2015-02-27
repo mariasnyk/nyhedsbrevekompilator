@@ -61,8 +61,11 @@
       <a class="btn btn-default" ng-href="#/{{newsletter.name}}">
         Annuller <span class="glyphicon glyphicon-chevron-left"></span>
       </a>
+      <button type="button" class="btn btn-success" ng-click="saveNewsletter(true)" ng-disabled="loading_previews">
+        Gem og luk edit <span class="glyphicon glyphicon-floppy-saved"></span>
+      </button>
       <button type="button" class="btn btn-success" ng-click="saveNewsletter()" ng-disabled="loading_previews">
-        Gem og luk <span class="glyphicon glyphicon-check"></span>
+        Gem <span class="glyphicon glyphicon-floppy-disk"></span>
       </button>
     </div>
     <div class="col-xs-6">
@@ -105,7 +108,7 @@
     </div>
   </div>
 
-  <hr>  
+  <hr>
 
   <div class="row" ng-show="edit">
     <div class="col-xs-6">

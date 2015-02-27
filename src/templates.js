@@ -50,7 +50,13 @@ module.exports.register = function (plugin, options, next) {
           // Requesting a specific template with a BOND node as data input
           if (request.query.u) {
 
-            var controlroom_url = getControlroomUrl(request.query.u);
+            // Validate the url
+            var uri = url.parse(request.query.u);
+            if (uri.protocol === null || uri.host === null) {
+              return reply({message: 'Url invalid'}).code(400);
+            }
+
+            var controlroom_url = getControlroomUrl(uri);
 
             download(request.query.u, function (err, data) {
               if (err) return reply(err).code(500);
@@ -157,10 +163,10 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       if (request.query.u) {
 
-        var url = getControlroomUrl(request.query.u);
+        var controlroom_url = getControlroomUrl(url.parse(request.query.u));
 
-        reply({ url: url })
-        .header('X-Controlroom-url', encodeURIComponent(url));
+        reply({ url: controlroom_url })
+        .header('X-Controlroom-url', encodeURIComponent(controlroom_url));
 
       } else {
         return reply().code(400);
@@ -274,9 +280,8 @@ function calculatePaywallToken (nid) {
   return newsl_access;
 }
 
-function getControlroomUrl (u) {
-  var bond = url.parse(u),
-      bond_base_url = '';
+function getControlroomUrl (bond) {
+  var bond_base_url = '';
 
   if (bond.host.indexOf('edit.') === 0) {
     bond_base_url = bond.protocol + '//' + bond.host;

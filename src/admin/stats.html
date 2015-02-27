@@ -80,8 +80,13 @@
           <td>{{ data.metrics.unsubscribes }}</td>
         </tr>
       </table>
-      <div ng-show="loading"><p class="text-center">Loading</p></div>
       <div ng-show="missing_category"><p class="text-center">V&aelig;lg katagori</p></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div id="chart_div"></div>
+      <div chart></div>
     </div>
   </div>
 </div>
