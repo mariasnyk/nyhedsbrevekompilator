@@ -77,7 +77,7 @@ app.directive('loadingIndicator', ['$interval', '$timeout', function ($interval,
       function c () {
         return $interval(function () {
           scope.dots = d();
-        }, 600);
+        }, 700);
       }
     }
   };
