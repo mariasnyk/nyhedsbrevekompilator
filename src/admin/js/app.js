@@ -9,7 +9,7 @@ app.config(['$routeProvider', function ($routeProvider) {
       redirectTo: '/' })
     .when( '/', {
       templateUrl: 'newsletter-dashboard.html',
-      controller: 'DashboardController' })
+      controller: 'NewsletterDashboardController' })
     .when( '/emails', {
       templateUrl: 'emails.html',
       controller: 'EmailsController' })
@@ -18,10 +18,10 @@ app.config(['$routeProvider', function ($routeProvider) {
       controller: 'StatsController' })
     .when( '/:name', {
       templateUrl: 'newsletter-editor.html',
-      controller: 'NewsletterController' })
+      controller: 'NewsletterEditorController' })
     .when( '/:name/:operator', {
       templateUrl: 'newsletter-editor.html',
-      controller: 'NewsletterController' })
+      controller: 'NewsletterEditorController' })
     .otherwise({
       redirectTo: '/' });
 }]);

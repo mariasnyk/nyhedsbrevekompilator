@@ -1,4 +1,4 @@
-app.controller('DashboardController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http',
+app.controller('NewsletterDashboardController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http',
   function ($scope, $routeParams, $location, $resource, $sce, $http) {
 
     var Newsletters = $resource('/newsletters/:name', { name: '@name' });

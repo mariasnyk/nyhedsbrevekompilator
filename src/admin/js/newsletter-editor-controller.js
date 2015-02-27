@@ -1,4 +1,4 @@
-app.controller('NewsletterController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', '$q', 'notifications',
+app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', '$q', 'notifications',
   function ($scope, $routeParams, $location, $resource, $sce, $http, $q, notifications) {
 
     // Defaulting the schedule with an added 15 minuttes
