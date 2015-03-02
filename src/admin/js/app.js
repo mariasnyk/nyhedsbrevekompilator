@@ -33,35 +33,21 @@ app.config(['$resourceProvider', function ($resourceProvider) {
 
 
 app.factory('loadingSwitch', ['$rootScope', '$interval', '$timeout', function($rootScope, $interval, $timeout) {
-  var showLoadingIndicators = [];
-
   return {
     turnOn: function (label) {
+      $rootScope.$broadcast('loadingIndicator:turnOn', label);
 
-      $rootScope.$broadcast('loadingIndicator:turnOn');
+      var timer = $timeout(function () {
+        $rootScope.$broadcast('loadingIndicator:turnOff');
+        console.log('Loading indicator timeout');
+      }, 120000);
 
-      var a = $interval(function () {
-        console.log('a interval');
-        }, 1000);
-
-      a.turnOff = function () {
-        $interval.cancel(a);
-        console.log(showLoadingIndicators.length, showLoadingIndicators);
-        //$rootScope.$broadcast('loadingIndicator:turnOff');
-
+      timer.turnOff = function () {
+        $rootScope.$broadcast('loadingIndicator:turnOff');
+        $timeout.cancel(this);
       }
 
-      showLoadingIndicators.push(a);
-
-      return a;
-
-      // var id = (Math.floor(Math.random() * 128));
-
-      // return {
-      //   turnOff: function () {
-      //     $rootScope.$broadcast('loadingIndicator:turnOff', id);
-      //   }
-      // }
+      return timer;
     }
   };
 }]);
@@ -69,62 +55,40 @@ app.factory('loadingSwitch', ['$rootScope', '$interval', '$timeout', function($r
 app.directive('loadingIndicator', ['$interval', '$timeout', function ($interval, $timeout) {
   return {
     restrict: 'EA',
-    template: '<div ng-show="loading" style="background-color: red; display: inline-block; top: 0px; right: 0px; padding: 3px 21px 3px 10px; position: absolute; min-width: 94px;">{{ label }}{{dots}}</div>',
+    template: '<div ng-show="loading" style="background-color: red; display: inline-block; top: 0px; right: 0px; padding: 3px 21px 3px 10px; position: absolute; min-width: 100px;">{{ label }}{{ dots }}</div>',
     link: function (scope, element, attrs) {
 
-      var dots = 0;
-      var a, b;
-      scope.label = 'Loading';
+      var dots = 0,
+          showLoadingIndicators = 0,
+          interval;
 
-      scope.$on('loadingIndicator:turnOn', function (event, id) {
-        a = $interval(function () {
-          ++dots;
-          console.log('dots', dots, dots % 4);
-          switch (dots % 4) {
-            case 0: scope.dots = ''; break;
-            case 1: scope.dots = '.'; break;
-            case 2: scope.dots = '..'; break;
-            case 3: scope.dots = '...'; break;
-          };
-        }, 1000);
+      scope.$on('loadingIndicator:turnOn', function (event, label) {
 
-        b = $timeout(function () {
-          dots = 0;
-          $interval.cancel(a);
-          scope.loading = false;
-        }, 60000);
+        scope.label = label !== undefined ? label : 'Loading';
 
-        scope.loading = true;
+        if (++showLoadingIndicators === 1) {
+
+          interval = $interval(function () {
+            switch (++dots % 4) {
+              case 0: scope.dots = '.'; break;
+              case 1: scope.dots = '..'; break;
+              case 2: scope.dots = '...'; break;
+              case 3: scope.dots = '....'; break;
+            };
+          }, 700);
+
+          scope.loading = true;
+        }
+
       });
 
       scope.$on('loadingIndicator:turnOff', function (event, id) {
-        dots = 0;
-        $interval.cancel(a);
-        $timeout.cancel(b);
-        scope.loading = false;
+        if (--showLoadingIndicators === 0) {
+          scope.loading = false;
+          dots = 0;
+          $interval.cancel(interval);
+        }
       });
-
-      // function d () {
-      //   switch (++dots % 4) {
-      //     case 0: return '';
-      //     case 1: return '.';
-      //     case 2: return '..';
-      //     case 3: return '...';
-      //   };
-      // }
-
-      // function c () {
-      //   return $interval(function () {
-      //     ++dots;
-      //     console.log('dots', dots, dots % 4);
-      //     switch (dots % 4) {
-      //       case 0: return scope.dots = '';
-      //       case 1: return scope.dots = '.';
-      //       case 2: return scope.dots = '..';
-      //       case 3: return scope.dots = '...';
-      //     };
-      //   }, 700);
-      // }
     }
   };
 }]);
