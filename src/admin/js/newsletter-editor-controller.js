@@ -26,6 +26,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         $scope.newsletter = Newsletters.get({ name: $routeParams.name }, function () { /* All OK. */ }, resourceErrorHandler);
 
         abe.turnOff();
+        console.log('abe turnOff edit');
       });
 
     } else {
@@ -50,6 +51,9 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         //updateControlroomIframe();
 
         //loadingSwitch.turnOff();
+        
+        abe.turnOff();
+        console.log('abe turnOff none-edit');
       }, resourceErrorHandler);
     }
 
@@ -87,7 +91,9 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
 
     $scope.saveNewsletter = function (close) {
-      var abe2 = loadingSwitch.turnOn('Saving');
+      
+      //var abe2 = loadingSwitch.turnOn('Saving');
+
       Newsletters.save($scope.newsletter, function (success) {
         console.log('Success saving template.');
         if (close === true) {
@@ -102,7 +108,9 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     };
 
     $scope.deleteNewsletter = function () {
+
       var abe3 = loadingSwitch.turnOn('Deleting');
+
       Newsletters.delete({ name: $scope.newsletter.name }, function () {
         abe3.turnOff();
         $location.url('/');
@@ -120,7 +128,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         return;
       }
 
-      var abe4 = loadingSwitch.turnOn();
+      //var abe4 = loadingSwitch.turnOn();
 
       $scope.loading_previews = true;
 
@@ -130,9 +138,11 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       $q.all([a,b]).then(function (result) {
         $scope.loading_previews = false;
         abe4.turnOff();
+        console.log('abe4 turnOff');
       },function (reason) {
         $scope.loading_previews = false;
         abe4.turnOff();
+        console.log('abe4 turnOff error');
       });
     }
 
@@ -142,6 +152,8 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         notifications.showWarning('Missing HTML template');
         return;
       }
+
+      var abe_1 = loadingSwitch.turnOn();
 
       $scope.loading_html_preview = true;
 
@@ -154,6 +166,8 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         $scope.newsletter.email_html = data;
         $scope.trusted_html_email_preview = $sce.trustAsHtml(data);
         $scope.loading_html_preview = false;
+        abe_1.turnOff();
+        console.log('abe_1 turnOff');
       })
       .error(function (data, status, headers, config) {
         console.log('updateHtmlPreview error', data);
@@ -165,6 +179,8 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         $scope.loading_html_preview = false;
         $scope.newsletter.email_html = '';
         $scope.trusted_html_email_preview = '<p>Error</p>';
+        abe_1.turnOff();
+        console.log('abe_1 turnOff error');
       });
     };
 
@@ -175,15 +191,21 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         return;
       }
 
+      //var abe_2 = loadingSwitch.turnOn();
+
       $scope.loading_plain_preview = true;
 
       return $http.get('/templates/' + $scope.newsletter.template_plain + '?u=' + encodeURIComponent($scope.newsletter.bond_url))
       .success(function (data) {
         $scope.newsletter.email_plain = data;
         $scope.loading_plain_preview = false;
+        abe_2.turnOff();
+        console.log('abe_2 turnOff');
       })
       .error(function (data, status, headers, config) {
         $scope.loading_plain_preview = false;
+        abe_2.turnOff();
+        console.log('abe_2 turnOff error');
       });
     };
 

@@ -32,17 +32,36 @@ app.config(['$resourceProvider', function ($resourceProvider) {
 }]);
 
 
-app.factory('loadingSwitch', ['$rootScope', function($rootScope) {
-  var showLoadingIndicater = false;
+app.factory('loadingSwitch', ['$rootScope', '$interval', '$timeout', function($rootScope, $interval, $timeout) {
+  var showLoadingIndicators = [];
 
   return {
     turnOn: function (label) {
-      $rootScope.$broadcast('loadingIndicator:turnOn', label !== undefined ? label : 'Loading');
-      return {
-        turnOff: function () {
-          $rootScope.$broadcast('loadingIndicator:turnOff', 'turnOff');
-        }
+
+      $rootScope.$broadcast('loadingIndicator:turnOn');
+
+      var a = $interval(function () {
+        console.log('a interval');
+        }, 1000);
+
+      a.turnOff = function () {
+        $interval.cancel(a);
+        console.log(showLoadingIndicators.length, showLoadingIndicators);
+        //$rootScope.$broadcast('loadingIndicator:turnOff');
+
       }
+
+      showLoadingIndicators.push(a);
+
+      return a;
+
+      // var id = (Math.floor(Math.random() * 128));
+
+      // return {
+      //   turnOff: function () {
+      //     $rootScope.$broadcast('loadingIndicator:turnOff', id);
+      //   }
+      // }
     }
   };
 }]);
@@ -54,34 +73,58 @@ app.directive('loadingIndicator', ['$interval', '$timeout', function ($interval,
     link: function (scope, element, attrs) {
 
       var dots = 0;
-      var a;
+      var a, b;
+      scope.label = 'Loading';
 
-      scope.$on('loadingIndicator:turnOn', function (event, label) {
-        scope.label = label;
-        dots = 0;
-        a = c();
+      scope.$on('loadingIndicator:turnOn', function (event, id) {
+        a = $interval(function () {
+          ++dots;
+          console.log('dots', dots, dots % 4);
+          switch (dots % 4) {
+            case 0: scope.dots = ''; break;
+            case 1: scope.dots = '.'; break;
+            case 2: scope.dots = '..'; break;
+            case 3: scope.dots = '...'; break;
+          };
+        }, 1000);
+
+        b = $timeout(function () {
+          dots = 0;
+          $interval.cancel(a);
+          scope.loading = false;
+        }, 60000);
+
         scope.loading = true;
       });
 
-      scope.$on('loadingIndicator:turnOff', function (event, data) {
+      scope.$on('loadingIndicator:turnOff', function (event, id) {
+        dots = 0;
         $interval.cancel(a);
+        $timeout.cancel(b);
         scope.loading = false;
       });
 
-      function d () {
-        switch (++dots % 4) {
-          case 0: return '';
-          case 1: return '.';
-          case 2: return '..';
-          case 3: return '...';
-        };
-      }
+      // function d () {
+      //   switch (++dots % 4) {
+      //     case 0: return '';
+      //     case 1: return '.';
+      //     case 2: return '..';
+      //     case 3: return '...';
+      //   };
+      // }
 
-      function c () {
-        return $interval(function () {
-          scope.dots = d();
-        }, 700);
-      }
+      // function c () {
+      //   return $interval(function () {
+      //     ++dots;
+      //     console.log('dots', dots, dots % 4);
+      //     switch (dots % 4) {
+      //       case 0: return scope.dots = '';
+      //       case 1: return scope.dots = '.';
+      //       case 2: return scope.dots = '..';
+      //       case 3: return scope.dots = '...';
+      //     };
+      //   }, 700);
+      // }
     }
   };
 }]);
