@@ -1,11 +1,11 @@
 app.controller('NewsletterDashboardController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications', 'loadingSwitch',
   function ($scope, $routeParams, $location, $resource, $sce, $http, notifications, loadingSwitch) {
 
-    loadingSwitch.turnOn();
+    var abe = loadingSwitch.turnOn();
     //var Newsletters = $resource('/newsletters/:name', { name: '@name' });
     var Newsletters = $resource('/newsletters/');
     $scope.newsletters = Newsletters.query(function () {
-      loadingSwitch.turnOff();
+      abe.turnOff();
     });
 
     $scope.createNewsletter = function (name) {

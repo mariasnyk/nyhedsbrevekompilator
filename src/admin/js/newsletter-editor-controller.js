@@ -9,7 +9,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     var Lists = $resource('/newsletters/lists/:list', { list: '@list' });
     var Templates = $resource('/templates/:name', { name: '@name' });
 
-    loadingSwitch.turnOn();
+    var abe = loadingSwitch.turnOn();
 
     $scope.edit = $routeParams.operator === 'edit';
 
@@ -25,7 +25,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       $q.all([$scope.identities.$promise, $scope.lists.$promise, $scope.html_templates.$promise, $scope.plain_templates.$promise]).then(function () {
         $scope.newsletter = Newsletters.get({ name: $routeParams.name }, function () { /* All OK. */ }, resourceErrorHandler);
 
-        loadingSwitch.turnOff();
+        abe.turnOff();
       });
 
     } else {
@@ -87,7 +87,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
 
     $scope.saveNewsletter = function (close) {
-      loadingSwitch.turnOn('Saving');
+      var abe2 = loadingSwitch.turnOn('Saving');
       Newsletters.save($scope.newsletter, function (success) {
         console.log('Success saving template.');
         if (close === true) {
@@ -96,15 +96,15 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
           notifications.showSuccess('Saved');
         }
 
-        loadingSwitch.turnOff();
+        abe2.turnOff();
 
       });
     };
 
     $scope.deleteNewsletter = function () {
-      loadingSwitch.turnOn('Deleting');
+      var abe3 = loadingSwitch.turnOn('Deleting');
       Newsletters.delete({ name: $scope.newsletter.name }, function () {
-        loadingSwitch.turnOff();
+        abe3.turnOff();
         $location.url('/');
       });
     };
@@ -120,7 +120,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         return;
       }
 
-      loadingSwitch.turnOn();
+      var abe4 = loadingSwitch.turnOn();
 
       $scope.loading_previews = true;
 
@@ -129,10 +129,10 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
       $q.all([a,b]).then(function (result) {
         $scope.loading_previews = false;
-        loadingSwitch.turnOff();
+        abe4.turnOff();
       },function (reason) {
         $scope.loading_previews = false;
-        loadingSwitch.turnOff();
+        abe4.turnOff();
       });
     }
 
@@ -190,7 +190,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
     $scope.sendNewsletter = function () {
 
-      loadingSwitch.turnOn('Sending');
+      var abe5 = loadingSwitch.turnOn('Sending');
 
       if($scope.at > Date.now()) {
         $scope.newsletter.at = $scope.at.toISOString();
@@ -201,11 +201,11 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
       $http.post('/newsletters/send', $scope.newsletter)
       .success(function (data) {
-        loadingSwitch.turnOff();
+        abe5.turnOff();
         notifications.showSuccess('Sendt ' + data.name);
       })
       .error(function (data, status) {
-        loadingSwitch.turnOff();
+        abe5.turnOff();
         console.log('Error', status, data);
         notifications.showError('Error: ' + data.message);
       });
@@ -214,15 +214,15 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
     $scope.draftNewsletter = function () {
       
-      loadingSwitch.turnOn('Creating');
+      var abe6 = loadingSwitch.turnOn('Creating');
 
       $http.post('/newsletters/draft', $scope.newsletter)
       .success(function (data) {
-        loadingSwitch.turnOff();
+        abe6.turnOff();
         notifications.showSuccess('Kladde oprettet ' + data.name);
       })
       .error(function (data, status) {
-        loadingSwitch.turnOff();
+        abe6.turnOff();
         console.log('Error', status, data);
       });
     };

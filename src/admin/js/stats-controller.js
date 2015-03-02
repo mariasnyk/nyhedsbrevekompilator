@@ -21,7 +21,7 @@ app.controller('StatsController', ['$scope', '$routeParams', '$location', '$reso
         $scope.missing_category = false;
       }
 
-      loadingSwitch.turnOn();
+      var abe = loadingSwitch.turnOn();
 
       $scope.stats_parameters.start_date = $filter('date')($scope.start_date, "yyyy-MM-dd");
       $scope.stats_parameters.end_date = $filter('date')($scope.end_date, "yyyy-MM-dd");
@@ -43,11 +43,11 @@ app.controller('StatsController', ['$scope', '$routeParams', '$location', '$reso
           });
         });
         console.log($scope.statsData);
-        loadingSwitch.turnOff();
+        abe.turnOff();
       },
       function (err) {
         console.log('err', err);
-        loadingSwitch.turnOff();
+        abe.turnOff();
         notifications.showError(err.statusText);
       });
     };

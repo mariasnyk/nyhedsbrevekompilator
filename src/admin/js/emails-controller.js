@@ -15,7 +15,7 @@ app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$res
     }
 
     $scope.getNewsletterData = function (name, index) {
-      loadingSwitch.turnOn();
+      var abe = loadingSwitch.turnOn();
       $scope.newsletter = Newsletters.get({name: name}, function (data) {
         $scope.newsletters[index].subject = data.subject;
         $scope.newsletters[index].identity = data.identity;
@@ -23,7 +23,7 @@ app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$res
         $scope.newsletters[index].date_schedule = data.date_schedule;
       }, function (err) {
         notifications.showError(err);
-        loadingSwitch.turnOff();
+        abe.turnOff();
       });
     };
   }]);

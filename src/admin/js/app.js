@@ -38,9 +38,11 @@ app.factory('loadingSwitch', ['$rootScope', function($rootScope) {
   return {
     turnOn: function (label) {
       $rootScope.$broadcast('loadingIndicator:turnOn', label !== undefined ? label : 'Loading');
-    },
-    turnOff: function () {
-      $rootScope.$broadcast('loadingIndicator:turnOff', 'turnOff');
+      return {
+        turnOff: function () {
+          $rootScope.$broadcast('loadingIndicator:turnOff', 'turnOff');
+        }
+      }
     }
   };
 }]);
