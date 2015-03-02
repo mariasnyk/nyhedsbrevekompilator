@@ -36,8 +36,8 @@ app.factory('loadingSwitch', ['$rootScope', function($rootScope) {
   var showLoadingIndicater = false;
 
   return {
-    turnOn: function () {
-      $rootScope.$broadcast('loadingIndicator:turnOn', 'turnOn');
+    turnOn: function (label) {
+      $rootScope.$broadcast('loadingIndicator:turnOn', label !== undefined ? label : 'Loading');
     },
     turnOff: function () {
       $rootScope.$broadcast('loadingIndicator:turnOff', 'turnOff');
@@ -48,13 +48,14 @@ app.factory('loadingSwitch', ['$rootScope', function($rootScope) {
 app.directive('loadingIndicator', ['$interval', '$timeout', function ($interval, $timeout) {
   return {
     restrict: 'EA',
-    template: '<div ng-show="loading" style="background-color: red; display: inline-block; top: 0px; right: 0px; padding: 3px 21px 3px 10px; position: absolute; min-width: 94px;">Loading{{dots}}</div>',
+    template: '<div ng-show="loading" style="background-color: red; display: inline-block; top: 0px; right: 0px; padding: 3px 21px 3px 10px; position: absolute; min-width: 94px;">{{ label }}{{dots}}</div>',
     link: function (scope, element, attrs) {
 
       var dots = 0;
       var a;
 
-      scope.$on('loadingIndicator:turnOn', function (event, data) {
+      scope.$on('loadingIndicator:turnOn', function (event, label) {
+        scope.label = label;
         dots = 0;
         a = c();
         scope.loading = true;

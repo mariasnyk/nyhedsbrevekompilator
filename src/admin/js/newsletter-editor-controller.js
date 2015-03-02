@@ -87,6 +87,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
 
     $scope.saveNewsletter = function (close) {
+      loadingSwitch.turnOn('Saving');
       Newsletters.save($scope.newsletter, function (success) {
         console.log('Success saving template.');
         if (close === true) {
@@ -94,17 +95,16 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         } else {
           notifications.showSuccess('Saved');
         }
+
+        loadingSwitch.turnOff();
+
       });
-      //console.log('n', $scope.newsletter);
-      // $http.post('/newsletters', $scope.newsletter)
-      // .success(function () {
-      // }).error(function (data, status) {
-      //   console.log('Error saving template.', data, status);
-      // });
     };
 
     $scope.deleteNewsletter = function () {
+      loadingSwitch.turnOn('Deleting');
       Newsletters.delete({ name: $scope.newsletter.name }, function () {
+        loadingSwitch.turnOff();
         $location.url('/');
       });
     };
@@ -189,6 +189,9 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
 
     $scope.sendNewsletter = function () {
+
+      loadingSwitch.turnOn('Sending');
+
       if($scope.at > Date.now()) {
         $scope.newsletter.at = $scope.at.toISOString();
         console.log('Scheduled to', $scope.newsletter.at);
@@ -198,9 +201,11 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
       $http.post('/newsletters/send', $scope.newsletter)
       .success(function (data) {
+        loadingSwitch.turnOff();
         notifications.showSuccess('Sendt ' + data.name);
       })
       .error(function (data, status) {
+        loadingSwitch.turnOff();
         console.log('Error', status, data);
         notifications.showError('Error: ' + data.message);
       });
@@ -208,11 +213,16 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
 
     $scope.draftNewsletter = function () {
+      
+      loadingSwitch.turnOn('Creating');
+
       $http.post('/newsletters/draft', $scope.newsletter)
       .success(function (data) {
+        loadingSwitch.turnOff();
         notifications.showSuccess('Kladde oprettet ' + data.name);
       })
       .error(function (data, status) {
+        loadingSwitch.turnOff();
         console.log('Error', status, data);
       });
     };
