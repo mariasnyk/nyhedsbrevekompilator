@@ -6,6 +6,8 @@ app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$res
       $scope.newsletters.sort(compare);
     });
 
+    loadingSwitch.watch($scope.newsletters);
+
     function compare(a,b) {
       if (a.newsletter_id < b.newsletter_id)
          return 1;
@@ -15,7 +17,6 @@ app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$res
     }
 
     $scope.getNewsletterData = function (name, index) {
-      var abe = loadingSwitch.turnOn();
       $scope.newsletter = Newsletters.get({name: name}, function (data) {
         $scope.newsletters[index].subject = data.subject;
         $scope.newsletters[index].identity = data.identity;
@@ -23,7 +24,7 @@ app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$res
         $scope.newsletters[index].date_schedule = data.date_schedule;
       }, function (err) {
         notifications.showError(err);
-        abe.turnOff();
       });
+      loadingSwitch.watch($scope.newsletter);
     };
   }]);

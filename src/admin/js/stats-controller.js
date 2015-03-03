@@ -13,6 +13,8 @@ app.controller('StatsController', ['$scope', '$routeParams', '$location', '$reso
 
     $scope.categories = Categories.query();
 
+    loadingSwitch.watch($scope.categories);
+
     $scope.getData = function () {
       if ($scope.stats_parameters.categories.length === 0) {
         $scope.missing_category = true;
@@ -21,15 +23,13 @@ app.controller('StatsController', ['$scope', '$routeParams', '$location', '$reso
         $scope.missing_category = false;
       }
 
-      var abe = loadingSwitch.turnOn();
-
       $scope.stats_parameters.start_date = $filter('date')($scope.start_date, "yyyy-MM-dd");
       $scope.stats_parameters.end_date = $filter('date')($scope.end_date, "yyyy-MM-dd");
 
       console.log($scope.stats_parameters);
       $scope.statsData = [];
 
-      Stats.query($scope.stats_parameters,
+      var quering = Stats.query($scope.stats_parameters,
       function (data) {
         console.log('data', data);
         data.forEach(function (value) {
@@ -43,13 +43,13 @@ app.controller('StatsController', ['$scope', '$routeParams', '$location', '$reso
           });
         });
         console.log($scope.statsData);
-        abe.turnOff();
       },
       function (err) {
         console.log('err', err);
-        abe.turnOff();
         notifications.showError(err.statusText);
       });
+
+      loadingSwitch.watch(quering);
     };
   }]);
 

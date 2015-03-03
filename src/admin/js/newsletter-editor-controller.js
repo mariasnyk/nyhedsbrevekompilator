@@ -1,8 +1,6 @@
 app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', '$q', 'notifications', 'loadingSwitch',
   function ($scope, $routeParams, $location, $resource, $sce, $http, $q, notifications, loadingSwitch) {
 
-    var loadingControls = loadingSwitch.turnOn();
-
     // Defaulting the schedule with an added 15 minuttes
     $scope.at = new Date(new Date().getTime() + 15*60000);
 
@@ -22,11 +20,13 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
       // Waiting for the drop-down data to be fetched before we query the newsletter.
       // This is done so that drop-downs are populated and the equivalent newsletter value is selected in the drop-down.
-      $q.all([$scope.identities.$promise, $scope.lists.$promise, $scope.html_templates.$promise, $scope.plain_templates.$promise]).then(function () {
+      var all = $q.all([$scope.identities.$promise, $scope.lists.$promise, $scope.html_templates.$promise, $scope.plain_templates.$promise]).then(function () {
         $scope.newsletter = Newsletters.get({ name: $routeParams.name }, function () { /* All OK. */ }, resourceErrorHandler);
 
-        loadingControls.turnOff();
+        loadingSwitch.watch($scope.newsletter);
       });
+
+      loadingSwitch.watch(all);
 
     } else {
 
@@ -49,8 +49,9 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         updatePreview();
         //updateControlroomIframe();
         
-        loadingControls.turnOff();
       }, resourceErrorHandler);
+
+      loadingSwitch.watch($scope.newsletter);
     }
 
 
@@ -87,30 +88,22 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
 
     $scope.saveNewsletter = function (close) {
-      
-      var savingIndicator = loadingSwitch.turnOn('Saving');
-
-      Newsletters.save($scope.newsletter, function (success) {
+      var saving = Newsletters.save($scope.newsletter, function (success) {
         console.log('Success saving template.');
         if (close === true) {
           $location.url('/' + $scope.newsletter.name );        
         } else {
           notifications.showSuccess('Saved');
         }
-
-        savingIndicator.turnOff();
-
       });
+      loadingSwitch.watch(saving, 'Saving');
     };
 
     $scope.deleteNewsletter = function () {
-
-      var deletingIndicator = loadingSwitch.turnOn('Deleting');
-
-      Newsletters.delete({ name: $scope.newsletter.name }, function () {
-        deletingIndicator.turnOff();
+      var deleting = Newsletters.delete({ name: $scope.newsletter.name }, function () {
         $location.url('/');
       });
+      loadingSwitch.watch(deleting);
     };
 
     $scope.updatePreviewClickEvent = function () {
@@ -124,20 +117,18 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         return;
       }
 
-      var abe4 = loadingSwitch.turnOn();
-
       $scope.loading_previews = true;
 
       var a = updateHtmlPreview();
       var b = updatePlainPreview();
 
-      $q.all([a,b]).then(function (result) {
+      var all = $q.all([a,b]).then(function (result) {
         $scope.loading_previews = false;
-        abe4.turnOff();
       },function (reason) {
         $scope.loading_previews = false;
-        abe4.turnOff();
       });
+
+      loadingSwitch.watch(all);
     }
 
 
@@ -147,10 +138,9 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         return;
       }
 
-      var updateHtmlPreviewIndicator = loadingSwitch.turnOn();
       $scope.loading_html_preview = true;
 
-      return $http.get('/templates/' + $scope.newsletter.template_html + '?u=' + encodeURIComponent($scope.newsletter.bond_url))
+      var getting = $http.get('/templates/' + $scope.newsletter.template_html + '?u=' + encodeURIComponent($scope.newsletter.bond_url))
       .success(function (data, status, getHeaders) {
         var headers = getHeaders();
         $scope.newsletter.subject = decodeURIComponent(headers['x-subject-suggestion']);
@@ -159,7 +149,6 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         $scope.newsletter.email_html = data;
         $scope.trusted_html_email_preview = $sce.trustAsHtml(data);
         $scope.loading_html_preview = false;
-        updateHtmlPreviewIndicator.turnOff();
       })
       .error(function (data, status, headers, config) {
         console.log('updateHtmlPreview error', data);
@@ -171,8 +160,10 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         $scope.loading_html_preview = false;
         $scope.newsletter.email_html = '';
         $scope.trusted_html_email_preview = '<p>Error</p>';
-        updateHtmlPreviewIndicator.turnOff();
       });
+
+      loadingSwitch.watch(getting);
+      return getting;
     };
 
 
@@ -182,27 +173,23 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         return;
       }
 
-      var updatePlainPreviewIndicator = loadingSwitch.turnOn();
-
       $scope.loading_plain_preview = true;
 
-      return $http.get('/templates/' + $scope.newsletter.template_plain + '?u=' + encodeURIComponent($scope.newsletter.bond_url))
+      var getting = $http.get('/templates/' + $scope.newsletter.template_plain + '?u=' + encodeURIComponent($scope.newsletter.bond_url))
       .success(function (data) {
         $scope.newsletter.email_plain = data;
         $scope.loading_plain_preview = false;
-        updatePlainPreviewIndicator.turnOff();
       })
       .error(function (data, status, headers, config) {
         $scope.loading_plain_preview = false;
-        updatePlainPreviewIndicator.turnOff();
       });
+
+      loadingSwitch.watch(getting);
+      return getting;
     };
 
 
     $scope.sendNewsletter = function () {
-
-      var abe5 = loadingSwitch.turnOn('Sending');
-
       if($scope.at > Date.now()) {
         $scope.newsletter.at = $scope.at.toISOString();
         console.log('Scheduled to', $scope.newsletter.at);
@@ -210,32 +197,29 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         console.log('Sending straight away');
       }
 
-      $http.post('/newsletters/send', $scope.newsletter)
+      var sending = $http.post('/newsletters/send', $scope.newsletter)
       .success(function (data) {
-        abe5.turnOff();
         notifications.showSuccess('Sendt ' + data.name);
       })
       .error(function (data, status) {
-        abe5.turnOff();
         console.log('Error', status, data);
         notifications.showError('Error: ' + data.message);
       });
+
+      loadingSwitch.watch(sending);
     };
 
 
     $scope.draftNewsletter = function () {
-      
-      var abe6 = loadingSwitch.turnOn('Creating');
-
-      $http.post('/newsletters/draft', $scope.newsletter)
+      var drafting = $http.post('/newsletters/draft', $scope.newsletter)
       .success(function (data) {
-        abe6.turnOff();
         notifications.showSuccess('Kladde oprettet ' + data.name);
       })
       .error(function (data, status) {
-        abe6.turnOff();
         console.log('Error', status, data);
       });
+
+      loadingSwitch.watch(drafting);
     };
 
 
@@ -244,9 +228,11 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         return;
       }
 
-      $http.get('/templates/controlroom?u=' + encodeURIComponent($scope.newsletter.bond_url))
+      var getting = $http.get('/templates/controlroom?u=' + encodeURIComponent($scope.newsletter.bond_url))
       .success(function (data) {
         $scope.controlroom_url = $sce.trustAsResourceUrl(data.url);
       });
+
+      loadingSwitch.watch(getting);
     }
   }]);

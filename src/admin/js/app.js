@@ -10,7 +10,7 @@ app.config(['$routeProvider', function ($routeProvider) {
       .when( '/', {
         templateUrl: 'newsletter-dashboard.html',
         controller: 'NewsletterDashboardController' })
-      .when( '/emails', {
+      .when( '/udsendelser', {
         templateUrl: 'emails.html',
         controller: 'EmailsController' })
       .when( '/stats', {
@@ -32,27 +32,25 @@ app.config(['$resourceProvider', function ($resourceProvider) {
 }]);
 
 
-app.factory('loadingSwitch', ['$rootScope', '$interval', '$timeout', function($rootScope, $interval, $timeout) {
+app.factory('loadingSwitch', ['$rootScope', function($rootScope) {
   return {
-    turnOn: function (label) {
-      $rootScope.$broadcast('loadingIndicator:turnOn', label);
+    watch: function (request, label) {
+      // Finding the promise
+      var promise = request.$$state !== undefined ? request :
+          request.$promise !== undefined ? request.$promise :
+           null;
 
-      var timer = $timeout(function () {
-        $rootScope.$broadcast('loadingIndicator:turnOff');
-        console.log('Loading indicator timeout');
-      }, 120000);
-
-      timer.turnOff = function () {
-        $rootScope.$broadcast('loadingIndicator:turnOff');
-        $timeout.cancel(this);
+      if (promise !== null) {
+        $rootScope.$broadcast('loadingIndicator:turnOn', label);
+        promise.finally(function () {
+          $rootScope.$broadcast('loadingIndicator:turnOff');
+        });
       }
-
-      return timer;
     }
   };
 }]);
 
-app.directive('loadingIndicator', ['$interval', '$timeout', function ($interval, $timeout) {
+app.directive('loadingIndicator', ['$interval', function ($interval) {
   return {
     restrict: 'EA',
     template: '<div ng-show="loading" style="background-color: red; display: inline-block; top: 0px; right: 0px; padding: 3px 21px 3px 10px; position: absolute; min-width: 100px;">{{ label }}{{ dots }}</div>',
@@ -79,7 +77,6 @@ app.directive('loadingIndicator', ['$interval', '$timeout', function ($interval,
 
           scope.loading = true;
         }
-
       });
 
       scope.$on('loadingIndicator:turnOff', function (event, id) {

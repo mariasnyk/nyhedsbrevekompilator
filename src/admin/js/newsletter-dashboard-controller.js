@@ -1,15 +1,14 @@
 app.controller('NewsletterDashboardController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications', 'loadingSwitch',
   function ($scope, $routeParams, $location, $resource, $sce, $http, notifications, loadingSwitch) {
 
-    var abe = loadingSwitch.turnOn();
     //var Newsletters = $resource('/newsletters/:name', { name: '@name' });
     var Newsletters = $resource('/newsletters/');
-    $scope.newsletters = Newsletters.query(function () {
-      abe.turnOff();
-    });
+    $scope.newsletters = Newsletters.query();
+
+    loadingSwitch.watch($scope.newsletters);
 
     $scope.createNewsletter = function (name) {
-      Newsletters.save({ name: name }, function () {
+      var a = Newsletters.save({ name: name }, function () {
         $location.url('/' + name + '/edit' );
       }, function (error) {
         console.log('Create newsletter error:', error)
@@ -19,6 +18,8 @@ app.controller('NewsletterDashboardController', ['$scope', '$routeParams', '$loc
           notifications.showError(error.statusText !== undefined ? error.statusText : 'Unknown error' );
         }
       });
+
+      loadingSwitch.watch(a);
     };
 
     $scope.createNewsletterKeyUp = function (clickEvent, name) {
