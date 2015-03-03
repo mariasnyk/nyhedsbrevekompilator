@@ -12,7 +12,7 @@ app.config(['$routeProvider', function ($routeProvider) {
         controller: 'NewsletterDashboardController' })
       .when( '/udsendelser', {
         templateUrl: 'publications.html',
-        controller: 'EmailsController' })
+        controller: 'PublicationsController' })
       .when( '/stats', {
         templateUrl: 'stats.html',
         controller: 'StatsController' })

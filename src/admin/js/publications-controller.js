@@ -1,4 +1,4 @@
-app.controller('EmailsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications', 'loadingSwitch',
+app.controller('PublicationsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications', 'loadingSwitch',
   function ($scope, $routeParams, $location, $resource, $sce, $http, notifications, loadingSwitch) {
     var Newsletters = $resource('/newsletters/emails/:name', { name: '@name' });
     $scope.newsletters = Newsletters.query(function () {
