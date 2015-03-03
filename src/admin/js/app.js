@@ -11,7 +11,7 @@ app.config(['$routeProvider', function ($routeProvider) {
         templateUrl: 'newsletter-dashboard.html',
         controller: 'NewsletterDashboardController' })
       .when( '/udsendelser', {
-        templateUrl: 'emails.html',
+        templateUrl: 'publications.html',
         controller: 'EmailsController' })
       .when( '/stats', {
         templateUrl: 'stats.html',
