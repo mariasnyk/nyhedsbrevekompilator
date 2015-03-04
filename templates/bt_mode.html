@@ -126,7 +126,7 @@
                 <div style="max-width: 300px; margin: 0 7px 0 20px; display: inline-block;  background-color: #ffffff; font-size; 0; line-height: 0px;">
                   <!-- Right story -->
                   {% set width="300" %}
-                  {% set node = nodes[loop.index]; %}
+                  {% set node = nodes[loop.index0]; %}
                   {% include "partials/bt_mode_article.html" %}
                 </div>
               </td>
@@ -134,7 +134,7 @@
                 <div style="max-width: 300px; margin: 0 20px 0 7px; display: inline-block;  background-color: #ffffff; font-size; 0; line-height: 0px;">
                   <!-- Left story -->
                   {% set width="300" %}
-                  {% set node = nodes[loop.index + 1]; %}
+                  {% set node = nodes[loop.index0 + 1]; %}
                   {% include "partials/bt_mode_article.html" %}
                 </div>
               </td>
