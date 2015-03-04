@@ -75,6 +75,10 @@ module.exports.register = function (plugin, options, next) {
               data.subject = emailSubjectSuggestion(data);
               data.dates = getDates();
 
+              if (request.query.debug) {
+                // TODO: What can we do the make the template debugging easier?
+              }
+
               reply
               .view(request.params.template, data)
               .header('Transfer-Encoding', 'chunked')
@@ -335,10 +339,10 @@ function danishMonthName (month) {
     case 5: return 'Maj';
     case 6: return 'Juni';
     case 7: return 'Juli';
-    case 7: return 'August';
-    case 7: return 'September';
-    case 7: return 'Oktober';
-    case 7: return 'November';
-    case 7: return 'December';
+    case 8: return 'August';
+    case 9: return 'September';
+    case 10: return 'Oktober';
+    case 11: return 'November';
+    case 12: return 'December';
   }
 }

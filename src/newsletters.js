@@ -119,6 +119,32 @@ module.exports.register = function (plugin, options, next) {
 
   plugin.route({
     method: 'get',
+    path: '/emails/schedule/{name}',
+    handler: function (request, reply) {
+      callSendGrid('/api/newsletter/schedule/get.json', 'name=' + encodeURIComponent(request.params.name), function (err, data) {
+        if (err) {
+          console.log(err)
+          reply(err).code(500);
+        } else reply(data);
+      });
+    }
+  });
+
+  plugin.route({
+    method: 'delete',
+    path: '/emails/schedule/{name}',
+    handler: function (request, reply) {
+      callSendGrid('/api/newsletter/schedule/delete.json', 'name=' + encodeURIComponent(request.params.name), function (err, data) {
+        if (err) {
+          console.log(err)
+          reply(err).code(500);
+        } else reply(data);
+      });
+    }
+  });
+
+  plugin.route({
+    method: 'get',
     path: '/emails/{name}',
     handler: function (request, reply) {
       callSendGrid('/api/newsletter/newsletter/get.json', 'name=' + encodeURIComponent(request.params.name), function (err, data) {
@@ -441,7 +467,7 @@ function createMarketingEmail (data, callback) {
       return callback({ error: 'Error when validating input for marketing email.', errors: err.errors });
     }
 
-    var name = data.name + ' ' + new Date().toISOString();
+    var name = data.name + ' ' + dkDateString();
 
     addSendGridMarketingEmail(data.identity, name, data.subject, data.email_plain, data.email_html, function (err, result) {
       if (err) {
@@ -473,6 +499,40 @@ function createMarketingEmail (data, callback) {
       });
     });
   });
+}
+
+function dkDateString () {
+  var a = new Date();
+  return danishDayName(a.getUTCDay()) + ' ' + a.getUTCDate() + ' ' + danishMonthName(a.getUTCMonth() + 1) + ' ' + a.getFullYear();
+}
+
+function danishDayName (day) {
+  switch (day) {
+    case 1: return 'Man';
+    case 2: return 'Tir';
+    case 3: return 'Ons';
+    case 4: return 'Tor';
+    case 5: return 'Fre';
+    case 6: return 'Lør';
+    case 7: return 'Søn';
+  }
+}
+
+function danishMonthName (month) {
+  switch (month) {
+    case 1: return 'Jan';
+    case 2: return 'Feb';
+    case 3: return 'Mar';
+    case 4: return 'Apr';
+    case 5: return 'Maj';
+    case 6: return 'Jun';
+    case 7: return 'Jul';
+    case 8: return 'Aug';
+    case 9: return 'Sep';
+    case 10: return 'Okt';
+    case 11: return 'Nov';
+    case 12: return 'Dec';
+  }
 }
 
 

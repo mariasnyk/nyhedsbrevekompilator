@@ -19,12 +19,15 @@
         <tr ng-repeat="newsletter in newsletters | filter: newsletterFilter">
           <td>{{ newsletter.name }}</td>
           <td>
-            <button ng-click="getNewsletterData(newsletter.name, $index)">Hent data</button>
+            <button ng-click="getNewsletterData(newsletter.name, $index)">Vis detaljer</button>
           </td>
           <td>{{ newsletter.subject }}</td>
           <td>{{ newsletter.identity }}</td>
           <td>{{ newsletter.total_recipients }}</td>
-          <td>{{ newsletter.date_schedule }}</td>
+          <td>
+            {{ newsletter.schedule }}
+            <button ng-show="newsletter.schedule" class="btn btn-danger btn-xs" ng-click="deleteSchedule(newsletter.name, $index)">Annuller</button>
+          </td>
         </tr>
       </table>
     </div>
