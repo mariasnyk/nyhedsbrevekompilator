@@ -175,28 +175,6 @@ module.exports.register = function (plugin, options, next) {
       } else {
         return reply().code(400);
       }
-
-// { protocol: 'http:',
-//   slashes: true,
-//   auth: null,
-//   host: 'edit.berlingskemedia.net.white.bond.u.net',
-//   port: null,
-//   hostname: 'edit.berlingskemedia.net.white.bond.u.net',
-//   hash: null,
-//   search: '?image_preset=620x355-c',
-//   query: { image_preset: '620x355-c' },
-//   pathname: '/bondapi/nodequeue/4626.ave-json',
-//   path: '/bondapi/nodequeue/4626.ave-json?image_preset=620x355-c',
-//   href: 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/4626.ave-json?image_preset=620x355-c' }
-
-// module.exports.getNodequeueControlroomUrl = function (id) {
-//   return 'http://' + bondHost + '/admin/content/nodequeue/' + id + '/view';
-// };
-
-// module.exports.getNodeControlroomUrl = function (id) {
-//   return 'http://' + bondHost + '/node/' + id + '/edit';
-// };
-
     }
   });
 

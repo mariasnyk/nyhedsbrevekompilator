@@ -30,7 +30,10 @@ module.exports = pool;
 
 module.exports.queryOne = function (sql, callback) {
   pool.query(sql, function (err, result) {
-    if (err) throw err;
+    if (err) {
+      console.log(err);
+      throw err; 
+    }
     else if (result.length === 0)
       callback(null, null);
     else if (result.length > 1)

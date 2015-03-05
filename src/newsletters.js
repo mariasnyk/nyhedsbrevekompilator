@@ -160,21 +160,20 @@ module.exports.register = function (plugin, options, next) {
     method: 'get',
     path: '/',
     handler: function (request, reply) {
-      userdb.query('SELECT id, name FROM mashed_composer ORDER BY name ASC', function (err, result) {
-        if (err) return reply(err);
-
-        reply(result.map(function (newsletter) {
-          return newsletter.name;
-        }));
+      queryAllNewsletters(function (err, newsletters) {
+        if (err)
+          reply(err).code(500);
+        else
+          reply(newsletters);
       });
     }
   });
 
   plugin.route({
     method: 'get',
-    path: '/{name}',
+    path: '/{ident}',
     handler: function (request, reply) {
-      queryOneNewsletter(request.params.name, function (err, newsletter) {
+      queryOneNewsletter(request.params.ident, function (err, newsletter) {
         if (err) return reply(err).code(500);
         else if (newsletter === null)
           reply().code(404);
@@ -187,19 +186,73 @@ module.exports.register = function (plugin, options, next) {
   plugin.route({
     method: 'post',
     path: '/',
-    handler: saveNewsletter
+    handler: function (request, reply) {
+      if (request.payload.name === undefined || request.payload.name === null || request.payload.name === '') {
+        return reply('Field name missing').code(400);
+      }
+
+      var ident = slugify(request.payload.name);
+
+      queryOneNewsletter(ident, function (err, result) {
+        if (result === null) {
+
+          var data = convertPayloadToDate(request.payload);
+
+          insertNewsletter(ident, data, function (err, result) {
+            if (err) {
+              console.log(err);
+              reply(err).code(500);
+            } else {
+              reply({ message: 'Inserted', ident: ident, id: result.insertId });
+            }
+          });
+        }
+      });
+    }
   });
 
   plugin.route({
     method: ['post','put'],
-    path: '/{name}',
-    handler: saveNewsletter
+    path: '/{ident}',
+    handler: function (request, reply) {
+      queryOneNewsletter(request.params.ident, function (err, result) {
+        if (err) {
+          console.log(err);
+          reply(err).code(500);
+        } else if (result === null) {
+          reply({ message: 'Newsletter ' + request.params.ident + ' does not exists'}).code(404);
+        } else {
+
+          var data = convertPayloadToDate(request.payload);
+
+          updateNewsletter(request.params.ident, data, function (err, result) {
+            if (err) {
+              console.log(err);
+              reply(err).code(500);
+            } else {
+              reply({ message: 'Updated' });
+            }
+          });
+        }
+      });
+    }
   });
 
   plugin.route({
     method: 'delete',
-    path: '/{name}',
-    handler: deleteNewsletter
+    path: '/{ident}',
+    handler: function (request, reply) {
+      deleteNewsletter(request.params.ident, function (err, result) {
+        if (err) {
+          console.log(err);
+          reply().code(500);
+        } else if (result.affectedRows === 0) {
+          reply().code(404);
+        } else {
+          reply();
+        }
+      });
+    }
   });
 
   plugin.route({
@@ -226,9 +279,9 @@ module.exports.register = function (plugin, options, next) {
 
   plugin.route({
     method: 'post',
-    path: '/{name}/send',
+    path: '/{ident}/send',
     handler: function (request, reply) {
-      queryOneNewsletter(request.params.name, function (err, newsletter) {
+      queryOneNewsletter(request.params.ident, function (err, newsletter) {
         if (err) return reply(err).code(500);
         if (newsletter === null) return reply().code(404);
 
@@ -249,12 +302,57 @@ module.exports.register.attributes = {
 };
 
 
-function queryOneNewsletter (name, callback) {
+function slugify (name) {
+  return name.toString().toLowerCase()
+    .replace(/\s+/g, '-')        // Replace spaces with -
+    .replace(/[^\w\-]+/g, '')    // Remove all non-word chars
+    .replace(/\-\-+/g, '-')      // Replace multiple - with single -
+    .replace(/^-+/, '')          // Trim - from start of text
+    .replace(/-+$/, '');         // Trim - from end of text
+}
 
+
+function convertPayloadToDate (payload) {
+  var newsletter = {
+    name: payload.name,
+    identity: payload.identity,
+    bond_url: payload.bond_url,
+    bond: url.parse(payload.bond_url !== undefined ? payload.bond_url : '', true),
+    template_html: payload.template_html,
+    template_plain: payload.template_plain,
+    categories: payload.categories,
+    list: payload.list
+  };
+
+  return new Buffer(JSON.stringify(newsletter)).toString('base64');
+}
+
+
+function queryAllNewsletters (callback) {
   var sql = [
-    'SELECT data',
+    'SELECT ident, data',
     'FROM mashed_composer',
-    'WHERE name = ' + userdb.escape(name)].join(' ');
+    'ORDER BY ident ASC'].join(' ');
+
+  userdb.query(sql, function (err, result) {
+    if (err) return callback(err);
+
+    callback(null, result.map(function (newsletter) {
+      var data = JSON.parse(new Buffer(newsletter.data, 'base64').toString('utf8'));
+      return {
+        ident: newsletter.ident,
+        name: data.name
+      }
+    }));
+  });
+}
+
+
+function queryOneNewsletter (ident, callback) {
+  var sql = [
+    'SELECT ident, data',
+    'FROM mashed_composer',
+    'WHERE ident = ' + userdb.escape(ident)].join(' ');
 
   userdb.queryOne(sql, function (err, result) {
     if (err) return callback(err);
@@ -262,130 +360,63 @@ function queryOneNewsletter (name, callback) {
       callback(null, null);
     else {
       var newsletter = JSON.parse(new Buffer(result.data, 'base64').toString('utf8'));
-      newsletter.name = name;
       callback(null, newsletter);
     }
   });
 }
 
 
-function saveNewsletter (request, reply) {
-
-  // If the request was made with the exact route (/newsletter/{name}), we'll overwrite the newsletter data.
-  var overwriteInDB = request.params.name !== undefined;
-  var name = request.params.name ? request.params.name : request.payload.name;
-
-  if (name === undefined || name === null || name === '') {
-    return reply('Field name missing').code(400);
-  }
-
-  var newsletter = {
-    name: name,
-    identity: request.payload.identity,
-    bond_url: request.payload.bond_url,
-    bond: url.parse(request.payload.bond_url !== undefined ? request.payload.bond_url : '', true),
-    template_html: request.payload.template_html,
-    template_plain: request.payload.template_plain,
-    categories: request.payload.categories,
-    list: request.payload.list
-  };
-
-  var data = new Buffer(JSON.stringify(newsletter)).toString('base64');
-
-  selectDB(name, function (err, result) {
-    if (err) {
-      console.log(err);
-      reply(err).code(500);
-
-    } else if (result === null) {
-      insertDB(name, data, handler);
-    } else if (overwriteInDB) {
-      updateDB(result.id, data, handler);
-    } else {
-      reply({ message: 'Newsletter ' + name + ' exists'}).code(403);
-    }
-  });
-
-  function handler (err, result) {
-    if (err) {
-      console.log(err);
-      reply(err).code(500);
-    } else {
-      if (result.insertId === 0)
-        reply({ message: 'Updated' });
-      else
-        reply({ message: 'Inserted', id: result.insertId });
-    }
-  }
-}
-
-
-
-function selectDB (name, callback) {
-  var sql = 'SELECT id FROM mashed_composer WHERE name = ' + userdb.escape(name);
-
-  userdb.queryOne(sql, callback);
-}
-
-function insertDB (name, data, callback) {
+function insertNewsletter (ident, data, callback) {
   var sql = [
     'INSERT INTO mashed_composer',
-    '(name, data)',
+    '(ident, data)',
     'VALUES (',
-    userdb.escape(name) + ',',
+    userdb.escape(ident) + ',',
     userdb.escape(data) + ')'].join (' ');
 
   userdb.query(sql, callback);
 }
 
-function updateDB (id, data, callback) {
+
+function updateNewsletter (ident, data, callback) {
   var sql = [
     'UPDATE mashed_composer',
     'SET data = ' + userdb.escape(data),
-    'WHERE id = ' + userdb.escape(id)].join (' ');
+    'WHERE ident = ' + userdb.escape(ident)].join (' ');
 
   userdb.query(sql, callback);
 }
 
 
-function deleteNewsletter (request, reply) {
-  deleteFromDB(request.params.name, function (err, result) {
-    if (err) {
-      console.log(err);
-      reply().code(500);
-    } else if (result.affectedRows === 0) {
-      reply().code(404);
-    } else {
-      reply();
-    }
-  });
-}
-
-
-function deleteFromDB (name, callback) {
-  var sql = 'DELETE FROM mashed_composer WHERE name = ' + userdb.escape(name);
-
+function deleteNewsletter (ident, callback) {
+  var sql = 'DELETE FROM mashed_composer WHERE ident = ' + userdb.escape(ident);
   userdb.query(sql, callback);
 }
 
 
-function validateLastChecksum (name, checksum, callback) {
-
-  var sql = 'SELECT last_checksum FROM mashed_composer WHERE name = ' + userdb.escape(name);
+function validateLastChecksum (list, checksum, callback) {
+  var sql = 'SELECT last_checksum FROM mashed_composer_checksums WHERE list = ' + userdb.escape(list);
 
   userdb.queryOne(sql, function (err, result) {
-    if (result.last_checksum === checksum) {
-      callback({message: 'Last checksum is identical.'});
+    if (result !== null && result.last_checksum === checksum) {
+      callback({ message: 'Last checksum is identical' });
     } else {
-      updateLastChecksum(name, checksum, callback);
+      callback(null, { message: 'Checksum OK' });
     }
   });
 }
 
 
-function updateLastChecksum (name, checksum, callback) {
+function updateLastChecksum (list, checksum, callback) {
+  var sql = [
+    'INSERT INTO mashed_composer_checksums (list, last_checksum)',
+    'VALUES (',
+    [userdb.escape(list), userdb.escape(checksum)].join(','),
+    ')',
+    'ON DUPLICATE KEY UPDATE',
+    'last_checksum = ', userdb.escape(checksum)
+  ].join(' ');
 
-  var sql = 'UPDATE mashed_composer SET last_checksum = ' + userdb.escape(checksum) + ' WHERE name = ' + userdb.escape(name);
   userdb.query(sql, callback);
 }
 
@@ -419,8 +450,6 @@ function download (url, callback) {
 
 function autoSendNewsletter (newsletter, callback) {
 
-  newsletter.at = new Date(new Date().getTime() + 15*60000);
-
   var html_url  = 'http://' + request.info.host + '/templates/' + newsletter.template_html + '?u=' + encodeURIComponent(newsletter.bond_url),
       plain_url = 'http://' + request.info.host + '/templates/' + newsletter.template_plain + '?u=' + encodeURIComponent(newsletter.bond_url);
 
@@ -435,6 +464,9 @@ function autoSendNewsletter (newsletter, callback) {
 
       newsletter.email_plain = email_plain;
 
+      newsletter.after = 15;
+      newsletter.name = newsletter.name + ' ' + dkDateString();
+
       sendNewsletter(newsletter, callback);
     });
   });
@@ -443,58 +475,55 @@ function autoSendNewsletter (newsletter, callback) {
 
 function sendNewsletter (newsletter, callback) {
 
-  validateLastChecksum(newsletter.name, newsletter.checksum, function (err) {
+  validateLastChecksum(newsletter.list, newsletter.checksum, function (err) {
     if (err) return callback(err);
 
     createMarketingEmail (newsletter, function (err, result) {
       if (err) return callback(err);
 
-      addSendGridSchedule(result.name, newsletter.at, function (err) {
+      addSendGridSchedule(newsletter.name, newsletter.after, function (err) {
         if (err) return callback(err);
 
-        callback(null, result);
+        updateLastChecksum(newsletter.list, newsletter.checksum, function (err) {
+          if (err) callback(err);
+          else callback(null, { message: 'Sent' });
+        });
       });
     });
   });
 }
 
 
-function createMarketingEmail (data, callback) {
+function createMarketingEmail (newsletter, callback) {
 
-  validateNewsletterInputData(data, function (err) {
+  validateNewsletterInputData(newsletter, function (err) {
     if (err) {
       console.log(err);
       return callback({ error: 'Error when validating input for marketing email.', errors: err.errors });
     }
 
-    var name = data.name + ' ' + dkDateString();
-
-    addSendGridMarketingEmail(data.identity, name, data.subject, data.email_plain, data.email_html, function (err, result) {
+    addSendGridMarketingEmail(newsletter.identity, newsletter.name, newsletter.subject, newsletter.email_plain, newsletter.email_html, function (err, result) {
       if (err) {
         console.log(err);
-        return callback({ error: 'Error when creating new marketing email.' });
+        //return callback({ error: 'Error when creating new marketing email.' });
+        return callback(err);
       }
 
       // Adding the newsletter name as a mandatory category
-      if (data.categories === undefined || data.categories === null) {
-        data.categories = [];
+      if (newsletter.categories === undefined || newsletter.categories === null) {
+        newsletter.categories = [];
       }
 
-      if (data.categories.indexOf(data.name) === -1) {
-        data.categories.push(data.name);
-      }
-
-      data.categories.forEach(function (category) {
-        addSendGridCategory(category, name);
+      newsletter.categories.forEach(function (category) {
+        addSendGridCategory(category, newsletter.name);
       });
 
-      addSendGridRecipients(data.list, name, function (err, result) {
+      addSendGridRecipients(newsletter.list, newsletter.name, function (err, result) {
         if (err) {
           console.log(err);
           return callback({ error: 'Error when adding recipients to marketing email.' });
         }
 
-        result.name = name;
         callback(null, result);
       });
     });
@@ -616,28 +645,27 @@ function addSendGridRecipients (list, name, callback) {
 }
 
 
-function addSendGridSchedule (name, at, callback) {
+function addSendGridSchedule (name, after, callback) {
 
-  if (typeof at === 'function' && callback === undefined) {
-    callback = at;
-    at = null;
+  if (typeof after === 'function' && callback === undefined) {
+    callback = after;
+    after = null;
   }
 
-  if (at !== null) {
-    try {
-      if (Date.parse(at) === NaN) {
-        return callback({ message: 'Field at (' + at + ') is not a valid date.' });
-      }
-    } catch (ex) {
-      return callback({ message: 'Field at (' + at + ') is not a valid date.' });
+  var body = 'name=' + encodeURIComponent(name);// +
+    //(after !== undefined && after !== null && after !== '' ? '&after=' + after : '');
+
+  if (after !== null) {
+    var temp = Number.parseInt(after);
+
+    if (temp === NaN || temp < 0) {
+      return callback({ message: 'Field after (' + after + ') is not a valid positive number.' });
+    } else {
+      body = body + '&after=' + temp.toString();
     }
   }
 
-  var body =
-    'name=' + encodeURIComponent(name) +
-    (at !== undefined && at !== null && at !== '' ? '&at=' + at : '');
-
-  callSendGrid('/api/newsletter/schedule/add.json', body, callback)
+  callSendGrid('/api/newsletter/schedule/add.json', body, callback);
 }
 
 

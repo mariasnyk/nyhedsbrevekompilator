@@ -8,8 +8,8 @@ app.controller('NewsletterDashboardController', ['$scope', '$routeParams', '$loc
     loadingSwitch.watch($scope.newsletters);
 
     $scope.createNewsletter = function (name) {
-      var a = Newsletters.save({ name: name }, function () {
-        $location.url('/' + name + '/edit' );
+      var saving = Newsletters.save({ name: name }, function (result) {
+        $location.url('/' + result.ident + '/edit' );
       }, function (error) {
         console.log('Create newsletter error:', error)
         if (error.data.message) {
@@ -19,7 +19,7 @@ app.controller('NewsletterDashboardController', ['$scope', '$routeParams', '$loc
         }
       });
 
-      loadingSwitch.watch(a);
+      loadingSwitch.watch(saving);
     };
 
     $scope.createNewsletterKeyUp = function (clickEvent, name) {

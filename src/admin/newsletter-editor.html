@@ -10,13 +10,13 @@
           class="form-control"
           type="text"
           ng-model="newsletter.name"
-          ng-disabled="!edit"
+          xng-disabled="!edit"
           placeholder="Insert name"/>
       </div>
     </div>
     <div class="col-xs-2">
       <div class="form-group">
-        <label for="identity_control">Identity (afsender)</label>
+        <label for="identity_control">Afsender</label>
         <select
           id="identity_control"
           class="form-control"
@@ -43,14 +43,13 @@
     </div>
     <div class="col-xs-2" ng-show="edit">
       <div class="form-group">
-        <label for="category_control">Add category</label>
-        <input id="category_control" class="form-control" type="text" ng-model="newCategory" ng-keyup="addCategory($event)" ng-disabled="!edit" placeholder="Add"/>
+        <label for="category_control">Tilføj kategori</label>
+        <input id="category_control" class="form-control" type="text" ng-model="newCategory" ng-keyup="addCategory($event)" ng-disabled="!edit" placeholder="Skriv her"/>
       </div>
     </div>
     <div class="col-xs-2">
-      <label for="category_control">Categories</label>
+      <label for="category_control">Kategorier</label>
       <ul class="list-inline">
-        <li><span class="label label-default">{{newsletter.name}}</span></li>
         <li ng-repeat="category in newsletter.categories track by $index">
           <span id="category-{{category}}" class="label label-info">{{category}} <span class="glyphicon glyphicon-remove" ng-show="edit" ng-click="removeCategory($index)"></span>&nbsp;</span>
         </li>
@@ -60,22 +59,22 @@
 
   <div class="row" ng-show="edit">
     <div class="col-xs-4">
-      <a class="btn btn-default" ng-href="#/{{newsletter.name}}">
+      <a class="btn btn-danger" ng-href="#/{{newsletter.name}}">
         Luk <span class="glyphicon glyphicon-chevron-left"></span>
       </a>
-      <button type="button" class="btn btn-success" ng-click="saveNewsletter(true)" ng-disabled="loading_previews">
+      <button ng-hide="true" type="button" class="btn btn-success" ng-click="saveNewsletter(true)" ng-disabled="loading_previews">
         Gem og luk edit <span class="glyphicon glyphicon-floppy-saved"></span>
       </button>
       <button type="button" class="btn btn-success" ng-click="saveNewsletter()" ng-disabled="loading_previews">
         Gem <span class="glyphicon glyphicon-floppy-disk"></span>
       </button>
+      <button type="button" class="btn btn-danger btn-xs" ng-click="deleteNewsletter()">
+        Slet <span class="glyphicon glyphicon-remove"></span>
+      </button>
     </div>
     <div class="col-xs-6">
       <button type="button" class="btn btn-info" ng-click="updatePreviewClickEvent()" ng-disabled="loading_previews">
-        Preview <span class="glyphicon glyphicon-refresh"></span>
-      </button>
-      <button type="button" class="btn btn-danger btn-xs" ng-click="deleteNewsletter()">
-        Slet <span class="glyphicon glyphicon-remove"></span>
+        Opdater preview <span class="glyphicon glyphicon-refresh"></span>
       </button>
     </div>
   </div>
@@ -89,14 +88,21 @@
     <div class="col-xs-8">
       <div class="form-inline">
         <button type="button" class="btn btn-info" ng-click="updatePreviewClickEvent()" ng-disabled="loading_previews">
-          Preview <span class="glyphicon glyphicon-refresh"></span>
+          Opdater <span class="glyphicon glyphicon-refresh"></span>
         </button>
         <div class="input-group">
-          <input class="form-control" type="datetime-local" ng-model="at"
-            placeholder="yyyy-MM-ddTHH:mm:ss" min="2001-01-01T00:00:00" max="2099-12-31T00:00:00" required />
-          <span class="input-group-btn"><button type="button" class="btn btn-danger" ng-click="sendNewsletter()" ng-disabled="loading_previews">
-            Send <span class="glyphicon glyphicon-envelope"></span>
-          </button></span>
+          <span class="input-group-addon">
+            Udsend om
+          </span>
+          <input class="form-control" type="number" ng-model="newsletter.after" min="0" style="width: 80px;">
+          <span class="input-group-addon">
+            minutter <span class="glyphicon glyphicon-time"></span>
+          </span>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-danger" ng-click="sendNewsletter()" ng-disabled="loading_previews">
+              Send <span class="glyphicon glyphicon-envelope"></span>
+            </button>
+          </span>
         </div>
         <button ng-hide="true" type="button" class="btn btn-warning" ng-click="draftNewsletter()" ng-disabled="loading_previews">
           Opret kladde <span class="glyphicon glyphicon-inbox"></span>

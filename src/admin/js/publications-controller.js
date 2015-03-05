@@ -6,6 +6,11 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
     $scope.newsletters = Newsletters.query(function () {
       // Sorting by id for chronically order
       $scope.newsletters.sort(compare);
+
+      // Getting details for the first ten newsletters
+      for (var i = 0; i < 10; i++) {
+        //$scope.getNewsletterData($scope.newsletters[i].name, i);
+      }
     });
 
     loadingSwitch.watch($scope.newsletters);
@@ -43,7 +48,6 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
     };
 
     $scope.deleteSchedule = function (name, index) {
-      console.log('delete', name, index);
       var deleting = Schedules.delete({ name: name }, function () {
         $scope.newsletters[index].schedule = null;
       }, function (error) {

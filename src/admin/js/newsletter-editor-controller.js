@@ -4,7 +4,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     // Defaulting the schedule with an added 15 minuttes
     $scope.at = new Date(new Date().getTime() + 15*60000);
 
-    var Newsletters = $resource('/newsletters/:name', { name: '@name' });
+    var Newsletters = $resource('/newsletters/:ident', { ident: '@ident' });
     var Identities = $resource('/newsletters/identities');
     var Lists = $resource('/newsletters/lists/:list', { list: '@list' });
     var Templates = $resource('/templates/:name', { name: '@name' });
@@ -21,7 +21,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       // Waiting for the drop-down data to be fetched before we query the newsletter.
       // This is done so that drop-downs are populated and the equivalent newsletter value is selected in the drop-down.
       var all = $q.all([$scope.identities.$promise, $scope.lists.$promise, $scope.html_templates.$promise, $scope.plain_templates.$promise]).then(function () {
-        $scope.newsletter = Newsletters.get({ name: $routeParams.name }, function () { /* All OK. */ }, resourceErrorHandler);
+        $scope.newsletter = Newsletters.get({ ident: $routeParams.ident }, function () { /* All OK. */ }, resourceErrorHandler);
 
         loadingSwitch.watch($scope.newsletter);
       });
@@ -31,7 +31,12 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     } else {
 
       // If we're not editing the newsletter, we don't need to fetch the dop-down data from e.g. SendGrid
-      $scope.newsletter = Newsletters.get({name: $routeParams.name}, function () {
+      $scope.newsletter = Newsletters.get({ident: $routeParams.ident}, function () {
+
+        $scope.newsletter.name = $scope.newsletter.name + ' ' + dkDateString();
+        $scope.newsletter.after = 15;
+
+
         // Populating the drop downs so newsletter values are visible
         $scope.html_templates = [$scope.newsletter.template_html];
         $scope.plain_templates = [$scope.newsletter.template_plain];
@@ -56,7 +61,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
 
     function resourceErrorHandler (response) {
-      console.log('Error fetching ' + $routeParams.name, response);
+      console.log('Error fetching ' + $routeParams.ident, response);
       if (response.status === 404) {
         $location.url('/');
       }
@@ -91,9 +96,9 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       var saving = Newsletters.save($scope.newsletter, function (success) {
         console.log('Success saving template.');
         if (close === true) {
-          $location.url('/' + $scope.newsletter.name );        
+          $location.url('/' + $routeParams.ident);
         } else {
-          notifications.showSuccess('Saved');
+          notifications.showSuccess('Gemt');
         }
       });
       loadingSwitch.watch(saving, 'Saving');
@@ -101,7 +106,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
 
     $scope.deleteNewsletter = function () {
-      var deleting = Newsletters.delete({ name: $scope.newsletter.name }, function () {
+      var deleting = Newsletters.delete({ ident: $routeParams.ident }, function () {
         $location.url('/');
       });
       loadingSwitch.watch(deleting, 'Deleting');
@@ -124,9 +129,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       var a = updateHtmlPreview();
       var b = updatePlainPreview();
 
-      var all = $q.all([a,b]).then(function (result) {
-        $scope.loading_previews = false;
-      },function (reason) {
+      var all = $q.all([a,b]).finally(function () {
         $scope.loading_previews = false;
       });
 
@@ -193,36 +196,33 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
 
     $scope.sendNewsletter = function () {
-      if($scope.at > Date.now()) {
-        $scope.newsletter.at = $scope.at.toISOString();
-        console.log('Scheduled to', $scope.newsletter.at);
-      } else {
-        console.log('Sending straight away');
-      }
-
       var sending = $http.post('/newsletters/send', $scope.newsletter)
-      .success(function (data) {
-        notifications.showSuccess('Sendt ' + data.name);
+      .success(function () {
+        notifications.showSuccess('Email ' + $scope.newsletter.name + ' sendt');
       })
       .error(function (data, status) {
         console.log('Error', status, data);
-        notifications.showError('Error: ' + data.message);
+        var error = data.error ? data.error :
+                    data.message ? data.message :
+                    data;
+
+        notifications.showError('Error: ' + error);
       });
 
-      loadingSwitch.watch(sending, 'Sending');
+      loadingSwitch.watch(sending, 'Sender');
     };
 
 
     $scope.draftNewsletter = function () {
       var drafting = $http.post('/newsletters/draft', $scope.newsletter)
-      .success(function (data) {
-        notifications.showSuccess('Kladde oprettet ' + data.name);
+      .success(function () {
+        notifications.showSuccess('Kladde ' + $scope.newsletter.name + ' oprettet');
       })
       .error(function (data, status) {
         console.log('Error', status, data);
       });
 
-      loadingSwitch.watch(drafting, 'Drafting');
+      loadingSwitch.watch(drafting, 'Opretter');
     };
 
 
@@ -239,3 +239,38 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       loadingSwitch.watch(getting);
     }
   }]);
+
+
+function dkDateString () {
+  var a = new Date();
+  return danishDayName(a.getUTCDay()) + ' ' + a.getUTCDate() + ' ' + danishMonthName(a.getUTCMonth() + 1) + ' ' + a.getFullYear();
+}
+
+function danishDayName (day) {
+  switch (day) {
+    case 1: return 'Man';
+    case 2: return 'Tir';
+    case 3: return 'Ons';
+    case 4: return 'Tor';
+    case 5: return 'Fre';
+    case 6: return 'Lør';
+    case 7: return 'Søn';
+  }
+}
+
+function danishMonthName (month) {
+  switch (month) {
+    case 1: return 'Jan';
+    case 2: return 'Feb';
+    case 3: return 'Mar';
+    case 4: return 'Apr';
+    case 5: return 'Maj';
+    case 6: return 'Jun';
+    case 7: return 'Jul';
+    case 8: return 'Aug';
+    case 9: return 'Sep';
+    case 10: return 'Okt';
+    case 11: return 'Nov';
+    case 12: return 'Dec';
+  }
+}

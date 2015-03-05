@@ -18,10 +18,10 @@ app.config(['$routeProvider', function ($routeProvider) {
         controller: 'StatsController' })
       .when( '/howto', {
         templateUrl: 'howto.html'})
-      .when( '/:name', {
+      .when( '/:ident', {
         templateUrl: 'newsletter-editor.html',
         controller: 'NewsletterEditorController' })
-      .when( '/:name/:operator', {
+      .when( '/:ident/:operator', {
         templateUrl: 'newsletter-editor.html',
         controller: 'NewsletterEditorController' })
       .otherwise({
