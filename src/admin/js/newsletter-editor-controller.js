@@ -93,7 +93,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
 
     $scope.saveNewsletter = function (close) {
-      var saving = Newsletters.save($scope.newsletter, function (success) {
+      var saving = Newsletters.save({ ident: $routeParams.ident }, $scope.newsletter, function (success) {
         console.log('Success saving template.');
         if (close === true) {
           $location.url('/' + $routeParams.ident);
