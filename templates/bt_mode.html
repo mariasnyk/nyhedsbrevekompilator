@@ -77,12 +77,11 @@
     <tr>
       <td align="center" valign="top">
         <!-- Top logo -->
-        <a href="http://www.bt.dk/sektion/modeogskonhed?{{ tracking }}" target="_blank">
-          <img src="http://nlstatic.berlingskemedia.dk/images/bt_mode_part_header_logo.png" width="491">
-        </a>
-        <a target="_blank" href="{{ buy_subscription_href }}">
-          <img src="http://nlstatic.berlingskemedia.dk/images/bt_mode_part_header_buy.png" width="163">
-        </a>
+        <img style="width: 100%;" src="http://nlstatic.berlingskemedia.dk/images/bt_mode_full_header_with_buy.png" width="654" usemap="#imgmap">
+        <map name="imgmap">
+          <area shape="rect" coords="0,0,491,72" href="http://www.bt.dk/sektion/modeogskonhed?{{ tracking }}">
+          <area shape="rect" coords="491,0,654,72" href="{{ buy_subscription_href }}">
+        </map>
       </td>
     </tr>
     <tr>
