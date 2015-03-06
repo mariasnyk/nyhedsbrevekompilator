@@ -8,21 +8,21 @@ app.config(['$routeProvider', function ($routeProvider) {
       .when( '/', {
         redirectTo: '/' })
       .when( '/', {
-        templateUrl: 'newsletter-dashboard.html',
+        templateUrl: 'templates/newsletter-dashboard.html',
         controller: 'NewsletterDashboardController' })
       .when( '/udsendelser', {
-        templateUrl: 'publications.html',
+        templateUrl: 'templates/publications.html',
         controller: 'PublicationsController' })
       .when( '/stats', {
-        templateUrl: 'stats.html',
+        templateUrl: 'templates/stats.html',
         controller: 'StatsController' })
       .when( '/howto', {
-        templateUrl: 'howto.html'})
+        templateUrl: 'templates/howto.html'})
       .when( '/:ident', {
-        templateUrl: 'newsletter-editor.html',
+        templateUrl: 'templates/newsletter-editor.html',
         controller: 'NewsletterEditorController' })
       .when( '/:ident/:operator', {
-        templateUrl: 'newsletter-editor.html',
+        templateUrl: 'templates/newsletter-editor.html',
         controller: 'NewsletterEditorController' })
       .otherwise({
         redirectTo: '/' });

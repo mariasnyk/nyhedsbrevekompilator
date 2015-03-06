@@ -59,10 +59,10 @@
 
   <div class="row" ng-show="edit">
     <div class="col-xs-4">
-      <a class="btn btn-danger" ng-href="#/{{newsletter.name}}">
+      <button type="button" class="btn btn-danger" ng-click="closeNewsletterEditor()">
         Luk <span class="glyphicon glyphicon-chevron-left"></span>
-      </a>
-      <button ng-hide="true" type="button" class="btn btn-success" ng-click="saveNewsletter(true)" ng-disabled="loading_previews">
+      </button>
+      <button type="button" class="btn btn-success" ng-click="saveNewsletter(true)" ng-disabled="loading_previews" ng-hide="true">
         Gem og luk edit <span class="glyphicon glyphicon-floppy-saved"></span>
       </button>
       <button type="button" class="btn btn-success" ng-click="saveNewsletter()" ng-disabled="loading_previews">

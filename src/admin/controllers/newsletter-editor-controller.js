@@ -96,7 +96,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       var saving = Newsletters.save({ ident: $routeParams.ident }, $scope.newsletter, function (success) {
         console.log('Success saving template.');
         if (close === true) {
-          $location.url('/' + $routeParams.ident);
+          $scope.closeNewsletterEditor();
         } else {
           notifications.showSuccess('Gemt');
         }
@@ -104,6 +104,9 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       loadingSwitch.watch(saving, 'Saving');
     };
 
+    $scope.closeNewsletterEditor = function () {
+      $location.url('/' + $routeParams.ident);
+    };
 
     $scope.deleteNewsletter = function () {
       var deleting = Newsletters.delete({ ident: $routeParams.ident }, function () {
