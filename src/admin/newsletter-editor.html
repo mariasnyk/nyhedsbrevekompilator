@@ -173,7 +173,7 @@
   <div class="row">
     <div class="col-md-12 col-lg-12">
       <div class="panel panel-primary">
-        <div class="panel-heading">HTML indhold <span style="float:right;"><a target="_blank" ng-href="{{ html_url }}?debug=true">Debug link</a></span></div>
+        <div class="panel-heading">HTML indhold <span style="float:right;"><a target="_blank" ng-href="{{ html_url }}&debug=true">Debug link</a></span></div>
         <div class="panel-body">
           <p ng-show="loading_html_preview">Loading...</p>
           <iframe ng-hide="loading_html_preview" class="newsletter-preview" srcdoc="{{trusted_html_email_preview}}"></iframe>
