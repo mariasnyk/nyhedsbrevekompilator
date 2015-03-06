@@ -91,3 +91,6 @@ app.directive('loadingIndicator', ['$interval', function ($interval) {
     }
   };
 }]);
+
+
+moment.locale('da');

@@ -33,7 +33,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       // If we're not editing the newsletter, we don't need to fetch the dop-down data from e.g. SendGrid
       $scope.newsletter = Newsletters.get({ident: $routeParams.ident}, function () {
 
-        $scope.newsletter.name = $scope.newsletter.name + ' ' + dkDateString();
+        $scope.newsletter.name = $scope.newsletter.name + ' ' + moment().format("ddd D MMM YYYY");
         $scope.newsletter.after = 15;
 
 
@@ -239,38 +239,3 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       loadingSwitch.watch(getting);
     }
   }]);
-
-
-function dkDateString () {
-  var a = new Date();
-  return danishDayName(a.getUTCDay()) + ' ' + a.getUTCDate() + ' ' + danishMonthName(a.getUTCMonth() + 1) + ' ' + a.getFullYear();
-}
-
-function danishDayName (day) {
-  switch (day) {
-    case 1: return 'Man';
-    case 2: return 'Tir';
-    case 3: return 'Ons';
-    case 4: return 'Tor';
-    case 5: return 'Fre';
-    case 6: return 'Lør';
-    case 7: return 'Søn';
-  }
-}
-
-function danishMonthName (month) {
-  switch (month) {
-    case 1: return 'Jan';
-    case 2: return 'Feb';
-    case 3: return 'Mar';
-    case 4: return 'Apr';
-    case 5: return 'Maj';
-    case 6: return 'Jun';
-    case 7: return 'Jul';
-    case 8: return 'Aug';
-    case 9: return 'Sep';
-    case 10: return 'Okt';
-    case 11: return 'Nov';
-    case 12: return 'Dec';
-  }
-}

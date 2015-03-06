@@ -5,8 +5,10 @@
 var http = require('http'),
     https = require('https'),
     url = require('url'),
+    moment = require('moment'),
     userdb = require('./userdb_client.js');
 
+moment.locale('da');
 
 module.exports.register = function (plugin, options, next) {
 
@@ -260,7 +262,7 @@ module.exports.register = function (plugin, options, next) {
     path: '/draft',
     handler: function (request, reply) {
       createMarketingEmail (request.payload, function (err, result) {
-        if (err) reply(err).code(400);
+        if (err) reply(err).code(500);
         else reply(result);
       });
     }
@@ -271,7 +273,7 @@ module.exports.register = function (plugin, options, next) {
     path: '/send',
     handler: function (request, reply) {
       sendNewsletter(request.payload, function (err, result) {
-        if (err) reply(err).code(400);
+        if (err) reply(err).code(500);
         else reply(result);
       });
     }
@@ -285,9 +287,31 @@ module.exports.register = function (plugin, options, next) {
         if (err) return reply(err).code(500);
         if (newsletter === null) return reply().code(404);
 
-        autoSendNewsletter(newsletter, function (err, result) {
-          if (err) reply(err).code(500);
-          else reply(result);
+        var html_url  = 'http://' + request.info.host + '/templates/' + newsletter.template_html + '?u=' + encodeURIComponent(newsletter.bond_url),
+            plain_url = 'http://' + request.info.host + '/templates/' + newsletter.template_plain + '?u=' + encodeURIComponent(newsletter.bond_url);
+
+        download(html_url, function (err, email_html, headers) {
+          if (err) return callback(err);
+
+          newsletter.subject = decodeURIComponent(headers['x-subject-suggestion']);
+          newsletter.email_html = email_html;
+
+          download(plain_url, function (err, email_plain) {
+            if (err) return callback(err);
+
+            newsletter.email_plain = email_plain;
+
+            newsletter.after = 15;
+            newsletter.name = newsletter.name + ' ' + moment().format("ddd D MMM YYYY HH:mm");
+
+            sendNewsletter(newsletter, function (err, result) {
+              if (err) reply(err).code(500);
+              else {
+                result.name = newsletter.name;
+                reply(result);
+              }
+            });
+          });
         });
       });
     }
@@ -448,31 +472,6 @@ function download (url, callback) {
 }
 
 
-function autoSendNewsletter (newsletter, callback) {
-
-  var html_url  = 'http://' + request.info.host + '/templates/' + newsletter.template_html + '?u=' + encodeURIComponent(newsletter.bond_url),
-      plain_url = 'http://' + request.info.host + '/templates/' + newsletter.template_plain + '?u=' + encodeURIComponent(newsletter.bond_url);
-
-  download(html_url, function (err, email_html, headers) {
-    if (err) return callback(err);
-
-    newsletter.subject = decodeURIComponent(headers['x-subject-suggestion']);
-    newsletter.email_html = email_html;
-
-    download(plain_url, function (err, email_plain) {
-      if (err) return callback(err);
-
-      newsletter.email_plain = email_plain;
-
-      newsletter.after = 15;
-      newsletter.name = newsletter.name + ' ' + dkDateString();
-
-      sendNewsletter(newsletter, callback);
-    });
-  });
-}
-
-
 function sendNewsletter (newsletter, callback) {
 
   validateLastChecksum(newsletter.list, newsletter.checksum, function (err) {
@@ -528,40 +527,6 @@ function createMarketingEmail (newsletter, callback) {
       });
     });
   });
-}
-
-function dkDateString () {
-  var a = new Date();
-  return danishDayName(a.getUTCDay()) + ' ' + a.getUTCDate() + ' ' + danishMonthName(a.getUTCMonth() + 1) + ' ' + a.getFullYear();
-}
-
-function danishDayName (day) {
-  switch (day) {
-    case 1: return 'Man';
-    case 2: return 'Tir';
-    case 3: return 'Ons';
-    case 4: return 'Tor';
-    case 5: return 'Fre';
-    case 6: return 'Lør';
-    case 7: return 'Søn';
-  }
-}
-
-function danishMonthName (month) {
-  switch (month) {
-    case 1: return 'Jan';
-    case 2: return 'Feb';
-    case 3: return 'Mar';
-    case 4: return 'Apr';
-    case 5: return 'Maj';
-    case 6: return 'Jun';
-    case 7: return 'Jul';
-    case 8: return 'Aug';
-    case 9: return 'Sep';
-    case 10: return 'Okt';
-    case 11: return 'Nov';
-    case 12: return 'Dec';
-  }
 }
 
 
