@@ -1,4 +1,4 @@
-//(function(window, angular, undefined) {'use strict';
+'use strict';
 
 var app = angular.module('userdb', ['ngRoute', 'ngSanitize', 'ngResource', 'ngCookies', 'ngNotificationsBar']);
 
