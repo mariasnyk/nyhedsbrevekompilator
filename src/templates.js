@@ -35,23 +35,18 @@ module.exports.register = function (plugin, options, next) {
     method: 'GET',
     path: '/',
     handler: function (request, reply) {
-      fs.stat(templateDir, function (err, stat) {
-        if (err) return reply().code(404);
-        if (!stat.isDirectory()) return reply().code(500);
-
-        fs.readdir(templateDir, function (err, files) {
-          reply(files
-            .filter(function (file) {
-              console.log(templateDir, file);
-              return fs.statSync(path.join(templateDir, file)).isFile() &&
-                (request.query.filter !== undefined ?
-                  file.indexOf(request.query.filter) > -1 :
-                  true);
-            })
-            .map(function (file) {
-              return file;
-            }));
-        });
+      fs.readdir(templateDir, function (err, files) {
+        reply(files
+          .filter(function (file) {
+            console.log(templateDir, file);
+            return fs.statSync(path.join(templateDir, file)).isFile() &&
+              (request.query.filter !== undefined ?
+                file.indexOf(request.query.filter) > -1 :
+                true);
+          })
+          .map(function (file) {
+            return file;
+          }));
       });
     }
   });
@@ -60,63 +55,63 @@ module.exports.register = function (plugin, options, next) {
     method: 'GET',
     path: '/{template*}',
     handler: function (request, reply) {
-      var templatePath = fs.realpathSync(path.join(templateDir, request.params.template));
+      var templatePath = path.join(templateDir, request.params.template);
 
       if (!fs.existsSync(templatePath))
         return reply().code(404);
 
-      fs.stat(templatePath, function (err, stat) {
-        if (err) return reply().code(404);
+      if (!fs.statSync(templatePath).isFile())
+        return reply().code(500);
 
-        if (!stat.isFile()) return reply().code(500);
+      // Just making sure we have the full path.
+      templatePath = fs.realpathSync(templatePath);
 
-        // Requesting a specific template with a BOND node as data input
-        if (request.query.u) {
+      // Requesting a specific template with a BOND node as data input
+      if (request.query.u) {
 
-          // Validate the url
-          var uri = url.parse(request.query.u);
-          if (uri.protocol === null || uri.host === null) {
-            return reply({message: 'Url invalid'}).code(400);
+        // Validate the url
+        var uri = url.parse(request.query.u);
+        if (uri.protocol === null || uri.host === null) {
+          return reply({message: 'Url invalid'}).code(400);
+        }
+
+        var controlroom_url = getControlroomUrl(uri);
+
+        download(request.query.u, function (err, data) {
+          if (err) return reply(err).code(500);
+
+          // Example of a response from a nodequeue that doesn't exist
+          //   { type: 'nodequeue',
+          //     id: '4222222626',
+          //     loadType: 'fullNode',
+          //     title: null,
+          //     nodes: [] }
+
+          if (data === null || ( data.type === 'nodequeue' && data.nodes.length === 0 )) {
+            return reply().code(404);
           }
 
-          var controlroom_url = getControlroomUrl(uri);
+          data.subject = emailSubjectSuggestion(data);
+          data.dates = getDates();
 
-          download(request.query.u, function (err, data) {
-            if (err) return reply(err).code(500);
+          if (request.query.debug) {
+            // TODO: What can we do the make the template debugging easier?
+          }
 
-            // Example of a response from a nodequeue that doesn't exist
-            //   { type: 'nodequeue',
-            //     id: '4222222626',
-            //     loadType: 'fullNode',
-            //     title: null,
-            //     nodes: [] }
-
-            if (data === null || ( data.type === 'nodequeue' && data.nodes.length === 0 )) {
-              return reply().code(404);
-            }
-
-            data.subject = emailSubjectSuggestion(data);
-            data.dates = getDates();
-
-            if (request.query.debug) {
-              // TODO: What can we do the make the template debugging easier?
-            }
-
-            reply
-            .view(request.params.template, data)
-            .header('Transfer-Encoding', 'chunked')
-            .header('Content-Type', contentTypeHeader(request.params.template))
-            .header('X-Subject-Suggestion', encodeURIComponent(data.subject))
-            .header('X-Content-Checksum', calculateChecksum(data))
-            .header('X-Controlroom-url', encodeURIComponent(controlroom_url));
-          });
-
-        } else {
           reply
-          .view(request.params.template)
-          .header('Content-Type', contentTypeHeader(request.params.template));
-        }
-      });
+          .view(request.params.template, data)
+          .header('Transfer-Encoding', 'chunked')
+          .header('Content-Type', contentTypeHeader(request.params.template))
+          .header('X-Subject-Suggestion', encodeURIComponent(data.subject))
+          .header('X-Content-Checksum', calculateChecksum(data))
+          .header('X-Controlroom-url', encodeURIComponent(controlroom_url));
+        });
+
+      } else {
+        reply
+        .view(request.params.template)
+        .header('Content-Type', contentTypeHeader(request.params.template));
+      }
     }
   });
 
