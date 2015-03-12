@@ -46,7 +46,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         // Validating the list still exists in SendGrid
         Lists.query({ list: $scope.newsletter.list}, function (response) {
           if (response[0] === undefined || response[0].list !== $scope.newsletter.list) {
-            console.log('Couldn\'t find list ' + $scope.newsletter.list + ' in SendGrid.')
+            console.log('Couldn\'t find list ' + $scope.newsletter.list + ' in SendGrid.');
             $scope.lists = ['ERROR'];
           }
         }, resourceErrorHandler);
@@ -69,7 +69,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
 
     $scope.addCategory = function (clickEvent) {
-      if ($scope.newsletter.categories == undefined) {
+      if ($scope.newsletter.categories === undefined) {
         $scope.newsletter.categories = [];
       }
 
@@ -173,7 +173,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
       loadingSwitch.watch(getting);
       return getting;
-    };
+    }
 
 
     function updatePlainPreview () {
@@ -195,7 +195,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
       loadingSwitch.watch(getting);
       return getting;
-    };
+    }
 
 
     $scope.sendNewsletter = function () {

@@ -30,7 +30,7 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
         $scope.newsletters[index].total_recipients = data.total_recipients;
         $scope.newsletters[index].date_schedule = data.date_schedule;
 
-        if (data.date_schedule != null) {
+        if (data.date_schedule !== null) {
           var schedule = Schedules.get({ name: name }, function () {
             if (schedule.date) {
               $scope.newsletters[index].schedule = schedule.date;

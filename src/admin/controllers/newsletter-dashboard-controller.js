@@ -11,7 +11,7 @@ app.controller('NewsletterDashboardController', ['$scope', '$routeParams', '$loc
       var saving = Newsletters.save({ name: name }, function (result) {
         $location.url('/' + result.ident + '/edit' );
       }, function (error) {
-        console.log('Create newsletter error:', error)
+        console.log('Create newsletter error:', error);
         if (error.data.message) {
           notifications.showError(error.data.message);  
         } else {

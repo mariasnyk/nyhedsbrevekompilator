@@ -9,7 +9,7 @@ app.controller('StatsController', ['$scope', '$routeParams', '$location', '$reso
     $scope.stats_parameters = {
       aggregated_by: "month", //day|week|month
       categories: []
-    }
+    };
 
     $scope.categories = Categories.query();
 
@@ -79,7 +79,7 @@ app.directive('chart', function() {
         var chart = new google.visualization.PieChart($elm[0]);
         chart.draw(data, options);
       }
-  }
+  };
 });
 
 // google.setOnLoadCallback(function() {

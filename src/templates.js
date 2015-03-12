@@ -1,3 +1,4 @@
+/*jshint node: true */
 'use strict';
 
 var fs = require('fs'),
@@ -104,7 +105,7 @@ module.exports.register = function (plugin, options, next) {
             reply
             .view(request.params.template, data)
             .header('Transfer-Encoding', 'chunked')
-            .header('Content-Type', ContentTypeHeader(request.params.template))
+            .header('Content-Type', contentTypeHeader(request.params.template))
             .header('X-Subject-Suggestion', encodeURIComponent(data.subject))
             .header('X-Content-Checksum', calculateChecksum(data))
             .header('X-Controlroom-url', encodeURIComponent(controlroom_url));
@@ -113,7 +114,7 @@ module.exports.register = function (plugin, options, next) {
         } else {
           reply
           .view(request.params.template)
-          .header('Content-Type', ContentTypeHeader(request.params.template))
+          .header('Content-Type', contentTypeHeader(request.params.template));
         }
       });
     }
@@ -233,7 +234,7 @@ function emailSubjectSuggestion (data) {
 }
 
 
-function ContentTypeHeader (template) {
+function contentTypeHeader (template) {
   if (template.slice(-5) === '.html') {
     return 'text/html; charset=utf-8';
   } else {
@@ -296,7 +297,7 @@ function getDates () {
     day: danishWeekdayName(temp.getDay()),
     month: danishMonthName(temp.getMonth() + 1),
     unix_timestap: temp.getTime()
-  }
+  };
 }
 
 function danishWeekdayName (day) {

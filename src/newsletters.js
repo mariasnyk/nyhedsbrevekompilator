@@ -1,5 +1,4 @@
 /*jshint node: true */
-
 'use strict';
 
 var http = require('http'),
@@ -29,7 +28,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       callSendGrid('/api/newsletter/identity/list.json', function (err, data) {
         if (err) {
-          console.log(err)
+          console.log(err);
           reply(err).code(500);
         } else reply(data.map(function (identity) {
           return identity.identity;
@@ -44,7 +43,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       callSendGrid('/api/newsletter/identity/get.json', 'identity=' + request.params.id, function (err, data) {
         if (err) {
-          console.log(err)
+          console.log(err);
           reply(err).code(500);
         } else reply(data);
       });
@@ -81,7 +80,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       callSendGrid('/api/newsletter/category/list.json', function (err, data) {
         if (err) {
-          console.log(err)
+          console.log(err);
           reply(err).code(500);
         } else reply(data.map(function (category) {
           return category.category;
@@ -97,7 +96,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       callSendGridV3('GET', '/v3/categories/stats' + request.url.search, function (err, data) {
         if (err) {
-          console.log(err)
+          console.log(err);
           reply(err).code(500);
         } else reply(data);
       });
@@ -112,7 +111,7 @@ module.exports.register = function (plugin, options, next) {
 
       callSendGrid('/api/newsletter/newsletter/list.json', body, function (err, data) {
         if (err) {
-          console.log(err)
+          console.log(err);
           reply(err).code(500);
         } else reply(data);
       });
@@ -125,7 +124,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       callSendGrid('/api/newsletter/schedule/get.json', 'name=' + encodeURIComponent(request.params.name), function (err, data) {
         if (err) {
-          console.log(err)
+          console.log(err);
           reply(err).code(500);
         } else reply(data);
       });
@@ -138,7 +137,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       callSendGrid('/api/newsletter/schedule/delete.json', 'name=' + encodeURIComponent(request.params.name), function (err, data) {
         if (err) {
-          console.log(err)
+          console.log(err);
           reply(err).code(500);
         } else reply(data);
       });
@@ -151,7 +150,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       callSendGrid('/api/newsletter/newsletter/get.json', 'name=' + encodeURIComponent(request.params.name), function (err, data) {
         if (err) {
-          console.log(err)
+          console.log(err);
           reply(err).code(500);
         } else reply(data);
       });
@@ -291,13 +290,13 @@ module.exports.register = function (plugin, options, next) {
             plain_url = 'http://' + request.info.host + '/templates/' + newsletter.template_plain + '?u=' + encodeURIComponent(newsletter.bond_url);
 
         download(html_url, function (err, email_html, headers) {
-          if (err) return callback(err);
+          if (err) return reply(err).code(500);
 
           newsletter.subject = decodeURIComponent(headers['x-subject-suggestion']);
           newsletter.email_html = email_html;
 
           download(plain_url, function (err, email_plain) {
-            if (err) return callback(err);
+            if (err) return reply(err).code(500);
 
             newsletter.email_plain = email_plain;
 
@@ -366,7 +365,7 @@ function queryAllNewsletters (callback) {
       return {
         ident: newsletter.ident,
         name: data.name
-      }
+      };
     }));
   });
 }
@@ -623,7 +622,7 @@ function addSendGridSchedule (name, after, callback) {
   if (after !== null) {
     var temp = Number.parseInt(after);
 
-    if (temp === NaN || temp < 0) {
+    if (isNaN(temp) || temp < 0) {
       return callback({ message: 'Field after (' + after + ') is not a valid positive number.' });
     } else {
       body = body + '&after=' + temp.toString();
