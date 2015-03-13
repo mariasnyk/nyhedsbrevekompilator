@@ -8,10 +8,12 @@ var fs = require('fs'),
     swig = require('swig'),
     extras = require('swig-extras'),
     checksum = require('checksum'),
-    templateDir = path.join(__dirname, '/../templates');
+    templateDir = path.join(__dirname, '/../templates'),
+    testDir = path.join(__dirname, '/../test');
 
-
-    // templateDir = '/home/dako/Code/sii-newsletter/templates';
+if (!fs.existsSync(testDir)) {
+  fs.mkdirSync(testDir);
+}
 
 extras.useFilter(swig, 'split');
 extras.useFilter(swig, 'trim');
@@ -66,6 +68,8 @@ module.exports.register = function (plugin, options, next) {
       // Just making sure we have the full path.
       templatePath = fs.realpathSync(templatePath);
 
+      var debug = request.query.debug === 'true';
+
       // Requesting a specific template with a BOND node as data input
       if (request.query.u) {
 
@@ -75,7 +79,7 @@ module.exports.register = function (plugin, options, next) {
           return reply({message: 'Url invalid'}).code(400);
         }
 
-        var controlroom_url = getControlroomUrl(uri);
+        var controlroom_url = getControlroomUrl(request.query.u);
 
         download(request.query.u, function (err, data) {
           if (err) return reply(err).code(500);
@@ -93,10 +97,7 @@ module.exports.register = function (plugin, options, next) {
 
           data.subject = emailSubjectSuggestion(data);
           data.dates = getDates();
-
-          if (request.query.debug) {
-            // TODO: What can we do the make the template debugging easier?
-          }
+          data.debug = debug;
 
           reply
           .view(request.params.template, data)
@@ -105,6 +106,26 @@ module.exports.register = function (plugin, options, next) {
           .header('X-Subject-Suggestion', encodeURIComponent(data.subject))
           .header('X-Content-Checksum', calculateChecksum(data))
           .header('X-Controlroom-url', encodeURIComponent(controlroom_url));
+        });
+
+      } else if (request.query.f) {
+
+        var templatePath = path.join(testDir, request.query.f);
+
+        if (!fs.existsSync(templatePath) || !fs.statSync(templatePath).isFile()) {
+          return reply(err).code(404);
+        }
+
+        fs.readFile(templatePath, function (err, data) {
+          if (err) return reply(err).code(500);
+
+          data = JSON.parse(data);
+          data.debug = debug;
+
+          reply
+          .view(request.params.template, data)
+          .header('Transfer-Encoding', 'chunked')
+          .header('Content-Type', contentTypeHeader(request.params.template));
         });
 
       } else {
@@ -165,8 +186,7 @@ module.exports.register = function (plugin, options, next) {
     path: '/controlroom',
     handler: function (request, reply) {
       if (request.query.u) {
-
-        var controlroom_url = getControlroomUrl(url.parse(request.query.u));
+        var controlroom_url = getControlroomUrl(request.query.u);
 
         reply({ url: controlroom_url })
         .header('X-Controlroom-url', encodeURIComponent(controlroom_url));
@@ -187,7 +207,6 @@ module.exports.register.attributes = {
 
 
 function download (url, callback) {
-
   http.get(url, function( response ) {
 
     if (response.statusCode === 401) {
@@ -261,7 +280,9 @@ function calculatePaywallToken (nid) {
   return newsl_access;
 }
 
-function getControlroomUrl (bond) {
+
+function getControlroomUrl (input) {
+  var bond = url.parse(input);
   var bond_base_url = '';
 
   if (bond.host.indexOf('edit.') === 0) {
@@ -281,6 +302,7 @@ function getControlroomUrl (bond) {
   }
 }
 
+
 function getDates () {
   var temp = new Date();
   return {
@@ -293,33 +315,33 @@ function getDates () {
     month: danishMonthName(temp.getMonth() + 1),
     unix_timestap: temp.getTime()
   };
-}
 
-function danishWeekdayName (day) {
-  switch (day) {
-    case 1: return 'Mandag';
-    case 2: return 'Tirsdag';
-    case 3: return 'Onsdag';
-    case 4: return 'Torsdag';
-    case 5: return 'Fredag';
-    case 6: return 'Lørdag';
-    case 7: return 'Søndag';
+  function danishWeekdayName (day) {
+    switch (day) {
+      case 1: return 'Mandag';
+      case 2: return 'Tirsdag';
+      case 3: return 'Onsdag';
+      case 4: return 'Torsdag';
+      case 5: return 'Fredag';
+      case 6: return 'Lørdag';
+      case 7: return 'Søndag';
+    }
   }
-}
 
-function danishMonthName (month) {
-  switch (month) {
-    case 1: return 'Januar';
-    case 2: return 'Februar';
-    case 3: return 'Marts';
-    case 4: return 'April';
-    case 5: return 'Maj';
-    case 6: return 'Juni';
-    case 7: return 'Juli';
-    case 8: return 'August';
-    case 9: return 'September';
-    case 10: return 'Oktober';
-    case 11: return 'November';
-    case 12: return 'December';
+  function danishMonthName (month) {
+    switch (month) {
+      case 1: return 'Januar';
+      case 2: return 'Februar';
+      case 3: return 'Marts';
+      case 4: return 'April';
+      case 5: return 'Maj';
+      case 6: return 'Juni';
+      case 7: return 'Juli';
+      case 8: return 'August';
+      case 9: return 'September';
+      case 10: return 'Oktober';
+      case 11: return 'November';
+      case 12: return 'December';
+    }
   }
 }

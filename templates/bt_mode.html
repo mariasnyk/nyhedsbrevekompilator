@@ -357,6 +357,10 @@
     </tr>
   </table>
 
+  {% if debug %}
+    {% include "partials/debuginfo.html" %}
+  {% endif %}
+
   <!--[if (gte mso 9)|(IE)]>
       </td>
     </tr>

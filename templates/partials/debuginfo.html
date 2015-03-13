@@ -1,0 +1,13 @@
+<br>
+<br>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<h1>Debug</h1>
+{% for node in nodes %}
+  <pre style="white-space: pre-wrap;">{{ node|json_encode }}</pre>
+  <hr>
+{% endfor %}
