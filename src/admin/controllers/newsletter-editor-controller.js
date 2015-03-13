@@ -13,6 +13,8 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
     if ($scope.edit) {
 
+      $scope.dirty = false;
+
       $scope.identities = Identities.query();
       $scope.lists = Lists.query();
       $scope.html_templates = Templates.query({filter:'.html'});
@@ -79,6 +81,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
             category = category.trim();
             if ($scope.newsletter.categories.indexOf(category) === -1 && category !== $scope.newsletter.name) {
               $scope.newsletter.categories.push(category);
+              $scope.dirty = true;
             }
           });
           $scope.newCategory = '';
@@ -89,12 +92,14 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
     $scope.removeCategory = function (categoryIndex) {
       $scope.newsletter.categories.splice(categoryIndex, 1);
+      $scope.dirty = true;
     };
 
 
     $scope.saveNewsletter = function (close) {
       var saving = Newsletters.save({ ident: $routeParams.ident }, $scope.newsletter, function (success) {
         console.log('Success saving template.');
+        $scope.dirty = false;
         if (close === true) {
           $scope.closeNewsletterEditor();
         } else {
@@ -115,6 +120,9 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       loadingSwitch.watch(deleting, 'Deleting');
     };
 
+    $scope.setDirty = function () {
+      $scope.dirty = true;
+    }
 
     $scope.updatePreviewClickEvent = function () {
       updatePreview();

@@ -10,6 +10,7 @@
           class="form-control"
           type="text"
           ng-model="newsletter.name"
+          ng-change="setDirty()"
           xng-disabled="!edit"
           placeholder="Insert name"/>
       </div>
@@ -23,6 +24,7 @@
           ng-model="newsletter.identity"
           ng-options="identity for identity in identities"
           ng-disabled="!edit"
+          ng-change="setDirty()"
           ng-required="true">
         </select>
       </div>
@@ -36,6 +38,7 @@
           ng-model="newsletter.list"
           ng-options="list for list in lists"
           ng-disabled="!edit"
+          ng-change="setDirty()"
           ng-required="true">
           <option value=""></option>
         </select>
@@ -59,13 +62,10 @@
 
   <div class="row" ng-show="edit">
     <div class="col-xs-4">
-      <button type="button" class="btn btn-danger" ng-click="closeNewsletterEditor()">
+      <button type="button" class="btn" ng-class="{'btn-danger': dirty, 'btn-default': !dirty}" ng-click="closeNewsletterEditor()">
         Luk <span class="glyphicon glyphicon-chevron-left"></span>
       </button>
-      <button type="button" class="btn btn-success" ng-click="saveNewsletter(true)" ng-disabled="loading_previews" ng-hide="true">
-        Gem og luk edit <span class="glyphicon glyphicon-floppy-saved"></span>
-      </button>
-      <button type="button" class="btn btn-success" ng-click="saveNewsletter()" ng-disabled="loading_previews">
+      <button type="button" class="btn" ng-class="{'btn-success': dirty, 'btn-default': !dirty}" ng-click="saveNewsletter()" ng-disabled="loading_previews">
         Gem <span class="glyphicon glyphicon-floppy-disk"></span>
       </button>
       <button type="button" class="btn btn-danger btn-xs" ng-click="deleteNewsletter()">
@@ -126,6 +126,7 @@
           class="form-control"
           placeholder="Insert BOND root URL"
           ng-model="newsletter.bond_url"
+          ng-change="setDirty()"
           ng-disabled="!edit">
       </div>
     </div>
@@ -138,6 +139,7 @@
           ng-model="newsletter.template_html"
           ng-options="template_html for template_html in html_templates"
           ng-disabled="!edit"
+          ng-change="setDirty()"
           ng-required="true">
         </select>
       </div>
@@ -151,6 +153,7 @@
           ng-model="newsletter.template_plain"
           ng-options="template_plain for template_plain in plain_templates"
           ng-disabled="!edit"
+          ng-change="setDirty()"
           ng-required="true">
         </select>
       </div>
