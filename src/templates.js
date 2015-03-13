@@ -9,10 +9,10 @@ var fs = require('fs'),
     extras = require('swig-extras'),
     checksum = require('checksum'),
     templateDir = path.join(__dirname, '/../templates'),
-    testDir = path.join(__dirname, '/../test');
+    testdataDir = path.join(__dirname, '/../testdata');
 
-if (!fs.existsSync(testDir)) {
-  fs.mkdirSync(testDir);
+if (!fs.existsSync(testdataDir)) {
+  fs.mkdirSync(testdataDir);
 }
 
 extras.useFilter(swig, 'split');
@@ -110,7 +110,7 @@ module.exports.register = function (plugin, options, next) {
 
       } else if (request.query.f) {
 
-        var templatePath = path.join(testDir, request.query.f);
+        var templatePath = path.join(testdataDir, request.query.f);
 
         if (!fs.existsSync(templatePath) || !fs.statSync(templatePath).isFile()) {
           return reply(err).code(404);

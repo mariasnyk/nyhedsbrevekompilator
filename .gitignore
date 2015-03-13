@@ -4,6 +4,8 @@ bower_components
 dist
 config.sh
 #templates
-test/*json
+testdata
+tests
+
 
 *.sublime-*

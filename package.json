@@ -23,8 +23,6 @@
   },
   "devDependencies": {
     "gulp": "^3.8.7",
-    "gulp-jshint": "^1.8.4",
-    "browser-sync": "^1.5.1",
-    "jasmine-node": "^1.14.5"
+    "gulp-jshint": "^1.8.4"
   }
 }
