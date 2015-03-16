@@ -37,28 +37,30 @@
 {% endif %}
 
 
-{% if background %}
-<div style="width: {{ width }}px; background-color: {{ background }};">
-{% else %}
-<div style="width: {{ width }}px;">
-{% endif %}
+<a  href="{{ node.urlAliases[0] }}?{{ tracking }}"
+    title="{{ node.title }}"
+    style="display: block; text-decoration: none; line-height: 23px; text-align: left"
+    target="_blank">
 
-  <a  href="{{ node.urlAliases[0] }}?{{ tracking }}"
-      title="{{ node.title }}"
-      style="display: block; text-decoration: none; line-height: 23px; text-align: left"
-      target="_blank">
+  {% if background %}
+  <div style="background-color: {{ background }};">
+  {% else %}
+  <div>
+  {% endif %}
 
-    {% set image_count = 0; %}
-    {% for image in node.images %}
-      {% set image_count = loop.index; %}
-      {% if loop.last %}
-        <img  style="width: {{ width }}px;"
-              width="{{ width }}"
-              alt="{{ image.title }}"
-              src="{{ image.image }}"
-              border="0" />
-      {% endif %}
-    {% endfor %}
+    <div style="width: {{ width }}px;">
+      {% set image_count = 0; %}
+      {% for image in node.images %}
+        {% set image_count = loop.index; %}
+        {% if loop.last %}
+          <img  style="width: {{ width }}px;"
+                width="{{ width }}"
+                alt="{{ image.title }}"
+                src="{{ image.image }}"
+                border="0" />
+        {% endif %}
+      {% endfor %}
+    </div>
 
     {% if background %}
     <div style="width: {{ width-10 }}px; padding: 0 5px 5px 5px;">
@@ -81,5 +83,5 @@
       </div>
       {% endif %}
     </div>
-  </a>
-</div>
+  </div>
+</a>
