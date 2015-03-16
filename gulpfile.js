@@ -62,31 +62,7 @@ gulp.task('build', ['lint', 'test'], function() {
     Each template used testdata from <templateName>.json
 */
 
-
-gulp.task('testdata', function () {
-
-  downloadTestdata('http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5857.ave-json?image_preset=620x355-c', 'bt_mode.html.json');
-  downloadTestdata('http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/31.ave-json?image_preset=620x355-c', 'bt_morgen.html.json');
-
-});
-
-gulp.task('tests', function () {
-  var templateDir = path.join(__dirname, 'templates');
-
-  render('bt_mode.html');
-  render('bt_morgen.html');
-
-  function render (templateName) {
-    renderExample(path.join(templateDir, templateName));
-  }
-});
-
-gulp.task('templating', function () {
-
-  console.log('Rendering examples...');
-
- renderAllExamples();
-
+gulp.task('templating', ['examples'], function () {
   gulp.watch('templates/*/*', function (event) {
     renderAllExamples();
   });
@@ -96,6 +72,17 @@ gulp.task('templating', function () {
   });
 
   console.log('Watching templates...');
+});
+
+
+gulp.task('testdata', function () {
+  downloadTestdata('http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5857.ave-json?image_preset=620x355-c', 'bt_mode.html.json');
+  downloadTestdata('http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/31.ave-json?image_preset=620x355-c', 'bt_morgen.html.json');
+  downloadTestdata('http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/102.ave-json?image_preset=620x355-c', 'bt_nyheder.html.json');
+});
+
+gulp.task('examples', function () {
+  renderAllExamples();
 });
 
 
@@ -136,8 +123,6 @@ function renderExample (templatePath) {
 
 function downloadTestdata (url, filename) {
   console.log('Downloading', url, 'as', filename);
-
-  var testdataDir = path.join(__dirname, 'tests', 'data');
 
   if (!fs.existsSync(testdataDir)) {
     fs.mkdirSync(testdataDir);

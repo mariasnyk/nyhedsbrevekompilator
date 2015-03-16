@@ -1,50 +1,85 @@
-{% set image_count = 0; %}
-<div style="width: {{ width }}px;">
-  <a href="{{ node.urlAliases[0] }}?{{ tracking }}" title="{{ node.title }}" style="display: block; text-decoration: none; line-height: 23px; text-align: left" target="_blank">
+{#
+  Highlights
+    191162: www.bt.dk > frontpage > highlight > 1
+    191163: www.bt.dk > frontpage > highlight > 2
+    191164: www.bt.dk > frontpage > highlight > 3
+    191165: www.bt.dk > frontpage > highlight > 4
+    191166: www.bt.dk > frontpage > highlight > 5
+    191167: www.bt.dk > frontpage > highlight > 6
+    191168: www.bt.dk > frontpage > highlight > 7
+    191169: www.bt.dk > frontpage > highlight > 8
+    191170: www.bt.dk > frontpage > highlight > 9
+    191171: www.bt.dk > frontpage > highlight > 10
 
+  Colors
+    191134: Yellow
+    191131: xxx
+    191132: xxx
+    191136: xxx
+    191140: xxx
+    191138: xxx
+    191139: xxx
+
+ #}
+
+{% if node.taxonomyTags.presentationTags %}
+  {% set background = null %} {% set color = "#000000" %}
+  {% for tag in node.taxonomyTags.presentationTags %}
+    {% if tag.id == "191134" %}    {% set background = "#fde62f" %}{% set color = "#000000" %} {# Yellow #}
+    {% elseif tag.id == "191131" %}{% set background = "#000000" %}{% set color = "#ffffff" %}
+    {% elseif tag.id == "191132" %}{% set background = "#cd0403" %}{% set color = "#FFFFFF" %}
+    {% elseif tag.id == "191136" %}{% set background = "#c7db47" %}{% set color = "#000000" %}
+    {% elseif tag.id == "191140" %}{% set background = "#bd86bc" %}{% set color = "#ffffff" %}
+    {% elseif tag.id == "191138" %}{% set background = "#00aeef" %}{% set color = "#ffffff" %}
+    {% elseif tag.id == "191139" %}{% set background = "#e17e00" %}{% set color = "#000000" %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+
+{% if background %}
+<div style="width: {{ width }}px; background-color: {{ background }};">
+{% else %}
+<div style="width: {{ width }}px;">
+{% endif %}
+
+  <a  href="{{ node.urlAliases[0] }}?{{ tracking }}"
+      title="{{ node.title }}"
+      style="display: block; text-decoration: none; line-height: 23px; text-align: left"
+      target="_blank">
+
+    {% set image_count = 0; %}
     {% for image in node.images %}
       {% set image_count = loop.index; %}
       {% if loop.last %}
-        <img style="width: {{ width }}px;" width="{{ width }}" alt="{{ image.title }}" src="{{ image.image }}" border="0" />
+        <img  style="width: {{ width }}px;"
+              width="{{ width }}"
+              alt="{{ image.title }}"
+              src="{{ image.image }}"
+              border="0" />
       {% endif %}
     {% endfor %}
 
-    <div style="width: {{ width }}px; text-align: left; line-height: 100%; margin-top: 5px;">
-      <font color="#000000" style="font-family:'bt_bold', 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 30px; line-height: 30px; font-weight: bold; text-rendering: optimizeLegibility;">
-        {{ node.title }}
-      </font>
-    </div>
-
-    {% if node.type === 'image_gallery' %}
-    <div style="text-align: left; line-height: 100%; margin: 10px 0px;">
-      <font color="#d00000" style="font-family:'bt_bold', 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
-        Se <span>{{ image_count }}</span> billeder
-      </font>
-    </div>
+    {% if background %}
+    <div style="width: {{ width-10 }}px; padding: 0 5px 5px 5px;">
+    {% else %}
+    <div style="width: {{ width }}px;">
     {% endif %}
+
+      <div style="text-align: left; line-height: 100%; margin-top: 5px;">
+        <font color="{{ color }}" style="font-family:'bt_bold', 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 30px; line-height: 30px; font-weight: bold; text-rendering: optimizeLegibility;">
+          {{ node.title }}
+        </font>
+      </div>
+
+      {% if node.type === 'image_gallery' %}
+      <div style="text-align: left; line-height: 100%; margin: 10px 0px;">
+        <font color="#d00000"
+              style="font-family:'bt_bold', 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+          Se <span>{{ image_count }}</span> billeder
+        </font>
+      </div>
+      {% endif %}
+    </div>
   </a>
 </div>
-{% if debug %}
-  <pre>{{ node.taxonomyTags.presentationTags }}</pre>
-{% endif %}
-
-                    {% for i in node %}
-                      {% if loop.key == "taxonomyTags" %}
-                        {% for j in i %}
-                          {% if loop.key == "presentationTags" %}
-                            {% for k in j %}
-                            {% for key, val in k %}  
-                              {% if val == "191134" %}{% set background = "#fde62f" %}{% set color = "#000000" %}
-                              {% elseif val == "191131" %}{% set background = "#000000" %}{% set color = "#ffffff" %}
-                              {% elseif val == "191132" %}{% set background = "#cd0403" %}{% set color = "#FFFFFF" %}
-                              {% elseif val == "191136" %}{% set background = "#c7db47" %}{% set color = "#000000" %}
-                              {% elseif val == "191140" %}{% set background = "#bd86bc" %}{% set color = "#ffffff" %}
-                              {% elseif val == "191138" %}{% set background = "#00aeef" %}{% set color = "#ffffff" %}
-                              {% elseif val == "191139" %}{% set background = "#e17e00" %}{% set color = "#000000" %}
-                                {% else %}{% endif %}
-                            {% endfor %}
-                            {% endfor %}
-                          {% endif %}
-                        {% endfor %}
-                      {% endif %}
-                    {% endfor %}

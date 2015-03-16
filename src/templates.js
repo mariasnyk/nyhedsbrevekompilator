@@ -81,8 +81,10 @@ module.exports.register = function (plugin, options, next) {
       templatePath = fs.realpathSync(templatePath);
 
       if (request.query.debug === 'true') {
-        
-        var datafilename = path.join(testdataDir, request.params.template + '.json');
+
+        var datafilename = request.query.f ?
+          path.join(testdataDir, request.query.f) :
+          path.join(testdataDir, request.params.template + '.json');
 
         if (!fs.existsSync(datafilename) || !fs.statSync(datafilename).isFile()) {
           return reply('Data file ' + datafilename + ' missing.').code(404);
