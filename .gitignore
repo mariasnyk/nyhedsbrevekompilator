@@ -5,7 +5,7 @@ dist
 config.sh
 #templates
 testdata
-tests
+examples
 
 
 *.sublime-*

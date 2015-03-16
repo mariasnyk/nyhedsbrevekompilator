@@ -1,6 +1,21 @@
 var gulp = require('gulp'),
     jshint = require('gulp-jshint'),
-    spawn = require('child_process').spawn;
+    spawn = require('child_process').spawn,
+    path = require('path'),
+    fs = require ('fs'),
+    http = require ('http');
+    examplesDir = path.join(__dirname, 'examples'),
+    templatesDir = path.join(__dirname, 'templates'),
+    testdataDir = path.join(__dirname, 'testdata');
+
+var swig = require('swig'),
+    extras = require('swig-extras');
+
+swig.setDefaults({ cache: false });
+extras.useFilter(swig, 'split');
+extras.useFilter(swig, 'trim');
+extras.useFilter(swig, 'truncate');
+
 
 
 gulp.task('default', ['serve']);
@@ -40,17 +55,6 @@ gulp.task('build', ['lint', 'test'], function() {
   // TODO
 });
 
-var swig = require('swig'),
-    extras = require('swig-extras'),
-    path = require('path'),
-    fs = require ('fs'),
-    http = require ('http');
-
-swig.setDefaults({ cache: false });
-extras.useFilter(swig, 'split');
-extras.useFilter(swig, 'trim');
-extras.useFilter(swig, 'truncate');
-
 /*
   Use the task "testdata" to create a JSON-file with data from BOND.
     Make sure the testdata filename follows the format: <templateName>.json
@@ -73,65 +77,67 @@ gulp.task('tests', function () {
   render('bt_morgen.html');
 
   function render (templateName) {
-    renderTest(path.join(templateDir, templateName));
+    renderExample(path.join(templateDir, templateName));
   }
 });
 
 gulp.task('templating', function () {
 
-  gulp.watch('templates/**/*', render);
+  console.log('Rendering examples...');
+
+ renderAllExamples();
+
+  gulp.watch('templates/*/*', function (event) {
+    renderAllExamples();
+  });
+
+  gulp.watch('templates/*', function (event) {
+    renderExample(event.path);
+  });
+
   console.log('Watching templates...');
-
-  function render (event) {
-    renderTest(event.path);
-  }
 });
 
-gulp.task('listing', ['templating'], function () {
-  var Hapi = require('hapi');
 
-  var server = new Hapi.Server();
-  server.connection({ port: 8080 });
+function renderAllExamples () {
 
-  server.route({
-      method: 'GET',
-      path: '/{param*}',
-      handler: {
-          directory: {
-              path: 'tests',
-              listing: true
-          }
-      }
+  console.log('Rendering all examples...');
+
+  fs.readdirSync(templatesDir).forEach(function (file) {
+    var templatePath = path.join(templatesDir, file);
+    if (fs.statSync(templatePath).isFile()) {
+      renderExample(templatePath);
+    }
   });
+}
 
-  server.start(function () {
-      console.log('Server running at:', server.info.uri);
-  });
-});
+function renderExample (templatePath) {
 
-function renderTest (templatePath) {
+  console.log('Rendering', templatePath);
+
   var templateName = path.basename(templatePath),
-      testsDir = path.join(__dirname, 'tests'),
-      rendered_testname = path.join(testsDir, templateName),
-      testdata = path.join(__dirname, 'testdata', templateName + '.json');
-
-  if (!fs.existsSync(testsDir)) {
-    fs.mkdirSync(testsDir);
-  }
+      testdata = path.join(testdataDir, templateName + '.json');
+      
 
   if (!fs.existsSync(testdata)) {
-    console.warn('Testdata', testdata, 'not found');
+    console.error('Testdata', testdata, 'not found');
     return;
   }
 
-  fs.writeFileSync(rendered_testname, swig.renderFile(templatePath, require(testdata)));
-  console.log(rendered_testname, 'updated');
+  if (!fs.existsSync(examplesDir)) {
+    fs.mkdirSync(examplesDir);
+  }
+
+  var exampleName = path.join(examplesDir, templateName);
+
+  fs.writeFileSync(exampleName, swig.renderFile(templatePath, require(testdata)));
+  console.log(exampleName, 'updated');
 }
 
 function downloadTestdata (url, filename) {
   console.log('Downloading', url, 'as', filename);
 
-  var testdataDir = path.join(__dirname, 'testdata');
+  var testdataDir = path.join(__dirname, 'tests', 'data');
 
   if (!fs.existsSync(testdataDir)) {
     fs.mkdirSync(testdataDir);

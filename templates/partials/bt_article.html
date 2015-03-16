@@ -1,0 +1,50 @@
+{% set image_count = 0; %}
+<div style="width: {{ width }}px;">
+  <a href="{{ node.urlAliases[0] }}?{{ tracking }}" title="{{ node.title }}" style="display: block; text-decoration: none; line-height: 23px; text-align: left" target="_blank">
+
+    {% for image in node.images %}
+      {% set image_count = loop.index; %}
+      {% if loop.last %}
+        <img style="width: {{ width }}px;" width="{{ width }}" alt="{{ image.title }}" src="{{ image.image }}" border="0" />
+      {% endif %}
+    {% endfor %}
+
+    <div style="width: {{ width }}px; text-align: left; line-height: 100%; margin-top: 5px;">
+      <font color="#000000" style="font-family:'bt_bold', 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 30px; line-height: 30px; font-weight: bold; text-rendering: optimizeLegibility;">
+        {{ node.title }}
+      </font>
+    </div>
+
+    {% if node.type === 'image_gallery' %}
+    <div style="text-align: left; line-height: 100%; margin: 10px 0px;">
+      <font color="#d00000" style="font-family:'bt_bold', 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+        Se <span>{{ image_count }}</span> billeder
+      </font>
+    </div>
+    {% endif %}
+  </a>
+</div>
+{% if debug %}
+  <pre>{{ node.taxonomyTags.presentationTags }}</pre>
+{% endif %}
+
+                    {% for i in node %}
+                      {% if loop.key == "taxonomyTags" %}
+                        {% for j in i %}
+                          {% if loop.key == "presentationTags" %}
+                            {% for k in j %}
+                            {% for key, val in k %}  
+                              {% if val == "191134" %}{% set background = "#fde62f" %}{% set color = "#000000" %}
+                              {% elseif val == "191131" %}{% set background = "#000000" %}{% set color = "#ffffff" %}
+                              {% elseif val == "191132" %}{% set background = "#cd0403" %}{% set color = "#FFFFFF" %}
+                              {% elseif val == "191136" %}{% set background = "#c7db47" %}{% set color = "#000000" %}
+                              {% elseif val == "191140" %}{% set background = "#bd86bc" %}{% set color = "#ffffff" %}
+                              {% elseif val == "191138" %}{% set background = "#00aeef" %}{% set color = "#ffffff" %}
+                              {% elseif val == "191139" %}{% set background = "#e17e00" %}{% set color = "#000000" %}
+                                {% else %}{% endif %}
+                            {% endfor %}
+                            {% endfor %}
+                          {% endif %}
+                        {% endfor %}
+                      {% endif %}
+                    {% endfor %}

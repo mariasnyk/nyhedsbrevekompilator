@@ -8,7 +8,8 @@ var fs = require('fs'),
     swig = require('swig'),
     extras = require('swig-extras'),
     checksum = require('checksum'),
-    templateDir = path.join(__dirname, '/../templates'),
+    templatesDir = path.join(__dirname, '/../templates'),
+    examplesDir = path.join(__dirname, '/../examples'),
     testdataDir = path.join(__dirname, '/../testdata');
 
 if (!fs.existsSync(testdataDir)) {
@@ -29,7 +30,7 @@ module.exports.register = function (plugin, options, next) {
       html: swig,
       plain: swig
     },
-    path: templateDir,
+    path: templatesDir,
     isCached: false /* must be turned of when in production*/
   });
 
@@ -37,11 +38,11 @@ module.exports.register = function (plugin, options, next) {
     method: 'GET',
     path: '/',
     handler: function (request, reply) {
-      fs.readdir(templateDir, function (err, files) {
+      fs.readdir(templatesDir, function (err, files) {
         reply(files
           .filter(function (file) {
-            console.log(templateDir, file);
-            return fs.statSync(path.join(templateDir, file)).isFile() &&
+            console.log(templatesDir, file);
+            return fs.statSync(path.join(templatesDir, file)).isFile() &&
               (request.query.filter !== undefined ?
                 file.indexOf(request.query.filter) > -1 :
                 true);
@@ -54,10 +55,21 @@ module.exports.register = function (plugin, options, next) {
   });
 
   plugin.route({
+      method: 'GET',
+      path: '/examples/{test*}',
+      handler: {
+          directory: {
+              path: examplesDir,
+              listing: true
+          }
+      }
+  });
+
+  plugin.route({
     method: 'GET',
     path: '/{template*}',
     handler: function (request, reply) {
-      var templatePath = path.join(templateDir, request.params.template);
+      var templatePath = path.join(templatesDir, request.params.template);
 
       if (!fs.existsSync(templatePath))
         return reply().code(404);
@@ -68,10 +80,25 @@ module.exports.register = function (plugin, options, next) {
       // Just making sure we have the full path.
       templatePath = fs.realpathSync(templatePath);
 
-      var debug = request.query.debug === 'true';
+      if (request.query.debug === 'true') {
+        
+        var datafilename = path.join(testdataDir, request.params.template + '.json');
+
+        if (!fs.existsSync(datafilename) || !fs.statSync(datafilename).isFile()) {
+          return reply('Data file ' + datafilename + ' missing.').code(404);
+        }
+
+        var data = require(datafilename);
+        data.debug = true;
+        data.dates = getDates();
+
+        reply
+        .view(request.params.template, data)
+        .header('Transfer-Encoding', 'chunked')
+        .header('Content-Type', contentTypeHeader(request.params.template));
 
       // Requesting a specific template with a BOND node as data input
-      if (request.query.u) {
+      } else if (request.query.u) {
 
         // Validate the url
         var uri = url.parse(request.query.u);
@@ -97,7 +124,6 @@ module.exports.register = function (plugin, options, next) {
 
           data.subject = emailSubjectSuggestion(data);
           data.dates = getDates();
-          data.debug = debug;
 
           reply
           .view(request.params.template, data)
@@ -108,25 +134,25 @@ module.exports.register = function (plugin, options, next) {
           .header('X-Controlroom-url', encodeURIComponent(controlroom_url));
         });
 
-      } else if (request.query.f) {
+      // } else if (request.query.f) {
 
-        var templatePath = path.join(testdataDir, request.query.f);
+      //   var templatePath = path.join(testdataDir, request.query.f);
 
-        if (!fs.existsSync(templatePath) || !fs.statSync(templatePath).isFile()) {
-          return reply(err).code(404);
-        }
+      //   if (!fs.existsSync(templatePath) || !fs.statSync(templatePath).isFile()) {
+      //     return reply(err).code(404);
+      //   }
 
-        fs.readFile(templatePath, function (err, data) {
-          if (err) return reply(err).code(500);
+      //   fs.readFile(templatePath, function (err, data) {
+      //     if (err) return reply(err).code(500);
 
-          data = JSON.parse(data);
-          data.debug = debug;
+      //     data = JSON.parse(data);
+      //     data.debug = debug;
 
-          reply
-          .view(request.params.template, data)
-          .header('Transfer-Encoding', 'chunked')
-          .header('Content-Type', contentTypeHeader(request.params.template));
-        });
+      //     reply
+      //     .view(request.params.template, data)
+      //     .header('Transfer-Encoding', 'chunked')
+      //     .header('Content-Type', contentTypeHeader(request.params.template));
+      //   });
 
       } else {
         reply
@@ -148,12 +174,12 @@ module.exports.register = function (plugin, options, next) {
       // Creating all directories in the request URL recursive
       var dirs = request.params.template.split('/').slice(0,-1);
       dirs.forEach(function (dir, index) {
-        var newDir = path.join(templateDir, dirs.slice(0, index + 1).join('/'));
+        var newDir = path.join(templatesDir, dirs.slice(0, index + 1).join('/'));
         if (!fs.existsSync(newDir))
           fs.mkdirSync(newDir);
       });
 
-      fs.writeFile(path.join(templateDir, request.params.template), request.payload, function (err) {
+      fs.writeFile(path.join(templatesDir, request.params.template), request.payload, function (err) {
         if (err) reply().code(500);
         else reply();
       });
@@ -168,7 +194,7 @@ module.exports.register = function (plugin, options, next) {
       if (request.params.template === undefined || request.params.template.charAt(request.params.template.length - 1) === '/')
         reply().code(400);
 
-      var templatePath = fs.realpathSync(path.join(templateDir, request.params.template));
+      var templatePath = fs.realpathSync(path.join(templatesDir, request.params.template));
 
       if (fs.existsSync(templatePath)) {
         fs.unlink(templatePath, function (err) {
