@@ -1,5 +1,4 @@
 var gulp = require('gulp'),
-    browserSync = require('browser-sync'),
     jshint = require('gulp-jshint'),
     spawn = require('child_process').spawn;
 
