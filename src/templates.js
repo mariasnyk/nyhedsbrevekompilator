@@ -33,7 +33,6 @@ module.exports.register = function (plugin, options, next) {
       fs.readdir(templatesDir, function (err, files) {
         reply(files
           .filter(function (file) {
-            console.log(templatesDir, file);
             return fs.statSync(path.join(templatesDir, file)).isFile() &&
               (request.query.filter !== undefined ?
                 file.indexOf(request.query.filter) > -1 :

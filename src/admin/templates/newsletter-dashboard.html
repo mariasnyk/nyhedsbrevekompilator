@@ -28,7 +28,7 @@
           <th colspan="999">Navn</th>
           <!-- <th></th> -->
         </tr>
-        <tr ng-repeat="newsletter in newsletters | filter: newsletterFilter">
+        <tr ng-repeat="newsletter in newsletters | filter: newsletterFilter | orderBy: 'name'">
           <td>
             <a ng-href="#/{{newsletter.ident}}">{{newsletter.name}}</a>
           </td>

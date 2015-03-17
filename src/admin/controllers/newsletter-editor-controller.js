@@ -79,7 +79,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         if ($scope.newCategory !== '') {
           $scope.newCategory.split(',').forEach( function (category) {
             category = category.trim();
-            if ($scope.newsletter.categories.indexOf(category) === -1 && category !== $scope.newsletter.name) {
+            if ($scope.newsletter.categories.indexOf(category) === -1) {
               $scope.newsletter.categories.push(category);
               $scope.dirty = true;
             }
@@ -110,7 +110,8 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     };
 
     $scope.closeNewsletterEditor = function () {
-      $location.url('/' + $routeParams.ident);
+      //$location.url('/' + $routeParams.ident);
+      $location.url('/');
     };
 
     $scope.deleteNewsletter = function () {
