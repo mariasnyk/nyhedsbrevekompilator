@@ -68,9 +68,21 @@ gulp.task('templating', ['examples'], function () {
 
 
 gulp.task('testdata', function () {
-  downloadTestdata('http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5857.ave-json?image_preset=620x355-c', 'bt_mode.html.json');
-  downloadTestdata('http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/31.ave-json?image_preset=620x355-c', 'bt_morgen.html.json');
-  downloadTestdata('http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/102.ave-json?image_preset=620x355-c', 'bt_nyheder.html.json');
+  downloadTestdata('bt', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/31.ave-json?image_preset=620x355-c');
+  downloadTestdata('bt_nyheder', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/102.ave-json?image_preset=620x355-c');
+  downloadTestdata('bt_breaking', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5893.ave-json?image_preset=620x355-c');
+  downloadTestdata('bt_eftermiddag', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5891.ave-json?image_preset=620x355-c');
+  downloadTestdata('bt_mode', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5857.ave-json?image_preset=620x355-c');
+  downloadTestdata('bt_morgen', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5890.ave-json?image_preset=620x355-c');
+  downloadTestdata('bt_nyhedsquiz', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5895.ave-json?image_preset=620x355-c');
+  downloadTestdata('bt_plus', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5894.ave-json?image_preset=620x355-c');
+  downloadTestdata('bt_sport', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5892.ave-json?image_preset=620x355-c');
+  downloadTestdata('stiften', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1599.ave-json?image_preset=620x355-c');
+  downloadTestdata('amtsavisen', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1600.ave-json?image_preset=620x355-c');
+  downloadTestdata('dagbladet-holstebro-struer', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1601.ave-json?image_preset=620x355-c');
+  downloadTestdata('dagbladetringskjern', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1602.ave-json?image_preset=620x355-c');
+  downloadTestdata('folkebladetlemvig', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5846.ave-json?image_preset=620x355-c');
+  downloadTestdata('viborg-folkeblad', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1604.ave-json?image_preset=620x355-c');
 });
 
 gulp.task('examples', function () {
@@ -94,7 +106,7 @@ function renderExample (templatePath) {
 
   console.log('Rendering', templatePath);
 
-  var templateName = path.basename(templatePath),
+  var templateName = path.basename(templatePath).replace('.html', ''),
       testdata = path.join(testdataDir, templateName + '.json');
       
 
@@ -113,7 +125,8 @@ function renderExample (templatePath) {
   console.log(exampleName, 'updated');
 }
 
-function downloadTestdata (url, filename) {
+function downloadTestdata (name, url) {
+  var filename = name + '.json';
   console.log('Downloading', url, 'as', filename);
 
   if (!fs.existsSync(testdataDir)) {

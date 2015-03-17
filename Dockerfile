@@ -15,9 +15,11 @@ RUN wget -O - http://nodejs.org/dist/v0.12.0/node-v0.12.0-linux-x64.tar.gz \
 WORKDIR /userdb
 
 # Copying the code into image. Be aware no config files are including.
-COPY ./src /userdb/src
+COPY ./examples /userdb/examples
 COPY ./node_modules /userdb/node_modules
+COPY ./src /userdb/src
 COPY ./templates /userdb/templates
+COPY ./testdata /userdb/testdata
 
 # Exposing our endpoint to Docker.
 EXPOSE  8000

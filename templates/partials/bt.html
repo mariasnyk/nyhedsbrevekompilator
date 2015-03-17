@@ -48,11 +48,6 @@
   </style>
 </head>
 <body style="background-color: #f9f9f9; margin: 0px;">
-  {% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + dates.yyyymmdd + "&ns_linkname=bt_modeskonhed"; %}
-  {% set buy_subscription_href = "http://sjma.dk/lpcms/landingpage/bt1.php?cid=BT-140218-CP-MALEDIT1NB&ns_campaign=_abonnementnyhedsbreve_toplink_bt&ns_mchannel=na&ns_source=nyhedsbreve&ns_linkname=nl_uspecificeret&ns_fee=3" %}
-  {% set sweetdeal_permission_href = "http://www.sweetdeal.dk?ns_campaign=_sweetdeal_signuprednl&ns_mchannel=na&ns_source=nyhedsbreve&ns_linkname=nl_uspecificeret&ns_fee=0" %}
-  {% set btsport_permission_href = "http://apps.adlifter.com/plugin/?application_key=70c4dd8af56f5dad9d5483513f049eb6&command=cmd_berlingske_quicksignup&customer_key=a40e4703a823d1d11977928620c6ead0&nlids=24,25,26&intids=&stack_key=fb5a0951e1258db8ca686b837e16e09e&lid=1660&mid=4&rtype=1&url=http://pm2.adlifter.com/landing/?page=MjA2Lmh0bWw=&email=[email]&action=1" %}
-  {% set unsubscribe_href = "http://nyhedsbreve.btdk-mail.dk/index.php?eksternid=[ekstern_id]&medieid=4" %}
 
   <!--[if (gte mso 9)|(IE)]>
   <table width="654" align="center" cellpadding="0" cellspacing="0" border="0">
@@ -77,9 +72,9 @@
     <tr>
       <td align="center" valign="top">
         <!-- Top logo -->
-        <img style="width: 100%;" src="http://nlstatic.berlingskemedia.dk/images/bt_mode_full_header_with_buy.png" width="654" usemap="#imgmap">
+        <img style="width: 100%;" src="{{ logo_url }}" width="654" usemap="#imgmap">
         <map name="imgmap">
-          <area shape="rect" coords="0,0,491,72" href="http://www.bt.dk/sektion/modeogskonhed?{{ tracking }}">
+          <area shape="rect" coords="0,0,491,72" href="{{ home_url }}?{{ tracking }}">
           <area shape="rect" coords="491,0,654,72" href="{{ buy_subscription_href }}">
         </map>
       </td>
@@ -93,7 +88,7 @@
         <div style="max-width: 614px; margin: 0 20px 0 20px; display: inline-block;  background-color: #ffffff; font-size; 0; line-height: 0px;">
           {% set width=614 %}
           {% set node = nodes[0]; %}
-          {% include "partials/bt_article.html" %}
+          {% include "bt_article.html" %}
         </div>
         <!-- Big story END -->
       </td>
@@ -104,9 +99,8 @@
     <tr>
       <td align="center" valign="top" bgcolor="#ececec">
         <!-- Wide banner -->
-        {% set banner_a_href = "http://ad1.emediate.dk/eas?cu=27669;ty=ct;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_1"; %}
-        {% set banner_img_src = "http://ad1.emediate.dk/eas?cu=27669;cre=img;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_1"; %}
-        {% include "partials/banner.html" %}
+        {% block wide_banner_1 %}
+        {% endblock %}
         <!-- Wide banner -->
       </td>
     </tr>
@@ -125,7 +119,7 @@
                   <!-- Right story -->
                   {% set width=300 %}
                   {% set node = nodes[loop.index0 - 1]; %}
-                  {% include "partials/bt_article.html" %}
+                  {% include "bt_article.html" %}
                 </div>
               </td>
               <td width="50%" align="center" valign="top">
@@ -133,7 +127,7 @@
                   <!-- Left story -->
                   {% set width=300 %}
                   {% set node = nodes[loop.index0]; %}
-                  {% include "partials/bt_article.html" %}
+                  {% include "bt_article.html" %}
                 </div>
               </td>
             </tr>
@@ -149,9 +143,8 @@
       <tr>
         <td align="center" valign="top" bgcolor="#ececec">
           <!-- First 4:3 beerbox banner -->
-          {% set banner_a_href = "http://ad1.emediate.dk/eas?cu=27671;ty=ct;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_2"; %}
-          {% set banner_img_src = "http://ad1.emediate.dk/eas?cu=27671;cre=img;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_2"; %}
-          {% include "partials/banner.html" %}
+          {% block box_banner_1 %}
+          {% endblock %}
           <!-- 4:3 beerbox banner END -->
         </td>
       </tr>
@@ -164,7 +157,7 @@
       <td align="center" valign="top">
         <!-- Read more -->
         <hr style="height: 1px; border: 0; background: #dddddd">
-        <a href="http://www.bt.dk/sektion/modeogskonhed?{{ tracking }}" style="text-decoration: none;">
+        <a href="{{ home_url }}?{{ tracking }}" style="text-decoration: none;">
           <div style="margin: 20px; background-color: #939393; padding: 10px; border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; -opera-border-radius: 4px;">
             <font color="#ffffff" style="font-family: 'bt_bold', 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
               Se flere historier
@@ -180,9 +173,8 @@
     <tr>
       <td align="center" valign="top" bgcolor="#ececec">
         <!-- Second 4:3 beerbox banner -->
-        {% set banner_a_href = "http://ad1.emediate.dk/eas?cu=27672;ty=ct;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_3"; %}
-        {% set banner_img_src = "http://ad1.emediate.dk/eas?cu=27672;cre=img;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_3"; %}
-        {% include "partials/banner.html" %}
+        {% block box_banner_2 %}
+        {% endblock %}
         <!-- 4:3 beerbox banner END -->
       </td>
     </tr>
@@ -266,9 +258,8 @@
     <tr>
       <td align="center" valign="top" bgcolor="#ececec">
         <!-- Wide banner -->
-        {% set banner_a_href = "http://ad1.emediate.dk/eas?cu=27670;ty=ct;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_4"; %}
-        {% set banner_img_src = "http://ad1.emediate.dk/eas?cu=27670;cre=img;kw=bt_modeskonhed;kw2=" + dates.yyyymmdd + ";upair=bt_modeskonhed_4"; %}
-        {% include "partials/banner.html" %}
+        {% block wide_banner_2 %}
+        {% endblock %}
         <!-- Wide banner -->
       </td>
     </tr>
@@ -318,7 +309,7 @@
     </tr>
     <tr>
       <td align="center" valign="top">
-        <hr style="height: 1px; border: 0; background: #dddddd">
+        <hr style="height: 1px; border: 0; background: #dddddd;">
       </td>
     </tr>
     <tr>
@@ -354,7 +345,7 @@
   </table>
 
   {% if debug %}
-    {% include "partials/debuginfo.html" %}
+    {% include "debuginfo.html" %}
   {% endif %}
 
   <!--[if (gte mso 9)|(IE)]>
