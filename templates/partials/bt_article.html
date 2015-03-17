@@ -1,37 +1,30 @@
-{#
-  Highlights
-    191162: www.bt.dk > frontpage > highlight > 1
-    191163: www.bt.dk > frontpage > highlight > 2
-    191164: www.bt.dk > frontpage > highlight > 3
-    191165: www.bt.dk > frontpage > highlight > 4
-    191166: www.bt.dk > frontpage > highlight > 5
-    191167: www.bt.dk > frontpage > highlight > 6
-    191168: www.bt.dk > frontpage > highlight > 7
-    191169: www.bt.dk > frontpage > highlight > 8
-    191170: www.bt.dk > frontpage > highlight > 9
-    191171: www.bt.dk > frontpage > highlight > 10
-
-  Colors
-    191134: Yellow
-    191131: xxx
-    191132: xxx
-    191136: xxx
-    191140: xxx
-    191138: xxx
-    191139: xxx
-
- #}
-
+{% set highlight = null %}
 {% if node.taxonomyTags.presentationTags %}
-  {% set background = null %} {% set color = "#000000" %}
   {% for tag in node.taxonomyTags.presentationTags %}
-    {% if tag.id == "191134" %}    {% set background = "#fde62f" %}{% set color = "#000000" %} {# Yellow #}
-    {% elseif tag.id == "191131" %}{% set background = "#000000" %}{% set color = "#ffffff" %}
-    {% elseif tag.id == "191132" %}{% set background = "#cd0403" %}{% set color = "#FFFFFF" %}
-    {% elseif tag.id == "191136" %}{% set background = "#c7db47" %}{% set color = "#000000" %}
-    {% elseif tag.id == "191140" %}{% set background = "#bd86bc" %}{% set color = "#ffffff" %}
-    {% elseif tag.id == "191138" %}{% set background = "#00aeef" %}{% set color = "#ffffff" %}
-    {% elseif tag.id == "191139" %}{% set background = "#e17e00" %}{% set color = "#000000" %}
+    {% if tag.id == "191162" %}     {% set highlight = 1 %}
+    {% elseif tag.id == "191163" %} {% set highlight = 2 %}
+    {% elseif tag.id == "191164" %} {% set highlight = 3 %}
+    {% elseif tag.id == "191165" %} {% set highlight = 4 %}
+    {% elseif tag.id == "191166" %} {% set highlight = 5 %}
+    {% elseif tag.id == "191167" %} {% set highlight = 6 %}
+    {% elseif tag.id == "191168" %} {% set highlight = 7 %}
+    {% elseif tag.id == "191169" %} {% set highlight = 8 %}
+    {% elseif tag.id == "191170" %} {% set highlight = 9 %}
+    {% elseif tag.id == "191171" %} {% set highlight = 10 %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% set background = null %} {% set color = "#000000" %}{% set highlight_color = "#cd0403" %}
+{% if node.taxonomyTags.presentationTags %}
+  {% for tag in node.taxonomyTags.presentationTags %}
+    {% if tag.id == "191134" %}     {# Yellow #}  {% set background = "#fde62f" %}  {% set color = "#000000" %}{% set highlight_color = "#cd0403" %}
+    {% elseif tag.id == "191131" %} {# Black #}   {% set background = "#000000" %}  {% set color = "#ffffff" %}{% set highlight_color = "#cd0403" %}
+    {% elseif tag.id == "191132" %} {# Red #}     {% set background = "#cd0403" %}  {% set color = "#ffffff" %}{% set highlight_color = "#000000" %}
+    {% elseif tag.id == "191136" %} {# Green #}   {% set background = "#c7db47" %}  {% set color = "#000000" %}{% set highlight_color = "#ffffff" %}
+    {% elseif tag.id == "191140" %} {# Purple #}  {% set background = "#bd86bc" %}  {% set color = "#ffffff" %}{% set highlight_color = "#000000" %}
+    {% elseif tag.id == "191138" %} {# Blue #}    {% set background = "#00aeef" %}  {% set color = "#ffffff" %}{% set highlight_color = "#cd0403" %}
+    {% elseif tag.id == "191139" %} {# Orange #}  {% set background = "#e17e00" %}  {% set color = "#000000" %}{% set highlight_color = "#ffffff" %}
     {% endif %}
   {% endfor %}
 {% endif %}
@@ -63,14 +56,19 @@
     </div>
 
     {% if background %}
-    <div style="width: {{ width-10 }}px; padding: 0 5px 5px 5px;">
+    <div style="width: {{ width-10 }}px; padding: 0 5px 10px 5px;">
     {% else %}
     <div style="width: {{ width }}px;">
     {% endif %}
 
+    {% set title = node.title | highlighter(highlight) %}
+
       <div style="text-align: left; line-height: 100%; margin-top: 5px;">
+        <font color="{{ highlight_color }}" style="font-family:'bt_bold', 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 30px; line-height: 30px; font-weight: bold; text-rendering: optimizeLegibility;">
+          {{ title.highlights }}
+        </font>
         <font color="{{ color }}" style="font-family:'bt_bold', 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 30px; line-height: 30px; font-weight: bold; text-rendering: optimizeLegibility;">
-          {{ node.title }}
+          {{ title.rest }}
         </font>
       </div>
 

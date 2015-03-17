@@ -5,8 +5,7 @@ var fs = require('fs'),
     path = require('path'),
     http = require('http'),
     url = require('url'),
-    swig = require('swig'),
-    extras = require('swig-extras'),
+    swig = require('./swig_helper.js'),
     checksum = require('checksum'),
     templatesDir = path.join(__dirname, '/../templates'),
     examplesDir = path.join(__dirname, '/../examples'),
@@ -15,13 +14,6 @@ var fs = require('fs'),
 if (!fs.existsSync(testdataDir)) {
   fs.mkdirSync(testdataDir);
 }
-
-extras.useFilter(swig, 'split');
-extras.useFilter(swig, 'trim');
-extras.useFilter(swig, 'truncate');
-
-swig.setDefaults({ cache: false }); /* must be turned of when in production*/
-
 
 module.exports.register = function (plugin, options, next) {
 

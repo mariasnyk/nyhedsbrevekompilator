@@ -3,19 +3,11 @@ var gulp = require('gulp'),
     spawn = require('child_process').spawn,
     path = require('path'),
     fs = require ('fs'),
-    http = require ('http');
+    http = require ('http'),
+    swig = require('./src/swig_helper.js'),
     examplesDir = path.join(__dirname, 'examples'),
     templatesDir = path.join(__dirname, 'templates'),
     testdataDir = path.join(__dirname, 'testdata');
-
-var swig = require('swig'),
-    extras = require('swig-extras');
-
-swig.setDefaults({ cache: false });
-extras.useFilter(swig, 'split');
-extras.useFilter(swig, 'trim');
-extras.useFilter(swig, 'truncate');
-
 
 
 gulp.task('default', ['serve']);
