@@ -364,7 +364,8 @@ function queryAllNewsletters (callback) {
       var data = JSON.parse(new Buffer(newsletter.data, 'base64').toString('utf8'));
       return {
         ident: newsletter.ident,
-        name: data.name
+        name: data.name,
+        categories: data.categories
       };
     }));
   });

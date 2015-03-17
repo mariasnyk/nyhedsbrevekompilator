@@ -33,6 +33,11 @@
             <a ng-href="#/{{newsletter.ident}}">{{newsletter.name}}</a>
           </td>
           <td>
+            <div ng-repeat="category in newsletter.categories">
+              <span  class="label label-info">{{category}}</span>
+            </div>
+          </td>
+          <td>
             <a class="btn btn-default btn-sm" ng-href="#/{{newsletter.ident}}">
               View <span class="glyphicon glyphicon-envelope"></span>
             </a>
