@@ -59,23 +59,18 @@ module.exports.register = function (plugin, options, next) {
   plugin.route({
     method: 'GET',
     path: '/{template*}',
+    config: {
+      validate: {
+        params: validateTemplate
+      }
+    },
     handler: function (request, reply) {
-      var templatePath = path.join(templatesDir, request.params.template);
-
-      if (!fs.existsSync(templatePath))
-        return reply().code(404);
-
-      if (!fs.statSync(templatePath).isFile())
-        return reply().code(500);
-
-      // Just making sure we have the full path.
-      templatePath = fs.realpathSync(templatePath);
 
       if (request.query.debug === 'true') {
 
         var datafilename = request.query.f ?
           path.join(testdataDir, request.query.f) :
-          path.join(testdataDir, request.params.template.replace('.html', '') + '.json');
+          path.join(testdataDir, request.params.template.replace('.html', '.json'));
 
         if (!fs.existsSync(datafilename) || !fs.statSync(datafilename).isFile()) {
           return reply('Data file ' + datafilename + ' missing.').code(404);
@@ -127,26 +122,6 @@ module.exports.register = function (plugin, options, next) {
           .header('X-Controlroom-url', encodeURIComponent(controlroom_url));
         });
 
-      // } else if (request.query.f) {
-
-      //   var templatePath = path.join(testdataDir, request.query.f);
-
-      //   if (!fs.existsSync(templatePath) || !fs.statSync(templatePath).isFile()) {
-      //     return reply(err).code(404);
-      //   }
-
-      //   fs.readFile(templatePath, function (err, data) {
-      //     if (err) return reply(err).code(500);
-
-      //     data = JSON.parse(data);
-      //     data.debug = debug;
-
-      //     reply
-      //     .view(request.params.template, data)
-      //     .header('Transfer-Encoding', 'chunked')
-      //     .header('Content-Type', contentTypeHeader(request.params.template));
-      //   });
-
       } else {
         reply
         .view(request.params.template)
@@ -157,6 +132,28 @@ module.exports.register = function (plugin, options, next) {
 
   plugin.route({
     method: 'POST',
+    path: '/{template*}',
+    config: {
+      validate: {
+        params: validateTemplate
+      },
+      payload: {
+        allow: 'application/json'
+      }
+    },
+    handler: function (request, reply) {
+      var data = request.payload;
+      data.subject = emailSubjectSuggestion(data);
+      data.dates = getDates();
+
+      reply
+      .view(request.params.template, data)
+      .header('Content-Type', contentTypeHeader(request.params.template));
+    }
+  });
+
+  plugin.route({
+    method: 'PUT',
     path: '/{template*}',
     handler: function (request, reply) {
 
@@ -223,6 +220,16 @@ module.exports.register.attributes = {
     name: 'templates',
     version: '1.0.0'
 };
+
+
+function validateTemplate (value, options, next) {
+  var templatePath = fs.realpathSync(path.join(templatesDir, value.template));
+
+  if (!fs.existsSync(templatePath) || !fs.statSync(templatePath).isFile())
+    next('Template ' + templatePath + ' not found');
+  else
+    next();
+}
 
 
 function download (url, callback) {

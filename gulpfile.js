@@ -104,10 +104,8 @@ function renderAllExamples () {
 
 function renderExample (templatePath) {
 
-  console.log('Rendering', templatePath);
-
-  var templateName = path.basename(templatePath).replace('.html', ''),
-      testdata = path.join(testdataDir, templateName + '.json');
+  var templateName = path.basename(templatePath),
+      testdata = path.join(testdataDir, templateName.replace('.html', '.json'));
       
 
   if (!fs.existsSync(testdata)) {
