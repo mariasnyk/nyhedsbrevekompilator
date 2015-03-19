@@ -38,6 +38,12 @@ app.config(['$resourceProvider', function ($resourceProvider) {
 app.factory('loadingSwitch', ['$rootScope', function($rootScope) {
   'use strict';
 
+  var watchers = 0;
+
+  $rootScope.$watch('watchers', function(newValue, oldValue, scope) {
+    scope.loading = watchers > 0;
+  });
+
   return {
     watch: function (request, label) {
       // Finding the promise
@@ -46,11 +52,18 @@ app.factory('loadingSwitch', ['$rootScope', function($rootScope) {
            null;
 
       if (promise !== null) {
-        $rootScope.$broadcast('loadingIndicator:turnOn', label);
+        if (++watchers === 1) {
+          $rootScope.$broadcast('loadingIndicator:turnOn', label);
+        }
         promise.finally(function () {
-          $rootScope.$broadcast('loadingIndicator:turnOff');
+          if (--watchers === 0) {
+            $rootScope.$broadcast('loadingIndicator:turnOff');
+          }
         });
       }
+    },
+    isLoading: function () {
+      return watchers > 0;
     }
   };
 }]);
@@ -61,37 +74,32 @@ app.directive('loadingIndicator', ['$interval', function ($interval) {
   return {
     restrict: 'EA',
     template: '<div ng-show="loading" style="background-color: red; display: inline-block; top: 0px; right: 0px; padding: 3px 21px 3px 10px; position: absolute; min-width: 100px;">{{ label }}{{ dots }}</div>',
-    link: function (scope, element, attrs) {
+    link: function ($scope, element, attrs) {
 
       var dots = 0,
           showLoadingIndicators = 0,
           interval;
 
-      scope.$on('loadingIndicator:turnOn', function (event, label) {
+      $scope.$on('loadingIndicator:turnOn', function (event, label) {
 
-        scope.label = label !== undefined ? label : 'Loading';
+        $scope.label = label !== undefined ? label : 'Loading';
 
-        if (++showLoadingIndicators === 1) {
+        interval = $interval(function () {
+          switch (++dots % 4) {
+            case 0: $scope.dots = '.'; break;
+            case 1: $scope.dots = '..'; break;
+            case 2: $scope.dots = '...'; break;
+            case 3: $scope.dots = '....'; break;
+          }
+        }, 700);
 
-          interval = $interval(function () {
-            switch (++dots % 4) {
-              case 0: scope.dots = '.'; break;
-              case 1: scope.dots = '..'; break;
-              case 2: scope.dots = '...'; break;
-              case 3: scope.dots = '....'; break;
-            }
-          }, 700);
-
-          scope.loading = true;
-        }
+        $scope.loading = true;
       });
 
-      scope.$on('loadingIndicator:turnOff', function (event, id) {
-        if (--showLoadingIndicators === 0) {
-          scope.loading = false;
-          dots = 0;
-          $interval.cancel(interval);
-        }
+      $scope.$on('loadingIndicator:turnOff', function (event, id) {
+        $scope.loading = false;
+        dots = 0;
+        $interval.cancel(interval);
       });
     }
   };

@@ -73,7 +73,7 @@
       </button>
     </div>
     <div class="col-xs-6">
-      <button type="button" class="btn btn-info" ng-click="updatePreviewClickEvent()" ng-disabled="loading_previews">
+      <button type="button" class="btn btn-info" ng-click="updatePreviewClickEvent()" ng-disabled="loading">
         Opdater preview <span class="glyphicon glyphicon-refresh"></span>
       </button>
     </div>
@@ -87,7 +87,7 @@
     </div>
     <div class="col-xs-8">
       <div class="form-inline">
-        <button type="button" class="btn btn-info" ng-click="updatePreviewClickEvent()" ng-disabled="loading_previews">
+        <button type="button" class="btn btn-info" ng-click="updatePreviewClickEvent()" ng-disabled="loading">
           Opdater <span class="glyphicon glyphicon-refresh"></span>
         </button>
         <div class="input-group">
@@ -99,15 +99,15 @@
             minutter <span class="glyphicon glyphicon-time"></span>
           </span>
           <span class="input-group-btn">
-            <button type="button" class="btn btn-danger" ng-click="sendNewsletter()" ng-disabled="loading_previews">
+            <button type="button" class="btn btn-danger" ng-click="sendNewsletter()" ng-disabled="loading">
               Send <span class="glyphicon glyphicon-envelope"></span>
             </button>
           </span>
         </div>
-        <button ng-hide="true" type="button" class="btn btn-warning" ng-click="draftNewsletter()" ng-disabled="loading_previews">
+        <button ng-hide="true" type="button" class="btn btn-warning" ng-click="draftNewsletter()" ng-disabled="loading">
           Opret kladde <span class="glyphicon glyphicon-inbox"></span>
         </button>
-        <a ng-href="{{ controlroom_url }}" target="_blank" class="btn btn-link" ng-disabled="loading_previews">
+        <a ng-href="{{ controlroom_url }}" target="_blank" class="btn btn-link" ng-disabled="loading">
           &Aring;bn BOND Controlroom
         </a>
       </div>
@@ -160,47 +160,71 @@
     </div>
   </div>
 
-  <!-- PREVIEW -->
+
   <div class="row">
     <div class="col-xs-12">
-      <div class="panel panel-primary">
-        <div class="panel-heading">Emnefelt</div>
-        <div class="panel-body">
-          <p ng-show="loading_html_preview">Loading...</p>
-          <input ng-hide="loading_html_preview" type="text" class="form-control" ng-model="newsletter.subject">
-        </div>
-      </div>
+      <ul class="nav nav-tabs">
+        <li role="presentation" ng-click="currentTab = 'subject'" ng-class="{active:currentTab === 'subject'}"><a>Emnefelt</a></li>
+        <li role="presentation" ng-click="currentTab = 'html'" ng-class="{active:currentTab === 'html'}" _class="active"><a>HTML indhold</a></li>
+        <li role="presentation" ng-click="currentTab = 'text'" ng-class="{active:currentTab === 'text'}"><a>Text indhold</a></li>
+        <li role="presentation" ng-click="currentTab = 'data'" ng-class="{active:currentTab === 'data'}"><a>Tilpas indhold</a></li>
+      </ul>
     </div>
   </div>
 
   <div class="row">
-    <div class="col-md-12 col-lg-12">
-      <div class="panel panel-primary">
-        <div class="panel-heading">HTML indhold <span style="float:right;"><a target="_blank" ng-href="{{ html_url }}&debug=true">Debug link</a></span></div>
-        <div class="panel-body">
-          <p ng-show="loading_html_preview">Loading...</p>
-          <iframe ng-hide="loading_html_preview" class="newsletter-preview" srcdoc="{{trusted_html_email_preview}}"></iframe>
-        </div>
-      </div>
-    </div>
-
-<!--     <div class="col-md-12 col-lg-12">
-      <div class="panel panel-primary">
-        <div class="panel-heading">BOND Controlroom</div>
-        <div class="panel-body">
-          <iframe class="newsletter-preview" ng-src="{{controlroom_url}}">please upgrade your browser if you see the message</iframe>
-        </div>
-      </div>
-    </div> -->
-
-    <div class="col-md-12 col-lg-12">
-      <div class="panel panel-primary">
-        <div class="panel-heading">Text indhold</div>
-        <div class="panel-body">
-          <p ng-show="loading_plain_preview">Loading...</p>
-          <textarea ng-hide="loading_plain_preview" class="newsletter-preview" style="background-color: white;" ng-model="newsletter.email_plain"></textarea>
-        </div>
-      </div>
+    <div class="col-xs-12">
+      <div ng-include="currentTab"></div>
     </div>
   </div>
+
+  <!-- PREVIEW -->
+  <script type="text/ng-template" id="subject">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <p ng-show="loading_html_preview">Loading...</p>
+        <input ng-hide="loading_html_preview" type="text" class="form-control" ng-model="newsletter.subject">
+      </div>
+    </div>
+  </script>
+
+  <script type="text/ng-template" id="html">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <p ng-show="loading_html_preview">Loading...</p>
+        <iframe ng-hide="loading_html_preview" class="newsletter-preview" srcdoc="{{trusted_html_email_preview}}"></iframe>
+      </div>
+    </div>
+    <a class="debug_link" target="_blank" ng-href="{{ html_url }}&debug=true">Debug link</a>
+  </script>
+
+<!--     <div class="col-md-12 col-lg-12">
+    <div class="panel panel-primary">
+      <div class="panel-heading">BOND Controlroom</div>
+      <div class="panel-body">
+        <iframe class="newsletter-preview" ng-src="{{controlroom_url}}">please upgrade your browser if you see the message</iframe>
+      </div>
+    </div>
+  </div> -->
+  <script type="text/ng-template" id="text">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <p ng-show="loading_plain_preview">Loading...</p>
+        <textarea ng-hide="loading_plain_preview" class="form-control newsletter-preview" style="background-color: white;" ng-model="newsletter.email_plain"></textarea>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/ng-template" id="data">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div ng-repeat="node in nodes">
+          <input
+            class="form-control"
+            type="text"
+            ng-model="node.title"
+            placeholder="Title"/>
+      </div>
+    </div>
+  </script>
 </div>

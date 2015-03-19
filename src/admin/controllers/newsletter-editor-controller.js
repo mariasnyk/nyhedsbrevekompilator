@@ -3,6 +3,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
     // Defaulting the schedule with an added 15 minuttes
     $scope.at = new Date(new Date().getTime() + 15*60000);
+    $scope.currentTab = 'html';
 
     var Newsletters = $resource('/newsletters/:ident', { ident: '@ident' });
     var Identities = $resource('/newsletters/identities');
@@ -31,6 +32,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       loadingSwitch.watch(all);
 
     } else {
+      $scope.nodes = [];
 
       // If we're not editing the newsletter, we don't need to fetch the dop-down data from e.g. SendGrid
       $scope.newsletter = Newsletters.get({ident: $routeParams.ident}, function () {
@@ -55,10 +57,20 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
         updatePreview();
         //updateControlroomIframe();
+
+        console.log($scope.newsletter);
+        var a = $http.get('/templates/data?u=' + $scope.newsletter.bond_url)
+        .success(function (res) {
+          console.log('res', res);
+          $scope.nodes = res.nodes;
+        });
+
+        loadingSwitch.watch(a);
         
       }, resourceErrorHandler);
 
       loadingSwitch.watch($scope.newsletter);
+
     }
 
 
@@ -136,16 +148,10 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         return;
       }
 
-      $scope.loading_previews = true;
-
       var a = updateHtmlPreview();
       var b = updatePlainPreview();
 
-      var all = $q.all([a,b]).finally(function () {
-        $scope.loading_previews = false;
-      });
-
-      loadingSwitch.watch(all);
+      loadingSwitch.watch($q.all([a,b]));
     }
 
 

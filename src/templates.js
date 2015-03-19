@@ -61,7 +61,8 @@ module.exports.register = function (plugin, options, next) {
     path: '/{template*}',
     config: {
       validate: {
-        params: validateTemplate
+        params: validateTemplate,
+        query: validateQueryU
       }
     },
     handler: function (request, reply) {
@@ -87,12 +88,6 @@ module.exports.register = function (plugin, options, next) {
 
       // Requesting a specific template with a BOND node as data input
       } else if (request.query.u) {
-
-        // Validate the url
-        var uri = url.parse(request.query.u);
-        if (uri.protocol === null || uri.host === null) {
-          return reply({message: 'Url invalid'}).code(400);
-        }
 
         var controlroom_url = getControlroomUrl(request.query.u);
 
@@ -149,6 +144,25 @@ module.exports.register = function (plugin, options, next) {
       reply
       .view(request.params.template, data)
       .header('Content-Type', contentTypeHeader(request.params.template));
+    }
+  });
+
+  plugin.route({
+    method: 'GET',
+    path: '/data',
+    config: {
+      validate: {
+        query: validateQueryU
+      }
+    },
+    handler: function (request, reply) {
+      download(request.query.u, function (err, data) {
+        if (err) return reply(err).code(500);
+
+        data.subject = emailSubjectSuggestion(data);
+        data.dates = getDates();
+        reply(data);
+      });
     }
   });
 
@@ -229,6 +243,23 @@ function validateTemplate (value, options, next) {
     next('Template ' + templatePath + ' not found');
   else
     next();
+}
+
+
+function validateQueryU (value, options, next) {
+  if (value.u) {
+    var uri = url.parse(value.u);
+
+    console.log('uri', uri);
+
+    if (uri.protocol === null || uri.host === null)
+      next('Url invalid');
+    else
+      next();
+
+  } else {
+    next();
+  }
 }
 
 
