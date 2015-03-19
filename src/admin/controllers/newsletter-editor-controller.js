@@ -32,14 +32,17 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       loadingSwitch.watch(all);
 
     } else {
-      $scope.nodes = [];
 
       // If we're not editing the newsletter, we don't need to fetch the dop-down data from e.g. SendGrid
       $scope.newsletter = Newsletters.get({ident: $routeParams.ident}, function () {
 
         $scope.newsletter.name = $scope.newsletter.name + ' ' + moment().format("ddd D MMM YYYY");
+        // Default 15 minuttes delay
         $scope.newsletter.after = 15;
 
+        getBondDataAndUpdatePreviews();
+
+        getControlroomUrl();
 
         // Populating the drop downs so newsletter values are visible
         $scope.html_templates = [$scope.newsletter.template_html];
@@ -54,23 +57,10 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
             $scope.lists = ['ERROR'];
           }
         }, resourceErrorHandler);
-
-        updatePreview();
-        //updateControlroomIframe();
-
-        console.log($scope.newsletter);
-        var a = $http.get('/templates/data?u=' + $scope.newsletter.bond_url)
-        .success(function (res) {
-          console.log('res', res);
-          $scope.nodes = res.nodes;
-        });
-
-        loadingSwitch.watch(a);
         
       }, resourceErrorHandler);
 
       loadingSwitch.watch($scope.newsletter);
-
     }
 
 
@@ -108,15 +98,11 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     };
 
 
-    $scope.saveNewsletter = function (close) {
+    $scope.saveNewsletter = function () {
       var saving = Newsletters.save({ ident: $routeParams.ident }, $scope.newsletter, function (success) {
+        notifications.showSuccess('Gemt');
         console.log('Success saving template.');
         $scope.dirty = false;
-        if (close === true) {
-          $scope.closeNewsletterEditor();
-        } else {
-          notifications.showSuccess('Gemt');
-        }
       });
       loadingSwitch.watch(saving, 'Saving');
     };
@@ -135,24 +121,74 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
     $scope.setDirty = function () {
       $scope.dirty = true;
-    }
-
-    $scope.updatePreviewClickEvent = function () {
-      updatePreview();
     };
 
+    var bonddatadirty = false;
+    
+    $scope.changeNodeTitle = function () {
+      bonddatadirty = true;
+    };
 
-    function updatePreview () {
+    $scope.blurNodeTitle = function () {
+      if (bonddatadirty) {
+        updatePreviews();
+        bonddatadirty = false;
+      }
+    };
+
+    $scope.moveNode = function (from, to) {
+      $scope.bonddata.nodes.splice(to, 0, $scope.bonddata.nodes.splice(from,1)[0]);
+      updatePreviews();
+    };
+
+    $scope.removeNode = function (index) {
+      $scope.bonddata.nodes.splice(index,1);
+      updatePreviews();
+    };
+
+    function getControlroomUrl () {
+      var get = $http.get('/templates/controlroom?u=' + $scope.newsletter.bond_url)
+      .success(function  (data) {
+        $scope.controlroom_url = data.url;
+        console.log('controlroom_url', $scope.controlroom_url)
+      });
+    }
+
+
+    function getBondData () {
       if ($scope.newsletter.bond_url === undefined) {
         notifications.showWarning('Missing BOND Url');
         return;
       }
 
+      //var get_bonddata = $http.get('/templates/data?u=' + $scope.newsletter.bond_url)
+      var get_bonddata = $http.get('/templates/data?f=bt.json')
+      .success(function (data) {
+        $scope.bonddata = data;
+          $scope.newsletter.subject =  data.subject;// decodeURIComponent(headers['x-subject-suggestion']);
+          $scope.newsletter.checksum = data.checksum; // headers['x-content-checksum'];
+          console.log('checksum', $scope.bonddata.checksum);
+      });
+      loadingSwitch.watch(get_bonddata);
+      return get_bonddata;
+    }
+    $scope.getBondData = getBondData;
+
+
+    function updatePreviews () {
       var a = updateHtmlPreview();
       var b = updatePlainPreview();
-
-      loadingSwitch.watch($q.all([a,b]));
+      return $q.all([a,b]);
     }
+    $scope.updatePreviews = updatePreviews;
+
+
+    function getBondDataAndUpdatePreviews () {
+      getBondData().success(function () {
+        updatePreviews();
+      });
+    }
+    $scope.getBondDataAndUpdatePreviews = getBondDataAndUpdatePreviews;
 
 
     function updateHtmlPreview () {
@@ -162,14 +198,11 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       }
 
       $scope.loading_html_preview = true;
-      $scope.html_url = '/templates/' + $scope.newsletter.template_html + '?u=' + encodeURIComponent($scope.newsletter.bond_url);
 
-      var getting = $http.get($scope.html_url)
+      var get_html = $http.post('/templates/' + $scope.newsletter.template_html, $scope.bonddata)
       .success(function (data, status, getHeaders) {
-        var headers = getHeaders();
-        $scope.newsletter.subject = decodeURIComponent(headers['x-subject-suggestion']);
-        $scope.newsletter.checksum = headers['x-content-checksum'];
-        $scope.controlroom_url = $sce.trustAsUrl(decodeURIComponent(headers['x-controlroom-url']));
+        // var headers = getHeaders();
+        //$scope.controlroom_url = $sce.trustAsUrl(decodeURIComponent(headers['x-controlroom-url']));
         $scope.newsletter.email_html = data;
         $scope.trusted_html_email_preview = $sce.trustAsHtml(data);
         $scope.loading_html_preview = false;
@@ -186,8 +219,8 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         $scope.trusted_html_email_preview = '<p>Error</p>';
       });
 
-      loadingSwitch.watch(getting);
-      return getting;
+      loadingSwitch.watch(get_html);
+      return get_html;
     }
 
 
@@ -199,7 +232,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
       $scope.loading_plain_preview = true;
 
-      var getting = $http.get('/templates/' + $scope.newsletter.template_plain + '?u=' + encodeURIComponent($scope.newsletter.bond_url))
+      var get_plain = $http.post('/templates/' + $scope.newsletter.template_plain, $scope.bonddata)
       .success(function (data) {
         $scope.newsletter.email_plain = data;
         $scope.loading_plain_preview = false;
@@ -208,8 +241,8 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         $scope.loading_plain_preview = false;
       });
 
-      loadingSwitch.watch(getting);
-      return getting;
+      loadingSwitch.watch(get_plain);
+      return get_plain;
     }
 
 
@@ -242,18 +275,4 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
       loadingSwitch.watch(drafting, 'Opretter');
     };
-
-
-    function updateControlroomIframe () {
-      if ($scope.newsletter.bond_url === undefined) {
-        return;
-      }
-
-      var getting = $http.get('/templates/controlroom?u=' + encodeURIComponent($scope.newsletter.bond_url))
-      .success(function (data) {
-        $scope.controlroom_url = $sce.trustAsResourceUrl(data.url);
-      });
-
-      loadingSwitch.watch(getting);
-    }
   }]);

@@ -80,6 +80,7 @@ module.exports.register = function (plugin, options, next) {
         var data = require(datafilename);
         data.debug = true;
         data.dates = getDates();
+        data.checksum = calculateChecksum(data);
 
         reply
         .view(request.params.template, data)
@@ -107,6 +108,7 @@ module.exports.register = function (plugin, options, next) {
 
           data.subject = emailSubjectSuggestion(data);
           data.dates = getDates();
+          data.checksum = calculateChecksum(data);
 
           reply
           .view(request.params.template, data)
@@ -140,10 +142,14 @@ module.exports.register = function (plugin, options, next) {
       var data = request.payload;
       data.subject = emailSubjectSuggestion(data);
       data.dates = getDates();
+      data.checksum = calculateChecksum(data);
 
       reply
       .view(request.params.template, data)
-      .header('Content-Type', contentTypeHeader(request.params.template));
+      .header('Transfer-Encoding', 'chunked')
+      .header('Content-Type', contentTypeHeader(request.params.template))
+      .header('X-Subject-Suggestion', encodeURIComponent(data.subject))
+      .header('X-Content-Checksum', calculateChecksum(data));
     }
   });
 
@@ -156,13 +162,20 @@ module.exports.register = function (plugin, options, next) {
       }
     },
     handler: function (request, reply) {
-      download(request.query.u, function (err, data) {
-        if (err) return reply(err).code(500);
-
+      if (request.query.f) {
+        var data = require(path.join(testdataDir, request.query.f));
         data.subject = emailSubjectSuggestion(data);
         data.dates = getDates();
         reply(data);
-      });
+      } else {
+        download(request.query.u, function (err, data) {
+          if (err) return reply(err).code(500);
+
+          data.subject = emailSubjectSuggestion(data);
+          data.dates = getDates();
+          reply(data);
+        });
+      }
     }
   });
 
