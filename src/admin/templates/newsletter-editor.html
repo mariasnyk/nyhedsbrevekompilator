@@ -176,92 +176,74 @@
   </div>
 
   <div ng-include="currentTab"></div>
+</div>
+
+<script type="text/ng-template" id="html">
   <div class="row">
     <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <p ng-show="loading_html_preview">Loading...</p>
+          <iframe ng-hide="loading_html_preview" class="newsletter-preview" srcdoc="{{trusted_html_email_preview}}"></iframe>
+        </div>
+      </div>
+      <a class="debug_link" target="_blank" ng-href="'/templates/'{{ newsletter.template_html }}?u={{ encodeURIComponent(newsletter.bond_url) }}&debug=true">Debug link</a>
     </div>
   </div>
+</script>
 
-  <!-- PREVIEW -->
-  <script type="text/ng-template" id="subject">
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <p ng-show="loading_html_preview">Loading...</p>
-            <input ng-hide="loading_html_preview" type="text" class="form-control" ng-model="newsletter.subject">
-          </div>
+<script type="text/ng-template" id="text">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <p ng-show="loading_plain_preview">Loading...</p>
+          <textarea ng-hide="loading_plain_preview" class="form-control newsletter-preview" style="background-color: white;" ng-model="newsletter.email_plain"></textarea>
         </div>
       </div>
     </div>
-  </script>
+  </div>
+</script>
 
-  <script type="text/ng-template" id="html">
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <p ng-show="loading_html_preview">Loading...</p>
-            <iframe ng-hide="loading_html_preview" class="newsletter-preview" srcdoc="{{trusted_html_email_preview}}"></iframe>
-          </div>
-        </div>
-        <a class="debug_link" target="_blank" ng-href="'/templates/'{{ newsletter.template_html }}?u={{ encodeURIComponent(newsletter.bond_url) }}&debug=true">Debug link</a>
-      </div>
-    </div>
-  </script>
-
-  <script type="text/ng-template" id="text">
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <p ng-show="loading_plain_preview">Loading...</p>
-            <textarea ng-hide="loading_plain_preview" class="form-control newsletter-preview" style="background-color: white;" ng-model="newsletter.email_plain"></textarea>
-          </div>
-        </div>
-      </div>
-    </div>
-  </script>
-
-  <script type="text/ng-template" id="data">
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <div class="form-horizontal">
-              <div class="form-group">
-                <label class="col-xs-2 control-label">Emnefelt</label>
-                <div class="col-xs-10">
-                  <input type="text" class="form-control" ng-model="newsletter.subject">
-                </div>
+<script type="text/ng-template" id="data">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="form-horizontal">
+            <div class="form-group">
+              <label class="col-xs-2 control-label">Emnefelt</label>
+              <div class="col-xs-10">
+                <input type="text" class="form-control" ng-model="newsletter.subject">
               </div>
-              <hr>
-              <div class="form-group" ng-repeat="node in bonddata.nodes">
-                <label class="col-xs-2 control-label">Artikel {{ $index + 1 }}</label>
-                <div class="col-xs-7">
-                  <input
-                    class="form-control"
-                    type="text"
-                    ng-model="node.title"
-                    ng-change="changeNodeTitle()"
-                    ng-blur="blurNodeTitle()"
-                    placeholder="Title"/>
-                </div>
-                <div class="col-xs-3">
-                  <button type="button" class="btn btn-default" ng-click="moveNode($index, $index - 1)">
-                    <span class="glyphicon glyphicon-arrow-up"></span>
-                  </button>
-                  <button type="button" class="btn btn-default" ng-click="moveNode($index, $index + 1)">
-                    <span class="glyphicon glyphicon-arrow-down"></span>
-                  </button>
-                  <button type="button" class="btn btn-warning" ng-click="removeNode($index)">
-                    <span class="glyphicon glyphicon-remove"></span>
-                  </button>
-                </div>
+            </div>
+            <hr>
+            <div class="form-group" ng-repeat="node in bonddata.nodes">
+              <label class="col-xs-2 control-label">Artikel {{ $index + 1 }}</label>
+              <div class="col-xs-7">
+                <input
+                  class="form-control"
+                  type="text"
+                  ng-model="node.title"
+                  ng-change="changeNodeTitle()"
+                  ng-blur="blurNodeTitle()"
+                  placeholder="Title"/>
               </div>
-            <div>
-          </div>
+              <div class="col-xs-3">
+                <button type="button" class="btn btn-default" ng-click="moveNode($index, $index - 1)">
+                  <span class="glyphicon glyphicon-arrow-up"></span>
+                </button>
+                <button type="button" class="btn btn-default" ng-click="moveNode($index, $index + 1)">
+                  <span class="glyphicon glyphicon-arrow-down"></span>
+                </button>
+                <button type="button" class="btn btn-warning" ng-click="removeNode($index)">
+                  <span class="glyphicon glyphicon-remove"></span>
+                </button>
+              </div>
+            </div>
+          <div>
         </div>
       </div>
     </div>
-  </script>
-</div>
+  </div>
+</script>

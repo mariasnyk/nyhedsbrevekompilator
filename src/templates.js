@@ -250,10 +250,10 @@ module.exports.register.attributes = {
 
 
 function validateTemplate (value, options, next) {
-  var templatePath = fs.realpathSync(path.join(templatesDir, value.template));
+  var templatePath = path.join(templatesDir, value.template);
 
   if (!fs.existsSync(templatePath) || !fs.statSync(templatePath).isFile())
-    next('Template ' + templatePath + ' not found');
+    next({ message: 'Template ' + templatePath + ' not found' });
   else
     next();
 }
@@ -263,10 +263,10 @@ function validateQueryU (value, options, next) {
   if (value.u) {
     var uri = url.parse(value.u);
 
-    console.log('uri', uri);
-
     if (uri.protocol === null || uri.host === null)
-      next('Url invalid');
+      next({ message: 'Url ' + value.u + ' invalid' });
+    else if (['http:', 'https:'].indexOf(uri.protocol) === -1)
+      next({ message: 'Url ' + value.u + ' invalid protocol' });
     else
       next();
 
