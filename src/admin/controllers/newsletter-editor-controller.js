@@ -150,8 +150,8 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       var get = $http.get('/templates/controlroom?u=' + $scope.newsletter.bond_url)
       .success(function  (data) {
         $scope.controlroom_url = data.url;
-        console.log('controlroom_url', $scope.controlroom_url)
       });
+      return get;
     }
 
 
@@ -167,7 +167,6 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         $scope.bonddata = data;
           $scope.newsletter.subject =  data.subject;// decodeURIComponent(headers['x-subject-suggestion']);
           $scope.newsletter.checksum = data.checksum; // headers['x-content-checksum'];
-          console.log('checksum', $scope.bonddata.checksum);
       });
       loadingSwitch.watch(get_bonddata);
       return get_bonddata;

@@ -2,7 +2,7 @@
 'use strict';
 
 var http = require('http'),
-    https = require('https'),
+    sendgrid = require('./sendgrid_helper.js'),
     url = require('url'),
     moment = require('moment'),
     userdb = require('./userdb_client.js');
@@ -26,13 +26,13 @@ module.exports.register = function (plugin, options, next) {
     method: 'get',
     path: '/identities',
     handler: function (request, reply) {
-      callSendGrid('/api/newsletter/identity/list.json', function (err, data) {
-        if (err) {
-          console.log(err);
+      sendgrid.getIdentities(function (err, data) {
+        if (err)
           reply(err).code(500);
-        } else reply(data.map(function (identity) {
-          return identity.identity;
-        }));
+        else
+          reply(data.map(function (identity) {
+            return identity.identity;
+          }));
       });
     }
   });
@@ -41,11 +41,11 @@ module.exports.register = function (plugin, options, next) {
     method: 'get',
     path: '/identities/{id}',
     handler: function (request, reply) {
-      callSendGrid('/api/newsletter/identity/get.json', 'identity=' + request.params.id, function (err, data) {
-        if (err) {
-          console.log(err);
+      sendgrid.getIdentity(request.params.id, function (err, data) {
+        if (err)
           reply(err).code(500);
-        } else reply(data);
+        else
+          reply(data);
       });
     }
   });
@@ -54,11 +54,13 @@ module.exports.register = function (plugin, options, next) {
     method: 'get',
     path: '/lists',
     handler: function (request, reply) {
-      callSendGrid('/api/newsletter/lists/get.json', function (err, data) {
-        if (err) return reply(err).code(500);
-        else reply(data.map(function (list) {
-          return list.list;
-        }));
+      sendgrid.getLists(function (err, data) {
+        if (err)
+          reply(err).code(500);
+        else
+          reply(data.map(function (list) {
+            return list.list;
+          }));
       });
     }
   });
@@ -67,9 +69,11 @@ module.exports.register = function (plugin, options, next) {
     method: 'get',
     path: '/lists/{list}',
     handler: function (request, reply) {
-      callSendGrid('/api/newsletter/lists/get.json', 'list=' + request.params.list, function (err, data) {
-        if (err) return reply(err).code(500);
-        else reply(data);
+      sendgrid.getList(request.params.list, function (err, data) {
+        if (err)
+          reply(err).code(500);
+        else
+          reply(data);
       });
     }
   });
@@ -78,13 +82,13 @@ module.exports.register = function (plugin, options, next) {
     method: 'get',
     path: '/categories',
     handler: function (request, reply) {
-      callSendGrid('/api/newsletter/category/list.json', function (err, data) {
-        if (err) {
-          console.log(err);
+      sendgrid.getCategories(function (err, data) {
+        if (err)
           reply(err).code(500);
-        } else reply(data.map(function (category) {
-          return category.category;
-        }));
+        else
+          reply(data.map(function (category) {
+            return category.category;
+          }));
       });
     }
   });
@@ -94,11 +98,11 @@ module.exports.register = function (plugin, options, next) {
     method: 'get',
     path: '/categories/stats',
     handler: function (request, reply) {
-      callSendGridV3('GET', '/v3/categories/stats' + request.url.search, function (err, data) {
-        if (err) {
-          console.log(err);
+      sendgrid.getStats(request.url.search, function (err, data) {
+        if (err)
           reply(err).code(500);
-        } else reply(data);
+        else
+          reply(data);
       });
     }
   });
@@ -107,13 +111,11 @@ module.exports.register = function (plugin, options, next) {
     method: 'get',
     path: '/emails',
     handler: function (request, reply) {
-      var body = request.query.name ? 'name=' + request.query.name : '';
-
-      callSendGrid('/api/newsletter/newsletter/list.json', body, function (err, data) {
-        if (err) {
-          console.log(err);
+      sendgrid.getEmails(request.query.name, function (err, data) {
+        if (err)
           reply(err).code(500);
-        } else reply(data);
+        else
+          reply(data);
       });
     }
   });
@@ -122,11 +124,11 @@ module.exports.register = function (plugin, options, next) {
     method: 'get',
     path: '/emails/schedule/{name}',
     handler: function (request, reply) {
-      callSendGrid('/api/newsletter/schedule/get.json', 'name=' + encodeURIComponent(request.params.name), function (err, data) {
-        if (err) {
-          console.log(err);
+      sendgrid.getEmailSchedule(request.params.name, function (err, data) {
+        if (err)
           reply(err).code(500);
-        } else reply(data);
+        else
+          reply(data);
       });
     }
   });
@@ -135,11 +137,11 @@ module.exports.register = function (plugin, options, next) {
     method: 'delete',
     path: '/emails/schedule/{name}',
     handler: function (request, reply) {
-      callSendGrid('/api/newsletter/schedule/delete.json', 'name=' + encodeURIComponent(request.params.name), function (err, data) {
-        if (err) {
-          console.log(err);
+      sendgrid.deleteEmailSchedule(request.params.name, function (err, data) {
+        if (err)
           reply(err).code(500);
-        } else reply(data);
+        else
+          reply(data);
       });
     }
   });
@@ -148,11 +150,11 @@ module.exports.register = function (plugin, options, next) {
     method: 'get',
     path: '/emails/{name}',
     handler: function (request, reply) {
-      callSendGrid('/api/newsletter/newsletter/get.json', 'name=' + encodeURIComponent(request.params.name), function (err, data) {
-        if (err) {
-          console.log(err);
+      sendgrid.getEmail(request.params.name, function (err, data) {
+        if (err)
           reply(err).code(500);
-        } else reply(data);
+        else
+          reply(data);
       });
     }
   });
@@ -259,8 +261,13 @@ module.exports.register = function (plugin, options, next) {
   plugin.route({
     method: 'post',
     path: '/draft',
+    config: {
+      validate: {
+        payload: validateNewsletterPayload
+      }
+    },
     handler: function (request, reply) {
-      createMarketingEmail (request.payload, function (err, result) {
+      sendgrid.createMarketingEmail(request.payload, function (err, result) {
         if (err) reply(err).code(500);
         else reply(result);
       });
@@ -270,10 +277,26 @@ module.exports.register = function (plugin, options, next) {
   plugin.route({
     method: 'post',
     path: '/send',
+    config: {
+      validate: {
+        payload: validateNewsletterPayload
+      }
+    },
     handler: function (request, reply) {
-      sendNewsletter(request.payload, function (err, result) {
-        if (err) reply(err).code(500);
-        else reply(result);
+      var newsletter = request.payload;
+
+      // TODO: Maybe validation this code down to validateNewsletterPayload?
+      validateLastChecksum(newsletter.list, newsletter.checksum, function (err) {
+        if (err) return reply(err).code(500);
+
+        sendgrid.sendMarketingEmail(newsletter, function (err, result) {
+          if (err) return reply(err).code(500);
+
+          updateLastChecksum(newsletter.list, newsletter.checksum, function (err) {
+            if (err) reply(err).code(500);
+            else reply({ message: 'Sent' });
+          });
+        });
       });
     }
   });
@@ -300,15 +323,19 @@ module.exports.register = function (plugin, options, next) {
 
             newsletter.email_plain = email_plain;
 
-            newsletter.after = 15;
-            newsletter.name = newsletter.name + ' ' + moment().format("ddd D MMM YYYY HH:mm");
-
-            sendNewsletter(newsletter, function (err, result) {
+            validateLastChecksum(newsletter.list, newsletter.checksum, function (err) {
               if (err) reply(err).code(500);
-              else {
-                result.name = newsletter.name;
-                reply(result);
-              }
+
+              newsletter.after = 15;
+              newsletter.name = newsletter.name + ' ' + moment().format("ddd D MMM YYYY HH:mm");
+
+              sendgrid.sendMarketingEmail(newsletter, function (err, result) {
+                if (err) reply(err).code(500);
+                else {
+                  result.name = newsletter.name;
+                  reply(result);
+                }
+              });
             });
           });
         });
@@ -472,256 +499,28 @@ function download (url, callback) {
 }
 
 
-function sendNewsletter (newsletter, callback) {
 
-  validateLastChecksum(newsletter.list, newsletter.checksum, function (err) {
-    if (err) return callback(err);
-
-    createMarketingEmail (newsletter, function (err, result) {
-      if (err) return callback(err);
-
-      addSendGridSchedule(newsletter.name, newsletter.after, function (err) {
-        if (err) return callback(err);
-
-        updateLastChecksum(newsletter.list, newsletter.checksum, function (err) {
-          if (err) callback(err);
-          else callback(null, { message: 'Sent' });
-        });
-      });
-    });
-  });
-}
-
-
-function createMarketingEmail (newsletter, callback) {
-
-  validateNewsletterInputData(newsletter, function (err) {
-    if (err) {
-      console.log(err);
-      return callback({ error: 'Error when validating input for marketing email.', errors: err.errors });
-    }
-
-    addSendGridMarketingEmail(newsletter.identity, newsletter.name, newsletter.subject, newsletter.email_plain, newsletter.email_html, function (err, result) {
-      if (err) {
-        console.log(err);
-        //return callback({ error: 'Error when creating new marketing email.' });
-        return callback(err);
-      }
-
-      // Adding the newsletter name as a mandatory category
-      if (newsletter.categories === undefined || newsletter.categories === null) {
-        newsletter.categories = [];
-      }
-
-      newsletter.categories.forEach(function (category) {
-        addSendGridCategory(category, newsletter.name);
-      });
-
-      addSendGridRecipients(newsletter.list, newsletter.name, function (err, result) {
-        if (err) {
-          console.log(err);
-          return callback({ error: 'Error when adding recipients to marketing email.' });
-        }
-
-        callback(null, result);
-      });
-    });
-  });
-}
-
-
-function validateNewsletterInputData (data, callback) {
+function validateNewsletterPayload (value, options, next) {
   var errors = [];
 
-  if (data.list === undefined)
+  if (value.list === undefined)
     errors.push('Field list is missing.');
 
-  if (data.identity === undefined)
+  if (value.identity === undefined)
     errors.push('Field identity is missing.');
 
-  if (data.subject === undefined)
+  if (value.subject === undefined)
     errors.push('Field subject is missing.');
 
-  if (data.email_html === undefined)
+  if (value.email_html === undefined)
     errors.push('Field email_html is missing.');
 
-  if (data.email_plain === undefined)
+  if (value.email_plain === undefined)
     errors.push('Field email_plain is missing.');
 
-  if (callback !== undefined && typeof callback === 'function') {
-    callback(errors.length > 0 ? {errors: errors} : null);
-  }
-
-  return errors.length === 0;
+  if (errors.length > 0)
+    next({ message: errors.join(' '), errors: errors});
+  else
+    next();
 }
 
-
-function createSendGridCategory (category, callback) {
-
-  var body = 'category=' + encodeURIComponent(category);
-  callSendGrid('/api/newsletter/category/create.json', body, callback);
-}
-
-
-function addSendGridCategory (category, name, callback) {
-
-  var body =
-    'category=' + encodeURIComponent(category) +
-    '&name=' + encodeURIComponent(name);
-
-  callSendGrid('/api/newsletter/category/add.json', body, function (err, data) {
-
-    if (err) {
-      // Example: {"error": "Category donkey1 does not exist"}
-      if (err.error == 'Category ' + category + ' does not exist') {
-        createSendGridCategory(category, function (err, data) {
-          addSendGridCategory (category, name, callback);
-        });
-      } else if (callback !== undefined && typeof callback === 'function' ) {
-        callback(err, null);
-      }
-    } else if (callback !== undefined && typeof callback === 'function' ) {
-      callback (null, data);
-    }
-  });
-}
-
-
-function addSendGridMarketingEmail (identity, name, subject, text, html, callback) {
-
-  var body =
-    'identity=' + identity +
-    '&name=' + encodeURIComponent(name) +
-    '&subject=' + encodeURIComponent(subject) +
-    '&text=' + encodeURIComponent(text) +
-    '&html=' + encodeURIComponent(html);
-
-  callSendGrid('/api/newsletter/add.json', body, callback); 
-}
-
-
-function addSendGridRecipients (list, name, callback) {
-
-  var body =
-    'list=' + encodeURIComponent(list) +
-    '&name=' + encodeURIComponent(name);
-
-  callSendGrid('/api/newsletter/recipients/add.json', body, callback); 
-}
-
-
-function addSendGridSchedule (name, after, callback) {
-
-  if (typeof after === 'function' && callback === undefined) {
-    callback = after;
-    after = null;
-  }
-
-  var body = 'name=' + encodeURIComponent(name);// +
-    //(after !== undefined && after !== null && after !== '' ? '&after=' + after : '');
-
-  if (after !== null) {
-    var temp = Number.parseInt(after);
-
-    if (isNaN(temp) || temp < 0) {
-      return callback({ message: 'Field after (' + after + ') is not a valid positive number.' });
-    } else {
-      body = body + '&after=' + temp.toString();
-    }
-  }
-
-  callSendGrid('/api/newsletter/schedule/add.json', body, callback);
-}
-
-
-function callSendGrid (path, body, callback) {
-
-  if (callback === undefined && typeof body === 'function') {
-    callback = body;
-    body = '';
-  }
-
-  if (body === null)
-    body = '';
-  else if (body !== '')
-    body = body + '&';
-
-  body = body + 'api_user=' + encodeURIComponent(process.env.SENDGRID_API_USER) + '&api_key=' + encodeURIComponent(process.env.SENDGRID_API_KEY);
-
-  var options = {
-    hostname: 'api.sendgrid.com',
-    port: 443,
-    path: path,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
-  };
-
-  var req = https.request(options, parseReponse(callback));
-
-  req.write(body);
-  req.end();
-
-  req.on('error', function (e) {
-    callback(e);
-  });
-}
-
-
-function callSendGridV3 (method, path, body, callback) {
-
-  if (callback === undefined && typeof body === 'function') {
-    callback = body;
-    body = '';
-  }
-
-  var authorization = new Buffer(process.env.SENDGRID_API_USER + ':' + process.env.SENDGRID_API_KEY).toString('base64');
-
-  var options = {
-    hostname: 'api.sendgrid.com',
-    port: 443,
-    path: path,
-    method: method,
-    headers: {
-      'Authorization': 'Basic ' + authorization
-    }
-  };
-
-//  console.log('Basic ' + authorization);
-//https://api.sendgrid.com/v3/categories/stats?aggregated_by=month&categories=BT+Mode+%26+Sk%C3%B8nhed&end_date=2015-02-23&start_date=2015-01-24
-//                                            ?aggregated_by=month&categories=BT+Mode+%26+Sk%C3%B8nhed&end_date=2015-02-23&start_date=2015-01-24
-  var req = https.request(options, parseReponse(callback));
-
-  req.write(body === null ? '' : body);
-  req.end();
-
-  req.on('error', function (e) {
-    callback(e);
-  });
-}
-
-
-function parseReponse (callback) {
-  return function (res) {
-    var data = '';
-
-    res.on('data', function(d) {
-      data = data + d;
-    });
-
-    res.on('end', function () {
-      try {
-        data = JSON.parse(data);
-      } catch (ex) {
-        console.log('JSON parse error on: ', data);
-        throw ex;
-      }
-
-      if (data.error || res.statusCode > 300)
-        callback(data, null);
-      else
-        callback(null, data);
-    });
-  };
-}

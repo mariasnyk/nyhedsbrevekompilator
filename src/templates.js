@@ -78,9 +78,8 @@ module.exports.register = function (plugin, options, next) {
         }
 
         var data = require(datafilename);
+        prepareData(data);
         data.debug = true;
-        data.dates = getDates();
-        data.checksum = calculateChecksum(data);
 
         reply
         .view(request.params.template, data)
@@ -106,9 +105,7 @@ module.exports.register = function (plugin, options, next) {
             return reply().code(404);
           }
 
-          data.subject = emailSubjectSuggestion(data);
-          data.dates = getDates();
-          data.checksum = calculateChecksum(data);
+          prepareData(data);
 
           reply
           .view(request.params.template, data)
@@ -139,17 +136,10 @@ module.exports.register = function (plugin, options, next) {
       }
     },
     handler: function (request, reply) {
-      var data = request.payload;
-      data.subject = emailSubjectSuggestion(data);
-      data.dates = getDates();
-      data.checksum = calculateChecksum(data);
-
       reply
-      .view(request.params.template, data)
+      .view(request.params.template, request.payload)
       .header('Transfer-Encoding', 'chunked')
-      .header('Content-Type', contentTypeHeader(request.params.template))
-      .header('X-Subject-Suggestion', encodeURIComponent(data.subject))
-      .header('X-Content-Checksum', calculateChecksum(data));
+      .header('Content-Type', contentTypeHeader(request.params.template));
     }
   });
 
@@ -164,15 +154,13 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       if (request.query.f) {
         var data = require(path.join(testdataDir, request.query.f));
-        data.subject = emailSubjectSuggestion(data);
-        data.dates = getDates();
+        prepareData(data);
         reply(data);
       } else {
         download(request.query.u, function (err, data) {
           if (err) return reply(err).code(500);
 
-          data.subject = emailSubjectSuggestion(data);
-          data.dates = getDates();
+          prepareData(data);
           reply(data);
         });
       }
@@ -269,12 +257,33 @@ function validateQueryU (value, options, next) {
       next({ message: 'Url ' + value.u + ' invalid protocol' });
     else
       next();
+  } else if (value.f) {
+    var testdataPath = path.join(testdataDir, value.f);
+
+    if (!fs.existsSync(testdataPath) || !fs.statSync(testdataPath).isFile())
+      next({ message: 'Testdata ' + testdataPath + ' not found' });
+    else
+      next();
 
   } else {
     next();
   }
 }
 
+
+function prepareData (data) {
+  data.dates = getDates();
+  data.subject = subjectSuggestion(data);
+  data.checksum = calculateChecksum(data);
+  if (data.type === 'nodequeue') {
+    data.nodes.forEach(function (node) {
+      node.newsl_access = calculatePaywallToken(node.id);
+    });
+  } else {
+    data.newsl_access = calculatePaywallToken(data.id);
+  }
+  return data;
+}
 
 function download (url, callback) {
   http.get(url, function( response ) {
@@ -302,7 +311,7 @@ function download (url, callback) {
 }
 
 
-function emailSubjectSuggestion (data) {
+function subjectSuggestion (data) {
   if (data === null) return '';
   var maxLength = 255;
 
