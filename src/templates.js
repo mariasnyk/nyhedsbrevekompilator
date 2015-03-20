@@ -160,6 +160,10 @@ module.exports.register = function (plugin, options, next) {
         download(request.query.u, function (err, data) {
           if (err) return reply(err).code(500);
 
+          if (data === null || ( data.type === 'nodequeue' && data.nodes.length === 0 )) {
+            return reply().code(404);
+          }
+
           prepareData(data);
           reply(data);
         });

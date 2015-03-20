@@ -123,28 +123,20 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       $scope.dirty = true;
     };
 
-    var bonddatadirty = false;
-    
     $scope.changeNodeTitle = function () {
-      bonddatadirty = true;
-    };
-
-    $scope.blurNodeTitle = function () {
-      if (bonddatadirty) {
-        updatePreviews();
-        bonddatadirty = false;
-      }
+      $scope.bonddatadirty = true;
     };
 
     $scope.moveNode = function (from, to) {
       $scope.bonddata.nodes.splice(to, 0, $scope.bonddata.nodes.splice(from,1)[0]);
-      updatePreviews();
+      $scope.bonddatadirty = true;
     };
 
     $scope.removeNode = function (index) {
       $scope.bonddata.nodes.splice(index,1);
-      updatePreviews();
+      $scope.bonddatadirty = true;
     };
+
 
     function getControlroomUrl () {
       var get = $http.get('/templates/controlroom?u=' + $scope.newsletter.bond_url)
@@ -161,12 +153,13 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         return;
       }
 
-      //var get_bonddata = $http.get('/templates/data?u=' + $scope.newsletter.bond_url)
-      var get_bonddata = $http.get('/templates/data?f=bt.json')
+      var get_bonddata = $http.get('/templates/data?u=' + $scope.newsletter.bond_url)
+      //var get_bonddata = $http.get('/templates/data?f=bt.json')
       .success(function (data) {
         $scope.bonddata = data;
           $scope.newsletter.subject =  data.subject;// decodeURIComponent(headers['x-subject-suggestion']);
           $scope.newsletter.checksum = data.checksum; // headers['x-content-checksum'];
+          $scope.bonddatadirty = false;
       });
       loadingSwitch.watch(get_bonddata);
       return get_bonddata;
@@ -221,6 +214,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       loadingSwitch.watch(get_html);
       return get_html;
     }
+    $scope.updateHtmlPreview = updateHtmlPreview;
 
 
     function updatePlainPreview () {
@@ -243,6 +237,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       loadingSwitch.watch(get_plain);
       return get_plain;
     }
+    $scope.updatePlainPreview = updatePlainPreview;
 
 
     $scope.sendNewsletter = function () {
