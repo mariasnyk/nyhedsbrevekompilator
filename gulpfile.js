@@ -85,16 +85,16 @@ gulp.task('testdata', function () {
   downloadTestdata('folkebladetlemvig', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5846.ave-json?image_preset=620x355-c');
   downloadTestdata('viborg-folkeblad', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1604.ave-json?image_preset=620x355-c');
 
-  downloadTestdata('berlingske-morgen', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5897.ave-json?image_preset=620x355-c');
-  downloadTestdata('berlingske-eftermiddag', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5842.ave-json?image_preset=620x355-c');
-  downloadTestdata('berlingske-aften', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5898.ave-json?image_preset=620x355-c');
-  downloadTestdata('berlingske-weekend', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5899.ave-json?image_preset=620x355-c');
-  downloadTestdata('berlingske-breaking', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5900.ave-json?image_preset=620x355-c');
-  downloadTestdata('berlingske-fri-weekend', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5901.ave-json?image_preset=620x355-c');
-  downloadTestdata('berlingske-rejseliv', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5906.ave-json?image_preset=620x355-c');
-  downloadTestdata('berlingske-nyhedsquiz', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5905.ave-json?image_preset=620x355-c');
-  downloadTestdata('politiko-morgenpost', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5902.ave-json?image_preset=620x355-c');
-  downloadTestdata('politiko-breaking', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5903.ave-json?image_preset=620x355-c');
+  downloadTestdata('berlingske_morgen', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5897.ave-json?image_preset=620x355-c');
+  downloadTestdata('berlingske_middag', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5842.ave-json?image_preset=620x355-c');
+  downloadTestdata('berlingske_aften', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5898.ave-json?image_preset=620x355-c');
+  downloadTestdata('berlingske_weekend', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5899.ave-json?image_preset=620x355-c');
+  downloadTestdata('berlingske_breaking', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5900.ave-json?image_preset=620x355-c');
+  downloadTestdata('berlingske_fri-weekend', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5901.ave-json?image_preset=620x355-c');
+  downloadTestdata('berlingske_rejseliv', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5906.ave-json?image_preset=620x355-c');
+  downloadTestdata('berlingske_nyhedsquiz', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5905.ave-json?image_preset=620x355-c');
+  downloadTestdata('berlingske_politiko', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5902.ave-json?image_preset=620x355-c');
+  downloadTestdata('berlingske_politiko-breaking', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5903.ave-json?image_preset=620x355-c');
 });
 
 gulp.task('examples', function () {

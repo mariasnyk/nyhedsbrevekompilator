@@ -23,7 +23,7 @@
     body, #bodyTable, #bodyCell{height:100% !important; margin:0; padding:0; width:100% !important;}
 
     @font-face {
-      font-family: 'bt_normal';
+      font-family: 'berlingske';
         src: url('http://nlstatic.berlingskemedia.dk/fonts/bt_one-bold-webfont.eot');
         src: url('http://nlstatic.berlingskemedia.dk/fonts/bt_one-bold-webfont.eot?#iefix') format('embedded-opentype'),
              url('http://nlstatic.berlingskemedia.dk/fonts/bt_one-bold-webfont.woff2') format('woff2'),
@@ -33,22 +33,10 @@
         font-weight: 400;
         font-style: normal;
     }
-
-    @font-face {
-      font-family: 'bt_bold';
-        src: url('http://nlstatic.berlingskemedia.dk/fonts/bt_one-bold-webfont.eot');
-        src: url('http://nlstatic.berlingskemedia.dk/fonts/bt_one-bold-webfont.eot?#iefix') format('embedded-opentype'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/bt_one-bold-webfont.woff2') format('woff2'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/bt_one-bold-webfont.woff') format('woff'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/bt_one-bold-webfont.ttf') format('truetype'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/bt_one-bold-webfont.svg#bt_onebold') format('svg');
-        font-weight: bold;
-        font-style: normal;
-    }
   </style>
 </head>
 
-{% set font_family="'bt_bold', 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif" %}
+{% set font_family="'berlingske', Georgia, 'Times New Roman', Times, serif" %}
 
 <body style="background-color: #f9f9f9; margin: 0px;">
 
@@ -91,7 +79,7 @@
         <div style="max-width: 614px; margin: 0 20px 0 20px; display: inline-block;  background-color: #ffffff; font-size; 0; line-height: 0px;">
           {% set width=614 %}
           {% set node = nodes[0]; %}
-          {% include "bt_article.html" %}
+          {% include "berlingske_article.html" %}
         </div>
         <!-- Big story END -->
       </td>
@@ -122,7 +110,7 @@
                   <!-- Right story -->
                   {% set width=300 %}
                   {% set node = nodes[loop.index0 - 1]; %}
-                  {% include "bt_article.html" %}
+                  {% include "berlingske_article.html" %}
                 </div>
               </td>
               <td width="50%" align="center" valign="top">
@@ -130,7 +118,7 @@
                   <!-- Left story -->
                   {% set width=300 %}
                   {% set node = nodes[loop.index0]; %}
-                  {% include "bt_article.html" %}
+                  {% include "berlingske_article.html" %}
                 </div>
               </td>
             </tr>
