@@ -71,28 +71,43 @@ module.exports.register = function (plugin, options, next) {
 
   plugin.route({
     method: 'GET',
+    path: '/data',
+    config: {
+      validate: {
+        query: validateQueryFU
+      }
+    },
+    handler: function (request, reply) {
+      if (request.query.f) {
+        var data = require(path.join(testdataDir, request.query.f));
+        prepareData(data);
+        reply(data);
+      } else {
+        getDataFromBond(request.query.u, function (err, data) {
+          if (err) return reply(err).code(500);
+          if (data === null) return reply().code(404);
+
+          reply(data);
+        });
+      }
+    }
+  });
+
+  plugin.route({
+    method: 'GET',
     path: '/{template*}',
     config: {
       validate: {
         params: validateTemplate,
-        query: validateQueryU
+        query: validateQueryFU
       }
     },
     handler: function (request, reply) {
 
-      if (request.query.debug === 'true') {
-
-        var datafilename = request.query.f ?
-          path.join(testdataDir, request.query.f) :
-          path.join(testdataDir, request.params.template.replace('.html', '.json'));
-
-        if (!fs.existsSync(datafilename) || !fs.statSync(datafilename).isFile()) {
-          return reply('Data file ' + datafilename + ' missing.').code(404);
-        }
-
-        var data = require(datafilename);
+      if (request.query.f) {
+        var data = require(path.join(testdataDir, request.query.f));
         prepareData(data);
-        data.debug = true;
+        data.debug = request.query.debug === 'true';
 
         reply
         .view(request.params.template, data)
@@ -105,6 +120,8 @@ module.exports.register = function (plugin, options, next) {
         getDataFromBond(request.query.u, function (err, data) {
           if (err) return reply(err).code(500);
           if (data === null) return reply().code(404);
+
+          data.debug = request.query.debug === 'true';
 
           reply
           .view(request.params.template, data)
@@ -137,30 +154,6 @@ module.exports.register = function (plugin, options, next) {
       .view(request.params.template, request.payload)
       .header('Transfer-Encoding', 'chunked')
       .header('Content-Type', contentTypeHeader(request.params.template));
-    }
-  });
-
-  plugin.route({
-    method: 'GET',
-    path: '/data',
-    config: {
-      validate: {
-        query: validateQueryU
-      }
-    },
-    handler: function (request, reply) {
-      if (request.query.f) {
-        var data = require(path.join(testdataDir, request.query.f));
-        prepareData(data);
-        reply(data);
-      } else {
-        getDataFromBond(request.query.u, function (err, data) {
-          if (err) return reply(err).code(500);
-          if (data === null) return reply().code(404);
-
-          reply(data);
-        });
-      }
     }
   });
 
@@ -244,7 +237,7 @@ function validateTemplate (value, options, next) {
 }
 
 
-function validateQueryU (value, options, next) {
+function validateQueryFU (value, options, next) {
   if (value.u) {
     var uri = url.parse(value.u);
 
