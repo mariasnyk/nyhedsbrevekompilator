@@ -5,7 +5,8 @@ var http = require('http'),
     sendgrid = require('./sendgrid_helper.js'),
     url = require('url'),
     moment = require('moment'),
-    userdb = require('./userdb_client.js');
+    userdb = require('./userdb_client.js'),
+    templates = require('./templates.js');
 
 moment.locale('da');
 
@@ -309,33 +310,26 @@ module.exports.register = function (plugin, options, next) {
         if (err) return reply(err).code(500);
         if (newsletter === null) return reply().code(404);
 
-        var html_url  = 'http://' + request.info.host + '/templates/' + newsletter.template_html + '?u=' + encodeURIComponent(newsletter.bond_url),
-            plain_url = 'http://' + request.info.host + '/templates/' + newsletter.template_plain + '?u=' + encodeURIComponent(newsletter.bond_url);
-
-        download(html_url, function (err, email_html, headers) {
+        templates.bond(newsletter.bond_url, function (err, data) {
           if (err) return reply(err).code(500);
 
-          newsletter.subject = decodeURIComponent(headers['x-subject-suggestion']);
-          newsletter.email_html = email_html;
+          newsletter.subject = data.subject;
+          newsletter.checksum = data.checksum;
 
-          download(plain_url, function (err, email_plain) {
-            if (err) return reply(err).code(500);
+          newsletter.email_html = templates.render(newsletter.template_html, data);
+          newsletter.email_plain = templates.render(newsletter.template_plain, data);
+          newsletter.after = 15;
+          newsletter.name = newsletter.name + ' ' + moment().format("ddd D MMM YYYY HH:mm");
 
-            newsletter.email_plain = email_plain;
+          validateLastChecksum(newsletter.list, newsletter.checksum, function (err) {
+            if (err) reply(err).code(500);
 
-            validateLastChecksum(newsletter.list, newsletter.checksum, function (err) {
+            sendgrid.sendMarketingEmail(newsletter, function (err, result) {
               if (err) reply(err).code(500);
-
-              newsletter.after = 15;
-              newsletter.name = newsletter.name + ' ' + moment().format("ddd D MMM YYYY HH:mm");
-
-              sendgrid.sendMarketingEmail(newsletter, function (err, result) {
-                if (err) reply(err).code(500);
-                else {
-                  result.name = newsletter.name;
-                  reply(result);
-                }
-              });
+              else {
+                result.name = newsletter.name;
+                reply(result);
+              }
             });
           });
         });
@@ -392,6 +386,7 @@ function queryAllNewsletters (callback) {
       return {
         ident: newsletter.ident,
         name: data.name,
+        list: data.list,
         categories: data.categories
       };
     }));
@@ -470,34 +465,6 @@ function updateLastChecksum (list, checksum, callback) {
 
   userdb.query(sql, callback);
 }
-
-
-function download (url, callback) {
-
-  http.get(url, function( response ) {
-
-    if (response.statusCode === 401) {
-      return callback (null, null);
-    } else if (response.statusCode !== 200) {
-      return callback (response.statusCode, null);
-    }
-
-    var data = '';
-    response.setEncoding('utf8');
-
-    response.on('data', function ( chunk ) {
-      data += chunk;
-    });
-
-    response.on('end', function() {
-      callback(null, data, response.headers);
-    });
-  }).on('error', function(e) {
-    console.log('Got error while requesting HTML (' + url + '): ' + e.message);
-    callback(e, null);
-  });
-}
-
 
 
 function validateNewsletterPayload (value, options, next) {

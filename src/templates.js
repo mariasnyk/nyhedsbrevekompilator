@@ -15,6 +15,38 @@ if (!fs.existsSync(testdataDir)) {
   fs.mkdirSync(testdataDir);
 }
 
+module.exports.render = function (templateName, data, callback) {
+  var template = path.join(templatesDir, templateName);
+
+  if (!fs.existsSync(template)) {
+    console.log( 'Template', templateName, 'not found');
+    return null;
+  }
+
+  return swig.renderFile(template, data);
+};
+
+function getDataFromBond (url, callback) {
+  download(url, function (err, data) {
+    if (err) return callback(err);
+
+    // Example of a response from a nodequeue that doesn't exist
+    //   { type: 'nodequeue',
+    //     id: '4222222626',
+    //     loadType: 'fullNode',
+    //     title: null,
+    //     nodes: [] }
+
+    if (data === null || ( data.type === 'nodequeue' && data.nodes.length === 0 )) {
+      return callback(null, null);
+    }
+
+    prepareData(data);
+    callback(null, data);
+  });
+};
+module.exports.bond = getDataFromBond;
+
 module.exports.register = function (plugin, options, next) {
 
   plugin.select('templates').views({
@@ -89,31 +121,15 @@ module.exports.register = function (plugin, options, next) {
       // Requesting a specific template with a BOND node as data input
       } else if (request.query.u) {
 
-        var controlroom_url = getControlroomUrl(request.query.u);
-
-        download(request.query.u, function (err, data) {
+        getDataFromBond(request.query.u, function (err, data) {
           if (err) return reply(err).code(500);
-
-          // Example of a response from a nodequeue that doesn't exist
-          //   { type: 'nodequeue',
-          //     id: '4222222626',
-          //     loadType: 'fullNode',
-          //     title: null,
-          //     nodes: [] }
-
-          if (data === null || ( data.type === 'nodequeue' && data.nodes.length === 0 )) {
-            return reply().code(404);
-          }
-
-          prepareData(data);
+          if (data === null) return reply().code(404);
 
           reply
           .view(request.params.template, data)
           .header('Transfer-Encoding', 'chunked')
-          .header('Content-Type', contentTypeHeader(request.params.template))
-          .header('X-Subject-Suggestion', encodeURIComponent(data.subject))
-          .header('X-Content-Checksum', calculateChecksum(data))
-          .header('X-Controlroom-url', encodeURIComponent(controlroom_url));
+          .header('Content-Type', contentTypeHeader(request.params.template));
+
         });
 
       } else {
@@ -157,14 +173,10 @@ module.exports.register = function (plugin, options, next) {
         prepareData(data);
         reply(data);
       } else {
-        download(request.query.u, function (err, data) {
+        getDataFromBond(request.query.u, function (err, data) {
           if (err) return reply(err).code(500);
+          if (data === null) return reply().code(404);
 
-          if (data === null || ( data.type === 'nodequeue' && data.nodes.length === 0 )) {
-            return reply().code(404);
-          }
-
-          prepareData(data);
           reply(data);
         });
       }

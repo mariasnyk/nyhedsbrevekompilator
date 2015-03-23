@@ -157,8 +157,8 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       //var get_bonddata = $http.get('/templates/data?f=bt.json')
       .success(function (data) {
         $scope.bonddata = data;
-          $scope.newsletter.subject =  data.subject;// decodeURIComponent(headers['x-subject-suggestion']);
-          $scope.newsletter.checksum = data.checksum; // headers['x-content-checksum'];
+          $scope.newsletter.subject =  data.subject;
+          $scope.newsletter.checksum = data.checksum;
           $scope.bonddatadirty = false;
       });
       loadingSwitch.watch(get_bonddata);
