@@ -26,25 +26,6 @@ module.exports.render = function (templateName, data, callback) {
   return swig.renderFile(template, data);
 };
 
-function getDataFromBond (url, callback) {
-  download(url, function (err, data) {
-    if (err) return callback(err);
-
-    // Example of a response from a nodequeue that doesn't exist
-    //   { type: 'nodequeue',
-    //     id: '4222222626',
-    //     loadType: 'fullNode',
-    //     title: null,
-    //     nodes: [] }
-
-    if (data === null || ( data.type === 'nodequeue' && data.nodes.length === 0 )) {
-      return callback(null, null);
-    }
-
-    prepareData(data);
-    callback(null, data);
-  });
-};
 module.exports.bond = getDataFromBond;
 
 module.exports.register = function (plugin, options, next) {
@@ -300,6 +281,26 @@ function prepareData (data) {
   }
   return data;
 }
+
+function getDataFromBond (url, callback) {
+  download(url, function (err, data) {
+    if (err) return callback(err);
+
+    // Example of a response from a nodequeue that doesn't exist
+    //   { type: 'nodequeue',
+    //     id: '4222222626',
+    //     loadType: 'fullNode',
+    //     title: null,
+    //     nodes: [] }
+
+    if (data === null || ( data.type === 'nodequeue' && data.nodes.length === 0 )) {
+      return callback(null, null);
+    }
+
+    prepareData(data);
+    callback(null, data);
+  });
+};
 
 function download (url, callback) {
   http.get(url, function( response ) {

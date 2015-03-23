@@ -2,6 +2,7 @@
 'use strict';
 
 var http = require('http'),
+    checksum = require('checksum'),
     sendgrid = require('./sendgrid_helper.js'),
     url = require('url'),
     moment = require('moment'),
@@ -286,14 +287,16 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       var newsletter = request.payload;
 
+      var checksum = calculateChecksum(newsletter);
+
       // TODO: Maybe validation this code down to validateNewsletterPayload?
-      validateLastChecksum(newsletter.list, newsletter.checksum, function (err) {
+      validateLastChecksum(newsletter.list, checksum, function (err) {
         if (err) return reply(err).code(500);
 
         sendgrid.sendMarketingEmail(newsletter, function (err, result) {
           if (err) return reply(err).code(500);
 
-          updateLastChecksum(newsletter.list, newsletter.checksum, function (err) {
+          updateLastChecksum(newsletter.list, checksum, function (err) {
             if (err) reply(err).code(500);
             else reply({ message: 'Sent' });
           });
@@ -314,22 +317,27 @@ module.exports.register = function (plugin, options, next) {
           if (err) return reply(err).code(500);
 
           newsletter.subject = data.subject;
-          newsletter.checksum = data.checksum;
-
           newsletter.email_html = templates.render(newsletter.template_html, data);
           newsletter.email_plain = templates.render(newsletter.template_plain, data);
           newsletter.after = 15;
           newsletter.name = newsletter.name + ' ' + moment().format("ddd D MMM YYYY HH:mm");
 
-          validateLastChecksum(newsletter.list, newsletter.checksum, function (err) {
+          var checksum = calculateChecksum(newsletter);
+
+          validateLastChecksum(newsletter.list, checksum, function (err) {
             if (err) reply(err).code(500);
 
             sendgrid.sendMarketingEmail(newsletter, function (err, result) {
-              if (err) reply(err).code(500);
-              else {
-                result.name = newsletter.name;
-                reply(result);
-              }
+              if (err) return reply(err).code(500);
+
+              updateLastChecksum(newsletter.list, checksum, function (err) {
+                if (err) return reply(err).code(500);
+                else {
+                  result.message = 'Sent';
+                  result.name = newsletter.name;
+                  reply(result);
+                }
+              });
             });
           });
         });
@@ -491,3 +499,18 @@ function validateNewsletterPayload (value, options, next) {
     next();
 }
 
+
+function calculateChecksum (data) {
+  if (data === null) return '';
+  if (data.type === 'nodequeue') {
+
+    var temp = data.nodes.map(function (node) {
+      return node.id;
+    });
+
+    return checksum(JSON.stringify(temp));
+
+  } else {
+    return checksum(JSON.stringify(data.id));
+  }
+}
