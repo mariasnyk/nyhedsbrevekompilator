@@ -187,7 +187,7 @@
           <iframe ng-hide="loading_html_preview" class="newsletter-preview" srcdoc="{{trusted_html_email_preview}}"></iframe>
         </div>
       </div>
-      <a class="debug_link" target="_blank" ng-href="'/templates/'{{ newsletter.template_html }}?u={{ encodeURIComponent(newsletter.bond_url) }}&debug=true">Debug link</a>
+      <a class="debug_link" target="_blank" href="/templates/{{ newsletter.template_html }}?u={{ safe_bond_url }}&debug=true">Debug link</a>
     </div>
   </div>
 </script>

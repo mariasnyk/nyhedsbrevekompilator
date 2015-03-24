@@ -118,16 +118,18 @@ module.exports.register = function (plugin, options, next) {
       } else if (request.query.u) {
 
         getDataFromBond(request.query.u, function (err, data) {
-          if (err) return reply(err).code(500);
-          if (data === null) return reply().code(404);
+          if (err) {
+            reply(err).code(500);
+          } else if (data === null) {
+            reply().code(404);
+          } else {
+            data.debug = request.query.debug === 'true';
 
-          data.debug = request.query.debug === 'true';
-
-          reply
-          .view(request.params.template, data)
-          .header('Transfer-Encoding', 'chunked')
-          .header('Content-Type', contentTypeHeader(request.params.template));
-
+            reply
+            .view(request.params.template, data)
+            .header('Transfer-Encoding', 'chunked')
+            .header('Content-Type', contentTypeHeader(request.params.template));
+          }
         });
 
       } else {
@@ -277,23 +279,22 @@ function prepareData (data) {
 
 function getDataFromBond (url, callback) {
   download(url, function (err, data) {
-    if (err) return callback(err);
-
-    // Example of a response from a nodequeue that doesn't exist
-    //   { type: 'nodequeue',
-    //     id: '4222222626',
-    //     loadType: 'fullNode',
-    //     title: null,
-    //     nodes: [] }
-
-    if (data === null || ( data.type === 'nodequeue' && data.nodes.length === 0 )) {
-      return callback(null, null);
+    if (err) {
+      callback(err);
+    } else if (data === null || ( data.type === 'nodequeue' && data.nodes.length === 0 )) {
+      // Example of a response from a nodequeue that doesn't exist
+      //   { type: 'nodequeue',
+      //     id: '4222222626',
+      //     loadType: 'fullNode',
+      //     title: null,
+      //     nodes: [] }
+      callback(null, null);
+    } else {
+      prepareData(data);
+      callback(null, data);
     }
-
-    prepareData(data);
-    callback(null, data);
   });
-};
+}
 
 function download (url, callback) {
   http.get(url, function( response ) {

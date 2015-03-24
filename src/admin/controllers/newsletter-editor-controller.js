@@ -49,6 +49,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         $scope.plain_templates = [$scope.newsletter.template_plain];
         $scope.identities = [$scope.newsletter.identity];
         $scope.lists = [$scope.newsletter.list];
+        $scope.safe_bond_url = encodeURIComponent($scope.newsletter.bond_url);
 
         // Validating the list still exists in SendGrid
         Lists.query({ list: $scope.newsletter.list}, function (response) {
