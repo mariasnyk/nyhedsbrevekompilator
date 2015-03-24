@@ -60,7 +60,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
             $scope.lists = ['ERROR'];
           }
         }, resourceErrorHandler);
-        
+
       }, resourceErrorHandler);
 
       loadingSwitch.watch($scope.newsletter);
@@ -75,12 +75,16 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     }
 
 
-    $scope.addCategory = function (clickEvent) {
+    $scope.addCategory = function (clickEvent, category) {
       if ($scope.newsletter.categories === undefined) {
         $scope.newsletter.categories = [];
       }
 
-      if (clickEvent.keyCode === 13) {
+      if (category) {
+        $scope.newCategory = category
+      }
+
+      if (clickEvent.keyCode === 13 || category) {
         if ($scope.newCategory !== '') {
           $scope.newCategory.split(',').forEach( function (category) {
             category = category.trim();
