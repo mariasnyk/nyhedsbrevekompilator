@@ -329,7 +329,9 @@ function subjectSuggestion (data) {
   if (data.type === 'nodequeue') {
     var temp = [];
     for (var i = 0; i < 3; i++) {
-      temp.push(data.nodes[i].title);
+      if (data.nodes[i] && data.nodes[i].title) {
+        temp.push(data.nodes[i].title);
+      }
     }
     return temp.join(' | ').substring(0, maxLength);
   } else {
