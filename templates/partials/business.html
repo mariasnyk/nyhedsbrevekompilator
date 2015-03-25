@@ -1,0 +1,34 @@
+{% extends "berlingske.html" %}
+{% if home_url === undefined %}
+{% endif %}
+{% set home_url = "http://www.business.dk/test1"; %}
+
+{% block social %}
+<div style="margin: 20px 0px 0px 0px;">
+  <font color="#000000" style="font-family: {{ font_family }}; font-size: 24px; line-height: 36px; text-rendering: optimizeLegibility;">
+    F&Oslash;LG BERLINGSKE BUSINESS
+  </font>
+</div>
+<div style="margin: 20px 0px;">
+  <div style="margin: 0px 15px; display: inline-block;">
+    <a target="_blank" href="https://www.facebook.com/berlingskebusiness" style="text-decoration: none;">
+      <img src="http://nlstatic.berlingskemedia.dk/images/facebook.png" width="12" />
+    </a>
+  </div>
+  <div style="margin: 0px 15px; display: inline-block;">
+    <a target="_blank" href="https://twitter.com/businessdk" style="text-decoration: none;">
+      <img src="http://nlstatic.berlingskemedia.dk/images/twitter.png" width="26" />
+    </a>
+  </div>
+  <div style="margin: 0px 15px; display: inline-block;">
+    <a target="_blank" href="https://www.linkedin.com/company/5069743" style="text-decoration: none;">
+      <img src="http://placehold.it/24x24" />
+    </a>
+  </div>
+  <div style="margin: 0px 15px; display: inline-block;">
+    <a target="_blank" href="https://plus.google.com/102636509175615648310/posts" style="text-decoration: none;">
+      <img src="http://nlstatic.berlingskemedia.dk/images/google_plus.png" width="28" />
+    </a>
+  </div>
+</div>
+{% endblock %}

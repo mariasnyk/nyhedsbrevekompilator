@@ -30,10 +30,11 @@
 {% endif %}
 
 
-<a  href="{{ node.urlAliases[0] }}?{{ tracking }}"
-    title="{{ node.title }}"
-    style="display: block; text-decoration: none; line-height: 23px; text-align: left"
-    target="_blank">
+<a
+  href="{{ node.urlAliases[0] }}?{{ tracking }}"
+  title="{{ node.title }}"
+  style="display: block; text-decoration: none; line-height: 23px; text-align: left"
+  target="_blank">
 
   {% if background %}
   <div style="background-color: {{ background }};">
@@ -46,11 +47,12 @@
       {% for image in node.images %}
         {% set image_count = loop.index; %}
         {% if loop.last %}
-          <img  style="width: {{ width }}px;"
-                width="{{ width }}"
-                alt="{{ image.title }}"
-                src="{{ image.image }}"
-                border="0" />
+          <img
+            style="width: {{ width }}px;"
+            width="{{ width }}"
+            alt="{{ image.title }}"
+            src="{{ image.image }}"
+            border="0" />
         {% endif %}
       {% endfor %}
     </div>
@@ -64,18 +66,23 @@
     {% set title = node.title | highlighter(highlight) %}
 
       <div style="text-align: left; line-height: 100%; margin-top: 5px;">
-        <font color="{{ highlight_color }}" style="font-family: {{ font_family }}; font-size: 30px; line-height: 30px; font-weight: bold; text-rendering: optimizeLegibility;">
+        <font
+          color="{{ highlight_color }}"
+          style="font-family: {{ font_family }}; font-size: 30px; line-height: 30px; font-weight: bold; text-rendering: optimizeLegibility;">
           {{ title.highlights }}
         </font>
-        <font color="{{ color }}" style="font-family: {{ font_family }}; font-size: 30px; line-height: 30px; font-weight: bold; text-rendering: optimizeLegibility;">
+        <font
+          color="{{ color }}"
+          style="font-family: {{ font_family }}; font-size: 30px; line-height: 30px; font-weight: bold; text-rendering: optimizeLegibility;">
           {{ title.rest }}
         </font>
       </div>
 
       {% if node.type === 'image_gallery' %}
       <div style="text-align: left; line-height: 100%; margin: 10px 0px;">
-        <font color="#d00000"
-              style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+        <font
+          color="#d00000"
+          style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
           Se <span>{{ image_count }}</span> billeder
         </font>
       </div>
