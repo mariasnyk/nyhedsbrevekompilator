@@ -95,10 +95,10 @@
     </div>
     <div class="col-xs-8">
       <div class="form-inline">
-        <button type="button" class="btn btn-info" ng-click="updatePreviews()" ng-disabled="loading">
+        <button type="button" class="btn btn-primary" ng-click="updatePreviews()" ng-disabled="loading">
           Opdater <span class="glyphicon glyphicon-refresh"></span>
         </button>
-        <button type="button" class="btn btn-info" ng-click="getBondData()" ng-disabled="loading">
+        <button type="button" class="btn btn-warning" ng-click="getBondData()" ng-disabled="loading">
           Reset indhold <span class="glyphicon glyphicon-refresh"></span>
         </button>
         <div class="input-group">
@@ -244,7 +244,7 @@
                 <button type="button" class="btn btn-default" ng-click="moveNode($index, $index + 1)">
                   <span class="glyphicon glyphicon-arrow-down"></span>
                 </button>
-                <button type="button" class="btn btn-warning" ng-click="removeNode($index)">
+                <button type="button" class="btn btn-danger" ng-click="removeNode($index)">
                   <span class="glyphicon glyphicon-remove"></span>
                 </button>
               </div>

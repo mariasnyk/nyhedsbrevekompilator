@@ -37,3 +37,7 @@ table
 .autocomplete a {
   cursor: pointer;
 }
+
+.nav-tabs a {
+  cursor: pointer;
+}
