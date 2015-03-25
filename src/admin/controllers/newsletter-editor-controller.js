@@ -218,6 +218,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         $scope.trusted_html_email_preview = '<p>Error</p>';
       });
 
+      $scope.bonddatadirty = false;
       loadingSwitch.watch(get_html);
       return get_html;
     }
