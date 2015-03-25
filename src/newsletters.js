@@ -395,12 +395,17 @@ function queryAllNewsletters (callback) {
         ident: newsletter.ident,
         name: data.name,
         list: data.list,
-        categories: data.categories
+        categories: data.categories,
+        incomplete: [data.identity, data.bond_url, data.template_html, data.template_plain, data.list].some(undefinedOrBlank)
       };
     }));
   });
 }
 
+function undefinedOrBlank (input) {
+  return input === undefined ||
+    (typeof input === 'string' ? input.length === 0 : false);
+}
 
 function queryOneNewsletter (ident, callback) {
   var sql = [

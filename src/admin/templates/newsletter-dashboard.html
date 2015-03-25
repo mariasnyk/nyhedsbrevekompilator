@@ -31,6 +31,7 @@
         <tr ng-repeat="newsletter in newsletters | filter: newsletterFilter | orderBy: 'name'">
           <td>
             <a ng-href="#/{{newsletter.ident}}">{{newsletter.name}}</a>
+            <span ng-show="newsletter.incomplete" style="color: red;" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
           </td>
           <td>
             <span ng-repeat="category in newsletter.categories">

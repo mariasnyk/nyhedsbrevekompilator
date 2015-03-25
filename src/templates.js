@@ -281,7 +281,9 @@ function getDataFromBond (url, callback) {
   download(url, function (err, data) {
     if (err) {
       callback(err);
-    } else if (data === null || ( data.type === 'nodequeue' && data.nodes.length === 0 )) {
+    } else if (data === null || data.type === undefined || data.id === undefined ) {
+      callback({ message: 'Invalind BOND data' });
+    } else if (data.type === 'nodequeue' && data.nodes.length === 0 ) {
       // Example of a response from a nodequeue that doesn't exist
       //   { type: 'nodequeue',
       //     id: '4222222626',
