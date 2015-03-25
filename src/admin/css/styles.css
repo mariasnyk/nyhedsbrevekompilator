@@ -37,3 +37,11 @@ table
 .autocomplete a {
   cursor: pointer;
 }
+
+.dndPlaceholder {
+  display: block;
+  height: 34px;
+  margin-bottom: 15px;
+  background-color: #ddd;
+  list-style: none;
+}
