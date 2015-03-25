@@ -48,11 +48,11 @@
       <div class="form-group">
         <label for="category_control">Tilføj kategori</label>
         <input id="category_control" class="form-control" type="text" ng-model="newCategory" ng-keyup="addCategory($event)" ng-disabled="!edit" placeholder="Skriv her">
-        <ul class="dropdown-menu autocomplete" ng-show="newCategory.length>=3">
+        <ul class="dropdown-menu autocomplete" ng-show="newCategory">
           <li ng-repeat="category in filteredCategories=(categories | filter:newCategory)">
             <a ng-click="addCategory('', category)">{{category}}</a>
           </li>
-          <li ng-hide="filteredCategories.length">
+          <li>
             <a>Tryk <span class="label label-default">ENTER</span> for at oprette</a>
           </li>
         </ul>
