@@ -27,3 +27,17 @@ table
 .debug_link {
   color: #ffffff;
 }
+
+.autocomplete {
+  display: block;
+  top: calc(100% - 15px);
+  left: 15px;
+}
+
+.autocomplete a {
+  cursor: pointer;
+}
+
+.nav-tabs a {
+  cursor: pointer;
+}

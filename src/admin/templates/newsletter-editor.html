@@ -47,7 +47,15 @@
     <div class="col-xs-2" ng-show="edit">
       <div class="form-group">
         <label for="category_control">Tilføj kategori</label>
-        <input id="category_control" class="form-control" type="text" ng-model="newCategory" ng-keyup="addCategory($event)" ng-disabled="!edit" placeholder="Skriv her"/>
+        <input id="category_control" class="form-control" type="text" ng-model="newCategory" ng-keyup="addCategory($event)" ng-disabled="!edit" placeholder="Skriv her">
+        <ul class="dropdown-menu autocomplete" ng-show="newCategory">
+          <li ng-repeat="category in filteredCategories=(categories | filter:newCategory)">
+            <a ng-click="addCategory('', category)">{{category}}</a>
+          </li>
+          <li>
+            <a>Tryk <span class="label label-default">ENTER</span> for at oprette</a>
+          </li>
+        </ul>
       </div>
     </div>
     <div class="col-xs-2">
@@ -87,10 +95,10 @@
     </div>
     <div class="col-xs-8">
       <div class="form-inline">
-        <button type="button" class="btn btn-info" ng-click="updatePreviews()" ng-disabled="loading">
+        <button type="button" class="btn btn-primary" ng-click="updatePreviews()" ng-disabled="loading">
           Opdater <span class="glyphicon glyphicon-refresh"></span>
         </button>
-        <button type="button" class="btn btn-info" ng-click="getBondData()" ng-disabled="loading">
+        <button type="button" class="btn btn-warning" ng-click="getBondData()" ng-disabled="loading">
           Reset indhold <span class="glyphicon glyphicon-refresh"></span>
         </button>
         <div class="input-group">
@@ -102,7 +110,7 @@
             minutter <span class="glyphicon glyphicon-time"></span>
           </span>
           <span class="input-group-btn">
-            <button type="button" class="btn btn-success" ng-click="sendNewsletter()" ng-disabled="loading">
+            <button type="button" class="btn btn-success" ng-click="sendNewsletter()" ng-disabled="loading || bonddatadirty">
               Send <span class="glyphicon glyphicon-envelope"></span>
             </button>
           </span>
@@ -236,7 +244,7 @@
                 <button type="button" class="btn btn-default" ng-click="moveNode($index, $index + 1)">
                   <span class="glyphicon glyphicon-arrow-down"></span>
                 </button>
-                <button type="button" class="btn btn-warning" ng-click="removeNode($index)">
+                <button type="button" class="btn btn-danger" ng-click="removeNode($index)">
                   <span class="glyphicon glyphicon-remove"></span>
                 </button>
               </div>

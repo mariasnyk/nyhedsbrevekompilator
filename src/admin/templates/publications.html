@@ -19,7 +19,7 @@
         <tr ng-repeat="newsletter in newsletters | filter: newsletterFilter">
           <td>{{ newsletter.name }}</td>
           <td>
-            <button class="btn btn-default" ng-click="getNewsletterData(newsletter.name, $index)">Vis detaljer</button>
+            <button class="btn btn-info" ng-click="getNewsletterData(newsletter.name, $index)">Vis detaljer</button>
           </td>
           <td>{{ newsletter.subject }}</td>
           <td>{{ newsletter.identity }}</td>
