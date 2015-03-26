@@ -263,20 +263,6 @@ function validateQueryFU (value, options, next) {
 }
 
 
-function prepareData (data) {
-  data.dates = getDates();
-  data.subject = subjectSuggestion(data);
-  data.checksum = calculateChecksum(data);
-  if (data.type === 'nodequeue') {
-    data.nodes.forEach(function (node) {
-      node.newsl_access = calculatePaywallToken(node.id);
-    });
-  } else {
-    data.newsl_access = calculatePaywallToken(data.id);
-  }
-  return data;
-}
-
 function getDataFromBond (url, callback) {
   download(url, function (err, data) {
     if (err) {
@@ -297,6 +283,7 @@ function getDataFromBond (url, callback) {
     }
   });
 }
+
 
 function download (url, callback) {
   http.get(url, function( response ) {
@@ -324,6 +311,35 @@ function download (url, callback) {
 }
 
 
+function prepareData (data) {
+  data.dates = getDates();
+  data.subject = subjectSuggestion(data);
+  data.checksum = calculateChecksum(data);
+  prepareNode(data);
+  return data;
+}
+
+function prepareNode (node) {
+  if (node.type === 'nodequeue') {
+    node.nodes.forEach(prepareNode);
+  } else {
+    node.newsl_access = calculatePaywallToken(node.id);
+
+    // if (node.type === 'news_article') {
+    //   node.calltoaction = 'Læs mere';
+    // } else if (node.type === 'image_gallery') {
+    //   node.image_count = Object.keys(node.images).length;
+    //   node.calltoaction = 'Se ' + node.image_count + ' billeder';
+    // } else if (node.type === 'news_article_external') {
+    //   node.calltoaction = 'Læs mere';
+    // } else if (node.type === 'webtv_link') {
+    //   node.calltoaction = 'Se TV-klip';
+    // } else {
+    //   node.calltoaction = 'Læs mere';
+    // }
+  }
+}
+
 function subjectSuggestion (data) {
   if (data === null) return '';
   var maxLength = 255;
@@ -338,15 +354,6 @@ function subjectSuggestion (data) {
     return temp.join(' | ').substring(0, maxLength);
   } else {
     return data.title.substring(0, maxLength);
-  }
-}
-
-
-function contentTypeHeader (template) {
-  if (template.slice(-5) === '.html') {
-    return 'text/html; charset=utf-8';
-  } else {
-    return 'text/plain; charset=utf-8';
   }
 }
 
@@ -372,6 +379,15 @@ function calculatePaywallToken (nid) {
   var token = checksum(nid.toString() + timestamp + process.env.PAYWALL_TOKEN_SALT, { algorithm: 'sha256' });
   var newsl_access = new Buffer(nid.toString() + '|' + timestamp + '|' + token).toString('base64');
   return newsl_access;
+}
+
+
+function contentTypeHeader (template) {
+  if (template.slice(-5) === '.html') {
+    return 'text/html; charset=utf-8';
+  } else {
+    return 'text/plain; charset=utf-8';
+  }
 }
 
 

@@ -235,25 +235,26 @@
                   ng-model="node.title"
                   ng-change="changeNodeTitle()"
                   ng-blur="blurNodeTitle()"
-                  placeholder="Title"/>
+                  placeholder="Rubrik"/>
                 <textarea
                   class="form-control"
                   type="text"
                   rows="3"
+                  ng-show="$index === 0"
                   ng-model="node.summary"
                   ng-change="changeNodeTitle()"
                   ng-blur="blurNodeTitle()"
-                  placeholder="Summary"></textarea>
+                  placeholder="Underrubrik"></textarea>
                 <input
                   class="form-control"
                   type="text"
-                  ng-model="node.byline"
+                  ng-model="node.calltoaction"
                   ng-change="changeNodeTitle()"
                   ng-blur="blurNodeTitle()"
-                  placeholder="Call to action"/>
+                  placeholder="Ny link tekst"/>
               </div>
               <div class="col-xs-2">
-                <button type="button" class="btn btn-default" ng-click="moveNode($index, $index - 1)">
+                <button type="button" class="btn btn-default" ng-click="moveNode($index, $index - 1)" ng-disabled="$index === 0">
                   <span class="glyphicon glyphicon-arrow-up"></span>
                 </button>
                 <button type="button" class="btn btn-default" ng-click="moveNode($index, $index + 1)">
@@ -264,9 +265,10 @@
                 </button>
               </div>
             </div>
-          <div>
+          </div>
         </div>
       </div>
+      <a class="debug_link" target="_blank" href="{{ newsletter.bond_url }}">BOND API URL</a>
     </div>
   </div>
 </script>
