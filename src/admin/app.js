@@ -73,7 +73,7 @@ app.directive('loadingIndicator', ['$interval', function ($interval) {
 
   return {
     restrict: 'EA',
-    template: '<div ng-show="loading" style="background-color: red; display: inline-block; top: 0px; right: 0px; padding: 3px 21px 3px 10px; position: absolute; min-width: 100px;">{{ label }}{{ dots }}</div>',
+    template: '<img src="img/jellyfish.gif" ng-show="loading" style="position: absolute; top: 0px; right: 0px;">',
     link: function ($scope, element, attrs) {
 
       var dots = 0,
