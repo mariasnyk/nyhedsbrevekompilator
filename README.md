@@ -107,438 +107,128 @@ Now visit [http://localhost:8000/](http://localhost:8000/) if you get no error a
 
 # Templating
 
+The templates are written in Swig. See the documentation on [http://paularmstrong.github.io/swig/docs/](http://paularmstrong.github.io/swig/docs/).
+Also, SendGrid Email Tags are placeholders that will be used when sending the email. See [https://sendgrid.com/docs/Marketing_Emails/tags.html](https://sendgrid.com/docs/Marketing_Emails/tags.html)
+
 The templates are located in `src/templates` and can be previewed by following URL: `http://<server>/templates/<template_filename>`.
 
-The data to be injected into the template is defined by query params **node** and **nodequeue**
+The data to be injected into the template is defined by
 
 E.g.:
 
 ```
-http://localhost:8000/templates/breaking.html?node=29660614
-http://localhost:8000/templates/overview.html?nodequeue=31 
+http://localhost:8000/templates/berlingske_middag.html?f=berlingske_middag.json
+http://localhost:8000/templates/berlingske_middag.html?u=http%3A%2F%2Fedit.berlingskemedia.net.white.bond.u.net%2Fbondapi%2Fnodequeue%2F5842.ave-json%3Fimage_preset%3D620x355-c
 ```
+
+To generate the JSON file in the testdata-folder, user the gulptask **gulp testdata**.
 
 Note: Changes to the templates does not require the application to be restarted since the templates are not cached nor compiled.
 
-The templates are written in Swig. See the documentation on [http://paularmstrong.github.io/swig/docs/](http://paularmstrong.github.io/swig/docs/).
-
-Also, SendGrid Email Tags are placeholders that will be used when sending the email. See [https://sendgrid.com/docs/Marketing_Emails/tags.html](https://sendgrid.com/docs/Marketing_Emails/tags.html) 
-
-
 # API
 
-From [http://docs.userdb.apiary.io/](http://docs.userdb.apiary.io/)
-
-FORMAT: 1A
-HOST: http://localhost:8000/v0
 
-This documents the API for *User DB*, a service for handling the subscription in marketing automation.
-
+## Template collection [GET /templates]
+Get all templates.
 
-# Group Members
-These methods are related to the **Member** resources.
+Use query param **filter** to narrow the result.
+E.g.: `template?filter=bt_` or `template?filter=html`
 
-## Members Collection [/members]
-Optional querystring parameter "show":
+Returns an array:
 
-- _default_ (not set) - showing only active members
-- _all_ - show both active and inactive members
-- _inactive_ - show only inactive members
+```
+[
+"berlingske_middag.html",
+"bt_eftermiddag.html",
+"bt_mode.html",
+"bt_morgen.html",
+"bt_nyhedsquiz.html",
+"bt_plus.html",
+"bt_sport.html",
+"simple_overview.plain"
+]
+```
 
-### List all members [GET]
+## Render template [GET /templates/{template}]
+Get rendered HTML of a template.
 
-+ Response 200 (application/json)
+Use query params **u** (BOND API URL) and **f** (JSON file in the testdata-folder) to inject data.
 
-        [{
-        "id": "1", "firstname": "Lars", "lastname": "Jensen", "birth_year": "1977", "birth_date": "03-11-1977", "gender": "", "company": "", "company_cvr": "" 
-        }, {
-        "id": "2", "firstname": "Lone", "lastname": "Hansen", "birth_year": "1963", "birth_date": "", "gender": "f", "company": "", "company_cvr": ""
-        }]
+## Render template [POST /templates/{template}]
+Get rendered HTML of a template.
 
-### Create a Member [POST]
-Fields:
+Use POST body payload with JSON to inject data.
 
-- `firstname` (text 255 characters)
-- `lastname` (text 255 characters)
-- `birth_year` (number 4 digits), optional
-- `birth_date` (date ISO 8601 in UTC)
-- `gender` (`m`, `f`)
-- `company` (text 255 characters), optional
-- `company_cvr` (text 255 characters), optional
-- `is_internal` (`0` default, `1`), optional
-- `robinson_flag` (`0` default, `1`), optional
+## Save template file [PUT /templates/{template}]
+Saves the HTML body payload as a template file.
+Beware: files will be overwritten.
 
-+ Request (application/json)
+## Delete template file [DELETE /templates/{template}]
+Deletes the template file.
 
-            { "firstname": "Lars", "lastname": "Jensen", "birth_year": "1977", "birth_date": "03-11-1977", "gender": "", "company": "", "company_cvr": "" }
+## XXX [GET /templates/controlroom]
+Returns the corresponding BOND controlroom URL based on a BOND API URL.
 
-+ Response 201
-    
-            { "message": "OK", "id": "123" }
+Use query params **u** (BOND API URL) as input.
 
+E.g.:
 
-## Member [/members/{id}]
+```
+GET http://localhost:8000/templates/controlroom?u=http%3A%2F%2Fedit.berlingskemedia.net.white.bond.u.net%2Fbondapi%2Fnodequeue%2F5842.ave-json%3Fimage_preset%3D620x355-c
+```
 
-Retrieve the specific member with all related data.
+returns:
 
-+ Parameters
-    + id (required, number, `1`) ... The `id` of the member to be retrived.
+```
+{
+"url": "http://edit.berlingskemedia.net.white.bond.u.net/admin/content/nodequeue/5842/view"
+}
+```
 
-### Retrieve a Member [GET]
+## XXX [GET /templates/examples]
+Returns a HTML directory listing of the examples-folder.
+Use the gulptask **gulp examples** to generate examples based on testdata.
 
-+ Response 200 (application/json)
+## XXX [GET /templates/examples/{example}]
+Returns a rendered HTML template example.
 
-        {
-        "id": "2", "firstname": "Lone", "lastname": "Hansen", "birth_year": "1963", "birth_date": "", "gender": "f", "company": "", "company_cvr": "", 
-        "addresses": 
-        [
-        {"id": "14", "type": "home", "system_id": "3", "coname": "", "road_name": "Pilestræde", "house_number": "34", "house_letter": "", "floor": "", "side_door": "", "place_name": "", "city": "København K", "postcode": "1147", "country_code": "DK"}
-        ], 
-        "emails": 
-        [
-        {"id": "33", "type": "work", "email": "lone@work.com"},
-        {"id": "56", "type": "personal", "email": "123@hotmail.com"}
-        ],
-        "phones": 
-        [
-        {"id": "62", "type": "home", "phone_number": "33112244"}
-        ],
-        "subscriptions":
-        [
-        {"id": "76", "newsletter_id": "565", "newsletter_href": "http://api.udb.berlingskemedia.net/v0/newsletters/565/", "subscription_date": "12-07-2009", "location_id": "112", "email_id": "56"},
-        {"id": "77", "newsletter_id": "878", "newsletter_href": "http://api.udb.berlingskemedia.net/v0/newsletters/868/", "subscription_date": "12-07-2009", "location_id": "112", "email_id": "33"},
-        ],
-        "permissions":
-        [
-        ],
-        "interests":
-        [
-        {"id": "978", "interest_id": "14", "interest_href": "http://api.udb.berlingskemedia.net/v0/interests/14/", "subscription_date": "12-07-2009", "location_id": "112"}
-        ]
-        }
-        
-### Delete a Member [DELETE]
-This is a soft delete. Eg. member `status` and subscriptions will be to *inactive*. This means that the member will not be return from any API subscription requests.
-But the member data will not be deleted from the database before an admin job deletes it.
-        
-+ Response 204
+## XXX [GET /templates/data]
+Returns JSON BONDAPI data from a URL
 
+## Newsletter collection [GET /newsletters]
 
+## XXX [POST /newsletters]
 
-## Member email [/members/{id}/email]
+## XXX [GET /newsletters/{newsletter}]
 
-### Add a new email to the member [POST]
-The request must contain the email adresse and type to be added.
-Fields:
+## XXX [PUT,POST /newsletters/{newsletter}]
 
-- `email_address` (text 255 characters)
-- `type` (text 50 characters)
+## XXX [DELETE /newsletters/{newsletter}]
 
+## XXX [POST /newsletters/draft]
 
-+ Request (application/json)
+## XXX [POST /newsletters/send]
 
-        { "type": "work", "email_address": "test@test.nl" }
+## XXX [POST /newsletters/{newsletter}/send]
 
-+ Response 201
+## XXX [GET /newsletters/admin]
 
-## Delete member email [/members/{id}/email/{emailid}]
+## XXX [GET /newsletters/identities]
 
-+ Parameters
-    + emailid (required, number, `33`) ... The `id` from resource *member.email*.
-    
-### Remove an existing email from the member [DELETE]
+## XXX [GET /newsletters/identities/{identity}]
 
-+ Response 204
+## XXX [GET /newsletters/lists]
 
+## XXX [GET /newsletters/lists/{list}]
 
-## Member phone [/members/{id}/phone]
+## XXX [GET /newsletters/categories]
 
-### Add a new phone number to the member [POST]
-The request must contain the phone number to be added.
-Fields:
+## XXX [GET /newsletters/categories/stats]
 
-- `phone_number` (text 50 characters)
-- `type` (text 50 characters)
+## XXX [GET /newsletters/emails]
 
-+ Request (application/json)
+## XXX [GET /newsletters/emails/{email}]
 
-        { "type": "work", "phone_number": "+4583736415" }
+## XXX [GET /newsletters/emails/schedule/{name}]
 
-+ Response 201
-
-## Delete member phone [/members/{id}/phone/{phoneid}]
-
-+ Parameters
-    + phoneid (required, number, `62`) ... The `id` from resource *member.phone*.
-    
-### Remove an existing phone number from the member [DELETE]
-
-+ Response 204
-
-
-
-
-## Member address [/members/{id}/address]
-
-### Add a new address to the member [POST]
-The request must contain the address to be added.
-Fields:
-
-- `type` (`billing` default, `shipping`)
-- `road_name` (text 255 characters)
-- `house_number` (text 10 characters)
-- `house_letter` (text 10 characters), optional
-- `floor` (text 10 characters), optional
-- `side_door` (text 10 characters), optional
-- `place_name` (text 40 characters), optional
-- `coname` (text 255 characters), optional
-- `city` (text 70 characters)
-- `postal_number` (text 32 characters)
-- `country_code` (text 2 characters)
-
-+ Request (application/json)
-
-+ Response 201
-
-
-## Delete member address [/members/{id}/address/{addressid}]
-
-+ Parameters
-    + addressid (required, number, `14`) ... The `id` from resource *member.addresses*.
-    
-### Remove an existing address from the member [DELETE]
-
-+ Response 204
-
-
-
-## Member subscriptions [/members/{id}/subscription]
-
-### Add a new subscription to the member [POST]
-Fields:
-
-- `newsletter_id`
-- `email` (text 255 characters)
-- `location_id`
-
-+ Request (application/json)
-
-+ Response 201
-
-## Delete member subscriptions [/members/{id}/subscription/{subscriptionid}]
-The subscription will be marked as inactive. Maybe we will delete it after 30 days.
-
-+ Parameters
-    + subscriptionid (required, number, `76`) ... The `id` from resource *member.subscriptions*.
-
-### Remove an existing subscription from the member [DELETE]
-
-+ Response 204
-
-
-
-## Member permissions [/members/{id}/permission]
-
-### Add a new permission to the member [POST]
-
-+ Request (application/json)
-
-+ Response 201
-
-## Member permissions [/members/{id}/permission/{permissionid}]
-
-+ Parameters
-    + permissionid (required, number, `76`) ... The `id` from resource *member.permissions*.
-    
-### Remove an existing permission from the member [DELETE]
-
-+ Response 204
-
-
-
-## Member interests [/members/{id}/interest]
-
-### Add a new interest to the member [POST]
-
-+ Request (application/json)
-
-+ Response 201
-
-## Member interests [/members/{id}/interest/{interestid}]
-
-+ Parameters
-    + interestid (required, number, `978`) ... The `id` from resource *member.interests*.
-
-### Remove an existing interest from the member [DELETE]
-
-+ Response 204
-
-
-
-# Group Publishers
-These methods are related to the **Publishers** resources.
-
-## Publisher Collection [/publishers]
-
-### List all Publishers [GET]
-
-+ Response 200 (application/json)
-
-        [{
-          "id": 1, "name": "AOK"
-        }, {
-          "id": 2, "name": "Berlingske"
-        }]
-
-### Create a Publisher [POST]
-Fields:
-
-- `name` (text 255 characters)
-- `display_text` (text 255 characters)
-- `from_email` (text 255 characters)
-- `from_name` (text 255 characters)
-- `url_picture_top` (text 255 characters)
-- `url` (text 255 characters)
-
-+ Request (application/json)
-
-        [{
-        "name": "AOK",
-        "display_text": "Alt om København", 
-        "from_email": "nothing@aok.dk", 
-        "from_name": "AOK.dk", 
-        "url_picture_top": "http://aok.dk/gfx/top.png", 
-        "url": "http://aok.dk/"
-        }]
-+ Response 201
-
-## Publisher [/publisher/{id}]
-
-### Retrieve a Publisher [GET]
-
-+ Response 200
-
-### Delete a Publisher [DELETE]
-
-+ Response 204    
-
-
-
-
-# Group Newsletters
-These methods are related to the **Newsletter** resources.
-
-## Newsletters Collection [/newsletters]
-
-### List all Newsletters [GET]
-+ Response 200 (application/json)
-
-        [{
-          "id": 1, "title": "Jogging in park"
-        }, {
-          "id": 2, "title": "Pick-up posters from post-office"
-        }]
-
-### Create a Newsletter [POST]
-Fields:
-
-- TODO
-
-+ Request (application/json)
-
-+ Response 201
-
-
-## Newsletters [/newsletters/{id}]
-    
-### Retrieve a Newsletter [GET]
-
-+ Response 200 (application/json)
-
-### Delete a Newsletter [DELETE]
-
-+ Response 204
-
-
-## Newsletters subscriptions [/newsletters/{id}/subscriptions]
-
-### Retrieve subscriptions for this Newsletter [GET]
-
-+ Response 200 (application/json)
-
-    
-        [{"email": "test@test.nl", "member":"123"},{"email": "john@doe.nl", "member":"987"}]
-
-
-
-
-# Group Permissions
-These methods are related to the **Permission** resources.
-
-## Permissions Collection [/permissions]
-
-### List all Permissions [GET]
-
-+ Response 200 (application/json)
-
-        [{
-          "id": 1, "title": "Jogging in park"
-        }, {
-          "id": 2, "title": "Pick-up posters from post-office"
-        }]
-
-### Create a Permission [POST]
-Fields:
-
-- TODO
-
-+ Request (application/json)
-
-+ Response 201
-
-## Permission [/permissions/{id}]
-
-### Retrieve a Permission [GET]
-
-+ Response 200
-
-### Delete a Permission [DELETE]
-
-+ Response 204
-
-
-
-# Group Interests
-These methods are related to the **Interests** resources.
-
-## Interests Collection [/interests]
-
-### List all Interests [GET]
-
-+ Response 200 (application/json)
-
-        [{
-          "id": 1, "title": "Jogging in park"
-        }, {
-          "id": 2, "title": "Pick-up posters from post-office"
-        }]
-
-### Create a Interest [POST]
-Fields:
-
-- TODO
-
-+ Request (application/json)
-
-+ Response 201
-
-## Interest [/interests/{id}]
-
-### Retrieve an Interest [GET]
-
-+ Response 200
-
-### Delete an Interest [DELETE]
-
-+ Response 204    
-
+## XXX [DELETE /newsletters/emails/schedule/{name}]

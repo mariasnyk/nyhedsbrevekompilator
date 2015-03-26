@@ -135,8 +135,10 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     };
 
     $scope.moveNode = function (from, to) {
-      $scope.bonddata.nodes.splice(to, 0, $scope.bonddata.nodes.splice(from,1)[0]);
-      $scope.bonddatadirty = true;
+      if (to !== -1) {
+        $scope.bonddata.nodes.splice(to, 0, $scope.bonddata.nodes.splice(from,1)[0]);
+        $scope.bonddatadirty = true;
+      }
     };
 
     $scope.removeNode = function (index) {

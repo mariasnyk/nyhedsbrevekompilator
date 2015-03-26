@@ -1,39 +1,8 @@
-{% set highlight = null %}
-{% if node.taxonomyTags.presentationTags %}
-  {% for tag in node.taxonomyTags.presentationTags %}
-    {% if tag.id == "191162" %}     {% set highlight = 1 %}
-    {% elseif tag.id == "191163" %} {% set highlight = 2 %}
-    {% elseif tag.id == "191164" %} {% set highlight = 3 %}
-    {% elseif tag.id == "191165" %} {% set highlight = 4 %}
-    {% elseif tag.id == "191166" %} {% set highlight = 5 %}
-    {% elseif tag.id == "191167" %} {% set highlight = 6 %}
-    {% elseif tag.id == "191168" %} {% set highlight = 7 %}
-    {% elseif tag.id == "191169" %} {% set highlight = 8 %}
-    {% elseif tag.id == "191170" %} {% set highlight = 9 %}
-    {% elseif tag.id == "191171" %} {% set highlight = 10 %}
-    {% endif %}
-  {% endfor %}
-{% endif %}
-
-{% set background = null %} {% set color = "#000000" %}{% set highlight_color = "#cd0403" %}
-{% if node.taxonomyTags.presentationTags %}
-  {% for tag in node.taxonomyTags.presentationTags %}
-    {% if tag.id == "191134" %}     {# Yellow #}  {% set background = "#fde62f" %}  {% set color = "#000000" %}{% set highlight_color = "#cd0403" %}
-    {% elseif tag.id == "191131" %} {# Black #}   {% set background = "#000000" %}  {% set color = "#ffffff" %}{% set highlight_color = "#cd0403" %}
-    {% elseif tag.id == "191132" %} {# Red #}     {% set background = "#cd0403" %}  {% set color = "#ffffff" %}{% set highlight_color = "#000000" %}
-    {% elseif tag.id == "191136" %} {# Green #}   {% set background = "#c7db47" %}  {% set color = "#000000" %}{% set highlight_color = "#ffffff" %}
-    {% elseif tag.id == "191140" %} {# Purple #}  {% set background = "#bd86bc" %}  {% set color = "#ffffff" %}{% set highlight_color = "#000000" %}
-    {% elseif tag.id == "191138" %} {# Blue #}    {% set background = "#00aeef" %}  {% set color = "#ffffff" %}{% set highlight_color = "#cd0403" %}
-    {% elseif tag.id == "191139" %} {# Orange #}  {% set background = "#e17e00" %}  {% set color = "#000000" %}{% set highlight_color = "#ffffff" %}
-    {% endif %}
-  {% endfor %}
-{% endif %}
-
-
-<a  href="{{ node.urlAliases[0] }}?{{ tracking }}"
-    title="{{ node.title }}"
-    style="display: block; text-decoration: none; line-height: 23px; text-align: left"
-    target="_blank">
+<a
+  href="{{ node.urlAliases[0] }}?{{ tracking }}"
+  title="{{ node.title }}"
+  style="display: block; text-decoration: none; line-height: 23px; text-align: left"
+  target="_blank">
 
   {% if background %}
   <div style="background-color: {{ background }};">
@@ -61,24 +30,65 @@
     <div style="width: {{ width }}px;">
     {% endif %}
 
-    {% set title = node.title | highlighter(highlight) %}
-
       <div style="text-align: left; line-height: 100%; margin-top: 5px;">
-        <font color="{{ highlight_color }}" style="font-family: {{ font_family }}; font-size: 30px; line-height: 30px; font-weight: bold; text-rendering: optimizeLegibility;">
-          {{ title.highlights }}
-        </font>
-        <font color="{{ color }}" style="font-family: {{ font_family }}; font-size: 30px; line-height: 30px; font-weight: bold; text-rendering: optimizeLegibility;">
-          {{ title.rest }}
+        <font
+          color="{{ color }}"
+          style="font-family: {{ font_family }}; font-size: 30px; line-height: 30px; font-weight: bold; text-rendering: optimizeLegibility;">
+          {{ node.title }}
         </font>
       </div>
+
+      {% if show_summary && node.summary %}
+      <p>
+        <font
+          color="#000000"
+          style="font-family: Georgia, 'Times New Roman', Times, serif; text-decoration: none; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+          {{ node.summary }}
+        </font>
+      </p>
+      {% endif %}
 
       {% if node.type === 'image_gallery' %}
       <div style="text-align: left; line-height: 100%; margin: 10px 0px;">
-        <font color="#d00000"
-              style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+        <font
+          color="#d00000"
+          style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
           Se <span>{{ image_count }}</span> billeder
         </font>
       </div>
+      {% endif %}
+
+      {% if node.type === 'news_article' %}
+      <div style="text-align: left; line-height: 100%; margin: 10px 0px;">
+        <font
+          color="#d00000"
+          style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+          L&aelig;s mere
+        </font>
+      </div>
+      {% endif %}
+
+      {% if node.type === 'news_article_external' %}
+      <div style="text-align: left; line-height: 100%; margin: 10px 0px;">
+        <font
+          color="#d00000"
+          style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+          L&aelig;s blogindl&aelig;g
+        </font>
+      </div>
+      {% endif %}
+
+      {% if node.type === 'webtv_link' %}
+      <div style="text-align: left; line-height: 100%; margin: 10px 0px;">
+        <font
+          color="#d00000"
+          style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+          Se TV-klip
+        </font>
+      </div>
+      {% endif %}
+
+      {% if node.type === 'XXX' %}
       {% endif %}
     </div>
   </div>

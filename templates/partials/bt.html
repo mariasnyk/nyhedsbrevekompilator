@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html>
+{% if home_url === undefined %}
+  {% set home_url = "http://www.bt.dk"; %}
+{% endif %}
 {% spaceless %}
 <head lang="en">
   <meta charset="UTF-8">
@@ -279,7 +282,7 @@
     </tr>
     <tr>
       <td align="center" valign="top">
-        <!-- Følg BT -->
+        {% block social %}
         <div style="margin: 20px 0px 0px 0px;">
           <font color="#000000" style="font-family: {{ font_family }}; font-size: 24px; line-height: 36px; text-rendering: optimizeLegibility;">
             F&Oslash;LG BT
@@ -307,7 +310,7 @@
             </a>
           </div>
         </div>
-        <!-- Følg BT END -->
+        {% endblock %}
       </td>
     </tr>
     <tr>

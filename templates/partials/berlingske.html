@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html>
+{% if home_url === undefined %}
+{% endif %}
+{% set home_url = "http://www.b.dk"; %}
 {% spaceless %}
 <head lang="en">
   <meta charset="UTF-8">
@@ -78,6 +81,7 @@
         <div style="max-width: 614px; margin: 0 20px 0 20px; display: inline-block;  background-color: #ffffff; font-size; 0; line-height: 0px;">
           {% set width=614 %}
           {% set node = nodes[0]; %}
+          {% set show_summary = true; %}
           {% include "berlingske_article.html" %}
         </div>
         <!-- Big story END -->
@@ -109,6 +113,7 @@
                   <!-- Right story -->
                   {% set width=300 %}
                   {% set node = nodes[loop.index0 - 1]; %}
+                  {% set show_summary = false; %}
                   {% include "berlingske_article.html" %}
                 </div>
               </td>
@@ -117,6 +122,7 @@
                   <!-- Left story -->
                   {% set width=300 %}
                   {% set node = nodes[loop.index0]; %}
+                  {% set show_summary = false; %}
                   {% include "berlingske_article.html" %}
                 </div>
               </td>
@@ -173,7 +179,7 @@
     </tr>
     <tr>
       <td align="center" valign="top">
-        <!-- Andre newsletters -->
+        {% block permissions %}
         <div style="margin: 20px 20px;">
           <div style="text-align: left; margin: 20px 0px;">
             <font color="#000000" style="font-family: {{ font_family }}; font-size: 30px; line-height: 30px; text-rendering: optimizeLegibility;">
@@ -242,7 +248,7 @@
             </tr>
           </table>
         </div>
-        <!-- Andre newsletters END -->
+        {% endblock %}
       </td>
     </tr>
     <tr>
@@ -266,10 +272,10 @@
     </tr>
     <tr>
       <td align="center" valign="top">
-        <!-- Følg BT -->
+        {% block social %}
         <div style="margin: 20px 0px 0px 0px;">
           <font color="#000000" style="font-family: {{ font_family }}; font-size: 24px; line-height: 36px; text-rendering: optimizeLegibility;">
-            F&Oslash;LG BT
+            F&Oslash;LG BERLINGSKE
           </font>
         </div>
         <div style="margin: 20px 0px;">
@@ -294,7 +300,7 @@
             </a>
           </div>
         </div>
-        <!-- Følg BT END -->
+        {% endblock %}
       </td>
     </tr>
     <tr>
