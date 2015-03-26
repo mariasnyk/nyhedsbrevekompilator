@@ -62,7 +62,7 @@
       <label for="category_control">Kategorier</label>
       <ul class="list-inline">
         <li ng-repeat="category in newsletter.categories track by $index">
-          <span id="category-{{category}}" class="label label-info">{{category}} <span class="glyphicon glyphicon-remove" ng-show="edit" ng-click="removeCategory($index)"></span>&nbsp;</span>
+          <span id="category-{{category}}" class="label label-info"  style="background-color:#{{category|tocolor}}">{{category}} <span class="glyphicon glyphicon-remove" ng-show="edit" ng-click="removeCategory($index)"></span>&nbsp;</span>
         </li>
       </ul>
     </div>
