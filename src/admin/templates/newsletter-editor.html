@@ -214,31 +214,47 @@
 </script>
 
 <script type="text/ng-template" id="data">
-  <div class="row">
+  <div class="row" id="newsletter-data-form">
     <div class="col-xs-12">
       <div class="panel panel-default">
         <div class="panel-body">
           <div class="form-horizontal">
             <div class="form-group">
-              <label class="col-xs-2 control-label">Emnefelt</label>
-              <div class="col-xs-10">
+              <label class="col-xs-1 control-label">Emnefelt</label>
+              <div class="col-xs-11">
                 <input type="text" class="form-control" ng-model="newsletter.subject">
               </div>
             </div>
             <hr>
-            <div class="form-group" ng-repeat="node in bonddata.nodes">
-              <label class="col-xs-2 control-label">Artikel {{ $index + 1 }}</label>
-              <div class="col-xs-7">
+            <div class="row node" ng-repeat="node in bonddata.nodes">
+              <label class="col-xs-1 control-label">Artikel {{ $index + 1 }}</label>
+              <div class="col-xs-9">
                 <input
                   class="form-control"
                   type="text"
                   ng-model="node.title"
                   ng-change="changeNodeTitle()"
                   ng-blur="blurNodeTitle()"
-                  placeholder="Title"/>
+                  placeholder="Rubrik"/>
+                <textarea
+                  class="form-control"
+                  type="text"
+                  rows="3"
+                  ng-show="$index === 0"
+                  ng-model="node.summary"
+                  ng-change="changeNodeTitle()"
+                  ng-blur="blurNodeTitle()"
+                  placeholder="Underrubrik"></textarea>
+                <input
+                  class="form-control"
+                  type="text"
+                  ng-model="node.calltoaction"
+                  ng-change="changeNodeTitle()"
+                  ng-blur="blurNodeTitle()"
+                  placeholder="Ny link tekst"/>
               </div>
-              <div class="col-xs-3">
-                <button type="button" class="btn btn-default" ng-click="moveNode($index, $index - 1)">
+              <div class="col-xs-2">
+                <button type="button" class="btn btn-default" ng-click="moveNode($index, $index - 1)" ng-disabled="$index === 0">
                   <span class="glyphicon glyphicon-arrow-up"></span>
                 </button>
                 <button type="button" class="btn btn-default" ng-click="moveNode($index, $index + 1)">
@@ -249,9 +265,10 @@
                 </button>
               </div>
             </div>
-          <div>
+          </div>
         </div>
       </div>
+      <a class="debug_link" target="_blank" href="{{ newsletter.bond_url }}">BOND API URL</a>
     </div>
   </div>
 </script>

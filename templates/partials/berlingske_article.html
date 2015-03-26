@@ -32,7 +32,7 @@
 
       <div style="text-align: left; line-height: 100%; margin-top: 5px;">
         <font
-          color="{{ color }}"
+          color="#000000"
           style="font-family: {{ font_family }}; font-size: 30px; line-height: 30px; font-weight: bold; text-rendering: optimizeLegibility;">
           {{ node.title }}
         </font>
@@ -48,7 +48,16 @@
       </p>
       {% endif %}
 
-      {% if node.type === 'image_gallery' %}
+      {% if node.calltoaction %}
+      <div style="text-align: left; line-height: 100%; margin: 10px 0px;">
+        <font
+          color="#d00000"
+          style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+          {{ node.calltoaction }}
+        </font>
+      </div>
+
+      {% elif node.type === 'image_gallery' %}
       <div style="text-align: left; line-height: 100%; margin: 10px 0px;">
         <font
           color="#d00000"
@@ -56,9 +65,8 @@
           Se <span>{{ image_count }}</span> billeder
         </font>
       </div>
-      {% endif %}
 
-      {% if node.type === 'news_article' %}
+      {% elif node.type === 'news_article' %}
       <div style="text-align: left; line-height: 100%; margin: 10px 0px;">
         <font
           color="#d00000"
@@ -66,9 +74,8 @@
           L&aelig;s mere
         </font>
       </div>
-      {% endif %}
 
-      {% if node.type === 'news_article_external' %}
+      {% elif node.type === 'news_article_external' %}
       <div style="text-align: left; line-height: 100%; margin: 10px 0px;">
         <font
           color="#d00000"
@@ -76,9 +83,8 @@
           L&aelig;s blogindl&aelig;g
         </font>
       </div>
-      {% endif %}
 
-      {% if node.type === 'webtv_link' %}
+      {% elif node.type === 'webtv_link' %}
       <div style="text-align: left; line-height: 100%; margin: 10px 0px;">
         <font
           color="#d00000"
@@ -86,9 +92,6 @@
           Se TV-klip
         </font>
       </div>
-      {% endif %}
-
-      {% if node.type === 'XXX' %}
       {% endif %}
     </div>
   </div>

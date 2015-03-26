@@ -41,3 +41,19 @@ table
 .nav-tabs a {
   cursor: pointer;
 }
+
+#newsletter-data-form .node {
+  margin-top: 12px;
+}
+
+#newsletter-data-form .node .form-control {
+  margin-top: 5px;
+}
+
+.btn
+{
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}

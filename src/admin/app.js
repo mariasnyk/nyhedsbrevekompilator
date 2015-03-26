@@ -40,10 +40,6 @@ app.factory('loadingSwitch', ['$rootScope', function($rootScope) {
 
   var watchers = 0;
 
-  // $rootScope.$watch('watchers', function(newValue, oldValue, scope) {
-  //   scope.loading = watchers > 0;
-  // });
-
   return {
     watch: function (request, label) {
       // Finding the promise
@@ -61,9 +57,6 @@ app.factory('loadingSwitch', ['$rootScope', function($rootScope) {
           }
         });
       }
-    // },
-    // isLoading: function () {
-    //   return watchers > 0;
     }
   };
 }]);
