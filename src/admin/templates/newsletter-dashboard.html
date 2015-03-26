@@ -35,7 +35,7 @@
           </td>
           <td>
             <span ng-repeat="category in newsletter.categories">
-              <span class="label label-info">{{category}}</span>
+              <span class="label label-info" style="background-color:#{{category|tocolor}}">{{category}}</span>
             </span>
           </td>
           <td align="right">
