@@ -10,23 +10,23 @@
       <table class="table table-hover">
         <tr>
           <th>Navn</th>
-          <th></th>
           <th>Emne</th>
           <th>Identitet</th>
-          <th>Antal<br>modtagere</th>
-          <th>Schedule<br>(UTC)</th>
+          <th>Modtagere</th>
+          <th>Udsendes</th>
         </tr>
         <tr ng-repeat="newsletter in newsletters | filter: newsletterFilter">
           <td>{{ newsletter.name }}</td>
           <td>
-            <button class="btn btn-info" ng-click="getNewsletterData(newsletter.name, $index)">Vis detaljer</button>
+            <button class="btn btn-info" ng-hide="newsletter.subject" ng-click="getNewsletterData(newsletter.name, $index)">Vis detaljer</button>
+            <div ng-show="newsletter.subject">{{ newsletter.subject }}</div>
           </td>
-          <td>{{ newsletter.subject }}</td>
-          <td>{{ newsletter.identity }}</td>
-          <td>{{ newsletter.total_recipients }}</td>
-          <td>
-            {{ newsletter.schedule }}
-            <button class="btn btn-danger btn-xs" ng-show="newsletter.schedule" ng-click="deleteSchedule(newsletter.name, $index)">Annuller</button>
+          <td><span class="label" style="background-color: #{{ newsletter.identity | tocolor}};">{{ newsletter.identity }}</span></td>
+          <td align="center">
+            <span class="badge">{{ newsletter.total_recipients }}</<span></td>
+          <td align="right">
+            <abbr title="{{ newsletter.schedule }}">{{ newsletter.fromnow }}</abbr>
+            <button class="btn btn-danger btn-xs btn-block" ng-show="newsletter.schedule" ng-click="deleteSchedule(newsletter.name, $index)">Annuller</button>
           </td>
         </tr>
       </table>
