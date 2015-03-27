@@ -1,8 +1,5 @@
 <!DOCTYPE html>
 <html>
-{% if home_url === undefined %}
-  {% set home_url = "http://www.bt.dk"; %}
-{% endif %}
 {% spaceless %}
 <head lang="en">
   <meta charset="UTF-8">
@@ -78,10 +75,10 @@
     <tr>
       <td align="center" valign="top">
         <!-- Top logo -->
-        <img style="width: 100%;" src="{{ logo_url }}" width="654" usemap="#imgmap">
+        <img style="width: 100%;" src="{{ logo_src }}" width="654" usemap="#imgmap">
         <map name="imgmap">
-          <area shape="rect" coords="0,0,491,72" href="{{ home_url }}?{{ tracking }}">
-          <area shape="rect" coords="491,0,654,72" href="{{ buy_subscription_href }}">
+          <area shape="rect" coords="0,0,491,57" href="{{ home_url }}?{{ tracking }}">
+          <area shape="rect" coords="491,0,654,57" href="{{ buy_subscription_href }}">
         </map>
       </td>
     </tr>

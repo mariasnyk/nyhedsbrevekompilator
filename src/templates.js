@@ -269,14 +269,15 @@ function getDataFromBond (url, callback) {
       callback(err);
     } else if (data === null || data.type === undefined || data.id === undefined ) {
       callback({ message: 'Invalind BOND data' });
-    } else if (data.type === 'nodequeue' && data.nodes.length === 0 ) {
+    // } else if (data.type === 'nodequeue' && data.nodes.length === 0 ) {
+      // callback(null, null);
+
       // Example of a response from a nodequeue that doesn't exist
       //   { type: 'nodequeue',
       //     id: '4222222626',
       //     loadType: 'fullNode',
       //     title: null,
       //     nodes: [] }
-      callback(null, null);
     } else {
       prepareData(data);
       callback(null, data);
