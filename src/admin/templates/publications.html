@@ -22,7 +22,8 @@
             <div ng-show="newsletter.subject">{{ newsletter.subject }}</div>
           </td>
           <td><span class="label" style="background-color: #{{ newsletter.identity | tocolor}};">{{ newsletter.identity }}</span></td>
-          <td>{{ newsletter.total_recipients }}</td>
+          <td align="center">
+            <span class="badge">{{ newsletter.total_recipients }}</<span></td>
           <td>
             {{ newsletter.fromnow }}
             <button class="btn btn-danger btn-xs" ng-show="newsletter.schedule" ng-click="deleteSchedule(newsletter.name, $index)">Annuller</button>
