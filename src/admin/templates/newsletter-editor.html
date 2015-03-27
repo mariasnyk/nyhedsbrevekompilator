@@ -241,6 +241,7 @@
                   type="text"
                   rows="3"
                   ng-if="$index === 0"
+                  ng-show="node.summary"
                   ng-model="node.summary"
                   ng-change="changeNodeTitle()"
                   ng-blur="blurNodeTitle()"
