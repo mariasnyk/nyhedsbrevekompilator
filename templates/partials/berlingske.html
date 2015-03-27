@@ -24,11 +24,33 @@
 
     @font-face {
       font-family: 'berlingske';
-        src: url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSerif-XBd-webfont.eot');
-        src: url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSerif-XBd-webfont.eot?#iefix') format('embedded-opentype'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSerif-XBd-webfont.woff2') format('woff2'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSerif-XBd-webfont.woff') format('woff'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSerif-XBd-webfont.ttf') format('truetype');
+        src: url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.eot');
+        src: url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.woff2') format('woff2'),
+             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.woff') format('woff'),
+             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.ttf') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'berlingske_bold';
+        src: url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.eot');
+        src: url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.woff2') format('woff2'),
+             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.woff') format('woff'),
+             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.ttf') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'berlingske_sans_bold';
+        src: url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.eot');
+        src: url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.woff2') format('woff2'),
+             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.woff') format('woff'),
+             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.ttf') format('truetype');
         font-weight: 400;
         font-style: normal;
     }
@@ -36,6 +58,8 @@
 </head>
 
 {% set font_family="'berlingske', Georgia, 'Times New Roman', Times, serif" %}
+{% set font_family_bold="'berlingske_bold', Georgia, 'Times New Roman', Times, serif" %}
+{% set font_family_sans="'berlingske_sans_bold', 'Helvetica Neue', Helvetica, Arial, sans-serif" %}
 
 <body style="background-color: #f9f9f9; margin: 0px;">
 
@@ -78,7 +102,7 @@
         <div style="max-width: 614px; margin: 0 20px 0 20px; display: inline-block;  background-color: #ffffff; font-size; 0; line-height: 0px;">
           {% set width=614 %}
           {% set node = nodes[0]; %}
-          {% set show_summary = true; %}
+          {% set primary_article = true; %}
           {% include "berlingske_article.html" %}
         </div>
         <!-- Big story END -->
@@ -110,7 +134,7 @@
                   <!-- Right story -->
                   {% set width=300 %}
                   {% set node = nodes[loop.index0 - 1]; %}
-                  {% set show_summary = false; %}
+                  {% set primary_article = false; %}
                   {% include "berlingske_article.html" %}
                 </div>
               </td>
@@ -119,7 +143,7 @@
                   <!-- Left story -->
                   {% set width=300 %}
                   {% set node = nodes[loop.index0]; %}
-                  {% set show_summary = false; %}
+                  {% set primary_article = false; %}
                   {% include "berlingske_article.html" %}
                 </div>
               </td>
@@ -151,8 +175,8 @@
         <!-- Read more -->
         <hr style="height: 1px; border: 0; background: #dddddd">
         <a href="{{ home_url }}?{{ tracking }}" style="text-decoration: none;">
-          <div style="margin: 20px; background-color: #939393; padding: 10px; border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; -opera-border-radius: 4px;">
-            <font color="#ffffff" style="font-family: {{ font_family }}; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+          <div style="margin: 20px; width: 200px; background-color: #13183D; padding: 10px; border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; -opera-border-radius: 4px;">
+            <font color="#ffffff" style="font-family: {{ font_family_sans }}; font-size: 20px; line-height: 30px; text-rendering: optimizeLegibility;">
               Se flere historier
             </font>
           </div>

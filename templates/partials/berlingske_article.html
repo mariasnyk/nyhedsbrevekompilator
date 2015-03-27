@@ -31,18 +31,26 @@
     {% endif %}
 
       <div style="text-align: left; line-height: 100%; margin-top: 5px;">
+        {% if primary_article %}
         <font
-          color="#000000"
-          style="font-family: {{ font_family }}; font-size: 30px; line-height: 30px; font-weight: bold; text-rendering: optimizeLegibility;">
+          color="#1A1A1A"
+          style="font-family: {{ font_family_bold }}; font-size: 36px; line-height: 36px; font-weight: bold; text-rendering: optimizeLegibility;">
           {{ node.title }}
         </font>
+        {% else %}
+        <font
+          color="#1A1A1A"
+          style="font-family: {{ font_family }}; font-size: 25px; line-height: 25px; text-rendering: optimizeLegibility;">
+          {{ node.title }}
+        </font>
+        {% endif %}
       </div>
 
-      {% if show_summary && node.summary %}
+      {% if primary_article && node.summary %}
       <p>
         <font
-          color="#000000"
-          style="font-family: Georgia, 'Times New Roman', Times, serif; text-decoration: none; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+          color="#1A1A1A"
+          style="font-family: {{ font_family }}; text-decoration: none; font-size: 18px; line-height: 18px; text-rendering: optimizeLegibility;">
           {{ node.summary }}
         </font>
       </p>
