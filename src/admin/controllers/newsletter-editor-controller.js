@@ -120,10 +120,12 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     };
 
     $scope.deleteNewsletter = function () {
-      var deleting = Newsletters.delete({ ident: $routeParams.ident }, function () {
-        $location.url('/');
-      });
-      loadingSwitch.watch(deleting, 'Deleting');
+      if (confirm("Er du sikker på du ønsker at slette dette nyhedsbrev?\nDenne handling kan ikke fortrydes!")) {
+        var deleting = Newsletters.delete({ ident: $routeParams.ident }, function () {
+          $location.url('/');
+        });
+        loadingSwitch.watch(deleting, 'Deleting');
+      }
     };
 
     $scope.setDirty = function () {
