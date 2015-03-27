@@ -82,7 +82,7 @@ gulp.task('testdata', function () {
   downloadTestdata('randers_update', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1600.ave-json?image_preset=620x355-c');
   downloadTestdata('holstebrostruer_update', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1601.ave-json?image_preset=620x355-c');
   downloadTestdata('dagbladetringskjern', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1602.ave-json?image_preset=620x355-c');
-  downloadTestdata('folkebladetlemvig', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5846.ave-json?image_preset=620x355-c');
+  downloadTestdata('lemvig_update', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5846.ave-json?image_preset=620x355-c');
   downloadTestdata('viborg-folkeblad', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1604.ave-json?image_preset=620x355-c');
 
   downloadTestdata('berlingske_morgen', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5897.ave-json?image_preset=620x355-c');
