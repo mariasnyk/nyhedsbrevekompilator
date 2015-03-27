@@ -25,15 +25,20 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
 
     $scope.getNewsletterData = function (name, index) {
       $scope.newsletter = Newsletters.get({ name: name }, function (data) {
+        var now = moment.utc();
+        var date = moment.utc(data.date_schedule, "YYYY-MM-DD HH:mm:ss");
+        var diff = now.diff(date);
+
         $scope.newsletters[index].subject = data.subject;
         $scope.newsletters[index].identity = data.identity;
         $scope.newsletters[index].total_recipients = data.total_recipients;
         $scope.newsletters[index].date_schedule = data.date_schedule;
 
-        if (data.date_schedule !== null) {
+        if (data.date_schedule !== null && diff < 0) {
           var schedule = Schedules.get({ name: name }, function () {
             if (schedule.date) {
-              $scope.newsletters[index].schedule = schedule.date;
+              $scope.newsletters[index].schedule = schedule.date
+              $scope.newsletters[index].fromnow = moment(schedule.date).fromNow();
             }
           });
 

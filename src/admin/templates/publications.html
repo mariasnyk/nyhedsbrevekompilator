@@ -14,7 +14,7 @@
           <th>Emne</th>
           <th>Identitet</th>
           <th>Antal<br>modtagere</th>
-          <th>Schedule<br>(UTC)</th>
+          <th>Udsendes</th>
         </tr>
         <tr ng-repeat="newsletter in newsletters | filter: newsletterFilter">
           <td>{{ newsletter.name }}</td>
@@ -25,7 +25,7 @@
           <td>{{ newsletter.identity }}</td>
           <td>{{ newsletter.total_recipients }}</td>
           <td>
-            {{ newsletter.schedule }}
+            {{ newsletter.fromnow }}
             <button class="btn btn-danger btn-xs" ng-show="newsletter.schedule" ng-click="deleteSchedule(newsletter.name, $index)">Annuller</button>
           </td>
         </tr>
