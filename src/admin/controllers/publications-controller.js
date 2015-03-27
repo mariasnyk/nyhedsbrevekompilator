@@ -8,7 +8,7 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
       $scope.newsletters.sort(compare);
 
       // Getting details for the first ten newsletters
-      for (var i = 0; i < 10; i++) {
+      for (var i = 0; i < 3; i++) {
         $scope.getNewsletterData($scope.newsletters[i].name, i);
       }
     });
