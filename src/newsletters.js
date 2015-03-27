@@ -290,17 +290,17 @@ module.exports.register = function (plugin, options, next) {
       var checksum = calculateChecksum(newsletter);
 
       // TODO: Maybe validation this code down to validateNewsletterPayload?
-      validateLastChecksum(newsletter.list, checksum, function (err) {
-        if (err) return reply(err).code(500);
+      // validateLastChecksum(newsletter.list, checksum, function (err) {
+      //   if (err) return reply(err).code(500);
 
         sendgrid.sendMarketingEmail(newsletter, function (err, result) {
           if (err) return reply(err).code(500);
 
-          updateLastChecksum(newsletter.list, checksum, function (err) {
-            if (err) reply(err).code(500);
+          // updateLastChecksum(newsletter.list, checksum, function (err) {
+            // if (err) reply(err).code(500);
             else reply({ message: 'Sent' });
-          });
-        });
+          // });
+        // });
       });
     }
   });

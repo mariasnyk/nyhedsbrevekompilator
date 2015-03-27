@@ -257,8 +257,8 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       })
       .error(function (data, status) {
         console.log('Error', status, data);
-        var error = data.error ? data.error :
-                    data.message ? data.message :
+        var error = data.message ? data.message :
+                    data.error ? data.error :
                     data;
 
         notifications.showError('Error: ' + error);
