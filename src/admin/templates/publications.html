@@ -25,7 +25,7 @@
           <td align="center">
             <span class="badge">{{ newsletter.total_recipients }}</<span></td>
           <td>
-            {{ newsletter.fromnow }}
+            <abbr title="{{ newsletter.schedule }}">{{ newsletter.fromnow }}</abbr>
             <button class="btn btn-danger btn-xs" ng-show="newsletter.schedule" ng-click="deleteSchedule(newsletter.name, $index)">Annuller</button>
           </td>
         </tr>
