@@ -21,7 +21,7 @@
             <button class="btn btn-info" ng-hide="newsletter.subject" ng-click="getNewsletterData(newsletter.name, $index)">Vis detaljer</button>
             <div ng-show="newsletter.subject">{{ newsletter.subject }}</div>
           </td>
-          <td>{{ newsletter.identity }}</td>
+          <td><span class="label" style="background-color: #{{ newsletter.identity | tocolor}};">{{ newsletter.identity }}</span></td>
           <td>{{ newsletter.total_recipients }}</td>
           <td>
             {{ newsletter.fromnow }}
