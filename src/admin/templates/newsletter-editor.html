@@ -80,11 +80,6 @@
         Slet <span class="glyphicon glyphicon-remove"></span>
       </button>
     </div>
-    <div class="col-xs-6">
-      <button type="button" class="btn btn-info" ng-click="getBondDataAndUpdatePreviews()" ng-disabled="loading">
-        Opdater preview <span class="glyphicon glyphicon-refresh"></span>
-      </button>
-    </div>
   </div>
 
   <div class="row" ng-hide="edit">
@@ -171,18 +166,18 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row" ng-if="!edit">
     <div class="col-xs-12">
       <ul class="nav nav-tabs">
         <!-- <li role="presentation" ng-click="currentTab = 'subject'" ng-class="{active:currentTab === 'subject'}"><a>Emnefelt</a></li> -->
         <li role="presentation" ng-click="currentTab = 'html'; updateHtmlPreview();" ng-class="{active:currentTab === 'html'}" _class="active"><a>HTML</a></li>
         <li role="presentation" ng-click="currentTab = 'text'; updatePlainPreview();" ng-class="{active:currentTab === 'text'}"><a>TEXT</a></li>
-        <li role="presentation" ng-hide="edit" ng-click="currentTab = 'data'" ng-class="{active:currentTab === 'data'}"><a>Tilpas indhold</a></li>
+        <li role="presentation" ng-click="currentTab = 'data'" ng-class="{active:currentTab === 'data'}"><a>Tilpas indhold</a></li>
       </ul>
     </div>
   </div>
 
-  <div ng-include="currentTab"></div>
+  <div ng-include="currentTab" ng-if="!edit"></div>
 
 </div>
 
