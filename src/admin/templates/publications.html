@@ -24,9 +24,9 @@
           <td><span class="label" style="background-color: #{{ newsletter.identity | tocolor}};">{{ newsletter.identity }}</span></td>
           <td align="center">
             <span class="badge">{{ newsletter.total_recipients }}</<span></td>
-          <td>
+          <td align="right">
             <abbr title="{{ newsletter.schedule }}">{{ newsletter.fromnow }}</abbr>
-            <button class="btn btn-danger btn-xs" ng-show="newsletter.schedule" ng-click="deleteSchedule(newsletter.name, $index)">Annuller</button>
+            <button class="btn btn-danger btn-xs btn-block" ng-show="newsletter.schedule" ng-click="deleteSchedule(newsletter.name, $index)">Annuller</button>
           </td>
         </tr>
       </table>
