@@ -10,7 +10,6 @@
       <table class="table table-hover">
         <tr>
           <th>Navn</th>
-          <th></th>
           <th>Emne</th>
           <th>Identitet</th>
           <th>Antal<br>modtagere</th>
@@ -19,9 +18,9 @@
         <tr ng-repeat="newsletter in newsletters | filter: newsletterFilter">
           <td>{{ newsletter.name }}</td>
           <td>
-            <button class="btn btn-info" ng-click="getNewsletterData(newsletter.name, $index)">Vis detaljer</button>
+            <button class="btn btn-info" ng-hide="newsletter.subject" ng-click="getNewsletterData(newsletter.name, $index)">Vis detaljer</button>
+            <div ng-show="newsletter.subject">{{ newsletter.subject }}</div>
           </td>
-          <td>{{ newsletter.subject }}</td>
           <td>{{ newsletter.identity }}</td>
           <td>{{ newsletter.total_recipients }}</td>
           <td>
