@@ -115,8 +115,10 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     };
 
     $scope.closeNewsletterEditor = function () {
-      //$location.url('/' + $routeParams.ident);
-      $location.url('/');
+      if ($scope.dirty === false || confirm("Sikker på du vil gå til oversigten uden at gemme dine ændringer?")) {
+        //$location.url('/' + $routeParams.ident);
+        $location.url('/');
+      }
     };
 
     $scope.deleteNewsletter = function () {
