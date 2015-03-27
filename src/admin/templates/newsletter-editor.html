@@ -240,7 +240,7 @@
                   class="form-control"
                   type="text"
                   rows="3"
-                  ng-show="$index === 0"
+                  ng-if="$index === 0"
                   ng-model="node.summary"
                   ng-change="changeNodeTitle()"
                   ng-blur="blurNodeTitle()"
