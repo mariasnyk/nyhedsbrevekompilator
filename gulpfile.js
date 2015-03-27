@@ -78,9 +78,9 @@ gulp.task('testdata', function () {
   downloadTestdata('bt_plus', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5894.ave-json?image_preset=620x355-c');
   downloadTestdata('bt_sport', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5892.ave-json?image_preset=620x355-c');
 
-  downloadTestdata('stiften', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1599.ave-json?image_preset=620x355-c');
-  downloadTestdata('amtsavisen', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1600.ave-json?image_preset=620x355-c');
-  downloadTestdata('dagbladet-holstebro-struer', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1601.ave-json?image_preset=620x355-c');
+  downloadTestdata('arhus_update', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1599.ave-json?image_preset=620x355-c');
+  downloadTestdata('randers_update', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1600.ave-json?image_preset=620x355-c');
+  downloadTestdata('holstebrostruer_update', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1601.ave-json?image_preset=620x355-c');
   downloadTestdata('dagbladetringskjern', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1602.ave-json?image_preset=620x355-c');
   downloadTestdata('folkebladetlemvig', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5846.ave-json?image_preset=620x355-c');
   downloadTestdata('viborg-folkeblad', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1604.ave-json?image_preset=620x355-c');
