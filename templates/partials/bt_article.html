@@ -16,7 +16,7 @@
 {% endif %}
 
 {% set background = null %} {% set color = "#000000" %}{% set highlight_color = "#cd0403" %}
-{% if node.taxonomyTags.presentationTags %}
+{% if !disableBTbackground && node.taxonomyTags.presentationTags %}
   {% for tag in node.taxonomyTags.presentationTags %}
     {% if tag.id == "191134" %}     {# Yellow #}  {% set background = "#fde62f" %}  {% set color = "#000000" %}{% set highlight_color = "#cd0403" %}
     {% elseif tag.id == "191131" %} {# Black #}   {% set background = "#000000" %}  {% set color = "#ffffff" %}{% set highlight_color = "#cd0403" %}
@@ -37,9 +37,9 @@
   target="_blank">
 
   {% if background %}
-  <div style="background-color: {{ background }};">
+  <div style="width: {{ width }}px; background-color: {{ background }};">
   {% else %}
-  <div>
+  <div style="width: {{ width }}px;">
   {% endif %}
 
     <div style="width: {{ width }}px;">
