@@ -1,0 +1,30 @@
+{% extends "partials/aok.html" %}
+
+{% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + dates.yyyymmdd + "&ns_linkname=AOK_musiknatteliv"; %}
+{% set home_url = "http://www.aok.dk"; %}
+{% set logo_src = "http://placehold.it/654x57"; %}
+{% set unsubscribe_href = "http://nyhedsbreve.aok-mail.dk/?eksternid=[ekstern_id]" %}
+
+{% block wide_banner_1 %}
+{% set banner_a_href = "http://ad1.emediate.dk/eas?cu=XXX;ty=ct;kw=AOK_musiknatteliv;kw2=" + dates.yyyymmdd + ";upair=AOK_musiknatteliv_1"; %}
+{% set banner_img_src = "http://ad1.emediate.dk/eas?cu=XXX;cre=img;kw=AOK_musiknatteliv;kw2=" + dates.yyyymmdd + ";upair=AOK_musiknatteliv_1"; %}
+{% include "partials/banner.html" %}
+{% endblock %}
+
+{% block wide_banner_2 %}
+{% set banner_a_href = "http://ad1.emediate.dk/eas?cu=XXX;ty=ct;kw=AOK_musiknatteliv;kw2=" + dates.yyyymmdd + ";upair=AOK_musiknatteliv_4"; %}
+{% set banner_img_src = "http://ad1.emediate.dk/eas?cu=XXX;cre=img;kw=AOK_musiknatteliv;kw2=" + dates.yyyymmdd + ";upair=AOK_musiknatteliv_4"; %}
+{% include "partials/banner.html" %}
+{% endblock %}
+
+{% block box_banner_1 %}
+{% set banner_a_href = "http://ad1.emediate.dk/eas?cu=XXX;ty=ct;kw=AOK_musiknatteliv;kw2=" + dates.yyyymmdd + ";upair=AOK_musiknatteliv_2"; %}
+{% set banner_img_src = "http://ad1.emediate.dk/eas?cu=XXX;cre=img;kw=AOK_musiknatteliv;kw2=" + dates.yyyymmdd + ";upair=AOK_musiknatteliv_2"; %}
+{% include "partials/banner.html" %}
+{% endblock %}
+
+{% block box_banner_2 %}
+{% set banner_a_href = "http://ad1.emediate.dk/eas?cu=XXX;ty=ct;kw=AOK_musiknatteliv;kw2=" + dates.yyyymmdd + ";upair=AOK_musiknatteliv_3"; %}
+{% set banner_img_src = "http://ad1.emediate.dk/eas?cu=XXX;cre=img;kw=AOK_musiknatteliv;kw2=" + dates.yyyymmdd + ";upair=AOK_musiknatteliv_3"; %}
+{% include "partials/banner.html" %}
+{% endblock %}
