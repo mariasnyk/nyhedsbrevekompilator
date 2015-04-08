@@ -2,7 +2,7 @@
 
 {% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + dates.yyyymmdd + "&ns_linkname=arhus_update"; %}
 {% set home_url = "http://stiften.dk"; %}
-{% set logo_src = "http://placehold.it/654x57"; %}
+{% set logo_src = "http://nlstatic.berlingskemedia.dk/headers/arhus_update.png"; %}
 {% set unsubscribe_href = "http://nyhedsbreve.stiften-mail.dk/?eksternid=[ekstern_id]" %}
 
 {% set buy_subscription_href = "http://b.kundeunivers.dk/koeb-abonnement/b2?ns_campaign=_nyhedsbreve_Køb_abo_toplink&ns_mchannel=&ns_source=nyhedsbreve&ns_linkname=web_toplink&ns_fee=" %}
@@ -31,4 +31,25 @@
 {% set banner_a_href = "http://ad1.emediate.dk/eas?cu=27809;ty=ct;kw=arhus_update;kw2=" + dates.yyyymmdd + ";upair=arhus_update_3"; %}
 {% set banner_img_src = "http://ad1.emediate.dk/eas?cu=27809;cre=img;kw=arhus_update;kw2=" + dates.yyyymmdd + ";upair=arhus_update_3"; %}
 {% include "partials/banner.html" %}
+{% endblock %}
+
+
+{% block social %}
+<div style="margin: 20px 0px 0px 0px;">
+  <font color="#000000" style="font-family: {{ font_family }}; font-size: 24px; line-height: 36px; text-rendering: optimizeLegibility;">
+    F&Oslash;LG &Aring;RHUS STIFTEN
+  </font>
+</div>
+<div style="margin: 20px 0px;">
+  <div style="margin: 0px 15px; display: inline-block;">
+    <a target="_blank" href="https://www.facebook.com/stiftstidende" style="text-decoration: none;">
+      <img src="http://nlstatic.berlingskemedia.dk/images/facebook.png" width="12" />
+    </a>
+  </div>
+  <div style="margin: 0px 15px; display: inline-block;">
+    <a target="_blank" href="https://twitter.com/stiftendk" style="text-decoration: none;">
+      <img src="http://nlstatic.berlingskemedia.dk/images/twitter.png" width="26" />
+    </a>
+  </div>
+</div>
 {% endblock %}

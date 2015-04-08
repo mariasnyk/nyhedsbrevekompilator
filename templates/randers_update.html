@@ -2,7 +2,7 @@
 
 {% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + dates.yyyymmdd + "&ns_linkname=randers_update"; %}
 {% set home_url = "http://amtsavisen.dk/randers"; %}
-{% set logo_src = "http://placehold.it/654x57"; %}
+{% set logo_src = "http://nlstatic.berlingskemedia.dk/headers/randers_update.png"; %}
 {% set unsubscribe_href = "http://nyhedsbreve.amtsavisen-mail.dk/?eksternid=[ekstern_id]" %}
 
 {% set buy_subscription_href = "http://b.kundeunivers.dk/koeb-abonnement/b2?ns_campaign=_nyhedsbreve_Køb_abo_toplink&ns_mchannel=&ns_source=nyhedsbreve&ns_linkname=web_toplink&ns_fee=" %}
@@ -31,4 +31,27 @@
 {% set banner_a_href = "http://ad1.emediate.dk/eas?cu=27809;ty=ct;kw=randers_update;kw2=" + dates.yyyymmdd + ";upair=randers_update_3"; %}
 {% set banner_img_src = "http://ad1.emediate.dk/eas?cu=27809;cre=img;kw=randers_update;kw2=" + dates.yyyymmdd + ";upair=randers_update_3"; %}
 {% include "partials/banner.html" %}
+{% endblock %}
+
+http://twitter.com/Amtsavisendk
+http://facebook.com/amtsavisen
+
+{% block social %}
+<div style="margin: 20px 0px 0px 0px;">
+  <font color="#000000" style="font-family: {{ font_family }}; font-size: 24px; line-height: 36px; text-rendering: optimizeLegibility;">
+    F&Oslash;LG RANDERS AMTSAVIS
+  </font>
+</div>
+<div style="margin: 20px 0px;">
+  <div style="margin: 0px 15px; display: inline-block;">
+    <a target="_blank" href="http://facebook.com/amtsavisen" style="text-decoration: none;">
+      <img src="http://nlstatic.berlingskemedia.dk/images/facebook.png" width="12" />
+    </a>
+  </div>
+  <div style="margin: 0px 15px; display: inline-block;">
+    <a target="_blank" href="http://twitter.com/Amtsavisendk" style="text-decoration: none;">
+      <img src="http://nlstatic.berlingskemedia.dk/images/twitter.png" width="26" />
+    </a>
+  </div>
+</div>
 {% endblock %}
