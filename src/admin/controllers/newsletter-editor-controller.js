@@ -166,7 +166,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         return;
       }
 
-      var get_bonddata = $http.get('/templates/data?u=' + $scope.newsletter.bond_url)
+      var get_bonddata = $http.get('/templates/data?u=' + encodeURIComponent($scope.newsletter.bond_url))
       //var get_bonddata = $http.get('/templates/data?f=bt.json')
       .success(function (data) {
         $scope.bonddata = data;

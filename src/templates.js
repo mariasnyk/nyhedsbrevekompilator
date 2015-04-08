@@ -267,7 +267,7 @@ function getDataFromBond (url, callback) {
   download(url, function (err, data) {
     if (err) {
       callback(err);
-    } else if (data === null || data.type === undefined || data.id === undefined ) {
+    } else if (data === null || data.type === undefined) {
       callback({ message: 'Invalind BOND data' });
     // } else if (data.type === 'nodequeue' && data.nodes.length === 0 ) {
       // callback(null, null);
@@ -321,7 +321,7 @@ function prepareData (data) {
 }
 
 function prepareNode (node) {
-  if (node.type === 'nodequeue') {
+  if (node.type === 'nodequeue' || node.type === 'latest_news') {
     node.nodes.forEach(prepareNode);
   } else {
     node.newsl_access = calculatePaywallToken(node.id);
@@ -345,7 +345,7 @@ function subjectSuggestion (data) {
   if (data === null) return '';
   var maxLength = 255;
 
-  if (data.type === 'nodequeue') {
+  if (data.type === 'nodequeue' || data.type === 'latest_news') {
     var temp = [];
     for (var i = 0; i < 3; i++) {
       if (data.nodes[i] && data.nodes[i].title) {
@@ -361,7 +361,7 @@ function subjectSuggestion (data) {
 
 function calculateChecksum (data) {
   if (data === null) return '';
-  if (data.type === 'nodequeue') {
+  if (data.type === 'nodequeue' || data.type === 'latest_news') {
 
     var temp = data.nodes.map(function (node) {
       return node.id;
