@@ -13,9 +13,10 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
     $scope.edit = $routeParams.operator === 'edit';
 
+    $scope.dirty = false;
+
     if ($scope.edit) {
 
-      $scope.dirty = false;
 
       $scope.identities = Identities.query();
       $scope.categories = Categories.query();
