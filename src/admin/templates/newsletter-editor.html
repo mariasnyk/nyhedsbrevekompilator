@@ -68,27 +68,21 @@
     </div>
   </div>
 
-  <div class="row" ng-show="edit">
+  <div class="row">
     <div class="col-xs-4">
       <button type="button" class="btn" ng-class="{'btn-warning': dirty, 'btn-default': !dirty}" ng-click="closeNewsletterEditor()">
         Til oversigt <span class="glyphicon glyphicon-chevron-left"></span>
       </button>
-      <button type="button" class="btn" ng-class="{'btn-success': dirty, 'btn-default': !dirty}" ng-click="saveNewsletter()" ng-disabled="loading_previews">
-        Gem <span class="glyphicon glyphicon-floppy-disk"></span>
-      </button>
-      <button type="button" class="btn btn-danger btn-xs" ng-click="deleteNewsletter()">
-        Slet <span class="glyphicon glyphicon-remove"></span>
-      </button>
+      <span ng-if="edit">
+        <button type="button" class="btn" ng-class="{'btn-success': dirty, 'btn-default': !dirty}" ng-click="saveNewsletter()" ng-disabled="loading_previews">
+          Gem <span class="glyphicon glyphicon-floppy-disk"></span>
+        </button>
+        <button type="button" class="btn btn-danger btn-xs" ng-click="deleteNewsletter()">
+          Slet <span class="glyphicon glyphicon-remove"></span>
+        </button>
+      </span>
     </div>
-  </div>
-
-  <div class="row" ng-hide="edit">
-    <div class="col-xs-4">
-      <a class="btn btn-default" ng-href="#/">
-        Til oversigt <span class="glyphicon glyphicon-chevron-left"></span>
-      </a>
-    </div>
-    <div class="col-xs-8">
+    <div class="col-xs-8" ng-if="!edit">
       <div class="form-inline">
         <button type="button" class="btn btn-primary" ng-click="updatePreviews()" ng-disabled="loading">
           Opdater <span class="glyphicon glyphicon-refresh"></span>
@@ -166,13 +160,13 @@
     </div>
   </div>
 
-  <div class="row" ng-if="!edit">
+  <div class="row" ng-hide="edit">
     <div class="col-xs-12">
       <ul class="nav nav-tabs">
         <!-- <li role="presentation" ng-click="currentTab = 'subject'" ng-class="{active:currentTab === 'subject'}"><a>Emnefelt</a></li> -->
         <li role="presentation" ng-click="currentTab = 'html'; updateHtmlPreview();" ng-class="{active:currentTab === 'html'}" _class="active"><a>HTML</a></li>
         <li role="presentation" ng-click="currentTab = 'text'; updatePlainPreview();" ng-class="{active:currentTab === 'text'}"><a>TEXT</a></li>
-        <li role="presentation" ng-click="currentTab = 'data'" ng-class="{active:currentTab === 'data'}"><a>Tilpas indhold</a></li>
+        <li role="presentation" ng-click="currentTab = 'data';" ng-class="{active:currentTab === 'data'}"><a>Tilpas indhold</a></li>
       </ul>
     </div>
   </div>
