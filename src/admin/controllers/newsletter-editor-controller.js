@@ -189,7 +189,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
 
     function getBondDataAndUpdatePreviews () {
-      getBondData().success(function () {
+      return getBondData().success(function () {
         updatePreviews();
       });
     }
