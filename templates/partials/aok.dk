@@ -1,0 +1,31 @@
+{% extends "berlingske.html" %}
+
+{% block social %}
+<div style="margin: 20px 0px 0px 0px;">
+  <font color="#000000" style="font-family: {{ font_family }}; font-size: 24px; line-height: 36px; text-rendering: optimizeLegibility;">
+    F&Oslash;LG AOK
+  </font>
+</div>
+<div style="margin: 20px 0px;">
+  <div style="margin: 0px 15px; display: inline-block;">
+    <a target="_blank" href="https://www.facebook.com/aokdk" style="text-decoration: none;">
+      <img src="http://nlstatic.berlingskemedia.dk/images/facebook.png" width="12" />
+    </a>
+  </div>
+  <div style="margin: 0px 15px; display: inline-block;">
+    <a target="_blank" href="https://twitter.com/aokdk" style="text-decoration: none;">
+      <img src="http://nlstatic.berlingskemedia.dk/images/twitter.png" width="26" />
+    </a>
+  </div>
+  <div style="margin: 0px 15px; display: inline-block;">
+    <a target="_blank" href="http://instagram.com/aokdk" style="text-decoration: none;">
+      <img src="http://nlstatic.berlingskemedia.dk/images/instagram.png" width="24" />
+    </a>
+  </div>
+  <div style="margin: 0px 15px; display: inline-block;">
+    <a target="_blank" href="https://plus.google.com/share?url=http://www.aok.dk/forside" style="text-decoration: none;">
+      <img src="http://nlstatic.berlingskemedia.dk/images/google_plus.png" width="28" />
+    </a>
+  </div>
+</div>
+{% endblock %}
