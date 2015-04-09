@@ -81,9 +81,6 @@
       </td>
     </tr>
     <tr>
-      <td width="100%" height="20" style="font-size: 0px; line-height: 0px;">&nbsp;</td>
-    </tr>
-    <tr>
       <td align="center" valign="top">
         <!-- Big story -->
         <div style="padding: 20px 20px;">
@@ -103,18 +100,12 @@
       </td>
     </tr>
     <tr>
-      <td width="100%" height="14" style="font-size: 0px; line-height: 0px;">&nbsp;</td>
-    </tr>
-    <tr>
       <td align="center" valign="top">
         <!-- Wide banner -->
         {% block wide_banner_1 %}
         {% endblock %}
         <!-- Wide banner -->
       </td>
-    </tr>
-    <tr>
-      <td width="100%" height="24" style="font-size: 0px; line-height: 0px;">&nbsp;</td>
     </tr>
     {% for node in nodes %}
       {% if loop.index0 !== 0 && loop.index0 % 2 === 0 %}
@@ -146,9 +137,6 @@
           <!-- Two-column stories END -->
         </td>
       </tr>
-      <tr>
-        <td width="100%" height="14" style="font-size: 0px; line-height: 0px;">&nbsp;</td>
-      </tr>
       {% endif %}
       {% if loop.index === 5 %}
       <tr>
@@ -158,9 +146,6 @@
           {% endblock %}
           <!-- 4:3 beerbox banner END -->
         </td>
-      </tr>
-      <tr>
-        <td width="100%" height="24" style="font-size: 0px; line-height: 0px;">&nbsp;</td>
       </tr>
       {% endif %}
     {% endfor %}
@@ -179,9 +164,6 @@
       </td>
     </tr>
     <tr>
-      <td width="100%" height="14" style="font-size: 0px; line-height: 0px;">&nbsp;</td>
-    </tr>
-    <tr>
       <td align="center" valign="top">
         <!-- Second 4:3 beerbox banner -->
         {% block box_banner_2 %}
@@ -190,12 +172,9 @@
       </td>
     </tr>
     <tr>
-      <td width="100%" height="14" style="font-size: 0px; line-height: 0px;">&nbsp;</td>
-    </tr>
-    <tr>
       <td align="center" valign="top">
         {% block permissions %}
-        <div style="padding: 20px 20px;">
+        <div style="padding: 40px 20px;">
           <div style="text-align: left; padding: 20px 0px;">
             <font color="#000000" style="font-family: {{ font_family }}; font-size: 30px; line-height: 30px; text-rendering: optimizeLegibility;">
               Tilmeld dig vores andre nyhedsbreve
@@ -262,11 +241,6 @@
               </td>
             </tr>
           </table>
-          <table width="100%" cellpadding="0" cellspacing="0" border="0">
-            <tr>
-              <td width="100%" height="14" style="font-size:0px; line-height: 0px;">&nbsp;</td>
-            </tr>
-          </table>
         </div>
         {% endblock %}
       </td>
@@ -281,9 +255,6 @@
     </tr>
     <tr>
       <td width="100%" height="24" style="font-size: 0px; line-height: 0px;">&nbsp;</td>
-    </tr>
-    <tr>
-      <td width="100%" height="20" style="font-size: 0px; line-height: 0px;">&nbsp;</td>
     </tr>
     <tr>
       <td align="center" valign="top">
