@@ -2,7 +2,10 @@
 'use strict';
 
 var swig = require('swig'),
-    extras = require('swig-extras');
+    extras = require('swig-extras'),
+    moment = require('moment');
+
+moment.locale('da');
 
 extras.useFilter(swig, 'split');
 extras.useFilter(swig, 'trim');
@@ -20,6 +23,10 @@ swig.setFilter('highlighter', function (input, highlight) {
       rest: words.slice(highlight).join(' ')
     };
   }
+});
+
+swig.setFilter('dato', function (input) {
+  return moment(input).format("ddd D MMM")
 });
 
 module.exports = swig;
