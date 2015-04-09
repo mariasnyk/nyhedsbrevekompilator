@@ -29,6 +29,13 @@
   {% endfor %}
 {% endif %}
 
+{% if node.taxonomyTags["pris/Abonnement"] %}
+  {% for tag in node.taxonomyTags["pris/Abonnement"] %}
+    {% if tag.id == "68787" %}
+      {% set plus = true %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
 <a
   href="{{ node.urlAliases[0] }}?{{ tracking }}"
@@ -65,7 +72,7 @@
 
     {% set title = node.title | highlighter(highlight) %}
 
-      <div style="text-align: left; line-height: 100%; margin-top: 5px;">
+      <div style="text-align: left; line-height: 100%; padding-top: 5px;">
         <font
           color="{{ highlight_color }}"
           style="font-family: {{ font_family }}; font-size: 30px; line-height: 30px; font-weight: bold; text-rendering: optimizeLegibility;">
@@ -79,7 +86,7 @@
       </div>
 
       {% if node.calltoaction %}
-      <div style="text-align: left; line-height: 100%; margin: 10px 0px;">
+      <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
         <font
           color="#d00000"
           style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
@@ -88,7 +95,7 @@
       </div>
 
       {% elif node.type === 'image_gallery' %}
-      <div style="text-align: left; line-height: 100%; margin: 10px 0px;">
+      <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
         <font
           color="#d00000"
           style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
@@ -96,6 +103,19 @@
         </font>
       </div>
       {% endif %}
+
+      {% if plus %}
+      <div style="text-align: left; line-height: 100%; padding-top: 10px">
+        <span style="padding: 0px 3px 0 1px; border-radius: 3px / 2px 0; background: #8FC447;">
+          <font
+            color="#ffffff"
+            style="font-family: {{ font_family }}; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
+            + PLUS
+          </font>
+        </span>
+      </div>
+      {% endif %}
+
     </div>
   </div>
 </a>

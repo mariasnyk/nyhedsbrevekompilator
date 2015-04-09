@@ -86,10 +86,18 @@
     <tr>
       <td align="center" valign="top">
         <!-- Big story -->
-        <div style="max-width: 614px; margin: 0 20px 0 20px; display: inline-block;  background-color: #ffffff; font-size; 0; line-height: 0px;">
-          {% set width=614 %}
-          {% set node = nodes[0]; %}
-          {% include "bt_article.html" %}
+        <div style="padding: 20px 20px;">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td width="100%" align="center" valign="top">
+                <div style="max-width: 614px; display: inline-block;  background-color: #ffffff; font-size; 0; line-height: 0px;">
+                  {% set width=614 %}
+                  {% set node = nodes[0]; %}
+                  {% include "bt_article.html" %}
+                </div>
+              </td>
+            </tr>
+          </table>
         </div>
         <!-- Big story END -->
       </td>
@@ -113,26 +121,28 @@
       <tr>
         <td align="center" valign="top">
           <!-- Two-column stories -->
-          <table width="100%" cellpadding="0" cellspacing="0" border="0">
-            <tr>
-              <td width="50%" align="center" valign="top">
-                <div style="max-width: 300px; padding: 0 7px 0 20px; display: inline-block;  background-color: #ffffff; font-size; 0; line-height: 0px;">
-                  <!-- Right story -->
-                  {% set width=300 %}
-                  {% set node = nodes[loop.index0 - 1]; %}
-                  {% include "bt_article.html" %}
-                </div>
-              </td>
-              <td width="50%" align="center" valign="top">
-                <div style="max-width: 300px; padding: 0 20px 0 7px; display: inline-block;  background-color: #ffffff; font-size; 0; line-height: 0px;">
-                  <!-- Left story -->
-                  {% set width=300 %}
-                  {% set node = nodes[loop.index0]; %}
-                  {% include "bt_article.html" %}
-                </div>
-              </td>
-            </tr>
-          </table>
+          <div style="padding: 20px 20px;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td width="50%" align="center" valign="top">
+                  <div style="max-width: 300px; padding-right: 7px; display: inline-block;  background-color: #ffffff; font-size; 0; line-height: 0px;">
+                    <!-- Right story -->
+                    {% set width=300 %}
+                    {% set node = nodes[loop.index0 - 1]; %}
+                    {% include "bt_article.html" %}
+                  </div>
+                </td>
+                <td width="50%" align="center" valign="top">
+                  <div style="max-width: 300px; padding-left: 7px; display: inline-block;  background-color: #ffffff; font-size; 0; line-height: 0px;">
+                    <!-- Left story -->
+                    {% set width=300 %}
+                    {% set node = nodes[loop.index0]; %}
+                    {% include "bt_article.html" %}
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
           <!-- Two-column stories END -->
         </td>
       </tr>

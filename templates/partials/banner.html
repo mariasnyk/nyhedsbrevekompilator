@@ -1,17 +1,19 @@
-<table cellpadding="0" cellspacing="0" border="0">
-  <tr>
-    <td>
-      <div style="text-align: left; margin: 10px 0 20px 0;">
-        {% if hide_annonce_label !== true %}
-        <font color="#333333" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 10px; line-height: 10px;  text-rendering: optimizeLegibility;">
-          ANNONCE
-        </font>
-        <br>
-        {% endif %}
-        <a target="_blank" href="{{ banner_a_href }}" title="">
-          <img class="full" src="{{ banner_img_src }}" alt="" border="0" style="max-width: 100%; display: block;" width="100%" />
-        </a>
-      </div>
-    </td>
-  </tr>
-</table>
+<div style="padding: 20px;">
+  <table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td>
+        <div style="text-align: left;">
+          {% if hide_annonce_label !== true %}
+          <font color="#333333" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 10px; line-height: 10px;  text-rendering: optimizeLegibility;">
+            ANNONCE
+          </font>
+          <br>
+          {% endif %}
+          <a target="_blank" href="{{ banner_a_href }}" title="">
+            <img class="full" src="{{ banner_img_src }}" alt="" border="0" style="max-width: 100%; display: block;" width="100%" />
+          </a>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
