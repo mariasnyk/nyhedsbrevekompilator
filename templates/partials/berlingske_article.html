@@ -1,106 +1,118 @@
+{% set primary_tag = null %}
+{% if node.taxonomyTags.primary %}
+  {% for tag in node.taxonomyTags.primary %}
+    {% if tag.id == "1363" %} {% set primary_tag = tag.tag %} {# Nationalt #}
+    {% elif tag.id == "1364" %} {% set primary_tag = tag.tag %} {# Globalt #}
+    {% elif tag.id == "1373" %} {% set primary_tag = tag.tag %} {# Kultur #}
+    {% elif tag.id == "67649" %} {% set primary_tag = tag.tag %} {# Tech #}
+    {% elif tag.id == "329960" %} {% set primary_tag = tag.tag %} {# Politisk morgenpost #} {% endif %}
+  {% endfor %}
+{% endif %}
+
 <a
-  href="{{ node.urlAliases[0] }}?{{ tracking }}"
+  href="{{ node.url }}?{{ tracking }}"
   title="{{ node.title }}"
   style="display: block; text-decoration: none; line-height: 23px; text-align: left"
   target="_blank">
 
-  {% if background %}
-  <div style="width: {{ width }}px; background-color: {{ background }};">
-  {% else %}
   <div style="width: {{ width }}px;">
-  {% endif %}
+    {% set image_count = 0; %}
+    {% for image in node.images %}
+      {% set image_count = loop.index; %}
+      {% if loop.last %}
+        <img  style="width: {{ width }}px;"
+              width="{{ width }}"
+              alt="{{ image.title }}"
+              src="{{ image.image }}"
+              border="0" />
+      {% endif %}
+    {% endfor %}
+  </div>
 
-    <div style="width: {{ width }}px;">
-      {% set image_count = 0; %}
-      {% for image in node.images %}
-        {% set image_count = loop.index; %}
-        {% if loop.last %}
-          <img  style="width: {{ width }}px;"
-                width="{{ width }}"
-                alt="{{ image.title }}"
-                src="{{ image.image }}"
-                border="0" />
-        {% endif %}
-      {% endfor %}
+  <div style="width: {{ width }}px;">
+
+    {% if primary_tag %}
+    <div style="text-align: left; line-height: 100%; padding-top: 3px; padding-bottom: 5px;">
+      <span style="padding: 1px 8px 3px 8px; background: #13183D;">
+        <font
+          color="#ffffff"
+          style="font-family: {{ font_family_sans }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
+          {{ primary_tag }}
+        </font>
+      </span>
     </div>
-
-    {% if background %}
-    <div style="width: {{ width-10 }}px; padding: 0 5px 10px 5px;">
-    {% else %}
-    <div style="width: {{ width }}px;">
     {% endif %}
 
-      <div style="text-align: left; line-height: 100%; padding-top: 5px;">
-        {% if primary_article %}
-        <font
-          color="#1A1A1A"
-          style="font-family: {{ font_family_bold }}; font-size: 36px; line-height: 36px; font-weight: bold; text-rendering: optimizeLegibility;">
-          {{ node.title }}
-        </font>
-        {% else %}
-        <font
-          color="#1A1A1A"
-          style="font-family: {{ font_family }}; font-size: 25px; line-height: 25px; text-rendering: optimizeLegibility;">
-          {{ node.title }}
-        </font>
-        {% endif %}
-      </div>
-
-      {% if primary_article && node.summary %}
-      <p>
-        <font
-          color="#1A1A1A"
-          style="font-family: {{ font_family }}; text-decoration: none; font-size: 18px; line-height: 18px; text-rendering: optimizeLegibility;">
-          {{ node.summary }}
-        </font>
-      </p>
-      {% endif %}
-
-      {% if node.calltoaction %}
-      <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
-        <font
-          color="#d00000"
-          style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
-          {{ node.calltoaction }}
-        </font>
-      </div>
-
-      {% elif node.type === 'image_gallery' %}
-      <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
-        <font
-          color="#d00000"
-          style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
-          Se <span>{{ image_count }}</span> billeder
-        </font>
-      </div>
-
-      {% elif node.type === 'news_article' %}
-      <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
-        <font
-          color="#d00000"
-          style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
-          L&aelig;s mere
-        </font>
-      </div>
-
-      {% elif node.type === 'news_article_external' %}
-      <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
-        <font
-          color="#d00000"
-          style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
-          L&aelig;s blogindl&aelig;g
-        </font>
-      </div>
-
-      {% elif node.type === 'webtv_link' %}
-      <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
-        <font
-          color="#d00000"
-          style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
-          Se TV-klip
-        </font>
-      </div>
+    <div style="text-align: left; line-height: 100%; padding-top: 5px;">
+      {% if primary_article %}
+      <font
+        color="#1A1A1A"
+        style="font-family: {{ font_family_bold }}; font-size: 36px; line-height: 36px; font-weight: bold; text-rendering: optimizeLegibility;">
+        {{ node.title }}
+      </font>
+      {% else %}
+      <font
+        color="#1A1A1A"
+        style="font-family: {{ font_family }}; font-size: 25px; line-height: 25px; text-rendering: optimizeLegibility;">
+        {{ node.title }}
+      </font>
       {% endif %}
     </div>
+
+    {% if primary_article && node.summary %}
+    <p>
+      <font
+        color="#1A1A1A"
+        style="font-family: {{ font_family }}; text-decoration: none; font-size: 18px; line-height: 18px; text-rendering: optimizeLegibility;">
+        {{ node.summary }}
+      </font>
+    </p>
+    {% endif %}
+
+    {% if node.calltoaction %}
+    <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
+      <font
+        color="#d00000"
+        style="font-family: {{ font_family_sans }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+        {{ node.calltoaction }}
+      </font>
+    </div>
+
+    {% elif node.type === 'image_gallery' %}
+    <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
+      <font
+        color="#d00000"
+        style="font-family: {{ font_family_sans }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+        Se <span>{{ image_count }}</span> billeder
+      </font>
+    </div>
+
+    {% elif node.type === 'news_article' %}
+    <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
+      <font
+        color="#d00000"
+        style="font-family: {{ font_family_sans }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+        L&aelig;s mere
+      </font>
+    </div>
+
+    {% elif node.type === 'news_article_external' %}
+    <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
+      <font
+        color="#d00000"
+        style="font-family: {{ font_family_sans }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+        L&aelig;s blogindl&aelig;g
+      </font>
+    </div>
+
+    {% elif node.type === 'webtv_link' %}
+    <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
+      <font
+        color="#d00000"
+        style="font-family: {{ font_family_sans }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+        Se TV-klip
+      </font>
+    </div>
+    {% endif %}
   </div>
 </a>
