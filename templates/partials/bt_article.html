@@ -95,6 +95,15 @@
         </font>
       </div>
 
+      {% elif node.type === 'webtv_link' %}
+      <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
+        <font
+          color="#d00000"
+          style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+          Se TV-klip
+        </font>
+      </div>
+
       {% elif node.type === 'image_gallery' %}
       <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
         <font
