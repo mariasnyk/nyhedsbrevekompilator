@@ -173,8 +173,31 @@
     </tr>
     <tr>
       <td align="center" valign="top">
+        {% block permission_intro %}
+        <div style="text-align: left; padding: 20px 20px;">
+          <font color="#000000" style="font-family: {{ font_family }}; font-size: 30px; line-height: 30px; text-rendering: optimizeLegibility;">
+            Tilmeld dig vores andre nyhedsbreve
+          </font>
+        </div>
+        {% endblock %}
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="top">
+        {% block permission_1 %}
+        {% endblock %}
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="top">
+        {% block permission_2 %}
+        {% endblock %}
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="top">
         {% block permissions %}
-        <div style="padding: 40px 20px;">
+        <div style="padding: 20px 20px;">
           <div style="text-align: left; padding: 20px 0px;">
             <font color="#000000" style="font-family: {{ font_family }}; font-size: 30px; line-height: 30px; text-rendering: optimizeLegibility;">
               Tilmeld dig vores andre nyhedsbreve

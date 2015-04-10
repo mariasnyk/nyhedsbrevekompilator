@@ -40,6 +40,22 @@
           {{ primary_tag }}
         </font>
       </span>
+      &nbsp;
+      <span style="padding: 1px 8px 3px 8px; background: #ffff;">
+        <font
+          color="#1A1A1A"
+          style="font-family: {{ font_family_sans }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
+          {{ node.dateCreated | moment }}
+        </font>
+      </span>
+    </div>
+    {% else %}
+    <div style="text-align: left; line-height: 100%; padding-top: 3px; padding-bottom: 5px;">
+      <font
+        color="#1A1A1A"
+        style="font-family: {{ font_family_sans }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
+        {{ node.dateCreated | moment }}
+      </font>
     </div>
     {% endif %}
 
