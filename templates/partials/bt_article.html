@@ -29,6 +29,7 @@
   {% endfor %}
 {% endif %}
 
+{% set plus = false %}
 {% if node.taxonomyTags["pris/Abonnement"] %}
   {% for tag in node.taxonomyTags["pris/Abonnement"] %}
     {% if tag.id == "68787" %}
