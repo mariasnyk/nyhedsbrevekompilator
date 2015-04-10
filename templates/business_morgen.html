@@ -4,31 +4,26 @@
 {% set home_url = "http://www.business.dk"; %}
 {% set logo_src = "http://placehold.it/654x57"; %}
 {% set unsubscribe_href = "http://nyhedsbreve.businessdk-mail.dk/?eksternid=[ekstern_id]" %}
-
 {% set buy_subscription_href = "http://b.kundeunivers.dk/koeb-abonnement/b2?ns_campaign=_nyhedsbreve_Køb_abo_toplink&ns_mchannel=&ns_source=nyhedsbreve&ns_linkname=web_toplink&ns_fee=" %}
-{% set sweetdeal_permission_href = "http://www.sweetdeal.dk?ns_campaign=_sweetdeal_signuprednl&ns_mchannel=na&ns_source=nyhedsbreve&ns_linkname=nl_uspecificeret&ns_fee=0" %}
-{% set btsport_permission_href = "http://apps.adlifter.com/plugin/?application_key=70c4dd8af56f5dad9d5483513f049eb6&command=cmd_berlingske_quicksignup&customer_key=a40e4703a823d1d11977928620c6ead0&nlids=24,25,26&intids=&stack_key=fb5a0951e1258db8ca686b837e16e09e&lid=1660&mid=4&rtype=1&url=http://pm2.adlifter.com/landing/?page=MjA2Lmh0bWw=&email=[email]&action=1" %}
+
+{% set kw = "business_morgen"; %}
 
 {% block wide_banner_1 %}
-{% set banner_a_href = "http://ad1.emediate.dk/eas?cu=27673;ty=ct;kw=business_morgen;kw2=" + dates.yyyymmdd + ";upair=business_morgen_1"; %}
-{% set banner_img_src = "http://ad1.emediate.dk/eas?cu=27673;cre=img;kw=business_morgen;kw2=" + dates.yyyymmdd + ";upair=business_morgen_1"; %}
+{% set cu = "27673"; %}
 {% include "partials/banner.html" %}
 {% endblock %}
 
 {% block wide_banner_2 %}
-{% set banner_a_href = "http://ad1.emediate.dk/eas?cu=27674;ty=ct;kw=business_morgen;kw2=" + dates.yyyymmdd + ";upair=business_morgen_4"; %}
-{% set banner_img_src = "http://ad1.emediate.dk/eas?cu=27674;cre=img;kw=business_morgen;kw2=" + dates.yyyymmdd + ";upair=business_morgen_4"; %}
+{% set cu = "27674"; %}
 {% include "partials/banner.html" %}
 {% endblock %}
 
 {% block box_banner_1 %}
-{% set banner_a_href = "http://ad1.emediate.dk/eas?cu=27675;ty=ct;kw=business_morgen;kw2=" + dates.yyyymmdd + ";upair=business_morgen_2"; %}
-{% set banner_img_src = "http://ad1.emediate.dk/eas?cu=27675;cre=img;kw=business_morgen;kw2=" + dates.yyyymmdd + ";upair=business_morgen_2"; %}
+{% set cu = "27675"; %}
 {% include "partials/banner.html" %}
 {% endblock %}
 
 {% block box_banner_2 %}
-{% set banner_a_href = "http://ad1.emediate.dk/eas?cu=27676;ty=ct;kw=business_morgen;kw2=" + dates.yyyymmdd + ";upair=business_morgen_3"; %}
-{% set banner_img_src = "http://ad1.emediate.dk/eas?cu=27676;cre=img;kw=business_morgen;kw2=" + dates.yyyymmdd + ";upair=business_morgen_3"; %}
+{% set cu = "27676"; %}
 {% include "partials/banner.html" %}
 {% endblock %}

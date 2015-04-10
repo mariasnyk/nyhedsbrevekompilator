@@ -1,3 +1,6 @@
+{% set kw2 = 'YYYYMMDD' | moment %}
+{% set upair = kw + '_' + cu %}
+
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td width="100%" height="14" style="font-size: 0px; line-height: 0px;">&nbsp;</td>
@@ -20,8 +23,8 @@
                 </font>
                 <br>
                 {% endif %}
-                <a target="_blank" href="{{ banner_a_href }}" title="">
-                  <img class="full" src="{{ banner_img_src }}" alt="" border="0" style="max-width: 100%; display: block;" width="100%" />
+                <a target="_blank" href="http://ad1.emediate.dk/eas?cu={{ cu }};ty=ct;kw={{ kw }};kw2={{ kw2 }};upair={{ upair }}" title="">
+                  <img class="full" src="http://ad1.emediate.dk/eas?cu={{ cu }};cre=img;kw={{ kw }};kw2={{ kw2 }};upair={{ upair }}" alt="" border="0" style="max-width: 100%; display: block;" width="100%" />
                 </a>
               </div>
             </td>

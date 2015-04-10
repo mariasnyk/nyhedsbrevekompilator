@@ -25,8 +25,8 @@ swig.setFilter('highlighter', function (input, highlight) {
   }
 });
 
-swig.setFilter('moment', function (date, format) {
-  return moment(date).format(format === undefined ? 'ddd D MMM' : format);
+swig.setFilter('moment', function (format, date) {
+  return moment(date).format(format === undefined || format === '' ? 'ddd D MMM' : format);
 });
 
 module.exports = swig;

@@ -45,7 +45,7 @@
         <font
           color="#1A1A1A"
           style="font-family: {{ font_family_sans }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
-          {{ node.dateCreated | moment }}
+          {{ '' | moment(node.dateCreated) }}
         </font>
       </span>
     </div>
@@ -54,7 +54,7 @@
       <font
         color="#1A1A1A"
         style="font-family: {{ font_family_sans }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
-        {{ node.dateCreated | moment }}
+        {{ '' | moment(node.dateCreated) }}
       </font>
     </div>
     {% endif %}
