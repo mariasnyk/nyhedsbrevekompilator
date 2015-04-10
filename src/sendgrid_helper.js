@@ -80,7 +80,10 @@ module.exports.sendMarketingEmail = function (newsletter, callback) {
 
     addSendGridSchedule(newsletter.name, newsletter.after, function (err) {
       if (err) callback(err);
-      else callback(null, { message: 'Sent' });
+      else {
+        console.log('Schedule of ' + newsletter.after + ' minuttes added to marketing email ' + newsletter.name + '.' );
+        callback(null, { message: 'Sent' });
+      }
     });
   });
 };
@@ -94,6 +97,7 @@ function createMarketingEmail (newsletter, callback) {
       //return callback({ error: 'Error when creating new marketing email.' });
       return callback(err);
     }
+
 
     // Adding the newsletter name as a mandatory category
     if (newsletter.categories === undefined || newsletter.categories === null) {
@@ -110,6 +114,7 @@ function createMarketingEmail (newsletter, callback) {
         return callback({ error: 'Error when adding recipients to marketing email.' });
       }
 
+      console.log('Marketing email ' + newsletter.name + ' created.' );
       callback(null, result);
     });
   });
