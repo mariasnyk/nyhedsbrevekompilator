@@ -25,8 +25,8 @@ swig.setFilter('highlighter', function (input, highlight) {
   }
 });
 
-swig.setFilter('dato', function (input) {
-  return moment(input).format("ddd D MMM")
+swig.setFilter('moment', function (date, format) {
+  return moment(date).format(format === undefined ? 'ddd D MMM' : format);
 });
 
 module.exports = swig;
