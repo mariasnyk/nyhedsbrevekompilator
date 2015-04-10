@@ -313,7 +313,6 @@ function download (url, callback) {
 
 
 function prepareData (data) {
-  data.dates = getDates();
   data.subject = subjectSuggestion(data);
   data.checksum = calculateChecksum(data);
   prepareNode(data);
@@ -410,49 +409,5 @@ function getControlroomUrl (input) {
     return bond_base_url + '/node/' + id + '/view';
   } else {
     return '';
-  }
-}
-
-
-function getDates () {
-  var temp = new Date();
-  return {
-    year: temp.getFullYear(),
-    date: temp.getDate().toString(),
-    yyyymmdd: temp.getFullYear() +
-              ('0' + (temp.getMonth() + 1)).slice(-2) +
-              ('0' + temp.getDate()).slice(-2),
-    day: danishWeekdayName(temp.getDay()),
-    month: danishMonthName(temp.getMonth() + 1),
-    unix_timestap: temp.getTime()
-  };
-
-  function danishWeekdayName (day) {
-    switch (day) {
-      case 1: return 'Mandag';
-      case 2: return 'Tirsdag';
-      case 3: return 'Onsdag';
-      case 4: return 'Torsdag';
-      case 5: return 'Fredag';
-      case 6: return 'Lørdag';
-      case 7: return 'Søndag';
-    }
-  }
-
-  function danishMonthName (month) {
-    switch (month) {
-      case 1: return 'Januar';
-      case 2: return 'Februar';
-      case 3: return 'Marts';
-      case 4: return 'April';
-      case 5: return 'Maj';
-      case 6: return 'Juni';
-      case 7: return 'Juli';
-      case 8: return 'August';
-      case 9: return 'September';
-      case 10: return 'Oktober';
-      case 11: return 'November';
-      case 12: return 'December';
-    }
   }
 }
