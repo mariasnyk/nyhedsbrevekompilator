@@ -1,6 +1,6 @@
 {% extends "partials/bt.html" %}
 
-{% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + dates.yyyymmdd + "&ns_linkname=bt_plus"; %}
+{% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + "YYYYMMDD" | moment + "&ns_linkname=bt_plus"; %}
 {% set home_url = "http://www.bt.dk"; %}
 {% set logo_src = "http://placehold.it/654x57"; %}
 {% set unsubscribe_href = "http://nyhedsbreve.btdk-mail.dk/index.php?eksternid=[ekstern_id]&medieid=4" %}

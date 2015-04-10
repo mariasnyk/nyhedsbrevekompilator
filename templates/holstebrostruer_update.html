@@ -1,6 +1,6 @@
 {% extends "partials/mjm.html" %}
 
-{% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + dates.yyyymmdd + "&ns_linkname=holstebrostruer_update"; %}
+{% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + "YYYYMMDD" | moment + "&ns_linkname=holstebrostruer_update"; %}
 {% set home_url = "http://dagbladet-holstebro-struer.dk"; %}
 {% set logo_src = "http://nlstatic.berlingskemedia.dk/headers/holstebrostruer_update.png"; %}
 {% set unsubscribe_href = "http://nyhedsbreve.dagbladet-holstebro-struer-mail.dk/?eksternid=[ekstern_id]" %}

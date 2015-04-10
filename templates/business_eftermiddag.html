@@ -1,6 +1,6 @@
 {% extends "partials/business.html" %}
 
-{% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + dates.yyyymmdd + "&ns_linkname=business_eftermiddag"; %}
+{% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + "YYYYMMDD" | moment + "&ns_linkname=business_eftermiddag"; %}
 {% set home_url = "http://www.business.dk"; %}
 {% set logo_src = "http://placehold.it/654x57"; %}
 {% set unsubscribe_href = "http://nyhedsbreve.businessdk-mail.dk/?eksternid=[ekstern_id]" %}

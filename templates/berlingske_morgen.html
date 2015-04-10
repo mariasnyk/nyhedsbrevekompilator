@@ -1,6 +1,6 @@
 {% extends "partials/berlingske.html" %}
 
-{% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + dates.yyyymmdd + "&ns_linkname=berlingske_morgen"; %}
+{% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + "YYYYMMDD" | moment + "&ns_linkname=berlingske_morgen"; %}
 {% set home_url = "http://www.b.dk"; %}
 {% set logo_src = "http://nlstatic.berlingskemedia.dk/headers/berlingske_morgen.png"; %}
 {% set unsubscribe_href = "http://nyhedsbreve.berlingske-mail.dk/index.php?eksternid=[ekstern_id]&medieid=4" %}

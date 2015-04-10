@@ -1,6 +1,6 @@
 {% extends "partials/mjm.html" %}
 
-{% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + dates.yyyymmdd + "&ns_linkname=arhus_update"; %}
+{% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + "YYYYMMDD" | moment + "&ns_linkname=arhus_update"; %}
 {% set home_url = "http://stiften.dk"; %}
 {% set logo_src = "http://nlstatic.berlingskemedia.dk/headers/arhus_update.png"; %}
 {% set unsubscribe_href = "http://nyhedsbreve.stiften-mail.dk/?eksternid=[ekstern_id]" %}
