@@ -138,11 +138,24 @@
         </td>
       </tr>
       {% endif %}
+
       {% if loop.index === 5 %}
       <tr>
         <td align="center" valign="top">
           <!-- First 4:3 beerbox banner -->
           {% block box_banner_1 %}
+          {% endblock %}
+          <!-- 4:3 beerbox banner END -->
+        </td>
+      </tr>
+      {% endif %}
+
+      {% if loop.index === 7 %}
+      {% set box_banner_2_inserted = true %}
+      <tr>
+        <td align="center" valign="top">
+          <!-- secong 4:3 beerbox banner -->
+          {% block box_banner_2 %}
           {% endblock %}
           <!-- 4:3 beerbox banner END -->
         </td>
@@ -163,6 +176,7 @@
         <!-- Read more END -->
       </td>
     </tr>
+    {% if box_banner_2_inserted !== true %}
     <tr>
       <td align="center" valign="top">
         <!-- Second 4:3 beerbox banner -->
@@ -171,6 +185,7 @@
         <!-- 4:3 beerbox banner END -->
       </td>
     </tr>
+    {% endif %}
     <tr>
       <td align="center" valign="top">
         {% block permission_intro %}
@@ -191,80 +206,6 @@
     <tr>
       <td align="center" valign="top">
         {% block permission_2 %}
-        {% endblock %}
-      </td>
-    </tr>
-    <tr>
-      <td align="center" valign="top">
-        {% block permissions %}
-        <div style="padding: 20px 20px;">
-          <div style="text-align: left; padding: 20px 0px;">
-            <font color="#000000" style="font-family: {{ font_family }}; font-size: 30px; line-height: 30px; text-rendering: optimizeLegibility;">
-              Tilmeld dig vores andre nyhedsbreve
-            </font>
-          </div>
-          <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f9f9f9;">
-            <tr>
-              <td width="50%" align="center" valign="top">
-                <div style="padding: 14px;">
-                  <div style="text-align: left; padding: 10px 0px;">
-                    <font color="#000000" style="font-family: {{ font_family }}; font-size: 20px; line-height: 20px; text-rendering: optimizeLegibility;">
-                      TILBUD FRA SWEETDEAL
-                    </font>
-                  </div>
-                  <div style="text-align: left; padding: 10px 0px;">
-                    <font color="#000000" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 16px; line-height: 20px; text-rendering: optimizeLegibility;">
-                      F&aring; attraktive tilbud der matcher dine interesser f&oslash;r andre direkte i din mailboks.
-                    </font>
-                  </div>
-                  <div style="text-align: left; padding: 10px 0px;">
-                    <a target="_blank" href="{{ sweetdeal_permission_href }}">
-                      <font color="#CC0000" style="font-family: {{ font_family }}; font-size: 16px; line-height: 20px; text-rendering: optimizeLegibility;">
-                        Tilmeld dig nyhedsbrev
-                      </font>
-                    </a>
-                  </div>
-                </div>
-              </td>
-              <td width="50%" align="center" valign="middle">
-                <img src="http://nlstatic.berlingskemedia.dk/images/sweetdeal.png" width="240" />
-              </td>
-            </tr>
-          </table>
-          <table width="100%" cellpadding="0" cellspacing="0" border="0">
-            <tr>
-              <td width="100%" height="14" style="font-size:0px; line-height: 0px;">&nbsp;</td>
-            </tr>
-          </table>
-          <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f9f9f9;">
-            <tr>
-              <td width="50%" align="center" valign="top">
-                <div style="padding: 14px;">
-                  <div style="text-align: left; padding: 10px 0px;">
-                    <font color="#000000" style="font-family: {{ font_family }}; font-size: 20px; line-height: 20px; text-rendering: optimizeLegibility;">
-                      NYHEDER FRA BT SPORT
-                    </font>
-                  </div>
-                  <div style="text-align: left; padding: 10px 0px;">
-                    <font color="#000000" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 16px; line-height: 20px; text-rendering: optimizeLegibility;">
-                      BT Sportens nyhedsbrev opdaterer dig dagligt med hvad der r&oslash;r sig inde for sportens verden.
-                    </font>
-                  </div>
-                  <div style="text-align: left; padding: 10px 0px;">
-                    <a target="_blank" href="{{ btsport_permission_href }}">
-                      <font color="#CC0000" style="font-family: {{ font_family }}; font-size: 16px; line-height: 20px; text-rendering: optimizeLegibility;">
-                        Tilmeld dig nyhedsbrev
-                      </font>
-                    </a>
-                  </div>
-                </div>
-              </td>
-              <td width="50%" align="center" valign="middle">
-                <img src="http://nlstatic.berlingskemedia.dk/images/BT_sport.png" width="241" />
-              </td>
-            </tr>
-          </table>
-        </div>
         {% endblock %}
       </td>
     </tr>
