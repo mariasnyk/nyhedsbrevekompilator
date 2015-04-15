@@ -38,7 +38,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
       // If we're not editing the newsletter, we don't need to fetch the dop-down data from e.g. SendGrid
       $scope.newsletter = Newsletters.get({ident: $routeParams.ident}, function () {
-
+        $scope.original_newsletters_name = $scope.newsletter.name;
         $scope.newsletter.name = $scope.newsletter.name + ' ' + moment().format("ddd D MMM YYYY");
         // Default 15 minuttes delay
         $scope.newsletter.after = 15;

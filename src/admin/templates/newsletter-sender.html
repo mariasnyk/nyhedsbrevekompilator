@@ -1,0 +1,174 @@
+<div class="container">
+  <h2>
+    <span>
+      <button type="button" class="btn" ng-class="{'btn-warning': dirty, 'btn-default': !dirty}" ng-click="closeNewsletterEditor()">
+        Til oversigt <span class="glyphicon glyphicon-chevron-left"></span>
+      </button>
+    </span>
+    Nyhedsbrev {{ original_newsletters_name }}
+  </h2>
+
+  <div class="row">
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label for="name_control">Navn</label>
+        <input
+          id="name_control"
+          class="form-control"
+          type="text"
+          ng-model="newsletter.name"
+          ng-change="setDirty()"
+          placeholder="Insert name"/>
+      </div>
+    </div>
+    <div class="col-xs-4 col-xs-offset-4">
+      <div>Afsender: <strong>{{ newsletter.identity }}</strong></div>
+      <div>Modtagerliste: <strong>{{ newsletter.list }}</strong></div>
+      <ul class="list-inline">
+        <li>Kategorier:</li>
+        <li ng-repeat="category in newsletter.categories">
+          <span class="label label-info" style="background-color:#{{category|tocolor}}">{{category}}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label for="subject">Emnefelt</label>
+        <input id="subject" type="text" class="form-control" ng-model="newsletter.subject">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-inline">
+        <button type="button" class="btn btn-primary" ng-click="updatePreviews()" ng-disabled="loading">
+          Opdater preview <span class="glyphicon glyphicon-refresh"></span>
+        </button>
+        <button type="button" class="btn btn-warning" ng-click="getBondData()" ng-disabled="loading">
+          Reset indhold <span class="glyphicon glyphicon-refresh"></span>
+        </button>
+        <div class="input-group">
+          <span class="input-group-addon">
+            Udsend om
+          </span>
+          <input class="form-control" type="number" ng-model="newsletter.after" min="0" style="width: 80px;">
+          <span class="input-group-addon">
+            minutter <span class="glyphicon glyphicon-time"></span>
+          </span>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-success" ng-click="sendNewsletter()" ng-disabled="loading || bonddatadirty">
+              Send <span class="glyphicon glyphicon-envelope"></span>
+            </button>
+          </span>
+        </div>
+        <button ng-hide="true" type="button" class="btn btn-warning" ng-click="draftNewsletter()" ng-disabled="loading">
+          Opret kladde <span class="glyphicon glyphicon-inbox"></span>
+        </button>
+        <a ng-href="{{ controlroom_url }}" target="_blank" class="btn btn-link" ng-disabled="loading">
+          &Aring;bn BOND Controlroom
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <hr>
+  <div class="row">
+    <div class="col-xs-12">
+      <ul class="nav nav-tabs">
+        <!-- <li role="presentation" ng-click="currentTab = 'subject'" ng-class="{active:currentTab === 'subject'}"><a>Emnefelt</a></li> -->
+        <li role="presentation" ng-click="currentTab = 'html'; updateHtmlPreview();" ng-class="{active:currentTab === 'html'}" _class="active"><a>HTML</a></li>
+        <li role="presentation" ng-click="currentTab = 'text'; updatePlainPreview();" ng-class="{active:currentTab === 'text'}"><a>TEXT</a></li>
+        <li role="presentation" ng-click="currentTab = 'data';" ng-class="{active:currentTab === 'data'}"><a>Tilpas indhold</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div ng-include="currentTab"></div>
+</div>
+
+<script type="text/ng-template" id="html">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <p ng-show="loading_html_preview">Loading...</p>
+          <iframe ng-hide="loading_html_preview" class="newsletter-preview" srcdoc="{{trusted_html_email_preview}}" onload='javascript:resizeIframe(this);'></iframe>
+        </div>
+      </div>
+      <a class="debug_link" target="_blank" href="/templates/{{ newsletter.template_html }}?u={{ safe_bond_url }}&debug=true">Debug link</a>
+    </div>
+  </div>
+</script>
+
+<script type="text/ng-template" id="text">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <p ng-show="loading_plain_preview">Loading...</p>
+          <textarea ng-hide="loading_plain_preview" class="form-control newsletter-preview" style="background-color: white;" ng-model="newsletter.email_plain"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script type="text/ng-template" id="data">
+  <div class="row" id="newsletter-data-form">
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="form-horizontal">
+            <div class="row node" ng-repeat="node in bonddata.nodes">
+              <label class="col-xs-1 control-label">Artikel {{ $index + 1 }}</label>
+              <div class="col-xs-9">
+                <input
+                  class="form-control"
+                  type="text"
+                  ng-model="node.title"
+                  ng-change="changeNodeTitle()"
+                  ng-blur="blurNodeTitle()"
+                  placeholder="Rubrik"/>
+                <textarea
+                  class="form-control"
+                  type="text"
+                  rows="3"
+                  ng-if="$index === 0"
+                  ng-show="node.summary"
+                  ng-model="node.summary"
+                  ng-change="changeNodeTitle()"
+                  ng-blur="blurNodeTitle()"
+                  placeholder="Underrubrik"></textarea>
+                <input
+                  class="form-control"
+                  type="text"
+                  ng-model="node.calltoaction"
+                  ng-change="changeNodeTitle()"
+                  ng-blur="blurNodeTitle()"
+                  placeholder="Ændre link tekst"/>
+              </div>
+              <div class="col-xs-2">
+                <button type="button" class="btn btn-default" ng-click="moveNode($index, $index - 1)" ng-disabled="$index === 0">
+                  <span class="glyphicon glyphicon-arrow-up"></span>
+                </button>
+                <button type="button" class="btn btn-default" ng-click="moveNode($index, $index + 1)">
+                  <span class="glyphicon glyphicon-arrow-down"></span>
+                </button>
+                <button type="button" class="btn btn-danger" ng-click="removeNode($index)">
+                  <span class="glyphicon glyphicon-remove"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a class="debug_link" target="_blank" href="{{ newsletter.bond_url }}">BOND API URL</a>
+    </div>
+  </div>
+</script>

@@ -1,264 +1,120 @@
-<div class="container-fluid">
-  <h2 ng-show="edit">Rediger indstillinger <span style="color: red;" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span></h2>
-  <h2 ng-hide="edit">Nyhedsbrev</h2>
+<div class="container">
   <div class="row">
-    <div class="col-xs-4">
+    <div class="form-horizontal">
       <div class="form-group">
-        <label for="name_control">Navn</label>
-        <input
-          id="name_control"
-          class="form-control"
-          type="text"
-          ng-model="newsletter.name"
-          ng-change="setDirty()"
-          xng-disabled="!edit"
-          placeholder="Insert name"/>
-      </div>
-    </div>
-    <div class="col-xs-2">
-      <div class="form-group">
-        <label for="identity_control">Afsender</label>
-        <select
-          id="identity_control"
-          class="form-control"
-          ng-model="newsletter.identity"
-          ng-options="identity for identity in identities"
-          ng-disabled="!edit"
-          ng-change="setDirty()"
-          ng-required="true">
-        </select>
-      </div>
-    </div>
-    <div class="col-xs-2">
-      <div class="form-group">
-        <label for="list_control">Modtagerliste</label>
-        <select
-          id="list_control"
-          class="form-control"
-          ng-model="newsletter.list"
-          ng-options="list for list in lists"
-          ng-disabled="!edit"
-          ng-change="setDirty()"
-          ng-required="true">
-          <option value=""></option>
-        </select>
-      </div>
-    </div>
-    <div class="col-xs-2" ng-show="edit">
-      <div class="form-group">
-        <label for="category_control">Tilføj kategori</label>
-        <input id="category_control" class="form-control" type="text" ng-model="newCategory" ng-keyup="addCategory($event)" ng-disabled="!edit" placeholder="Skriv her">
-        <ul class="dropdown-menu autocomplete" ng-show="newCategory">
-          <li ng-repeat="category in filteredCategories=(categories | filter:newCategory)">
-            <a ng-click="addCategory('', category)">{{category}}</a>
-          </li>
-          <li>
-            <a>Tryk <span class="label label-default">ENTER</span> for at oprette</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="col-xs-2">
-      <label for="category_control">Kategorier</label>
-      <ul class="list-inline">
-        <li ng-repeat="category in newsletter.categories track by $index">
-          <span id="category-{{category}}" class="label label-info"  style="background-color:#{{category|tocolor}}">{{category}} <span class="glyphicon glyphicon-remove" ng-show="edit" ng-click="removeCategory($index)"></span>&nbsp;</span>
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-4">
-      <button type="button" class="btn" ng-class="{'btn-warning': dirty, 'btn-default': !dirty}" ng-click="closeNewsletterEditor()">
-        Til oversigt <span class="glyphicon glyphicon-chevron-left"></span>
-      </button>
-      <span ng-if="edit">
-        <button type="button" class="btn" ng-class="{'btn-success': dirty, 'btn-default': !dirty}" ng-click="saveNewsletter()" ng-disabled="loading_previews">
-          Gem <span class="glyphicon glyphicon-floppy-disk"></span>
-        </button>
-        <button type="button" class="btn btn-danger btn-xs" ng-click="deleteNewsletter()">
-          Slet <span class="glyphicon glyphicon-remove"></span>
-        </button>
-      </span>
-    </div>
-    <div class="col-xs-8" ng-if="!edit">
-      <div class="form-inline">
-        <button type="button" class="btn btn-primary" ng-click="updatePreviews()" ng-disabled="loading">
-          Opdater <span class="glyphicon glyphicon-refresh"></span>
-        </button>
-        <button type="button" class="btn btn-warning" ng-click="getBondData()" ng-disabled="loading">
-          Reset indhold <span class="glyphicon glyphicon-refresh"></span>
-        </button>
-        <div class="input-group">
-          <span class="input-group-addon">
-            Udsend om
-          </span>
-          <input class="form-control" type="number" ng-model="newsletter.after" min="0" style="width: 80px;">
-          <span class="input-group-addon">
-            minutter <span class="glyphicon glyphicon-time"></span>
-          </span>
-          <span class="input-group-btn">
-            <button type="button" class="btn btn-success" ng-click="sendNewsletter()" ng-disabled="loading || bonddatadirty">
-              Send <span class="glyphicon glyphicon-envelope"></span>
-            </button>
-          </span>
-        </div>
-        <button ng-hide="true" type="button" class="btn btn-warning" ng-click="draftNewsletter()" ng-disabled="loading">
-          Opret kladde <span class="glyphicon glyphicon-inbox"></span>
-        </button>
-        <a ng-href="{{ controlroom_url }}" target="_blank" class="btn btn-link" ng-disabled="loading">
-          &Aring;bn BOND Controlroom
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <hr>
-
-  <div class="row" ng-show="edit">
-    <div class="col-xs-6">
-      <div class="form-group">
-        <label for="bond_url_control">BOND URL</label>
-        <input
-          id="bond_url_control"
-          type="text"
-          class="form-control"
-          placeholder="Insert BOND root URL"
-          ng-model="newsletter.bond_url"
-          ng-change="setDirty()"
-          ng-disabled="!edit">
-      </div>
-    </div>
-    <div class="col-xs-3">
-      <div class="form-group">
-        <label for="template_html_control">HTML Template</label>
-        <select
-          id="template_html_control"
-          class="form-control"
-          ng-model="newsletter.template_html"
-          ng-options="template_html for template_html in html_templates"
-          ng-disabled="!edit"
-          ng-change="setDirty()"
-          ng-required="true">
-        </select>
-      </div>
-    </div>
-    <div class="col-xs-3">
-      <div class="form-group">
-        <label for="template_plain_control">Text Template</label>
-        <select
-          id="template_plain_control"
-          class="form-control"
-          ng-model="newsletter.template_plain"
-          ng-options="template_plain for template_plain in plain_templates"
-          ng-disabled="!edit"
-          ng-change="setDirty()"
-          ng-required="true">
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <div class="row" ng-hide="edit">
-    <div class="col-xs-12">
-      <ul class="nav nav-tabs">
-        <!-- <li role="presentation" ng-click="currentTab = 'subject'" ng-class="{active:currentTab === 'subject'}"><a>Emnefelt</a></li> -->
-        <li role="presentation" ng-click="currentTab = 'html'; updateHtmlPreview();" ng-class="{active:currentTab === 'html'}" _class="active"><a>HTML</a></li>
-        <li role="presentation" ng-click="currentTab = 'text'; updatePlainPreview();" ng-class="{active:currentTab === 'text'}"><a>TEXT</a></li>
-        <li role="presentation" ng-click="currentTab = 'data';" ng-class="{active:currentTab === 'data'}"><a>Tilpas indhold</a></li>
-      </ul>
-    </div>
-  </div>
-
-  <div ng-include="currentTab" ng-if="!edit"></div>
-
-</div>
-
-<script type="text/ng-template" id="html">
-  <div class="row">
-    <div class="col-xs-12">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <p ng-show="loading_html_preview">Loading...</p>
-          <iframe ng-hide="loading_html_preview" class="newsletter-preview" srcdoc="{{trusted_html_email_preview}}" onload='javascript:resizeIframe(this);'></iframe>
-        </div>
-      </div>
-      <a class="debug_link" target="_blank" href="/templates/{{ newsletter.template_html }}?u={{ safe_bond_url }}&debug=true">Debug link</a>
-    </div>
-  </div>
-</script>
-
-<script type="text/ng-template" id="text">
-  <div class="row">
-    <div class="col-xs-12">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <p ng-show="loading_plain_preview">Loading...</p>
-          <textarea ng-hide="loading_plain_preview" class="form-control newsletter-preview" style="background-color: white;" ng-model="newsletter.email_plain"></textarea>
+        <div class="col-sm-10 col-sm-offset-2">
+          <button type="button" class="btn" ng-class="{'btn-warning': dirty, 'btn-default': !dirty}" ng-click="closeNewsletterEditor()">
+            Til oversigt <span class="glyphicon glyphicon-chevron-left"></span>
+          </button>
+          <button type="button" class="btn" ng-class="{'btn-success': dirty, 'btn-default': !dirty}" ng-click="saveNewsletter()" ng-disabled="loading_previews">
+            Gem <span class="glyphicon glyphicon-floppy-disk"></span>
+          </button>
+          <button type="button" class="btn btn-danger btn-xs" ng-click="deleteNewsletter()">
+            Slet <span class="glyphicon glyphicon-remove"></span>
+          </button>
         </div>
       </div>
     </div>
-  </div>
-</script>
-
-<script type="text/ng-template" id="data">
-  <div class="row" id="newsletter-data-form">
-    <div class="col-xs-12">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <div class="form-horizontal">
-            <div class="form-group">
-              <label class="col-xs-1 control-label">Emnefelt</label>
-              <div class="col-xs-11">
-                <input type="text" class="form-control" ng-model="newsletter.subject">
-              </div>
-            </div>
-            <hr>
-            <div class="row node" ng-repeat="node in bonddata.nodes">
-              <label class="col-xs-1 control-label">Artikel {{ $index + 1 }}</label>
-              <div class="col-xs-9">
-                <input
-                  class="form-control"
-                  type="text"
-                  ng-model="node.title"
-                  ng-change="changeNodeTitle()"
-                  ng-blur="blurNodeTitle()"
-                  placeholder="Rubrik"/>
-                <textarea
-                  class="form-control"
-                  type="text"
-                  rows="3"
-                  ng-if="$index === 0"
-                  ng-show="node.summary"
-                  ng-model="node.summary"
-                  ng-change="changeNodeTitle()"
-                  ng-blur="blurNodeTitle()"
-                  placeholder="Underrubrik"></textarea>
-                <input
-                  class="form-control"
-                  type="text"
-                  ng-model="node.calltoaction"
-                  ng-change="changeNodeTitle()"
-                  ng-blur="blurNodeTitle()"
-                  placeholder="Ændre link tekst"/>
-              </div>
-              <div class="col-xs-2">
-                <button type="button" class="btn btn-default" ng-click="moveNode($index, $index - 1)" ng-disabled="$index === 0">
-                  <span class="glyphicon glyphicon-arrow-up"></span>
-                </button>
-                <button type="button" class="btn btn-default" ng-click="moveNode($index, $index + 1)">
-                  <span class="glyphicon glyphicon-arrow-down"></span>
-                </button>
-                <button type="button" class="btn btn-danger" ng-click="removeNode($index)">
-                  <span class="glyphicon glyphicon-remove"></span>
-                </button>
-              </div>
-            </div>
+    <div class="form-horizontal">
+      <div class="form-group">
+        <label for="name_control" class="col-sm-2 control-label">Navn</label>
+        <div class="col-sm-10">
+          <input
+            id="name_control"
+            class="form-control"
+            type="text"
+            ng-model="newsletter.name"
+            ng-change="setDirty()"
+            placeholder="Insert name"/>
           </div>
+      </div>
+      <div class="form-group">
+        <label for="identity_control" class="col-sm-2 control-label">Afsender</label>
+        <div class="col-sm-10">
+          <select
+            id="identity_control"
+            class="form-control"
+            ng-model="newsletter.identity"
+            ng-options="identity for identity in identities"
+            ng-change="setDirty()"
+            ng-required="true">
+          </select>
         </div>
       </div>
-      <a class="debug_link" target="_blank" href="{{ newsletter.bond_url }}">BOND API URL</a>
+      <div class="form-group">
+        <label for="list_control" class="col-sm-2 control-label">Modtagerliste</label>
+        <div class="col-sm-10">
+          <select
+            id="list_control"
+            class="form-control"
+            ng-model="newsletter.list"
+            ng-options="list for list in lists"
+            ng-change="setDirty()"
+            ng-required="true">
+            <option value=""></option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="bond_url_control" class="col-sm-2 control-label">BOND URL</label>
+        <div class="col-sm-10">
+          <input
+            id="bond_url_control"
+            type="text"
+            class="form-control"
+            placeholder="Insert BOND root URL"
+            ng-model="newsletter.bond_url"
+            ng-change="setDirty()">
+          </div>
+      </div>
+      <div class="form-group">
+        <label for="template_html_control" class="col-sm-2 control-label">HTML Template</label>
+        <div class="col-sm-10">
+          <select
+            id="template_html_control"
+            class="form-control"
+            ng-model="newsletter.template_html"
+            ng-options="template_html for template_html in html_templates"
+            ng-change="setDirty()"
+            ng-required="true">
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="template_plain_control" class="col-sm-2 control-label">Text Template</label>
+        <div class="col-sm-10">
+          <select
+            id="template_plain_control"
+            class="form-control"
+            ng-model="newsletter.template_plain"
+            ng-options="template_plain for template_plain in plain_templates"
+            ng-change="setDirty()"
+            ng-required="true">
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="category_control" class="col-sm-2 control-label">Tilføj kategori</label>
+        <div class="col-sm-5">
+          <input id="category_control" class="form-control" type="text" ng-model="newCategory" ng-keyup="addCategory($event)" placeholder="Skriv her">
+          <ul class="dropdown-menu autocomplete" ng-show="newCategory">
+            <li ng-repeat="category in filteredCategories=(categories | filter:newCategory)">
+              <a ng-click="addCategory('', category)">{{category}}</a>
+            </li>
+            <li>
+              <a>Tryk <span class="label label-default">ENTER</span> for at oprette</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-5">
+          <label for="category_control">Kategorier</label>
+          <ul class="list-inline">
+            <li ng-repeat="category in newsletter.categories track by $index">
+              <span id="category-{{category}}" class="label label-info"  style="background-color:#{{category|tocolor}}">{{category}} <span class="glyphicon glyphicon-remove" ng-click="removeCategory($index)"></span>&nbsp;</span>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
-</script>
+</div>
