@@ -22,14 +22,16 @@
       </div>
     </div>
     <div class="col-xs-4 col-xs-offset-4">
-      <div>Afsender: <strong>{{ newsletter.identity }}</strong></div>
-      <div>Modtagerliste: <strong>{{ newsletter.list }}</strong></div>
-      <ul class="list-inline">
-        <li>Kategorier:</li>
-        <li ng-repeat="category in newsletter.categories">
-          <span class="label label-info" style="background-color:#{{category|tocolor}}">{{category}}</span>
-        </li>
-      </ul>
+      <h4>Afsender: <strong>{{ newsletter.identity }}</strong></h4>
+      <h4>Modtagerliste: <strong>{{ newsletter.list }}</strong></h4>
+      <h4>
+        <ul class="list-inline">
+          <li>Kategorier:</li>
+          <li ng-repeat="category in newsletter.categories">
+            <span class="label label-info" style="background-color:#{{category|tocolor}}">{{category}}</span>
+          </li>
+        </ul>
+      </h4>
     </div>
   </div>
 
