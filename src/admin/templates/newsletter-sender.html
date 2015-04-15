@@ -9,7 +9,7 @@
   </h2>
 
   <div class="row">
-    <div class="col-xs-4">
+    <div class="col-xs-3">
       <div class="form-group">
         <label for="name_control">Navn</label>
         <input
@@ -21,17 +21,19 @@
           placeholder="Insert name"/>
       </div>
     </div>
-    <div class="col-xs-4 col-xs-offset-4">
-      <h4>Afsender: <strong>{{ newsletter.identity }}</strong></h4>
-      <h4>Modtagerliste: <strong>{{ newsletter.list }}</strong></h4>
-      <h4>
-        <ul class="list-inline">
-          <li>Kategorier:</li>
-          <li ng-repeat="category in newsletter.categories">
-            <span class="label label-info" style="background-color:#{{category|tocolor}}">{{category}}</span>
-          </li>
-        </ul>
-      </h4>
+    <div class="col-xs-3">
+      Afsender: <strong>{{ newsletter.identity }}</strong>
+    </div>
+    <div class="col-xs-3">
+      Modtagerliste: <strong>{{ newsletter.list }}</strong>
+    </div>
+    <div class="col-xs-3">
+      <ul class="list-inline">
+        <li>Kategorier:</li>
+        <li ng-repeat="category in newsletter.categories">
+          <span class="label label-info" style="background-color:#{{category|tocolor}}">{{category}}</span>
+        </li>
+      </ul>
     </div>
   </div>
 
@@ -51,7 +53,7 @@
           Opdater preview <span class="glyphicon glyphicon-refresh"></span>
         </button>
         <button type="button" class="btn btn-warning" ng-click="getBondData()" ng-disabled="loading">
-          Reset indhold <span class="glyphicon glyphicon-refresh"></span>
+          Reset indhold <span class="glyphicon glyphicon-trash"></span>
         </button>
         <div class="input-group">
           <span class="input-group-addon">
