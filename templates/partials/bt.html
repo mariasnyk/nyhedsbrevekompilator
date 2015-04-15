@@ -108,58 +108,58 @@
       </td>
     </tr>
     {% for node in nodes %}
-      {% if loop.index0 !== 0 && loop.index0 % 2 === 0 %}
-      <tr>
-        <td align="center" valign="top">
-          <!-- Two-column stories -->
-          <div style="padding: 20px 20px;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-              <tr>
-                <td width="50%" align="center" valign="top">
-                  <div style="max-width: 300px; padding-right: 7px; display: inline-block; background-color: #ffffff; font-size; 0; line-height: 0px;">
-                    <!-- Right story -->
-                    {% set width=300 %}
-                    {% set node = nodes[loop.index0 - 1]; %}
-                    {% include "bt_article.html" %}
-                  </div>
-                </td>
-                <td width="50%" align="center" valign="top">
-                  <div style="max-width: 300px; padding-left: 7px; display: inline-block; background-color: #ffffff; font-size; 0; line-height: 0px;">
-                    <!-- Left story -->
-                    {% set width=300 %}
-                    {% set node = nodes[loop.index0]; %}
-                    {% include "bt_article.html" %}
-                  </div>
-                </td>
-              </tr>
-            </table>
-          </div>
-          <!-- Two-column stories END -->
-        </td>
-      </tr>
+      {% if max_nodes > 0 && loop.index > max_nodes %}
+      <!-- This is empty on purpose. -->
+      {% elif loop.index0 !== 0 && loop.index0 % 2 === 0 %}
+        <tr>
+          <td align="center" valign="top">
+            <!-- Two-column stories -->
+            <div style="padding: 20px 20px;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td width="50%" align="center" valign="top">
+                    <div style="max-width: 300px; padding-right: 7px; display: inline-block; background-color: #ffffff; font-size; 0; line-height: 0px;">
+                      <!-- Right story -->
+                      {% set width=300 %}
+                      {% set node = nodes[loop.index0 - 1]; %}
+                      {% include "bt_article.html" %}
+                    </div>
+                  </td>
+                  <td width="50%" align="center" valign="top">
+                    <div style="max-width: 300px; padding-left: 7px; display: inline-block; background-color: #ffffff; font-size; 0; line-height: 0px;">
+                      <!-- Left story -->
+                      {% set width=300 %}
+                      {% set node = nodes[loop.index0]; %}
+                      {% include "bt_article.html" %}
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <!-- Two-column stories END -->
+          </td>
+        </tr>
       {% endif %}
 
       {% if loop.index === 5 %}
-      <tr>
-        <td align="center" valign="top">
-          <!-- First 4:3 beerbox banner -->
-          {% block box_banner_1 %}
-          {% endblock %}
-          <!-- 4:3 beerbox banner END -->
-        </td>
-      </tr>
-      {% endif %}
-
-      {% if loop.index === 7 %}
-      {% set box_banner_2_inserted = true %}
-      <tr>
-        <td align="center" valign="top">
-          <!-- secong 4:3 beerbox banner -->
-          {% block box_banner_2 %}
-          {% endblock %}
-          <!-- 4:3 beerbox banner END -->
-        </td>
-      </tr>
+        <tr>
+          <td align="center" valign="top">
+            <!-- First 4:3 beerbox banner -->
+            {% block box_banner_1 %}
+            {% endblock %}
+            <!-- 4:3 beerbox banner END -->
+          </td>
+        </tr>
+      {% elif loop.index === 7 %}
+        {% set box_banner_2_inserted = true %}
+        <tr>
+          <td align="center" valign="top">
+            <!-- secong 4:3 beerbox banner -->
+            {% block box_banner_2 %}
+            {% endblock %}
+            <!-- 4:3 beerbox banner END -->
+          </td>
+        </tr>
       {% endif %}
     {% endfor %}
     <tr>
