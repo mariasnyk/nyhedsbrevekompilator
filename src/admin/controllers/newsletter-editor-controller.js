@@ -205,6 +205,9 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
       $scope.loading_html_preview = true;
 
+      $scope.bonddata.at = $scope.newsletter.at;
+      $scope.bonddata.after = $scope.newsletter.after;
+
       var get_html = $http.post('/templates/' + $scope.newsletter.template_html, $scope.bonddata)
       .success(function (data, status, getHeaders) {
         // var headers = getHeaders();

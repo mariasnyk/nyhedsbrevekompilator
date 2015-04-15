@@ -29,4 +29,15 @@ swig.setFilter('moment', function (format, date) {
   return moment(date).format(format === undefined || format === '' ? 'ddd D MMM' : format);
 });
 
+swig.setFilter('tracking', function (format, after, at) {
+  format = format === undefined || format === '' ? 'YYYYMMDD' : format;
+  if (after) {
+    return moment().add(after, 'minutes').format(format);
+  } else if (at) {
+    return moment(at).format(format);
+  } else {
+    return moment().format(format);
+  }
+});
+
 module.exports = swig;

@@ -57,7 +57,7 @@
           <span class="input-group-addon">
             Udsend om
           </span>
-          <input class="form-control" type="number" ng-model="newsletter.after" min="0" style="width: 80px;">
+          <input class="form-control" type="number" ng-model="newsletter.after" min="0" style="width: 80px;" ng-blur="updatePreviews()">
           <span class="input-group-addon">
             minutter <span class="glyphicon glyphicon-time"></span>
           </span>
