@@ -7,9 +7,11 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
       // Sorting by id for chronically order
       $scope.newsletters.sort(compare);
 
-      // Getting details for the first ten newsletters
+      // Getting details for the first x newsletters
       for (var i = 0; i < 3; i++) {
-        $scope.getNewsletterData($scope.newsletters[i].name, i);
+        if ($scope.newsletters[i]) {
+          $scope.getNewsletterData($scope.newsletters[i].name, i);
+        }
       }
     });
 
@@ -25,24 +27,29 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
 
     $scope.getNewsletterData = function (name, index) {
       $scope.newsletter = Newsletters.get({ name: name }, function (data) {
-        var now = moment.utc();
-        var date = moment.utc(data.date_schedule, "YYYY-MM-DD HH:mm:ss");
-        var diff = now.diff(date);
 
         $scope.newsletters[index].subject = data.subject;
         $scope.newsletters[index].identity = data.identity;
         $scope.newsletters[index].total_recipients = data.total_recipients;
-        $scope.newsletters[index].date_schedule = data.date_schedule;
 
-        if (data.date_schedule !== null && diff < 0) {
-          var schedule = Schedules.get({ name: name }, function () {
-            if (schedule.date) {
-              $scope.newsletters[index].schedule = schedule.date
-              $scope.newsletters[index].fromnow = moment(schedule.date).fromNow();
-            }
-          });
+        if (data.date_schedule !== null) {
+          var date_schedule = moment(data.date_schedule + '-07:00');
 
-          loadingSwitch.watch(schedule);
+          if (moment.utc().diff(date_schedule) < 0 ) {
+            $scope.newsletters[index].schedule = date_schedule.format('dddd D-MM HH:mm');
+            $scope.newsletters[index].fromnow = moment(date_schedule).fromNow();
+
+            // var schedule = Schedules.get({ name: name }, function () {
+            //   if (schedule.date) {
+            //     console.log(moment.utc(schedule.date));
+            //     $scope.newsletters[index].schedule = schedule.date;
+            //     $scope.newsletters[index].fromnow = moment(schedule.date).fromNow();
+            //   }
+            // });
+
+            // loadingSwitch.watch(schedule);
+          }
+
         }
 
       }, function (err) {
@@ -55,6 +62,7 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
     $scope.deleteSchedule = function (name, index) {
       var deleting = Schedules.delete({ name: name }, function () {
         $scope.newsletters[index].schedule = null;
+        $scope.newsletters[index].fromnow = null;
       }, function (error) {
         console.log('Error', error);
         notifications.showError(error.data.error);
