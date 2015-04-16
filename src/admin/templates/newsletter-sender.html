@@ -59,7 +59,7 @@
           <span class="input-group-addon">
             Udsend om
           </span>
-          <input class="form-control" type="number" ng-model="newsletter.after" min="0" style="width: 80px;" ng-blur="updatePreviews()">
+          <input class="form-control" type="number" ng-model="newsletter.after" min="0" style="width: 80px;">
           <span class="input-group-addon">
             minutter <span class="glyphicon glyphicon-time"></span>
           </span>
@@ -75,6 +75,31 @@
         <a ng-href="{{ controlroom_url }}" target="_blank" class="btn btn-link" ng-disabled="loading">
           &Aring;bn BOND Controlroom
         </a>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="dropdown">
+          <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown">
+            <div class="input-group"><input type="text" class="form-control" ng-model="newsletter.at">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+          </a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <datetimepicker ng-model="newsletter.at" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"/>
+          </ul>
+        </div>
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+            Udsend
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <li role="presentation"><a role="menuitem" tabindex="-1">minutter</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1">klokken</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>

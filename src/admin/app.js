@@ -1,6 +1,6 @@
 
 
-var app = angular.module('userdb', ['ngRoute', 'ngSanitize', 'ngResource', 'ngCookies', 'ngNotificationsBar', 'toColorFilter']);
+var app = angular.module('userdb', ['ngRoute', 'ngSanitize', 'ngResource', 'ngCookies', 'ngNotificationsBar', 'toColorFilter', 'ui.bootstrap.datetimepicker']);
 
 app.config(['$routeProvider', function ($routeProvider) {
   'use strict';
