@@ -39,9 +39,11 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       // If we're not editing the newsletter, we don't need to fetch the dop-down data from e.g. SendGrid
       $scope.newsletter = Newsletters.get({ident: $routeParams.ident}, function () {
         $scope.original_newsletters_name = $scope.newsletter.name;
-        $scope.newsletter.name = $scope.newsletter.name + ' ' + moment().format("ddd D MMM YYYY");
+
         // Default 15 minuttes delay
         $scope.newsletter.after = 15;
+
+        suggestMarkeringEmailName();
 
         getBondDataAndUpdatePreviews();
 
@@ -151,6 +153,19 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       $scope.bonddatadirty = true;
     };
 
+    var after = moment().add($scope.newsletter.after, 'minutes');
+    $scope.afterChanged = function () {
+      var temp = moment().add($scope.newsletter.after, 'minutes');
+      if (!moment(after).isSame(temp, 'day')) {
+        after = temp;
+        suggestMarkeringEmailName();
+        updatePreviews();
+      }
+    };
+
+    function suggestMarkeringEmailName () {
+      $scope.newsletter.name = $scope.original_newsletters_name + ' ' + moment().add($scope.newsletter.after, 'minutes').format("ddd D MMM YYYY");
+    }
 
     function getControlroomUrl () {
       var get = $http.get('/templates/controlroom?u=' + $scope.newsletter.bond_url)
