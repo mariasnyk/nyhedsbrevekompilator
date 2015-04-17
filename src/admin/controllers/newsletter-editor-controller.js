@@ -14,6 +14,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     $scope.edit = $routeParams.operator === 'edit';
 
     $scope.dirty = false;
+    var after;
 
     if ($scope.edit) {
 
@@ -42,6 +43,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
         // Default 15 minuttes delay
         $scope.newsletter.after = 15;
+        after = moment().add($scope.newsletter.after, 'minutes');
 
         suggestMarkeringEmailName();
 
@@ -153,7 +155,6 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       $scope.bonddatadirty = true;
     };
 
-    var after = moment().add($scope.newsletter.after, 'minutes');
     $scope.afterChanged = function () {
       var temp = moment().add($scope.newsletter.after, 'minutes');
       if (!moment(after).isSame(temp, 'day')) {
