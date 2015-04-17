@@ -11,7 +11,9 @@
   <div class="row">
     <div class="col-xs-3">
       <div class="form-group">
-        <label for="name_control">Navn</label>
+        <label for="name_control">
+          <abbr title="Bruges til statistik og opf&oslash;lgning">Navn</abbr>
+        </label>
         <input
           id="name_control"
           class="form-control"
@@ -59,7 +61,7 @@
           <span class="input-group-addon">
             Udsend om
           </span>
-          <input class="form-control" type="number" ng-model="newsletter.after" min="0" style="width: 80px;" ng-blur="updatePreviews()">
+          <input class="form-control" type="number" ng-model="newsletter.after" min="0" style="width: 80px;" ng-change="afterChanged()">
           <span class="input-group-addon">
             minutter <span class="glyphicon glyphicon-time"></span>
           </span>
