@@ -3,6 +3,7 @@ node_modules
 bower_components
 dist
 config.sh
+config.bat
 #templates
 testdata
 examples
