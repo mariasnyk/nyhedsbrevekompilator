@@ -49,17 +49,16 @@
 <a
   href="{{ node.url }}?{{ tracking }}"
   title="{{ node.title }}"
-  style="height: 100%; display: inline-block; text-decoration: none; line-height: 23px; text-align: left"
+  style="height: 100%; display: inline-block; text-decoration: none; line-height: 23px; text-align: left;"
   target="_blank">
 
   {% if background %}
-  <div style="max-width: {{ width }}px; height: 100%; display: inline-block; background-color: {{ background }}; font-size; 0; line-height: 0px;">
+  <div style="width: {{ width }}px; height: 100%; display: inline-block; background-color: {{ background }}; font-size; 0; line-height: 0px;">
   {% else %}
-  <div style="max-width: {{ width }}px; height: 100%; display: inline-block; background-color: #ffffff; font-size; 0; line-height: 0px;">
+  <div style="width: {{ width }}px; height: 100%; display: inline-block; background-color: #ffffff; font-size; 0; line-height: 0px;">
   {% endif %}
 
     {% if image_count > 0 %}
-    <div style="width: {{ width }}px;">
       {% for image in node.images %}
         {% if loop.last %}
           <img
@@ -70,13 +69,12 @@
             border="0" />
         {% endif %}
       {% endfor %}
-    </div>
     {% endif %}
 
     {% if background %}
-    <div style="width: {{ width-10 }}px; padding: 0 5px 10px 5px;">
+    <div style="padding-right: 5px; padding-bottom: 10px; padding-left: 5px;">
     {% else %}
-    <div style="width: {{ width }}px;">
+    <div>
     {% endif %}
 
       {% set title = node.title | highlighter(highlight) %}
