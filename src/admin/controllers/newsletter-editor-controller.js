@@ -14,7 +14,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     $scope.edit = $routeParams.operator === 'edit';
 
     $scope.dirty = false;
-    var after;
+    var after = moment().add(15, 'minutes');
 
     if ($scope.edit) {
 
@@ -44,6 +44,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         // Default 15 minuttes delay
         $scope.newsletter.after = 15;
         after = moment().add($scope.newsletter.after, 'minutes');
+        $scope.newsletter.at = moment().add($scope.newsletter.after, 'minutes');
 
         suggestMarkeringEmailName();
 

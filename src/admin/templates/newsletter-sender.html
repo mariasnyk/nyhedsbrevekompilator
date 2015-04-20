@@ -49,14 +49,8 @@
   </div>
 
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-4">
       <div class="form-inline">
-        <button type="button" class="btn btn-primary" ng-click="updatePreviews()" ng-disabled="loading">
-          Opdater preview <span class="glyphicon glyphicon-refresh"></span>
-        </button>
-        <button type="button" class="btn btn-warning" ng-click="getBondData()" ng-disabled="loading">
-          Reset indhold <span class="glyphicon glyphicon-trash"></span>
-        </button>
         <div class="input-group">
           <span class="input-group-addon">
             Udsend om
@@ -74,48 +68,33 @@
         <button ng-hide="true" type="button" class="btn btn-warning" ng-click="draftNewsletter()" ng-disabled="loading">
           Opret kladde <span class="glyphicon glyphicon-inbox"></span>
         </button>
-        <a ng-href="{{ controlroom_url }}" target="_blank" class="btn btn-link" ng-disabled="loading">
-          &Aring;bn BOND Controlroom
-        </a>
       </div>
     </div>
-
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="form-inline">
-          <div class="input-group">
-            <span class="input-group-addon">
-              Udsend klokken <span class="glyphicon glyphicon-time"></span>
-            </span>
-            <span class="input-group-addon">
-              <div class="dropdown">
-                <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown">
-                  <div class="input-group"><input type="text" class="form-control" ng-model="newsletter.at">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                  </div>
-                </a>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                  <datetimepicker ng-model="newsletter.at" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"/>
-                </ul>
-              </div>
-            </span>
-            <span class="input-group-btn">
-              <button type="button" class="btn btn-success" ng-click="_sendNewsletter()" ng-disabled="loading || bonddatadirty">
-                Send <span class="glyphicon glyphicon-envelope"></span>
-              </button>
-            </span>
-          </div>
+    <div class="col-xs-8">
+      <div class="form-inline">
+        <div class="input-group">
+          <span class="input-group-addon">
+            Udsend klokken <span class="glyphicon glyphicon-time"></span>
+          </span>
+          <span class="input-group-addon">
+            <div class="dropdown">
+              <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown">
+                <div class="input-group">
+                  <input type="text" class="form-control" ng-model="newsletter.at">
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                </div>
+              </a>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                <datetimepicker ng-model="newsletter.at" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"/>
+              </ul>
+            </div>
+          </span>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-success" ng-click="_sendNewsletter()" ng-disabled="loading || bonddatadirty">
+              Send <span class="glyphicon glyphicon-envelope"></span>
+            </button>
+          </span>
         </div>
-<!--         <div class="dropdown">
-          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-            Udsend
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-            <li role="presentation"><a role="menuitem" tabindex="-1">minutter</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1">klokken</a></li>
-          </ul>
-        </div> -->
       </div>
     </div>
   </div>
@@ -127,8 +106,22 @@
     <div class="col-xs-12">
       <ul class="nav nav-tabs">
         <!-- <li role="presentation" ng-click="currentTab = 'subject'" ng-class="{active:currentTab === 'subject'}"><a>Emnefelt</a></li> -->
-        <li role="presentation" ng-click="currentTab = 'html'; updateHtmlPreview();" ng-class="{active:currentTab === 'html'}" _class="active"><a>HTML</a></li>
-        <li role="presentation" ng-click="currentTab = 'text'; updatePlainPreview();" ng-class="{active:currentTab === 'text'}"><a>TEXT</a></li>
+        <li role="presentation" ng-click="currentTab = 'html'; updateHtmlPreview();" ng-class="{active:currentTab === 'html'}" _class="active">
+          <a>
+            HTML
+            <button type="button" class="btn btn-default btn-xs" ng-click="updateHtmlPreview()" ng-disabled="loading">
+              <span class="glyphicon glyphicon-refresh"></span>
+            </button>
+          </a>
+        </li>
+        <li role="presentation" ng-click="currentTab = 'text'; updatePlainPreview();" ng-class="{active:currentTab === 'text'}">
+          <a>
+            TEXT
+            <button type="button" class="btn btn-default btn-xs" ng-click="updatePlainPreview()" ng-disabled="loading">
+              <span class="glyphicon glyphicon-refresh"></span>
+            </button>
+          </a>
+        </li>
         <li role="presentation" ng-click="currentTab = 'data';" ng-class="{active:currentTab === 'data'}"><a>Tilpas indhold</a></li>
       </ul>
     </div>
@@ -170,6 +163,12 @@
       <div class="panel panel-default">
         <div class="panel-body">
           <div class="form-horizontal">
+            <button type="button" class="btn btn-warning" ng-click="getBondData()" ng-disabled="loading">
+              Reset indhold <span class="glyphicon glyphicon-trash"></span>
+            </button>
+            <a ng-href="{{ controlroom_url }}" target="_blank" class="btn btn-link" ng-disabled="loading">
+              &Aring;bn BOND Controlroom
+            </a>
             <div class="row node" ng-repeat="node in bonddata.nodes">
               <label class="col-xs-1 control-label">Artikel {{ $index + 1 }}</label>
               <div class="col-xs-9">
