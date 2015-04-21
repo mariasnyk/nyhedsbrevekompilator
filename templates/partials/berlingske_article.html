@@ -1,3 +1,4 @@
+{% if node !== null %}
 {% set primary_tag = null %}
 {% if node.taxonomyTags.primary %}
   {% for tag in node.taxonomyTags.primary %}
@@ -132,3 +133,4 @@
     {% endif %}
   </div>
 </a>
+{% endif %}

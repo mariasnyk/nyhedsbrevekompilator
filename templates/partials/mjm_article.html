@@ -1,3 +1,4 @@
+{% if node !== null %}
 <a
   href="{{ node.url }}?{{ tracking }}"
   title="{{ node.title }}"
@@ -75,3 +76,4 @@
     {% endif %}
   </div>
 </a>
+{% endif %}
