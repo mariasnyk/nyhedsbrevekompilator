@@ -191,7 +191,11 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
           $scope.newsletter.subject =  data.subject;
           $scope.newsletter.checksum = data.checksum;
           $scope.bonddatadirty = false;
+      })
+      .error(function (err) {
+        notifications.showError('Failed to get data from ' + $scope.newsletter.bond_url);
       });
+      
       loadingSwitch.watch(get_bonddata);
       return get_bonddata;
     }
