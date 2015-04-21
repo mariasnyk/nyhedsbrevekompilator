@@ -1,0 +1,79 @@
+{# From
+  http://codepen.io/actionrocket/pen/zHkgx
+  http://labs.actionrocket.co/the-hybrid-coding-approach
+  #}
+{% set kw2 = 'YYYYMMDD' | tracking(after, at) %}
+{% set upair = kw + '_' + cu %}
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="display:block; max-width:614px !important;">
+        <tr>
+          <td width="100%" height="14" style="font-size: 0px; line-height: 0px;">&nbsp;</td>
+        </tr>
+        <tr>
+          {% if hide_annonce_background !== true %}
+          <td width="100%" align="center" valign="top" bgcolor="#ececec">
+          {% else %}
+          <td width="100%" align="center" valign="top">
+          {% endif %}
+            <table border="0" cellspacing="0" cellpadding="0" style="width:100%; max-width:614px !important;" align="center">
+              <!--[if gte mso 9]>
+                <table id="outlookholder" border="0" cellspacing="0" cellpadding="0" align="center"><tr><td>
+              <![endif]-->
+              <!--[if (IE)]>
+                <table border="0" cellspacing="0" cellpadding="0" width="614" align="center"><tr><td>
+              <![endif]-->
+              <tr>
+                <td width="100%" align="center"> 
+                  <!--this is one way to set min width-->
+                  <table width="320" border="0" cellspacing="0" cellpadding="0" align="center">
+                    <tr>
+                      <td width="320" align="center">
+                        <img style="display:block;" border="0" src="http://nlstatic.berlingskemedia.dk/images/spacer.gif" width="320" height="20" />
+                      </td>
+                    </tr>
+                  </table>
+          
+                  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td width="100%" align="center">
+                        <div style="text-align: left;">
+                          {% if hide_annonce_label !== true %}
+                          <font color="#333333" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 10px; line-height: 10px;  text-rendering: optimizeLegibility;">
+                            ANNONCE
+                          </font>
+                          <br>
+                          {% endif %}
+                          <a target="_blank" href="http://ad1.emediate.dk/eas?cu={{ cu }};ty=ct;kw={{ kw }};kw2={{ kw2 }};upair={{ upair }}" title="">
+                            <img class="full" src="http://ad1.emediate.dk/eas?cu={{ cu }};cre=img;kw={{ kw }};kw2={{ kw2 }};upair={{ upair }}" alt="" border="0" style="display:block; max-width: 614px !important;" width="100%" />
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+          
+                  <table width="320" border="0" cellspacing="0" cellpadding="0" align="center">
+                    <tr>
+                      <td align="center">
+                        <img style="display:block;" border="0" src="http://nlstatic.berlingskemedia.dk/images/spacer.gif" width="20" height="20" />
+                      </td>
+                    </tr>
+                  </table>
+    
+                </td>
+              </tr>
+              <!--[if mso]>
+                </td></tr></table>
+                <![endif]-->
+              <!--[if gte mso 9]>
+                </td></tr></table>
+              <![endif]-->
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
