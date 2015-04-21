@@ -15,7 +15,10 @@
   {% endfor %}
 {% endif %}
 
-{% set background = null %} {% set color = "#000000" %}{% set highlight_color = "#cd0403" %}
+{% set background = "#ffffff" %}
+{% set color = "#000000" %}
+{% set highlight_color = "#cd0403" %}
+
 {% if !disableBTbackground && node.taxonomyTags.presentationTags %}
   {% for tag in node.taxonomyTags.presentationTags %}
     {% if tag.id == "191134" %}     {# Yellow #}  {% set background = "#fde62f" %}  {% set color = "#000000" %}{% set highlight_color = "#cd0403" %}
@@ -49,14 +52,10 @@
 <a
   href="{{ node.url }}?{{ tracking }}"
   title="{{ node.title }}"
-  style="height: 100%; display: inline-block; text-decoration: none; line-height: 23px; text-align: left;"
+  style="height: 100%; display: inline-block; text-decoration: none; line-height: 23px; text-align: left; background-color: {{ background }};"
   target="_blank">
 
-  {% if background %}
   <div style="width: {{ width }}px; height: 100%; display: inline-block; background-color: {{ background }}; font-size; 0; line-height: 0px;">
-  {% else %}
-  <div style="width: {{ width }}px; height: 100%; display: inline-block; background-color: #ffffff; font-size; 0; line-height: 0px;">
-  {% endif %}
 
     {% if image_count > 0 %}
       {% for image in node.images %}
@@ -71,8 +70,8 @@
       {% endfor %}
     {% endif %}
 
-    {% if background %}
-    <div style="padding-right: 5px; padding-bottom: 10px; padding-left: 5px;">
+    {% if background !== '#ffffff' %}
+    <div style="background-color: {{ background }}; padding-top: 5px; padding-right: 5px; padding-bottom: 10px; padding-left: 5px;">
     {% else %}
     <div>
     {% endif %}
