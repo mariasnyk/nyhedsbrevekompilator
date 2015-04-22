@@ -1,15 +1,19 @@
 <div class="container">
-  <h2>
-    <span>
-      <button type="button" class="btn" ng-class="{'btn-warning': dirty, 'btn-default': !dirty}" ng-click="closeNewsletterEditor()">
+  <div class="row">
+    <div class="col-xs-6">
+      <button type="button" class="btn btn-xs" ng-class="{'btn-warning': dirty, 'btn-default': !dirty}" ng-click="closeNewsletterEditor()">
         Til oversigt <span class="glyphicon glyphicon-chevron-left"></span>
       </button>
-    </span>
-    Nyhedsbrev {{ original_newsletters_name }}
-  </h2>
+    </div>
+    <div class="col-xs-6">
+      <small>Hvis noget ikke virker eller du har en idé, skriv til Daniel Kokott på <a href="mailto:dako@berlingskemedia.dk">dako@berlingskemedia.dk</a> eller ring på 25442445.</small>
+    </div>
+  </div>
+
+  <hr>
 
   <div class="row">
-    <div class="col-xs-3">
+    <div class="col-md-8 col-sm-12">
       <div class="form-group">
         <label for="name_control">
           <abbr title="Bruges til statistik og opf&oslash;lgning">Navn</abbr>
@@ -22,78 +26,53 @@
           ng-change="setDirty()"
           placeholder="Insert name"/>
       </div>
-    </div>
-    <div class="col-xs-3">
-      Afsender: <strong>{{ newsletter.identity }}</strong>
-    </div>
-    <div class="col-xs-3">
-      Modtagerliste: <strong>{{ newsletter.list }}</strong>
-    </div>
-    <div class="col-xs-3">
-      <ul class="list-inline">
-        <li>Kategorier:</li>
-        <li ng-repeat="category in newsletter.categories">
-          <span class="label label-info" style="background-color:#{{category|tocolor}}">{{category}}</span>
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-12">
       <div class="form-group">
         <label for="subject">Emnefelt</label>
         <input id="subject" type="text" class="form-control" ng-model="newsletter.subject">
       </div>
     </div>
+    <div class="col-md-4 col-sm-12">
+      <dl class="dl-horizontal well">
+        <dt>Nyhedsbrev</dt>
+        <dd>{{ original_newsletters_name }}</dd>
+        <dt>Afsender</dt>
+        <dd>{{ newsletter.identity }}</dd>
+        <dt>Modtagerliste</dt>
+        <dd>{{ newsletter.list }}</dd>
+        <dt>Kategorier</dt>
+        <dd>
+          <ul class="list-inline">
+            <li>Kategorier:</li>
+            <li ng-repeat="category in newsletter.categories">
+              <span class="label label-info" style="background-color:#{{category|tocolor}}">{{category}}</span>
+            </li>
+          </ul>
+        </dd>
+      </dl>
+    </div>
   </div>
 
   <div class="row">
-    <div class="col-md-6 col-sm-12">
+    <div class="col-md-8 col-sm-12">
       <div class="form-inline">
-        <div class="input-group">
-          <span class="input-group-addon">
-            Udsend om
-          </span>
-          <input class="form-control" type="number" ng-model="newsletter.after" min="0" style="width: 80px;" ng-change="afterChanged()">
-          <span class="input-group-addon">
-            minutter <span class="glyphicon glyphicon-time"></span>
-          </span>
-          <span class="input-group-btn">
-            <button type="button" class="btn btn-success" ng-click="sendNewsletter()" ng-disabled="loading || bonddatadirty">
-              Send <span class="glyphicon glyphicon-envelope"></span>
-            </button>
-          </span>
-        </div>
-        <button ng-hide="true" type="button" class="btn btn-warning" ng-click="draftNewsletter()" ng-disabled="loading">
-          Opret kladde <span class="glyphicon glyphicon-inbox"></span>
+        <button type="button" class="btn btn-success" ng-click="sendNewsletter()" ng-disabled="loading || bonddatadirty">
+          Send <span class="glyphicon glyphicon-envelope"></span>
         </button>
-      </div>
-    </div>
-    <div class="col-md-6 col-sm-12">
-      <div class="form-inline">
-        <div class="input-group">
-          <span class="input-group-addon">
-            Udsend klokken <span class="glyphicon glyphicon-time"></span>
-          </span>
-          <span class="input-group-addon">
-            <div class="dropdown">
-              <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown">
-                <div class="input-group">
-                  <input type="text" class="form-control" ng-model="newsletter.at">
-                  <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                </div>
-              </a>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                <datetimepicker ng-model="newsletter.at" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"/>
-              </ul>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" ng-model="schedule_after"> V&aelig;lg tidspunkt for udsendelse
+          </label>
+        </div>
+        <div class="dropdown form-group" ng-show="schedule_after">
+          <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown">
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="newsletter.at">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
             </div>
-          </span>
-          <span class="input-group-btn">
-            <button type="button" class="btn btn-success" ng-click="_sendNewsletter()" ng-disabled="loading || bonddatadirty">
-              Send <span class="glyphicon glyphicon-envelope"></span>
-            </button>
-          </span>
+          </a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <datetimepicker ng-model="newsletter.at" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"/>
+          </ul>
         </div>
       </div>
     </div>
