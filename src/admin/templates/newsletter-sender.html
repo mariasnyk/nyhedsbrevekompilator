@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-6">
-      <button type="button" class="btn btn-xs" ng-class="{'btn-warning': dirty, 'btn-default': !dirty}" ng-click="closeNewsletterEditor()">
+      <button type="button" class="btn" ng-class="{'btn-warning': dirty, 'btn-default': !dirty}" ng-click="closeNewsletterSender()">
         Til oversigt <span class="glyphicon glyphicon-chevron-left"></span>
       </button>
     </div>
@@ -34,7 +34,11 @@
     <div class="col-md-4 col-sm-12">
       <dl class="dl-horizontal well">
         <dt>Nyhedsbrev</dt>
-        <dd>{{ original_newsletters_name }}</dd>
+        <dd>{{ original_newsletters_name }}
+          <a title="Indstillinger" class="btn btn-default btn-xs" ng-click="openNewsletterEditor()">
+            <span class="glyphicon glyphicon-edit"></span>
+          </a>
+        </dd>
         <dt>Afsender</dt>
         <dd>{{ newsletter.identity }}</dd>
         <dt>Modtagerliste</dt>

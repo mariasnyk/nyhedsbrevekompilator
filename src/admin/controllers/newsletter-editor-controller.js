@@ -122,10 +122,17 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       loadingSwitch.watch(saving, 'Saving');
     };
 
+    $scope.openNewsletterEditor = function () {
+      $location.url('/' + $routeParams.ident + '/edit');
+    };
+
+    $scope.closeNewsletterSender = function () {
+      $location.url('/');
+    };
+
     $scope.closeNewsletterEditor = function () {
-      if ($scope.dirty === false || confirm("Sikker på du vil gå til oversigten uden at gemme dine ændringer?")) {
-        //$location.url('/' + $routeParams.ident);
-        $location.url('/');
+      if ($scope.dirty === false || confirm("Sikker på du vil lukke uden at gemme dine ændringer?")) {
+        $location.url('/' + $routeParams.ident);
       }
     };
 
