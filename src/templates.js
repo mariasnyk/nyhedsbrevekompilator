@@ -140,8 +140,6 @@ module.exports.register = function (plugin, options, next) {
       }
     },
     handler: function (request, reply) {
-      console.log('timestamp', request.payload.timestamp);
-      console.log(new Date(request.payload.timestamp))
       reply
       .view(request.params.template, request.payload)
       .header('Transfer-Encoding', 'chunked')
