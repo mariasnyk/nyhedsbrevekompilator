@@ -185,13 +185,6 @@ returns:
 }
 ```
 
-## XXX [GET /templates/examples]
-Returns a HTML directory listing of the examples-folder.
-Use the gulptask **gulp examples** to generate examples based on testdata.
-
-## XXX [GET /templates/examples/{example}]
-Returns a rendered HTML template example.
-
 ## XXX [GET /templates/data]
 Returns JSON BONDAPI data from a URL
 
