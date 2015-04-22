@@ -14,7 +14,9 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     $scope.edit = $routeParams.operator === 'edit';
 
     $scope.dirty = false;
-    var after = moment().add(15, 'minutes');
+
+    $scope.schedule_after = 15;
+    $scope.schedule_at = moment();
 
     if ($scope.edit) {
 
@@ -42,9 +44,9 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         $scope.original_newsletters_name = $scope.newsletter.name;
 
         // Default 15 minuttes delay
-        $scope.newsletter.after = 15;
-        after = moment().add($scope.newsletter.after, 'minutes');
-        $scope.newsletter.at = moment().add($scope.newsletter.after, 'minutes');
+        // $scope.newsletter.after = 15;
+        // schedule_after = moment().add($scope.newsletter.after, 'minutes');
+        //$scope.newsletter.at = moment().add($scope.newsletter.after, 'minutes');
 
         suggestMarkeringEmailName();
 
@@ -156,14 +158,6 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       $scope.bonddatadirty = true;
     };
 
-    $scope.afterChanged = function () {
-      var temp = moment().add($scope.newsletter.after, 'minutes');
-      if (!moment(after).isSame(temp, 'day')) {
-        after = temp;
-        suggestMarkeringEmailName();
-        updatePreviews();
-      }
-    };
 
     function suggestMarkeringEmailName () {
       $scope.newsletter.name = $scope.original_newsletters_name + ' ' + moment().add($scope.newsletter.after, 'minutes').format("ddd D MMM YYYY");
@@ -226,8 +220,10 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
       $scope.loading_html_preview = true;
 
-      $scope.bonddata.at = $scope.newsletter.at;
-      $scope.bonddata.after = $scope.newsletter.after;
+      // $scope.bonddata.at = $scope.newsletter.at;
+      // $scope.bonddata.after = $scope.newsletter.after;
+      $scope.bonddata.timestamp = $scope.schedule_at ? moment($scope.schedule_at).unix() : moment().add($scope.schedule_after, 'minutes').unix();
+      console.log('update', $scope.schedule_at, $scope.schedule_after, $scope.bonddata.timestamp);
 
       var get_html = $http.post('/templates/' + $scope.newsletter.template_html, $scope.bonddata)
       .success(function (data, status, getHeaders) {
@@ -280,20 +276,23 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
 
     $scope.sendNewsletter = function () {
-      var sending = $http.post('/newsletters/send', $scope.newsletter)
-      .success(function () {
-        notifications.showSuccess('Email ' + $scope.newsletter.name + ' sendt');
-      })
-      .error(function (data, status) {
-        console.log('Error', status, data);
-        var error = data.message ? data.message :
-                    data.error ? data.error :
-                    data;
 
-        notifications.showError('Error: ' + error);
-      });
+      console.log('sending', $scope.schedule_at, $scope.schedule_after);
 
-      loadingSwitch.watch(sending, 'Sender');
+      // var sending = $http.post('/newsletters/send', $scope.newsletter)
+      // .success(function () {
+      //   notifications.showSuccess('Email ' + $scope.newsletter.name + ' sendt');
+      // })
+      // .error(function (data, status) {
+      //   console.log('Error', status, data);
+      //   var error = data.message ? data.message :
+      //               data.error ? data.error :
+      //               data;
+
+      //   notifications.showError('Error: ' + error);
+      // });
+
+      // loadingSwitch.watch(sending, 'Sender');
     };
 
 

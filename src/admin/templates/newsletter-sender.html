@@ -42,7 +42,6 @@
         <dt>Kategorier</dt>
         <dd>
           <ul class="list-inline">
-            <li>Kategorier:</li>
             <li ng-repeat="category in newsletter.categories">
               <span class="label label-info" style="background-color:#{{category|tocolor}}">{{category}}</span>
             </li>
@@ -60,18 +59,18 @@
         </button>
         <div class="checkbox">
           <label>
-            <input type="checkbox" ng-model="schedule_after"> V&aelig;lg tidspunkt for udsendelse
+            <input type="checkbox" ng-model="show_schedule_at_selector"> V&aelig;lg tidspunkt for udsendelse
           </label>
         </div>
-        <div class="dropdown form-group" ng-show="schedule_after">
+        <div class="dropdown form-group" ng-show="show_schedule_at_selector">
           <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown">
             <div class="input-group">
-              <input type="text" class="form-control" ng-model="newsletter.at">
+              <input type="text" class="form-control" ng-model="schedule_at">
               <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
             </div>
           </a>
           <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-            <datetimepicker ng-model="newsletter.at" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"/>
+            <datetimepicker ng-model="schedule_at" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"/>
           </ul>
         </div>
       </div>
@@ -88,17 +87,11 @@
         <li role="presentation" ng-click="currentTab = 'html'; updateHtmlPreview();" ng-class="{active:currentTab === 'html'}" _class="active">
           <a>
             HTML
-            <button type="button" class="btn btn-default btn-xs" ng-click="updateHtmlPreview()" ng-disabled="loading">
-              <span class="glyphicon glyphicon-refresh"></span>
-            </button>
           </a>
         </li>
         <li role="presentation" ng-click="currentTab = 'text'; updatePlainPreview();" ng-class="{active:currentTab === 'text'}">
           <a>
             TEXT
-            <button type="button" class="btn btn-default btn-xs" ng-click="updatePlainPreview()" ng-disabled="loading">
-              <span class="glyphicon glyphicon-refresh"></span>
-            </button>
           </a>
         </li>
         <li role="presentation" ng-click="currentTab = 'data';" ng-class="{active:currentTab === 'data'}"><a>Tilpas indhold</a></li>
@@ -115,6 +108,11 @@
       <div class="panel panel-default">
         <div class="panel-body">
           <p ng-show="loading_html_preview">Loading...</p>
+          <p class="text-right">
+            <button type="button" class="btn btn-default btn-xs" _ng-click="updateHtmlPreview()" ng-disabled="loading">
+              <span class="glyphicon glyphicon-refresh"></span>
+            </button>
+          </p>
           <iframe ng-hide="loading_html_preview" class="newsletter-preview" srcdoc="{{trusted_html_email_preview}}" onload='javascript:resizeIframe(this);'></iframe>
         </div>
       </div>
@@ -129,6 +127,11 @@
       <div class="panel panel-default">
         <div class="panel-body">
           <p ng-show="loading_plain_preview">Loading...</p>
+          <p class="text-right">
+            <button type="button" class="btn btn-default btn-xs" _ng-click="updatePlainPreview()" ng-disabled="loading">
+              <span class="glyphicon glyphicon-refresh"></span>
+            </button>
+          </p>
           <textarea ng-hide="loading_plain_preview" class="form-control newsletter-preview" style="background-color: white;" ng-model="newsletter.email_plain"></textarea>
         </div>
       </div>
@@ -142,12 +145,14 @@
       <div class="panel panel-default">
         <div class="panel-body">
           <div class="form-horizontal">
-            <button type="button" class="btn btn-warning" ng-click="getBondData()" ng-disabled="loading">
-              Reset indhold <span class="glyphicon glyphicon-trash"></span>
-            </button>
-            <a ng-href="{{ controlroom_url }}" target="_blank" class="btn btn-link" ng-disabled="loading">
-              &Aring;bn BOND Controlroom
-            </a>
+            <p class="text-right">
+              <button type="button" class="btn btn-warning" ng-click="getBondData()" ng-disabled="loading">
+                Reset indhold <span class="glyphicon glyphicon-trash"></span>
+              </button>
+              <a ng-href="{{ controlroom_url }}" target="_blank" class="btn btn-link" ng-disabled="loading">
+                &Aring;bn BOND Controlroom
+              </a>
+            </p>
             <div class="row node" ng-repeat="node in bonddata.nodes">
               <label class="col-xs-1 control-label">Artikel {{ $index + 1 }}</label>
               <div class="col-xs-9">
