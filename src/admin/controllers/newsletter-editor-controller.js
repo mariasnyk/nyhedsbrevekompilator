@@ -1,8 +1,6 @@
 app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', '$q', 'notifications', 'loadingSwitch',
   function ($scope, $routeParams, $location, $resource, $sce, $http, $q, notifications, loadingSwitch) {
 
-    // Defaulting the schedule with an added 15 minuttes
-    $scope.at = new Date(new Date().getTime() + 15*60000);
     $scope.currentTab = 'html';
 
     var Newsletters = $resource('/newsletters/:ident', { ident: '@ident' });
@@ -15,8 +13,9 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
     $scope.dirty = false;
 
+    // Defaulting the schedule with an added 15 minuttes
     $scope.schedule_after = 15;
-    $scope.schedule_at = moment();
+    $scope.schedule_at = moment().add(1, 'hours').startOf('hour').toISOString();
 
     if ($scope.edit) {
 
@@ -229,8 +228,8 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
       // $scope.bonddata.at = $scope.newsletter.at;
       // $scope.bonddata.after = $scope.newsletter.after;
-      $scope.bonddata.timestamp = $scope.schedule_at ? moment($scope.schedule_at).unix() : moment().add($scope.schedule_after, 'minutes').unix();
-      console.log('update', $scope.schedule_at, $scope.schedule_after, $scope.bonddata.timestamp);
+      $scope.bonddata.timestamp = $scope.schedule_at_specified ? moment($scope.schedule_at).unix() : moment().add($scope.schedule_after, 'minutes').unix();
+      console.log('update', $scope.schedule_at, $scope.schedule_after, $scope.bonddata.timestamp, moment.unix($scope.bonddata.timestamp));
 
       var get_html = $http.post('/templates/' + $scope.newsletter.template_html, $scope.bonddata)
       .success(function (data, status, getHeaders) {

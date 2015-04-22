@@ -56,17 +56,17 @@
   </div>
 
   <div class="row">
-    <div class="col-md-8 col-sm-12">
+    <div class="col-xs-12">
       <div class="form-inline">
         <button type="button" class="btn btn-success" ng-click="sendNewsletter()" ng-disabled="loading || bonddatadirty">
           Send <span class="glyphicon glyphicon-envelope"></span>
         </button>
         <div class="checkbox">
           <label>
-            <input type="checkbox" ng-model="show_schedule_at_selector"> V&aelig;lg tidspunkt for udsendelse
+            <input type="checkbox" ng-model="schedule_at_specified"> V&aelig;lg tidspunkt for udsendelse
           </label>
         </div>
-        <div class="dropdown form-group" ng-show="show_schedule_at_selector">
+        <div class="dropdown form-group" ng-show="schedule_at_specified">
           <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown">
             <div class="input-group">
               <input type="text" class="form-control" ng-model="schedule_at">
