@@ -33,11 +33,13 @@
     </div>
     <div class="col-md-4 col-sm-12">
       <dl class="dl-horizontal well">
-        <dt>Nyhedsbrev</dt>
-        <dd>{{ original_newsletters_name }}
+        <dt>
           <a title="Indstillinger" class="btn btn-default btn-xs" ng-click="openNewsletterEditor()">
             <span class="glyphicon glyphicon-edit"></span>
           </a>
+          Nyhedsbrev
+        </dt>
+        <dd>{{ original_newsletters_name }}
         </dd>
         <dt>Afsender</dt>
         <dd>{{ newsletter.identity }}</dd>
