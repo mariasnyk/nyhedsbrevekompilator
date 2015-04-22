@@ -1,7 +1,7 @@
 {% extends "partials/bt.html" %}
 {% set disableBTbackground = true; %}
 
-{% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + "YYYYMMDD" | moment + "&ns_linkname=bt_modeskonhed"; %}
+{% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + timestamp | yyyymmdd + "&ns_linkname=bt_modeskonhed"; %}
 {% set home_url = "http://www.bt.dk/sektion/modeogskonhed"; %}
 {% set logo_src = "http://nlstatic.berlingskemedia.dk/headers/bt_mode.png"; %}
 {% set unsubscribe_href = "http://nyhedsbreve.btdk-mail.dk/index.php?eksternid=[ekstern_id]&medieid=4" %}

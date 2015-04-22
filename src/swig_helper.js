@@ -38,6 +38,12 @@ swig.setFilter('tracking', function (format, after, at) {
   } else {
     return moment().format(format);
   }
+
 });
+
+swig.setFilter('yyyymmdd', function (timestamp) {
+  return moment.unix(timestamp).format('YYYYMMDD');
+});
+
 
 module.exports = swig;

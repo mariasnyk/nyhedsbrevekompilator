@@ -1,6 +1,6 @@
 {% extends "partials/mjm.html" %}
 
-{% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + "YYYYMMDD" | moment + "&ns_linkname=viborg_update"; %}
+{% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + timestamp | yyyymmdd + "&ns_linkname=viborg_update"; %}
 {% set home_url = "http://viborg-folkeblad.dk"; %}
 {% set logo_src = "http://nlstatic.berlingskemedia.dk/headers/viborg_update.png"; %}
 {% set unsubscribe_href = "http://nyhedsbreve.viborg-folkeblad-mail.dk/?eksternid=[ekstern_id]" %}
