@@ -8,7 +8,6 @@ var fs = require('fs'),
     swig = require('./swig_helper.js'),
     checksum = require('checksum'),
     templatesDir = path.join(__dirname, '/../templates'),
-    examplesDir = path.join(__dirname, '/../examples'),
     testdataDir = path.join(__dirname, '/../testdata');
 
 if (!fs.existsSync(testdataDir)) {
@@ -56,17 +55,6 @@ module.exports.register = function (plugin, options, next) {
           }));
       });
     }
-  });
-
-  plugin.route({
-      method: 'GET',
-      path: '/examples/{test*}',
-      handler: {
-          directory: {
-              path: examplesDir,
-              listing: true
-          }
-      }
   });
 
   plugin.route({

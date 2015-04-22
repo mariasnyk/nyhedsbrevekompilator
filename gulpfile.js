@@ -5,7 +5,6 @@ var gulp = require('gulp'),
     fs = require ('fs'),
     http = require ('http'),
     swig = require('./src/swig_helper.js'),
-    examplesDir = path.join(__dirname, 'examples'),
     templatesDir = path.join(__dirname, 'templates'),
     testdataDir = path.join(__dirname, 'testdata');
 
@@ -54,19 +53,6 @@ gulp.task('build', ['lint', 'test'], function() {
     Each template used testdata from <templateName>.json
 */
 
-gulp.task('templating', ['examples'], function () {
-  gulp.watch('templates/*/*', function (event) {
-    renderAllExamples();
-  });
-
-  gulp.watch('templates/*', function (event) {
-    renderExample(event.path);
-  });
-
-  console.log('Watching templates...');
-});
-
-
 gulp.task('testdata', function () {
   downloadTestdata('bt', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/31.ave-json?image_preset=620x355-c');
   downloadTestdata('bt_nyheder', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/102.ave-json?image_preset=620x355-c');
@@ -96,44 +82,6 @@ gulp.task('testdata', function () {
   downloadTestdata('berlingske_politiko', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5902.ave-json?image_preset=620x355-c');
   downloadTestdata('berlingske_politiko-breaking', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5903.ave-json?image_preset=620x355-c');
 });
-
-gulp.task('examples', function () {
-  renderAllExamples();
-});
-
-
-function renderAllExamples () {
-
-  console.log('Rendering all examples...');
-
-  fs.readdirSync(templatesDir).forEach(function (file) {
-    var templatePath = path.join(templatesDir, file);
-    if (fs.statSync(templatePath).isFile()) {
-      renderExample(templatePath);
-    }
-  });
-}
-
-function renderExample (templatePath) {
-
-  var templateName = path.basename(templatePath),
-      testdata = path.join(testdataDir, templateName.replace('.html', '.json'));
-      
-
-  if (!fs.existsSync(testdata)) {
-    console.error('Testdata', testdata, 'not found');
-    return;
-  }
-
-  if (!fs.existsSync(examplesDir)) {
-    fs.mkdirSync(examplesDir);
-  }
-
-  var exampleName = path.join(examplesDir, templateName);
-
-  fs.writeFileSync(exampleName, swig.renderFile(templatePath, require(testdata)));
-  console.log(exampleName, 'updated');
-}
 
 function downloadTestdata (name, url) {
   var filename = name + '.json';
