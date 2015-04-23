@@ -24,12 +24,13 @@
           type="text"
           ng-model="newsletter.name"
           ng-change="setDirty()"
+          ng-disabled="newsletter_sent"
           placeholder="Insert name"/>
-        <small>Note: Bannere og tracking er dateret med {{ schedule_date }}</small>
+        <small>Note: <em>Navn</em> bruges til statistik og opf&oslash;lgning. Ikke som tidspunkt for udsendelse.<br>Bannere og tracking er dateret med <strong>{{ schedule_date }}</strong></small>
       </div>
       <div class="form-group">
         <label for="subject">Emnefelt</label>
-        <input id="subject" type="text" class="form-control" ng-model="newsletter.subject">
+        <input id="subject" type="text" class="form-control" ng-model="newsletter.subject" ng-disabled="newsletter_sent">
       </div>
     </div>
     <div class="col-md-4 col-sm-12">
@@ -61,12 +62,12 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="form-inline">
-        <button type="button" class="btn btn-success" ng-click="sendNewsletter()" ng-disabled="loading || bonddatadirty">
+        <button type="button" class="btn btn-success" ng-click="sendNewsletter()" ng-disabled="loading || bonddatadirty || newsletter_sent">
           Send <span class="glyphicon glyphicon-envelope"></span>
         </button>
         <div class="checkbox">
           <label>
-            <input type="checkbox" ng-model="schedule_at_specified"> V&aelig;lg tidspunkt for udsendelse
+            <input type="checkbox" ng-change="scheduleChanged()" ng-model="schedule_at_specified"> V&aelig;lg tidspunkt for udsendelse
           </label>
         </div>
         <div class="dropdown form-group" ng-show="schedule_at_specified">
@@ -77,7 +78,7 @@
             </div>
           </a>
           <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-            <datetimepicker ng-model="schedule_at" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"/>
+            <datetimepicker ng-change="scheduleChanged()" ng-model="schedule_at" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"/>
           </ul>
         </div>
       </div>

@@ -21,7 +21,7 @@ app.config(['$routeProvider', function ($routeProvider) {
       templateUrl: 'templates/howto.html'})
     .when( '/:ident', {
       templateUrl: 'templates/newsletter-sender.html',
-      controller: 'NewsletterEditorController' })
+      controller: 'NewsletterSenderController' })
     .when( '/:ident/:operator', {
       templateUrl: 'templates/newsletter-editor.html',
       controller: 'NewsletterEditorController' })

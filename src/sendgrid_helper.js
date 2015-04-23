@@ -2,7 +2,8 @@
 'use strict';
 
 var http = require('http'),
-    https = require('https');
+    https = require('https'),
+    moment = require('moment');
 
 
 module.exports.getIdentities = function (callback) {
@@ -78,10 +79,9 @@ module.exports.sendMarketingEmail = function (newsletter, callback) {
   createMarketingEmail(newsletter, function (err, result) {
     if (err) return callback(err);
 
-    addSendGridSchedule(newsletter.name, newsletter.after, function (err) {
+    addSendGridSchedule(newsletter.name, newsletter.at, newsletter.after, function (err) {
       if (err) callback(err);
       else {
-        console.log('Schedule of ' + newsletter.after + ' minuttes added to marketing email ' + newsletter.name + '.' );
         callback(null, { message: 'Sent' });
       }
     });
@@ -175,25 +175,42 @@ function addSendGridRecipients (list, name, callback) {
   callSendGrid('/api/newsletter/recipients/add.json', body, callback); 
 }
 
-
-function addSendGridSchedule (name, after, callback) {
+function addSendGridSchedule (name, at, after, callback) {
 
   if (typeof after === 'function' && callback === undefined) {
     callback = after;
     after = null;
+  } else if (typeof at === 'function' && after === undefined && callback === undefined) {
+    callback = at;
+    at = null;
   }
 
-  var body = 'name=' + encodeURIComponent(name);// +
-    //(after !== undefined && after !== null && after !== '' ? '&after=' + after : '');
+  var body = 'name=' + encodeURIComponent(name);
 
-  if (after !== null) {
+  if (at !== undefined && at !== null) {
+    var temp = moment(at);
+
+    if (temp.isValid()) {
+      if (moment().isBefore(temp)) {
+        body = body + '&at=' + temp.toISOString();
+        console.log('Scheduling email ' + name + ' at ' + at);
+      } else {
+        console.log('Scheduling email ' + name + ' now because ' + at + ' is in the past.');
+      }
+    } else {
+      return callback({ message: 'Field at (' + at + ') is not a valid ISO date.' });
+    }
+  } else if (after !== undefined && after !== null) {
     var temp = Number.parseInt(after);
 
     if (isNaN(temp) || temp < 0) {
       return callback({ message: 'Field after (' + after + ') is not a valid positive number.' });
     } else {
       body = body + '&after=' + temp.toString();
+      console.log('Scheduling email ' + name + ' after ' + after);
     }
+  } else {
+    console.log('Scheduling email ' + name + ' now');
   }
 
   callSendGrid('/api/newsletter/schedule/add.json', body, callback);
