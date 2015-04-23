@@ -1,0 +1,4 @@
+{% block content %}{% for node in nodes %} {% if loop.index < 15 %} {{ node.title | safe }} {% endif %}
+   > {{ node.url }}
+
+{% endfor %}{% endblock %}
