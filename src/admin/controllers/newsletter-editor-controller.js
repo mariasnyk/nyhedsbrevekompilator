@@ -17,6 +17,8 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     $scope.schedule_after = 15;
     $scope.schedule_at = moment().add(1, 'hours').startOf('hour');
 
+    // $scope.schedule_date = $scope.schedule_at_specified ? moment($scope.schedule_at).
+
     if ($scope.edit) {
 
 
@@ -160,7 +162,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       $scope.bonddatadirty = true;
     };
 
-    $scope.afterChanged = function () {
+    $scope.scheduleChanged = function () {
       var temp = moment().add($scope.newsletter.after, 'minutes');
       if (!moment(after).isSame(temp, 'day')) {
         after = temp;

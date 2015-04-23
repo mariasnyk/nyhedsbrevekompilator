@@ -16,7 +16,7 @@
     <div class="col-md-8 col-sm-12">
       <div class="form-group">
         <label for="name_control">
-          <abbr title="Bruges til statistik og opf&oslash;lgning">Navn</abbr>
+          <abbr title="Bruges til statistik og opf&oslash;lgning. Ikke som tidspunkt for udsendelse.">Navn</abbr>
         </label>
         <input
           id="name_control"
@@ -25,6 +25,7 @@
           ng-model="newsletter.name"
           ng-change="setDirty()"
           placeholder="Insert name"/>
+        <small>Note: Bannere og tracking er dateret med {{ schedule_date }}</small>
       </div>
       <div class="form-group">
         <label for="subject">Emnefelt</label>
@@ -59,11 +60,19 @@
 
   <div class="row">
     <div class="col-xs-12">
-      <div class="form-inline text-right">
+      <div class="form-inline">
+        <button type="button" class="btn btn-success" ng-click="sendNewsletter()" ng-disabled="loading || bonddatadirty">
+          Send <span class="glyphicon glyphicon-envelope"></span>
+        </button>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" ng-model="schedule_at_specified"> V&aelig;lg tidspunkt for udsendelse
+          </label>
+        </div>
         <div class="dropdown form-group" ng-show="schedule_at_specified">
           <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown">
             <div class="input-group">
-              <input type="text" class="form-control" ng-model="schedule_at" ng-change="afterChanges()">
+              <input type="text" class="form-control" ng-model="schedule_at" ng-change="scheduleChanged()">
               <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
             </div>
           </a>
@@ -71,14 +80,6 @@
             <datetimepicker ng-model="schedule_at" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"/>
           </ul>
         </div>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" ng-model="schedule_at_specified"> V&aelig;lg tidspunkt for udsendelse
-          </label>
-        </div>
-        <button type="button" class="btn btn-success" ng-click="sendNewsletter()" ng-disabled="loading || bonddatadirty">
-          Send <span class="glyphicon glyphicon-envelope"></span>
-        </button>
       </div>
     </div>
   </div>
