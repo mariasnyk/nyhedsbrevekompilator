@@ -15,7 +15,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
     // Defaulting the schedule with an added 15 minuttes
     $scope.schedule_after = 15;
-    $scope.schedule_at = moment().add(1, 'hours').startOf('hour').toISOString();
+    $scope.schedule_at = moment().add(1, 'hours').startOf('hour');
 
     if ($scope.edit) {
 
@@ -40,14 +40,10 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
       // If we're not editing the newsletter, we don't need to fetch the dop-down data from e.g. SendGrid
       $scope.newsletter = Newsletters.get({ident: $routeParams.ident}, function () {
+
         $scope.original_newsletters_name = $scope.newsletter.name;
 
-        // Default 15 minuttes delay
-        // $scope.newsletter.after = 15;
-        // schedule_after = moment().add($scope.newsletter.after, 'minutes');
-        //$scope.newsletter.at = moment().add($scope.newsletter.after, 'minutes');
-
-        suggestMarkeringEmailName();
+        suggestMarketingEmailName();
 
         getBondDataAndUpdatePreviews();
 
@@ -164,8 +160,16 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       $scope.bonddatadirty = true;
     };
 
+    $scope.afterChanged = function () {
+      var temp = moment().add($scope.newsletter.after, 'minutes');
+      if (!moment(after).isSame(temp, 'day')) {
+        after = temp;
+        suggestMarketingEmailName();
+        updatePreviews();
+      }
+    };
 
-    function suggestMarkeringEmailName () {
+    function suggestMarketingEmailName () {
       $scope.newsletter.name = $scope.original_newsletters_name + ' ' + moment().add($scope.newsletter.after, 'minutes').format("ddd D MMM YYYY");
     }
 
@@ -226,10 +230,9 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
       $scope.loading_html_preview = true;
 
-      // $scope.bonddata.at = $scope.newsletter.at;
-      // $scope.bonddata.after = $scope.newsletter.after;
-      $scope.bonddata.timestamp = $scope.schedule_at_specified ? moment($scope.schedule_at).unix() : moment().add($scope.schedule_after, 'minutes').unix();
-      console.log('update', $scope.schedule_at, $scope.schedule_after, $scope.bonddata.timestamp, moment.unix($scope.bonddata.timestamp));
+      $scope.bonddata.timestamp = $scope.schedule_at_specified
+        ? moment($scope.schedule_at).unix()
+        : moment().add($scope.schedule_after, 'minutes').unix();
 
       var get_html = $http.post('/templates/' + $scope.newsletter.template_html, $scope.bonddata)
       .success(function (data, status, getHeaders) {
@@ -283,7 +286,15 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
     $scope.sendNewsletter = function () {
 
-      console.log('sending', $scope.schedule_at, $scope.schedule_after);
+      if ($scope.schedule_at_specified) {
+        $scope.newsletter.at = '';
+      } else {
+        $scope.newsletter.after = 5;
+      }
+        // ? moment($scope.schedule_at).unix()
+        // : moment().add($scope.schedule_after, 'minutes').unix();
+
+      console.log('sending', $scope.newsletter);
 
       // var sending = $http.post('/newsletters/send', $scope.newsletter)
       // .success(function () {
