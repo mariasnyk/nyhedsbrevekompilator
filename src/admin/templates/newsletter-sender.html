@@ -185,7 +185,7 @@
                   class="form-control"
                   type="text"
                   rows="3"
-                  ng-init="has_bt_plus = hasCategory('BT Plus')"
+                  ng-init="has_bt_plus = hasCategory(['BT Plus', 'BT Breaking News'])"
                   ng-show="has_bt_plus"
                   ng-model="node.custom_summary"
                   ng-change="changeNodeTitle()"
