@@ -91,9 +91,14 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     };
 
     $scope.hasCategory = function (category) {
-      console.log('COMP')
       return $scope.newsletter.categories.some(function (cat) {
-        return cat === category;
+        if (typeof category === 'string') {
+          return cat === category;
+        } else if(category instanceof Array) {
+          return category.indexOf(cat) > -1;
+        } else {
+          return false;
+        }
       });
     };
 
