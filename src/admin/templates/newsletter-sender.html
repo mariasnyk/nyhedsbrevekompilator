@@ -181,6 +181,16 @@
                   ng-change="changeNodeTitle()"
                   ng-blur="blurNodeTitle()"
                   placeholder="Underrubrik"></textarea>
+                <textarea
+                  class="form-control"
+                  type="text"
+                  rows="3"
+                  ng-init="has_bt_plus = hasCategory('BT Plus')"
+                  ng-show="has_bt_plus"
+                  ng-model="node.custom_summary"
+                  ng-change="changeNodeTitle()"
+                  ng-blur="blurNodeTitle()"
+                  placeholder="BT Plus"></textarea>
                 <input
                   class="form-control"
                   type="text"

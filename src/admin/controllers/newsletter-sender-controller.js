@@ -90,6 +90,13 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       setScheduleDateLabel();
     };
 
+    $scope.hasCategory = function (category) {
+      console.log('COMP')
+      return $scope.newsletter.categories.some(function (cat) {
+        return cat === category;
+      });
+    };
+
     function setScheduleDateLabel () {
       $scope.schedule_date = $scope.schedule_at_specified
         ? moment($scope.schedule_at).format('ddd D MMM YYYY')

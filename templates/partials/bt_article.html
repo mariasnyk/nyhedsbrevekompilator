@@ -89,6 +89,16 @@
           </font>
         </div>
 
+        {% if node.custom_summary %}
+        <div style="text-align: left; line-height: 100%; padding-top: 16px;">
+          <font
+            color="#1A1A1A"
+            style="font-family: 'Helvetica Neue', Helvetica, Arial, Verdana, sans-serif; font-weight: bold; text-decoration: none; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+            {{ node.custom_summary }}
+          </font>
+        </div>
+        {% endif %}
+
         {% if node.calltoaction %}
         <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
           <font
