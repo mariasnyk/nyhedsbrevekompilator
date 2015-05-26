@@ -99,6 +99,12 @@
     </tr>
     <tr>
       <td align="center" valign="top">
+        {% block story_appendix %}
+        {% endblock %}
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="top">
         <!-- Wide banner -->
         {% block wide_banner_1 %}
         {% endblock %}
@@ -140,6 +146,7 @@
       {% endif %}
 
       {% if loop.index === 5 %}
+        {% set box_banner_1_inserted = true %}
         <tr>
           <td align="center" valign="top">
             <!-- First 4:3 beerbox banner -->
@@ -160,8 +167,10 @@
         </tr>
       {% endif %}
     {% endfor %}
+
     <tr>
       <td align="center" valign="top">
+        {% block read_more %}
         <!-- Read more -->
         <hr style="height: 1px; border: 0; background: #dddddd">
         <a href="{{ home_url }}?{{ tracking }}" style="text-decoration: none;">
@@ -172,8 +181,10 @@
           </div>
         </a>
         <!-- Read more END -->
+        {% endblock %}
       </td>
     </tr>
+
     {% if box_banner_2_inserted !== true %}
     <tr>
       <td align="center" valign="top">
