@@ -1,5 +1,6 @@
 {% extends "partials/bt.html" %}
 
+
 {% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + timestamp | yyyymmdd + "&ns_linkname=bt_plus"; %}
 {% set home_url = "http://www.bt.dk"; %}
 {% set logo_src = "http://placehold.it/654x57"; %}
@@ -26,4 +27,21 @@
 {% block box_banner_2 %}
 {% set cu = "27672"; %}
 {% include "partials/banner.html" %}
+{% endblock %}
+
+{% block permission_intro %}
+{% endblock %}
+
+{% block permission_1 %}
+{% set cu = "28359"; %}
+{% set hide_annonce_background = true; %}
+{% set hide_annonce_label = true; %}
+{# include "partials/banner.html" #}
+{% endblock %}
+
+{% block permission_2 %}
+{% set cu = "28360"; %}
+{% set hide_annonce_background = true; %}
+{% set hide_annonce_label = true; %}
+{# include "partials/banner.html" #}
 {% endblock %}
