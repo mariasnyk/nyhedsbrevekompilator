@@ -4,7 +4,8 @@
   "description": "User DB",
   "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/server.js",
+    "build": "sudo docker build -t bmdako/userdb:$npm_package_version . && sudo docker tag bmdako/userdb:$npm_package_version bmdako/userdb:latest"
   },
   "author": "Berlingske Media",
   "license": "ISC",
