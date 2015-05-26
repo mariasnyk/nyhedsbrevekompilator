@@ -5,11 +5,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
     var Newsletters = $resource('/newsletters/:ident', { ident: '@ident' });
     var Identities = $resource('/newsletters/identities');
-    var Categories = $resource('/newsletters/categories');
     var Lists = $resource('/newsletters/lists/:list', { list: '@list' });
-    var Templates = $resource('/templates/:name', { name: '@name' });
-
-    $scope.edit = $routeParams.operator === 'edit';
 
     $scope.dirty = false;
 
@@ -20,57 +16,37 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     // $scope.schedule_date = $scope.schedule_at_specified ? moment($scope.schedule_at).
     setScheduleDateLabel();
 
-    if ($scope.edit) {
+    // If we're not editing the newsletter, we don't need to fetch the dop-down data from e.g. SendGrid
+    $scope.newsletter = Newsletters.get({ident: $routeParams.ident}, function () {
 
+      $scope.original_newsletters_name = $scope.newsletter.name;
 
-      $scope.identities = Identities.query();
-      $scope.categories = Categories.query();
-      $scope.lists = Lists.query();
-      $scope.html_templates = Templates.query({filter:'.html'});
-      $scope.plain_templates = Templates.query({filter:'.plain'});
+      suggestMarketingEmailName();
 
-      // Waiting for the drop-down data to be fetched before we query the newsletter.
-      // This is done so that drop-downs are populated and the equivalent newsletter value is selected in the drop-down.
-      var all = $q.all([$scope.identities.$promise, $scope.categories.$promise, $scope.lists.$promise, $scope.html_templates.$promise, $scope.plain_templates.$promise]).then(function () {
-        $scope.newsletter = Newsletters.get({ ident: $routeParams.ident }, function () { /* All OK. */ }, resourceErrorHandler);
+      getBondDataAndUpdatePreviews();
 
-        loadingSwitch.watch($scope.newsletter);
-      });
+      getControlroomUrl();
 
-      loadingSwitch.watch(all);
+      // Populating the drop downs so newsletter values are visible
+      $scope.html_templates = [$scope.newsletter.template_html];
+      $scope.plain_templates = [$scope.newsletter.template_plain];
+      $scope.identities = [$scope.newsletter.identity];
+      $scope.lists = [$scope.newsletter.list];
+      $scope.safe_bond_url = encodeURIComponent($scope.newsletter.bond_url);
 
-    } else {
+      // TODO: Maybe we should validate the Identity also, like we do with Lists
 
-      // If we're not editing the newsletter, we don't need to fetch the dop-down data from e.g. SendGrid
-      $scope.newsletter = Newsletters.get({ident: $routeParams.ident}, function () {
-
-        $scope.original_newsletters_name = $scope.newsletter.name;
-
-        suggestMarketingEmailName();
-
-        getBondDataAndUpdatePreviews();
-
-        getControlroomUrl();
-
-        // Populating the drop downs so newsletter values are visible
-        $scope.html_templates = [$scope.newsletter.template_html];
-        $scope.plain_templates = [$scope.newsletter.template_plain];
-        $scope.identities = [$scope.newsletter.identity];
-        $scope.lists = [$scope.newsletter.list];
-        $scope.safe_bond_url = encodeURIComponent($scope.newsletter.bond_url);
-
-        // Validating the list still exists in SendGrid
-        Lists.query({ list: $scope.newsletter.list}, function (response) {
-          if (response[0] === undefined || response[0].list !== $scope.newsletter.list) {
-            console.log('Couldn\'t find list ' + $scope.newsletter.list + ' in SendGrid.');
-            $scope.lists = ['ERROR'];
-          }
-        }, resourceErrorHandler);
-
+      // Validating the list still exists in SendGrid
+      Lists.query({ list: $scope.newsletter.list}, function (response) {
+        if (response[0] === undefined || response[0].list !== $scope.newsletter.list) {
+          console.log('Couldn\'t find list ' + $scope.newsletter.list + ' in SendGrid.');
+          $scope.lists = ['ERROR'];
+        }
       }, resourceErrorHandler);
 
-      loadingSwitch.watch($scope.newsletter);
-    }
+    }, resourceErrorHandler);
+
+    loadingSwitch.watch($scope.newsletter);
 
 
     function resourceErrorHandler (response) {
@@ -80,67 +56,12 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       }
     }
 
-
-    $scope.addCategory = function (clickEvent, category) {
-      if ($scope.newsletter.categories === undefined) {
-        $scope.newsletter.categories = [];
-      }
-
-      if (category) {
-        $scope.newCategory = category
-      }
-
-      if (clickEvent.keyCode === 13 || category) {
-        if ($scope.newCategory !== '') {
-          $scope.newCategory.split(',').forEach( function (category) {
-            category = category.trim();
-            if ($scope.newsletter.categories.indexOf(category) === -1) {
-              $scope.newsletter.categories.push(category);
-              $scope.dirty = true;
-            }
-          });
-          $scope.newCategory = '';
-        }
-      }
-    };
-
-
-    $scope.removeCategory = function (categoryIndex) {
-      $scope.newsletter.categories.splice(categoryIndex, 1);
-      $scope.dirty = true;
-    };
-
-
-    $scope.saveNewsletter = function () {
-      var saving = Newsletters.save({ ident: $routeParams.ident }, $scope.newsletter, function (success) {
-        notifications.showSuccess('Gemt');
-        console.log('Success saving template.');
-        $scope.dirty = false;
-      });
-      loadingSwitch.watch(saving, 'Saving');
-    };
-
     $scope.openNewsletterEditor = function () {
       $location.url('/' + $routeParams.ident + '/edit');
     };
 
     $scope.closeNewsletterSender = function () {
       $location.url('/');
-    };
-
-    $scope.closeNewsletterEditor = function () {
-      if ($scope.dirty === false || confirm("Sikker på du vil lukke uden at gemme dine ændringer?")) {
-        $location.url('/' + $routeParams.ident);
-      }
-    };
-
-    $scope.deleteNewsletter = function () {
-      if (confirm("Er du sikker på du ønsker at slette dette nyhedsbrev?\nDenne handling kan ikke fortrydes!")) {
-        var deleting = Newsletters.delete({ ident: $routeParams.ident }, function () {
-          $location.url('/');
-        });
-        loadingSwitch.watch(deleting, 'Deleting');
-      }
     };
 
     $scope.setDirty = function () {
