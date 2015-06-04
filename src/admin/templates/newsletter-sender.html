@@ -16,7 +16,7 @@
     <div class="col-md-8 col-sm-12">
       <div class="form-group">
         <label for="name_control">
-          <abbr title="Bruges til statistik og opf&oslash;lgning. Ikke som tidspunkt for udsendelse.">Navn</abbr>
+          <abbr title="Bruges til statistik og opf&oslash;lgning. Ikke som tidspunkt for udsendelse.">Internt navn</abbr>
         </label>
         <input
           id="name_control"
@@ -155,10 +155,10 @@
           <div class="form-horizontal">
             <p class="text-right">
               <button type="button" class="btn btn-warning" ng-click="getBondData()" ng-disabled="loading">
-                Reset indhold <span class="glyphicon glyphicon-trash"></span>
+                Reset med nyt indhold fra BOND <span class="glyphicon glyphicon-trash"></span>
               </button>
               <a ng-href="{{ controlroom_url }}" target="_blank" class="btn btn-link" ng-disabled="loading">
-                &Aring;bn BOND Controlroom
+                &Aring;bn nodek&oslash; i BOND
               </a>
             </p>
             <div class="row node" ng-repeat="node in bonddata.nodes">
