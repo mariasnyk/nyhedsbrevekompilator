@@ -4,9 +4,12 @@
   {% for tag in node.taxonomyTags.primary %}
     {% if tag.id == "1363" %} {% set primary_tag = tag.tag %} {# Nationalt #}
     {% elif tag.id == "1364" %} {% set primary_tag = tag.tag %} {# Globalt #}
+    {% elif tag.id == "1369" %} {% set primary_tag = tag.tag %} {# Viden #}
     {% elif tag.id == "1373" %} {% set primary_tag = tag.tag %} {# Kultur #}
     {% elif tag.id == "67649" %} {% set primary_tag = tag.tag %} {# Tech #}
-    {% elif tag.id == "329960" %} {% set primary_tag = tag.tag %} {# Politisk morgenpost #} {% endif %}
+    {% elif tag.id == "329416" %} {% set primary_tag = tag.tag %} {# Nyheder #}
+    {% elif tag.id == "329960" %} {% set primary_tag = tag.tag %} {# Politisk morgenpost #}
+    {% endif %}
   {% endfor %}
 {% endif %}
 
@@ -41,23 +44,6 @@
           {{ primary_tag }}
         </font>
       </span>
-      &nbsp;
-      <span style="padding: 1px 8px 3px 8px; background: #ffff;">
-        <font
-          color="#1A1A1A"
-          style="font-family: {{ font_family_sans }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
-          {{ '' | moment(node.dateCreated) }}
-        </font>
-      </span>
-    </div>
-    {% else %}
-    <div style="text-align: left; line-height: 100%; padding-top: 3px; padding-bottom: 5px;">
-      <font
-        color="#1A1A1A"
-        style="font-family: {{ font_family_sans }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
-        {{ '' | moment(node.dateCreated) }}
-      </font>
-    </div>
     {% endif %}
 
     <div style="text-align: left; line-height: 100%; padding-top: 5px;">

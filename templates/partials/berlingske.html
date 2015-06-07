@@ -86,6 +86,13 @@
     <tr>
       <td align="center" valign="top">
         <!-- Top logo -->
+        <div style="text-align: left; line-height: 100%; padding-left: 20px;">
+          <font
+            color="#1A1A1A"
+            style="font-family: {{ font_family_sans }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
+            {{ 'dddd D MMMM' | moment(timestamp) }}
+          </font>
+        </div>
         <img style="width: 100%;" src="{{ logo_src }}" width="654" usemap="#imgmap">
         <map name="imgmap">
           <area shape="rect" coords="0,0,491,97" href="{{ home_url }}?{{ tracking }}">
