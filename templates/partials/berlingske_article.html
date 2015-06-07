@@ -2,7 +2,9 @@
 {% set primary_tag = null %}
 {% if node.taxonomyTags.primary %}
   {% for tag in node.taxonomyTags.primary %}
-    {% if tag.id == "1363" %} {% set primary_tag = tag.tag %} {# Nationalt #}
+    {% if tag.id != "2" %} {% set primary_tag = tag.tag %} {# wwww.b.dk #}
+    {# elif'erne nedenfor kan i princippet slettes, men står der i tilfældet de skal bruges senere. #}
+    {% elif tag.id == "1363" %} {% set primary_tag = tag.tag %} {# Nationalt #}
     {% elif tag.id == "1364" %} {% set primary_tag = tag.tag %} {# Globalt #}
     {% elif tag.id == "1369" %} {% set primary_tag = tag.tag %} {# Viden #}
     {% elif tag.id == "1373" %} {% set primary_tag = tag.tag %} {# Kultur #}
@@ -37,9 +39,9 @@
 
     {% if primary_tag %}
     <div style="text-align: left; line-height: 100%; padding-top: 3px; padding-bottom: 5px;">
-      <span style="padding: 1px 8px 3px 8px; background: #13183D;">
+      <span style="padding: 1px 0px 3px 0px;">
         <font
-          color="#ffffff"
+          color="#3795a0"
           style="font-family: {{ font_family_sans }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
           {{ primary_tag }}
         </font>
