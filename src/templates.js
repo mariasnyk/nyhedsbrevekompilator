@@ -302,31 +302,10 @@ function download (url, callback) {
 
 function prepareData (data) {
   data.subject = subjectSuggestion(data);
-  data.checksum = calculateChecksum(data);
-  prepareNode(data);
+  addPaywallToken(data);
   return data;
 }
 
-function prepareNode (node) {
-  if (node.type === 'nodequeue' || node.type === 'latest_news') {
-    node.nodes.forEach(prepareNode);
-  } else {
-    node.newsl_access = calculatePaywallToken(node.id);
-
-    // if (node.type === 'news_article') {
-    //   node.calltoaction = 'Læs mere';
-    // } else if (node.type === 'image_gallery') {
-    //   node.image_count = Object.keys(node.images).length;
-    //   node.calltoaction = 'Se ' + node.image_count + ' billeder';
-    // } else if (node.type === 'news_article_external') {
-    //   node.calltoaction = 'Læs mere';
-    // } else if (node.type === 'webtv_link') {
-    //   node.calltoaction = 'Se TV-klip';
-    // } else {
-    //   node.calltoaction = 'Læs mere';
-    // }
-  }
-}
 
 function subjectSuggestion (data) {
   if (data === null) return '';
@@ -346,18 +325,11 @@ function subjectSuggestion (data) {
 }
 
 
-function calculateChecksum (data) {
-  if (data === null) return '';
-  if (data.type === 'nodequeue' || data.type === 'latest_news') {
-
-    var temp = data.nodes.map(function (node) {
-      return node.id;
-    });
-
-    return checksum(JSON.stringify(temp));
-
+function addPaywallToken (node) {
+  if (node.type === 'nodequeue' || node.type === 'latest_news') {
+    node.nodes.forEach(prepareNode);
   } else {
-    return checksum(JSON.stringify(data.id));
+    node.newsl_access = calculatePaywallToken(node.id);
   }
 }
 

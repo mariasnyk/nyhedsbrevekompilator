@@ -287,20 +287,9 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       var newsletter = request.payload;
 
-      var checksum = calculateChecksum(newsletter);
-
-      // TODO: Maybe validation this code down to validateNewsletterPayload?
-      // validateLastChecksum(newsletter.list, checksum, function (err) {
-      //   if (err) return reply(err).code(500);
-
-        sendgrid.sendMarketingEmail(newsletter, function (err, result) {
-          if (err) return reply(err).code(500);
-
-          // updateLastChecksum(newsletter.list, checksum, function (err) {
-            // if (err) reply(err).code(500);
-            else reply({ message: 'Sent' });
-          // });
-        // });
+      sendgrid.sendMarketingEmail(newsletter, function (err, result) {
+        if (err) return reply(err).code(500);
+        else reply({ message: 'Sent' });
       });
     }
   });
@@ -322,7 +311,7 @@ module.exports.register = function (plugin, options, next) {
           newsletter.after = 15;
           newsletter.name = newsletter.name + ' ' + moment().format("ddd D MMM YYYY HH:mm");
 
-          var checksum = calculateChecksum(newsletter);
+          var checksum = calculateChecksum(data);
 
           validateLastChecksum(newsletter.list, checksum, function (err) {
             if (err) reply(err).code(500);
@@ -402,10 +391,12 @@ function queryAllNewsletters (callback) {
   });
 }
 
+
 function undefinedOrBlank (input) {
   return input === undefined ||
     (typeof input === 'string' ? input.length === 0 : false);
 }
+
 
 function queryOneNewsletter (ident, callback) {
   var sql = [
@@ -507,7 +498,7 @@ function validateNewsletterPayload (value, options, next) {
 
 function calculateChecksum (data) {
   if (data === null) return '';
-  if (data.type === 'nodequeue') {
+  if (data.type === 'nodequeue' || data.type === 'latest_news') {
 
     var temp = data.nodes.map(function (node) {
       return node.id;

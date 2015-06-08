@@ -134,9 +134,9 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       //var get_bonddata = $http.get('/templates/data?f=bt.json')
       .success(function (data) {
         $scope.bonddata = data;
-          $scope.newsletter.subject =  data.subject;
-          $scope.newsletter.checksum = data.checksum;
-          $scope.bonddatadirty = false;
+        $scope.newsletter.subject =  data.subject;
+        $scope.newsletter.checksum = data.checksum;
+        $scope.bonddatadirty = false;
       })
       .error(function (err) {
         notifications.showError('Failed to get data from ' + $scope.newsletter.bond_url);
