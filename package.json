@@ -1,6 +1,6 @@
 {
   "name": "userdb",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "User DB",
   "main": "src/server.js",
   "scripts": {
