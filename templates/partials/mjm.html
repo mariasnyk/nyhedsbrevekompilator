@@ -124,7 +124,7 @@
     {% for node in nodes %}
       {% if max_nodes > 0 && loop.index > max_nodes %}
         {# This is empty on purpose. #}
-      {% if loop.index0 !== 0 && loop.index0 % 2 === 0 %}
+      {% elif loop.index0 !== 0 && loop.index0 % 2 === 0 %}
       <tr>
         <td align="center" valign="top">
           <!-- Two-column stories -->
