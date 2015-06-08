@@ -90,13 +90,13 @@
           <font
             color="#1A1A1A"
             style="font-family: {{ font_family_sans }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
-            {{ 'dddd D MMMM' | moment(timestamp) }}
+            {{ timestamp | unix('dddd D MMMM') }}
           </font>
         </div>
         <img style="width: 100%;" src="{{ logo_src }}" width="654" usemap="#imgmap">
         <map name="imgmap">
-          <area shape="rect" coords="0,0,491,97" href="{{ home_url }}?{{ tracking }}">
-          <area shape="rect" coords="491,0,654,97" href="{{ buy_subscription_href }}">
+          <area shape="rect" coords="0,0,520,97" href="{{ home_url }}?{{ tracking }}">
+          <area shape="rect" coords="520,0,654,97" href="{{ buy_subscription_href }}">
         </map>
       </td>
     </tr>
