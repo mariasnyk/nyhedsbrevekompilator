@@ -327,7 +327,7 @@ function subjectSuggestion (data) {
 
 function addPaywallToken (node) {
   if (node.type === 'nodequeue' || node.type === 'latest_news') {
-    node.nodes.forEach(prepareNode);
+    node.nodes.forEach(addPaywallToken);
   } else {
     node.newsl_access = calculatePaywallToken(node.id);
   }
