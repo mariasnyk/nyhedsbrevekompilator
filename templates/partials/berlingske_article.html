@@ -30,10 +30,10 @@
 
   <div style="width: {{ width }}px; height: 100%; display: inline-block; background-color: {{ background }}; font-size: 0; line-height: 0px;">
 
-    {% set image_count = 0; %}
+    {% set image_found = false; %}
     {% for image in node.images %}
-      {% set image_count = loop.index; %}
-      {% if loop.first %}
+      {% if !image_found && image.relation[0] === 'default' %}
+        {% set image_found = true; %}
         <img  style="width: {{ width }}px;"
               width="{{ width }}"
               alt="{{ image.title }}"
