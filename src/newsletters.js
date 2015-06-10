@@ -201,9 +201,9 @@ module.exports.register = function (plugin, options, next) {
       queryOneNewsletter(ident, function (err, result) {
         if (result === null) {
 
-          var data = convertPayloadToDate(request.payload);
+          var newsletter = convertPayloadToNewsletter(request.payload);
 
-          insertNewsletter(ident, data, function (err, result) {
+          insertNewsletter(ident, newsletter, function (err, result) {
             if (err) {
               console.log(err);
               reply(err).code(500);
@@ -228,9 +228,9 @@ module.exports.register = function (plugin, options, next) {
           reply({ message: 'Newsletter ' + request.params.ident + ' does not exists'}).code(404);
         } else {
 
-          var data = convertPayloadToDate(request.payload);
+          var newsletter = convertPayloadToNewsletter(request.payload);
 
-          updateNewsletter(request.params.ident, data, function (err, result) {
+          updateNewsletter(request.params.ident, newsletter, function (err, result) {
             if (err) {
               console.log(err);
               reply(err).code(500);
@@ -301,6 +301,7 @@ module.exports.register = function (plugin, options, next) {
       queryOneNewsletter(request.params.ident, function (err, newsletter) {
         if (err) return reply(err).code(500);
         if (newsletter === null) return reply().code(404);
+        if (newsletter.scheduling_disabled === true) return reply().code(403);
 
         templates.bond(newsletter.bond_url, function (err, data) {
           if (err) return reply(err).code(500);
@@ -308,8 +309,8 @@ module.exports.register = function (plugin, options, next) {
           newsletter.subject = data.subject;
           newsletter.email_html = templates.render(newsletter.template_html, data);
           newsletter.email_plain = templates.render(newsletter.template_plain, data);
-          newsletter.after = 15;
-          newsletter.name = newsletter.name + ' ' + moment().format("ddd D MMM YYYY HH:mm");
+          newsletter.after = 5;
+          newsletter.name = newsletter.name + ' ' + moment().format("ddd D MMM YYYY kl HH:mm");
 
           var checksum = calculateChecksum(data);
 
@@ -353,7 +354,7 @@ function slugify (name) {
 }
 
 
-function convertPayloadToDate (payload) {
+function convertPayloadToNewsletter (payload) {
   var newsletter = {
     name: payload.name,
     identity: payload.identity,
@@ -362,7 +363,8 @@ function convertPayloadToDate (payload) {
     template_html: payload.template_html,
     template_plain: payload.template_plain,
     categories: payload.categories,
-    list: payload.list
+    list: payload.list,
+    scheduling_disabled: payload.scheduling_disabled
   };
 
   return new Buffer(JSON.stringify(newsletter)).toString('base64');
@@ -504,7 +506,10 @@ function calculateChecksum (data) {
       return node.id;
     });
 
-    return checksum(JSON.stringify(temp));
+    // It's safer jo test against only the five articles
+    var temp2 = temp.slice(0, 5);
+
+    return checksum(JSON.stringify(temp2));
 
   } else {
     return checksum(JSON.stringify(data.id));
