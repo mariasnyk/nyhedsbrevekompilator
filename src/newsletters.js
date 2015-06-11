@@ -315,7 +315,7 @@ module.exports.register = function (plugin, options, next) {
           var checksum = calculateChecksum(data);
 
           validateLastChecksum(newsletter.list, checksum, function (err) {
-            if (err) reply(err).code(500);
+            if (err) return reply(err).code(500);
 
             sendgrid.sendMarketingEmail(newsletter, function (err, result) {
               if (err) return reply(err).code(500);
@@ -451,7 +451,7 @@ function validateLastChecksum (list, checksum, callback) {
 
   userdb.queryOne(sql, function (err, result) {
     if (result !== null && result.last_checksum === checksum) {
-      callback({ message: 'Last checksum is identical' });
+      callback({ message: 'Last checksum is identical for recipient list' + list });
     } else {
       callback(null, { message: 'Checksum OK' });
     }
