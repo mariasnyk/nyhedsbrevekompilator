@@ -55,7 +55,7 @@
           <span style="padding: 1px 0px 3px 0px;">
             <font
               color="#3795a0"
-              style="font-family: {{ font_family_sans }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
+              style="font-family: {{ font_family_sans|safe }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
               {{ primary_tag }}
             </font>
           </span>
@@ -66,13 +66,13 @@
           {% if primary_article %}
           <font
             color="#1A1A1A"
-            style="font-family: {{ font_family_bold }}; font-size: 36px; line-height: 36px; font-weight: bold; text-rendering: optimizeLegibility;">
+            style="font-family: {{ font_family_bold|safe }}; font-size: 36px; line-height: 36px; font-weight: bold; text-rendering: optimizeLegibility;">
             {{ node.title }}
           </font>
           {% else %}
           <font
             color="#1A1A1A"
-            style="font-family: {{ font_family }}; font-size: 25px; line-height: 25px; text-rendering: optimizeLegibility;">
+            style="font-family: {{ font_family|safe }}; font-size: 25px; line-height: 25px; text-rendering: optimizeLegibility;">
             {{ node.title }}
           </font>
           {% endif %}
@@ -82,7 +82,7 @@
         <div style="text-align: left; line-height: 100%; padding-top: 5px; text-decoration: none;">
           <font
             color="#1A1A1A"
-            style="font-family: {{ font_family }}; text-decoration: none; font-size: 18px; line-height: 22px; text-rendering: optimizeLegibility;">
+            style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 22px; text-rendering: optimizeLegibility;">
             {{ node.summary }}
           </font>
         </div>
@@ -92,7 +92,7 @@
         <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
           <font
             color="#d00000"
-            style="font-family: {{ font_family_sans }}; text-decoration: underline; font-weight: bold; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+            style="font-family: {{ font_family_sans|safe }}; text-decoration: underline; font-weight: bold; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
             {{ node.calltoaction }}
           </font>
         </div>
@@ -101,7 +101,7 @@
         <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
           <font
             color="#d00000"
-            style="font-family: {{ font_family_sans }}; text-decoration: underline; font-weight: bold; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+            style="font-family: {{ font_family_sans|safe }}; text-decoration: underline; font-weight: bold; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
             Se billederne
           </font>
         </div>
@@ -110,7 +110,7 @@
         <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
           <font
             color="#d00000"
-            style="font-family: {{ font_family_sans }}; text-decoration: underline; font-weight: bold; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+            style="font-family: {{ font_family_sans|safe }}; text-decoration: underline; font-weight: bold; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
             L&aelig;s mere
           </font>
         </div>
@@ -119,7 +119,7 @@
         <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
           <font
             color="#d00000"
-            style="font-family: {{ font_family_sans }}; text-decoration: underline; font-weight: bold; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+            style="font-family: {{ font_family_sans|safe }}; text-decoration: underline; font-weight: bold; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
             L&aelig;s mere
           </font>
         </div>
@@ -128,7 +128,7 @@
         <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
           <font
             color="#d00000"
-            style="font-family: {{ font_family_sans }}; text-decoration: underline; font-weight: bold; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+            style="font-family: {{ font_family_sans|safe }}; text-decoration: underline; font-weight: bold; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
             Se TV-klip
           </font>
         </div>

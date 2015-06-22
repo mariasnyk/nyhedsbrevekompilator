@@ -25,13 +25,13 @@
       {% if primary_article %}
       <font
         color="#1A1A1A"
-        style="font-family: {{ font_family_bold }}; font-size: 36px; line-height: 36px; font-weight: bold; text-rendering: optimizeLegibility;">
+        style="font-family: {{ font_family_bold|safe }}; font-size: 36px; line-height: 36px; font-weight: bold; text-rendering: optimizeLegibility;">
         {{ node.title }}
       </font>
       {% else %}
       <font
         color="#1A1A1A"
-        style="font-family: {{ font_family }}; font-size: 25px; line-height: 25px; text-rendering: optimizeLegibility;">
+        style="font-family: {{ font_family|safe }}; font-size: 25px; line-height: 25px; text-rendering: optimizeLegibility;">
         {{ node.title }}
       </font>
       {% endif %}
@@ -41,7 +41,7 @@
     <p>
       <font
         color="#1A1A1A"
-        style="font-family: {{ font_family }}; text-decoration: none; font-size: 18px; line-height: 18px; text-rendering: optimizeLegibility;">
+        style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 18px; text-rendering: optimizeLegibility;">
         {{ node.summary }}
       </font>
     </p>
@@ -51,7 +51,7 @@
     <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
       <font
         color="#1A1A1A"
-        style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+        style="font-family: {{ font_family|safe }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
         {{ node.calltoaction }}
       </font>
     </div>
@@ -60,7 +60,7 @@
     <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
       <font
         color="#1A1A1A"
-        style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+        style="font-family: {{ font_family|safe }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
         Se <span>{{ image_count }}</span> billeder
       </font>
     </div>
@@ -69,7 +69,7 @@
     <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
       <font
         color="#1A1A1A"
-        style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+        style="font-family: {{ font_family|safe }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
         Se TV-klip
       </font>
     </div>

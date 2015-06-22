@@ -83,12 +83,12 @@
         <div style="text-align: left; line-height: 100%;">
           <font
             color="{{ highlight_color }}"
-            style="font-family: {{ font_family }}; font-size: 29px; line-height: 29px; font-weight: bold; text-rendering: optimizeLegibility;">
+            style="font-family: {{ font_family|safe }}; font-size: 29px; line-height: 29px; font-weight: bold; text-rendering: optimizeLegibility;">
             {{ title.highlights }}
           </font>
           <font
             color="{{ color }}"
-            style="font-family: {{ font_family }}; font-size: 29px; line-height: 29px; font-weight: bold; text-rendering: optimizeLegibility;">
+            style="font-family: {{ font_family|safe }}; font-size: 29px; line-height: 29px; font-weight: bold; text-rendering: optimizeLegibility;">
             {{ title.rest }}
           </font>
         </div>
@@ -107,7 +107,7 @@
         <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
           <font
             color="#d00000"
-            style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+            style="font-family: {{ font_family|safe }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
             {{ node.calltoaction }}
           </font>
         </div>
@@ -116,7 +116,7 @@
         <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
           <font
             color="#d00000"
-            style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+            style="font-family: {{ font_family|safe }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
             Se TV-klip
           </font>
         </div>
@@ -125,7 +125,7 @@
         <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
           <font
             color="#d00000"
-            style="font-family: {{ font_family }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+            style="font-family: {{ font_family|safe }}; text-decoration: underline; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
             Se <span>{{ image_count }}</span> billeder
           </font>
         </div>
@@ -136,7 +136,7 @@
           <span style="padding: 0px 3px 0 1px; border-radius: 3px / 2px 0; background: #8FC447;">
             <font
               color="#ffffff"
-              style="font-family: {{ font_family }}; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
+              style="font-family: {{ font_family|safe }}; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
               + PLUS
             </font>
           </span>

@@ -23,30 +23,30 @@
     body, #bodyTable, #bodyCell{height:100% !important; margin:0; padding:0; width:100% !important;}
 
     @font-face {
-      font-family: 'bt_normal';
-        src: url('http://nlstatic.berlingskemedia.dk/fonts/BTOneText-webfont.eot');
-        src: url('http://nlstatic.berlingskemedia.dk/fonts/BTOneText-webfont.eot?#iefix') format('embedded-opentype'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/BTOneText-webfont.woff2') format('woff2'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/BTOneText-webfont.woff') format('woff'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/BTOneText-webfont.ttf') format('truetype');
+      font-family: "bt_normal";
+        src: url("http://nlstatic.berlingskemedia.dk/fonts/BTOneText-webfont.eot");
+        src: url("http://nlstatic.berlingskemedia.dk/fonts/BTOneText-webfont.eot?#iefix") format("embedded-opentype"),
+             url("http://nlstatic.berlingskemedia.dk/fonts/BTOneText-webfont.woff2") format("woff2"),
+             url("http://nlstatic.berlingskemedia.dk/fonts/BTOneText-webfont.woff") format("woff"),
+             url("http://nlstatic.berlingskemedia.dk/fonts/BTOneText-webfont.ttf") format("truetype");
         font-weight: 400;
         font-style: normal;
     }
 
     @font-face {
-      font-family: 'bt_bold';
-        src: url('http://nlstatic.berlingskemedia.dk/fonts/BTOne-Bold-webfont.eot');
-        src: url('http://nlstatic.berlingskemedia.dk/fonts/BTOne-Bold-webfont.eot?#iefix') format('embedded-opentype'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/BTOne-Bold-webfont.woff2') format('woff2'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/BTOne-Bold-webfont.woff') format('woff'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/BTOne-Bold-webfont.ttf') format('truetype');
+      font-family: "bt_bold";
+        src: url("http://nlstatic.berlingskemedia.dk/fonts/BTOne-Bold-webfont.eot");
+        src: url("http://nlstatic.berlingskemedia.dk/fonts/BTOne-Bold-webfont.eot?#iefix") format("embedded-opentype"),
+             url("http://nlstatic.berlingskemedia.dk/fonts/BTOne-Bold-webfont.woff2") format("woff2"),
+             url("http://nlstatic.berlingskemedia.dk/fonts/BTOne-Bold-webfont.woff") format("woff"),
+             url("http://nlstatic.berlingskemedia.dk/fonts/BTOne-Bold-webfont.ttf") format("truetype");
         font-weight: bold;
         font-style: normal;
     }
   </style>
 </head>
 
-{% set font_family="'bt_bold', 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif" %}
+{% set font_family="bt_bold, 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif" %}
 
 <body style="background-color: #f9f9f9; margin: 0px;">
 
@@ -175,7 +175,7 @@
         <hr style="height: 1px; border: 0; background: #dddddd">
         <a href="{{ home_url }}?{{ tracking }}" style="text-decoration: none;">
           <div style="margin: 20px; background-color: #939393; padding: 10px; border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; -opera-border-radius: 4px;">
-            <font color="#ffffff" style="font-family: {{ font_family }}; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+            <font color="#ffffff" style="font-family: {{ font_family|safe }}; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
               Se flere historier
             </font>
           </div>
@@ -199,7 +199,7 @@
       <td align="center" valign="top">
         {% block permission_intro %}
         <div style="text-align: left; padding: 20px 20px;">
-          <font color="#000000" style="font-family: {{ font_family }}; font-size: 30px; line-height: 30px; text-rendering: optimizeLegibility;">
+          <font color="#000000" style="font-family: {{ font_family|safe }}; font-size: 30px; line-height: 30px; text-rendering: optimizeLegibility;">
             Tilmeld dig vores andre nyhedsbreve
           </font>
         </div>
@@ -238,7 +238,7 @@
       <td align="center" valign="top">
         {% block social %}
         <div style="padding: 20px 0px 0px 0px;">
-          <font color="#000000" style="font-family: {{ font_family }}; font-size: 24px; line-height: 36px; text-rendering: optimizeLegibility;">
+          <font color="#000000" style="font-family: {{ font_family|safe }}; font-size: 24px; line-height: 36px; text-rendering: optimizeLegibility;">
             F&Oslash;LG BT
           </font>
         </div>

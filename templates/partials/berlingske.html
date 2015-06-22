@@ -23,43 +23,43 @@
     body, #bodyTable, #bodyCell{height:100% !important; margin:0; padding:0; width:100% !important;}
 
     @font-face {
-      font-family: 'berlingske';
-        src: url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.eot');
-        src: url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.eot?#iefix') format('embedded-opentype'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.woff2') format('woff2'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.woff') format('woff'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.ttf') format('truetype');
+      font-family: "berlingske";
+        src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.eot");
+        src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.eot?#iefix") format("embedded-opentype"),
+             url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.woff2") format("woff2"),
+             url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.woff") format("woff"),
+             url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.ttf") format("truetype");
         font-weight: 400;
         font-style: normal;
     }
 
     @font-face {
-      font-family: 'berlingske_bold';
-        src: url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.eot');
-        src: url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.eot?#iefix') format('embedded-opentype'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.woff2') format('woff2'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.woff') format('woff'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.ttf') format('truetype');
+      font-family: "berlingske_bold";
+        src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.eot");
+        src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.eot?#iefix") format("embedded-opentype"),
+             url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.woff2") format("woff2"),
+             url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.woff") format("woff"),
+             url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.ttf") format("truetype");
         font-weight: 400;
         font-style: normal;
     }
 
     @font-face {
-      font-family: 'berlingske_sans_bold';
-        src: url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.eot');
-        src: url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.eot?#iefix') format('embedded-opentype'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.woff2') format('woff2'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.woff') format('woff'),
-             url('http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.ttf') format('truetype');
+      font-family: "berlingske_sans_bold";
+        src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.eot");
+        src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.eot?#iefix") format("embedded-opentype"),
+             url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.woff2") format("woff2"),
+             url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.woff") format("woff"),
+             url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.ttf") format("truetype");
         font-weight: 400;
         font-style: normal;
     }
   </style>
 </head>
 
-{% set font_family="'berlingske', Georgia, 'Times New Roman', Times, serif" %}
-{% set font_family_bold="'berlingske_bold', Georgia, 'Times New Roman', Times, serif" %}
-{% set font_family_sans="'berlingske_sans_bold', 'Helvetica Neue', Helvetica, Arial, sans-serif" %}
+{% set font_family="berlingske, Georgia, 'Times New Roman', Times, serif" %}
+{% set font_family_bold="berlingske_bold, Georgia, 'Times New Roman', Times, serif" %}
+{% set font_family_sans="berlingske_sans_bold, 'Helvetica Neue', Helvetica, Arial, sans-serif" %}
 
 <body style="background-color: #f9f9f9; margin: 0px;">
 
@@ -89,7 +89,7 @@
         <div style="text-align: left; line-height: 100%; padding-left: 20px;">
           <font
             color="#1A1A1A"
-            style="font-family: {{ font_family_sans }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
+            style="font-family: {{ font_family_sans|safe }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
             {{ timestamp | unix('dddd D. MMMM YYYY') }}
           </font>
         </div>
@@ -178,7 +178,7 @@
         <hr style="height: 1px; border: 0; background: #dddddd">
         <a href="{{ home_url }}?{{ tracking }}" style="text-decoration: none;">
           <div style="margin: 20px; width: 200px; background-color: #13183D; padding: 10px; border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; -opera-border-radius: 4px;">
-            <font color="#ffffff" style="font-family: {{ font_family_sans }}; font-size: 20px; line-height: 30px; text-rendering: optimizeLegibility;">
+            <font color="#ffffff" style="font-family: {{ font_family_sans|safe }}; font-size: 20px; line-height: 30px; text-rendering: optimizeLegibility;">
               Se flere historier
             </font>
           </div>
@@ -214,7 +214,7 @@
       <td align="center" valign="top">
         {% block social %}
         <div style="padding: 20px 0px 0px 0px;">
-          <font color="#000000" style="font-family: {{ font_family }}; font-size: 24px; line-height: 36px; text-rendering: optimizeLegibility;">
+          <font color="#000000" style="font-family: {{ font_family|safe }}; font-size: 24px; line-height: 36px; text-rendering: optimizeLegibility;">
             F&Oslash;LG BERLINGSKE
           </font>
         </div>
