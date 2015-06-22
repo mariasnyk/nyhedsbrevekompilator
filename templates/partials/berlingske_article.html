@@ -32,7 +32,7 @@
 
     {% set image_found = false; %}
     {% for image in node.images %}
-      {% if !image_found && image.relation[0] === 'default' %}
+      {% if !image_found && image.relation | hasValue('default') %}
         {% set image_found = true; %}
         <img  style="width: {{ width }}px;"
               width="{{ width }}"

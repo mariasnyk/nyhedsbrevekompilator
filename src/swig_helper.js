@@ -50,4 +50,11 @@ swig.setFilter('yyyymmdd', function (timestamp) {
 });
 
 
+swig.setFilter('hasValue', function (listOfValues, value) {
+  return Object.prototype.toString.call(listOfValues) !== '[object Array]' ?
+    false :
+    listOfValues.indexOf(value) > -1;
+});
+
+
 module.exports = swig;
