@@ -310,7 +310,7 @@ module.exports.register = function (plugin, options, next) {
           newsletter.email_html = templates.render(newsletter.template_html, data);
           newsletter.email_plain = templates.render(newsletter.template_plain, data);
           newsletter.after = 5;
-          newsletter.name = newsletter.name + ' ' + moment().format("ddd D MMM YYYY kl HH:mm");
+          newsletter.name = newsletter.name + ' ' + moment().format("ddd D MMM YYYY HH:mm");
 
           var checksum = calculateChecksum(data);
 
