@@ -5,7 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "build": "sudo docker build -t bmdako/userdb:$npm_package_version . && sudo docker tag bmdako/userdb:$npm_package_version bmdako/userdb:latest"
+    "build": "sudo docker build -t bmdako/userdb:$npm_package_version . && sudo docker tag bmdako/userdb:$npm_package_version bmdako/userdb:latest",
+    "push": "sudo docker push bmdako/userdb:$npm_package_version && sudo docker push bmdako/userdb:latest"
   },
   "author": "Berlingske Media",
   "license": "ISC",
