@@ -16,10 +16,13 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     // $scope.schedule_date = $scope.schedule_at_specified ? moment($scope.schedule_at).
     setScheduleDateLabel();
 
+    $scope.newsletter_ident = $routeParams.ident;
+
     // If we're not editing the newsletter, we don't need to fetch the dop-down data from e.g. SendGrid
     $scope.newsletter = Newsletters.get({ident: $routeParams.ident}, function () {
 
       $scope.original_newsletters_name = $scope.newsletter.name;
+      $scope.$parent.page_title = $scope.original_newsletters_name;
 
       suggestMarketingEmailName();
 
@@ -55,14 +58,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
         $location.url('/');
       }
     }
-
-    $scope.openNewsletterEditor = function () {
-      $location.url('/' + $routeParams.ident + '/edit');
-    };
-
-    $scope.closeNewsletterSender = function () {
-      $location.url('/');
-    };
 
     $scope.setDirty = function () {
       $scope.dirty = true;

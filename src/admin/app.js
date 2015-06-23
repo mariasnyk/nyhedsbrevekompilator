@@ -9,12 +9,15 @@ app.config(['$routeProvider', function ($routeProvider) {
     .when( '/', {
       redirectTo: '/' })
     .when( '/', {
+      page_title: 'Nyhedsbreve',
       templateUrl: 'templates/newsletter-dashboard.html',
       controller: 'NewsletterDashboardController' })
     .when( '/udsendelser', {
+      page_title: 'Udsendte nyhedsbreve',
       templateUrl: 'templates/publications.html',
       controller: 'PublicationsController' })
     .when( '/stats', {
+      page_title: 'Statistiker',
       templateUrl: 'templates/stats.html',
       controller: 'StatsController' })
     .when( '/howto', {
@@ -98,5 +101,12 @@ app.directive('loadingIndicator', ['$interval', function ($interval) {
   };
 }]);
 
+app.run(['$location', '$rootScope', function($location, $rootScope) {
+  $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
+    $rootScope.page_title = current.$$route.page_title !== undefined
+      ? current.$$route.page_title
+      : current.params.ident;
+  });
+}]);
 
 moment.locale('da');

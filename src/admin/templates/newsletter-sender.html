@@ -1,9 +1,9 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-6">
-      <button type="button" class="btn" ng-class="{'btn-warning': dirty, 'btn-default': !dirty}" ng-click="closeNewsletterSender()">
+      <a title="Til oversigt" class="btn" ng-class="{'btn-warning': dirty, 'btn-default': !dirty}" ng-href="#/">
         Til oversigt <span class="glyphicon glyphicon-chevron-left"></span>
-      </button>
+      </a>
     </div>
     <div class="col-xs-6">
       <small>Hvis noget ikke virker eller du har en god idé, skriv til Daniel Kokott på <a href="mailto:dako@berlingskemedia.dk">dako@berlingskemedia.dk</a> eller ring på 25442445.</small>
@@ -36,7 +36,7 @@
     <div class="col-md-4 col-sm-12">
       <dl class="dl-horizontal well">
         <dt>
-          <a title="Indstillinger" class="btn btn-default btn-xs" ng-click="openNewsletterEditor()">
+          <a title="Indstillinger" class="btn btn-default btn-xs" ng-href="#/{{newsletter_ident}}/edit">
             <span class="glyphicon glyphicon-edit"></span>
           </a>
           Nyhedsbrev
@@ -108,6 +108,8 @@
   </div>
 
   <div ng-include="currentTab"></div>
+
+  <a class="debug_link" target="_blank" href="/templates/{{ newsletter.template_html }}?u={{ safe_bond_url }}&debug=true">Debug link</a>
 </div>
 
 <script type="text/ng-template" id="html">
@@ -124,7 +126,6 @@
           <iframe ng-hide="loading_html_preview" class="newsletter-preview" srcdoc="{{trusted_html_email_preview}}" onload='javascript:resizeIframe(this);'></iframe>
         </div>
       </div>
-      <a class="debug_link" target="_blank" href="/templates/{{ newsletter.template_html }}?u={{ safe_bond_url }}&debug=true">Debug link</a>
     </div>
   </div>
 </script>
@@ -176,6 +177,8 @@
                   type="text"
                   rows="3"
                   ng-if="$index === 0"
+                  ng-init="show_summary = hasCategory(['Berlingske', 'MJM', 'Politiko', 'Business'])"
+                  ng-show="show_summary"
                   ng-model="node.summary"
                   ng-change="changeNodeTitle()"
                   ng-blur="blurNodeTitle()"
@@ -184,8 +187,8 @@
                   class="form-control"
                   type="text"
                   rows="3"
-                  ng-init="has_bt_plus = hasCategory(['BT Plus', 'BT Breaking News'])"
-                  ng-show="has_bt_plus"
+                  ng-init="show_custom_summary = hasCategory(['BT Plus', 'BT Breaking News', 'BT Nyhedsquiz'])"
+                  ng-show="show_custom_summary"
                   ng-model="node.custom_summary"
                   ng-change="changeNodeTitle()"
                   ng-blur="blurNodeTitle()"
@@ -213,7 +216,6 @@
           </div>
         </div>
       </div>
-      <a class="debug_link" target="_blank" href="{{ newsletter.bond_url }}">BOND API URL</a>
     </div>
   </div>
 </script>
