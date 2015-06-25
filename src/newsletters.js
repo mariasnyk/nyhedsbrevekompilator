@@ -451,7 +451,9 @@ function validateLastChecksum (list, checksum, callback) {
 
   userdb.queryOne(sql, function (err, result) {
     if (result !== null && result.last_checksum === checksum) {
-      callback({ message: 'Last checksum is identical for recipient list' + list });
+      var message = 'Last checksum is identical for recipient list ' + list;
+      console.log(message);
+      callback({ message: message });
     } else {
       callback(null, { message: 'Checksum OK' });
     }
