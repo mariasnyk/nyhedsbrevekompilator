@@ -30,7 +30,7 @@
         </tr>
         <tr ng-repeat="newsletter in newsletters | filter: newsletterFilter | orderBy: 'name'">
           <td>
-            <a ng-href="#/{{newsletter.ident}}">{{newsletter.name}}</a>
+            <a ng-href="#/{{newsletter.ident}}" class="btn btn-link">{{newsletter.name}}</a>
             <span ng-show="newsletter.incomplete" style="color: red;" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
           </td>
           <td>

@@ -5,8 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "build": "sudo docker build -t bmdako/userdb:$npm_package_version . && sudo docker tag bmdako/userdb:$npm_package_version bmdako/userdb:latest",
-    "push": "sudo docker push bmdako/userdb:$npm_package_version && sudo docker push bmdako/userdb:latest"
+    "build": "docker build -t bmdako/userdb:$npm_package_version . && docker tag -f bmdako/userdb:$npm_package_version bmdako/userdb:latest",
+    "push": "docker push bmdako/userdb:$npm_package_version && docker push bmdako/userdb:latest"
   },
   "author": "Berlingske Media",
   "license": "ISC",
@@ -15,7 +15,6 @@
     "url": "https://github.com/bmdako/userdb"
   },
   "dependencies": {
-    "aws-sdk": "^2.1.14",
     "checksum": "^0.1.1",
     "hapi": "^8.2.0",
     "moment": "^2.9.0",
