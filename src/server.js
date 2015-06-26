@@ -7,7 +7,7 @@ var Hapi = require('hapi'),
 
 
 // A plugin to redirect GET requests on / to admin interface
-var redirectRootToAdmin = {
+var admin = {
   register: function (plugin, options, next) {
 
     plugin.route({
@@ -33,8 +33,8 @@ var redirectRootToAdmin = {
   }
 };
 
-redirectRootToAdmin.register.attributes = {
-  name: 'redirectRootToAdmin',
+admin.register.attributes = {
+  name: 'admin',
   version: '1.0.0'
 };
 
@@ -49,7 +49,7 @@ var server = new Hapi.Server({
 
 server.connection({ port: 8000 });
 
-server.register(redirectRootToAdmin, cb);
+server.register(admin, cb);
 server.register(templates, { routes: { prefix: '/templates' } }, cb);
 server.register(newsletters, { routes: { prefix: '/newsletters' } }, cb);
 
