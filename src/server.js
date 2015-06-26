@@ -18,16 +18,16 @@ var redirectRootToAdmin = {
       }
     });
 
-  plugin.route({
-    method: 'get',
-    path: '/nyhedsbreve/{param*}',
-    handler: {
-      directory: {
-        path: 'admin',
-        index: true
+    plugin.route({
+      method: 'get',
+      path: '/nyhedsbreve/{param*}',
+      handler: {
+        directory: {
+          path: 'admin',
+          index: true
+        }
       }
-    }
-  });
+    });
 
     next();
   }

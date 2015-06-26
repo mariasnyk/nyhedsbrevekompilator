@@ -22,6 +22,9 @@ module.exports.register = function (plugin, options, next) {
         index: true
       }
     }
+    // handler: function (request, reply) {
+    //   reply.redirect('/nyhedsbreve');
+    // }
   });
 
   plugin.route({
