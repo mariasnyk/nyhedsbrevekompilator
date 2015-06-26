@@ -15,6 +15,7 @@ RUN wget -O - http://nodejs.org/dist/v0.12.0/node-v0.12.0-linux-x64.tar.gz \
 WORKDIR /userdb
 
 # Copying the code into image. Be aware no config files are including.
+COPY ./admin /userdb/admin
 COPY ./node_modules /userdb/node_modules
 COPY ./src /userdb/src
 COPY ./templates /userdb/templates

@@ -9,13 +9,25 @@ var Hapi = require('hapi'),
 // A plugin to redirect GET requests on / to admin interface
 var redirectRootToAdmin = {
   register: function (plugin, options, next) {
+
     plugin.route({
       method: 'get',
       path: '/',
       handler: function (request, reply) {
-        reply.redirect('/newsletters/admin');
+        reply.redirect('/nyhedsbreve');
       }
     });
+
+  plugin.route({
+    method: 'get',
+    path: '/nyhedsbreve/{param*}',
+    handler: {
+      directory: {
+        path: 'admin',
+        index: true
+      }
+    }
+  });
 
     next();
   }
