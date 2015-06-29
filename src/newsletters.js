@@ -291,7 +291,7 @@ module.exports.register = function (plugin, options, next) {
       var newsletter = request.payload;
 
       sendgrid.sendMarketingEmail(newsletter, function (err, result) {
-        if (err) return reply(err).code(500);
+        if (err) reply(err).code(500);
         else reply({ message: 'Sent' });
       });
     }
