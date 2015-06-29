@@ -21,9 +21,9 @@
       <select
         class="form-control"
         ng-model="stats_parameters.aggregated_by">
-        <option value="day">Dag</option>
-        <option value="week">Uge</option>
-        <option value="month">M&aring;ned</option>
+        <option value="day">Opdel p&aring; dag</option>
+        <option value="week">Opdel p&aring; uge</option>
+        <option value="month">Opdel p&aring; m&aring;ned</option>
       </select>
     </div>
     <div class="col-xs-1">
@@ -38,55 +38,47 @@
   </div>
   <div class="row">
     <div class="col-xs-12">
-      <table class="table">
+     <table class="table">
         <tr>
-          <th>Date</th>
-          <th>Category</th>
-          <th>blocks</th>
-          <th>bounce_drops</th>
-          <th>bounces</th>
-          <th>clicks</th>
-          <th>deferred</th>
-          <th>delivered</th>
-          <th>invalid_emails</th>
-          <th>opens</th>
-          <th>processed</th>
-          <th>requests</th>
-          <th>spam_report_drops</th>
-          <th>spam_reports</th>
-          <th>unique_clicks</th>
-          <th>unique_opens</th>
-          <th>unsubscribe_drops</th>
-          <th>unsubscribes</th>
+          <th>Dato</th>
+          <th>Kategori</th>
+          <th>Udsendt</th>
+          <th>Leveret</th>
+          <th>&Aring;bninger</th>
+          <th>Unikke &aring;bninger</th>
+          <th>&Aring;bningsrate</th>
+          <th>Kliks</th>
+          <th>Unikke kliks</th>
+          <th>Unikke klikrate</th>
+          <th>Total klikrate</th>
+          <th>Blokerede</th>
+          <th>Bounces</th>
+          <th>Spam</th>
         </tr>
         <tr ng-repeat="data in statsData">
           <td>{{ data.date }}</td>
           <td>{{ data.name }}</td>
-          <td>{{ data.metrics.blocks }}</td>
-          <td>{{ data.metrics.bounce_drops }}</td>
-          <td>{{ data.metrics.bounces }}</td>
-          <td>{{ data.metrics.clicks }}</td>
-          <td>{{ data.metrics.deferred }}</td>
-          <td>{{ data.metrics.delivered }}</td>
-          <td>{{ data.metrics.invalid_emails }}</td>
-          <td>{{ data.metrics.opens }}</td>
-          <td>{{ data.metrics.processed }}</td>
           <td>{{ data.metrics.requests }}</td>
-          <td>{{ data.metrics.spam_report_drops }}</td>
-          <td>{{ data.metrics.spam_reports }}</td>
-          <td>{{ data.metrics.unique_clicks }}</td>
+          <td>{{ data.metrics.delivered }}</td>
+          <td>{{ data.metrics.opens }}</td>
           <td>{{ data.metrics.unique_opens }}</td>
-          <td>{{ data.metrics.unsubscribe_drops }}</td>
-          <td>{{ data.metrics.unsubscribes }}</td>
+          <td>{{ data.metrics.unique_opens }}</td>
+          <td>{{ data.metrics.clicks }}</td>
+          <td>{{ data.metrics.unique_clicks }}</td>
+          <td>TODO</td>
+          <td>TODO</td>
+          <td>{{ data.metrics.blocks }}</td>
+          <td>{{ data.metrics.bounces }}</td>
+          <td>{{ data.metrics.spam_reports }}</td>
         </tr>
       </table>
       <div ng-show="missing_category"><p class="text-center">V&aelig;lg katagori</p></div>
     </div>
   </div>
-  <div class="row">
+<!--   <div class="row">
     <div class="col-xs-12">
       <div id="chart_div"></div>
       <div chart></div>
     </div>
-  </div>
+  </div> -->
 </div>
