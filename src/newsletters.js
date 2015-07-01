@@ -310,9 +310,12 @@ module.exports.register = function (plugin, options, next) {
           if (err) return reply(err).code(500);
 
           newsletter.subject = data.subject;
+          newsletter.after = 5;
+
+          data.timestamp = moment().add(newsletter.after, 'minutes').unix();
+
           newsletter.email_html = templates.render(newsletter.template_html, data);
           newsletter.email_plain = templates.render(newsletter.template_plain, data);
-          newsletter.after = 5;
           newsletter.name = newsletter.name + ' ' + moment().format("ddd D MMM YYYY HH:mm");
 
           var checksum = calculateChecksum(data);
