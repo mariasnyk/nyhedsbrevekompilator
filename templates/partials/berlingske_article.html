@@ -71,12 +71,22 @@
           {% endif %}
         </div>
 
-        {% if primary_article && node.summary %}
+        {% if (primary_article && node.summary) || always_show_article_summary === true %}
         <div style="text-align: left; line-height: 100%; padding-top: 5px; text-decoration: none;">
           <font
             color="#1A1A1A"
             style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 22px; text-rendering: optimizeLegibility;">
             {{ node.summary }}
+          </font>
+        </div>
+        {% endif %}
+
+        {% if node.custom_summary %}
+        <div style="text-align: left; line-height: 100%; padding-top: 10px;">
+          <font
+            color="#1A1A1A"
+            style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 22px; text-rendering: optimizeLegibility;">
+            {% autoescape false %} {{ node.custom_summary | safe }} {% endautoescape %}
           </font>
         </div>
         {% endif %}
