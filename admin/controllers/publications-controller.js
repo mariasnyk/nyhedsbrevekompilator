@@ -34,6 +34,7 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
         $scope.emails[index].subject = data.subject;
         $scope.emails[index].identity = data.identity;
         $scope.emails[index].total_recipients = data.total_recipients;
+        $scope.emails[index].html = data.html;
 
         if (data.date_schedule !== null) {
           var date_schedule = moment(data.date_schedule + '-07:00');
@@ -44,7 +45,8 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
           if (moment.utc().diff(date_schedule) < 0 ) {
             $scope.emails[index].scheduled = true;
           }
-
+        } else {
+          $scope.emails[index].cancelled = true;
         }
 
       }, function (err) {
@@ -52,6 +54,13 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
       });
 
       loadingSwitch.watch($scope.email);
+    };
+
+    $scope.showEmailHtml = function (html) {
+      var preview = window.open();
+      preview.document.open();
+      preview.document.write(html);
+      preview.document.close();
     };
 
     $scope.deleteSchedule = function (email) {
