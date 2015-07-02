@@ -52,6 +52,11 @@ module.exports.getEmail = function (name, callback) {
 };
 
 
+module.exports.deleteEmail = function (name, callback) {
+  callSendGrid('/api/newsletter/delete.json', 'name=' + encodeURIComponent(name), standardCallback(callback));
+};
+
+
 module.exports.getEmailSchedule = function (name, callback) {
   callSendGrid('/api/newsletter/schedule/get.json', 'name=' + encodeURIComponent(name), standardCallback(callback));
 };

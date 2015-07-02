@@ -165,6 +165,19 @@ module.exports.register = function (plugin, options, next) {
   });
 
   plugin.route({
+    method: 'delete',
+    path: '/emails/{name}',
+    handler: function (request, reply) {
+      sendgrid.deleteEmail(request.params.name, function (err, data) {
+        if (err)
+          reply(err).code(500);
+        else
+          reply(data);
+      });
+    }
+  });
+
+  plugin.route({
     method: 'get',
     path: '/',
     handler: function (request, reply) {

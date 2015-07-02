@@ -1,21 +1,22 @@
 app.controller('PublicationsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', 'notifications', 'loadingSwitch',
   function ($scope, $routeParams, $location, $resource, $sce, $http, notifications, loadingSwitch) {
-    var Newsletters = $resource('/newsletters/emails/:name', { name: '@name' });
+    var Emails = $resource('/newsletters/emails/:name', { name: '@name' });
     var Schedules = $resource('/newsletters/emails/schedule/:name', { name: '@name' });
 
-    $scope.newsletters = Newsletters.query(function () {
-      // Sorting by id for chronically order
-      $scope.newsletters.sort(compare);
+    $scope.emails = Emails.query(function () {
 
-      // Getting details for the first x newsletters
+      // Sorting by id for chronically order
+      $scope.emails.sort(compare);
+
+      // Getting details for the first x emails
       for (var i = 0; i < 3; i++) {
-        if ($scope.newsletters[i]) {
-          $scope.getNewsletterData($scope.newsletters[i].name, i);
+        if ($scope.emails[i]) {
+          $scope.getEmailData($scope.emails[i]);
         }
       }
     });
 
-    loadingSwitch.watch($scope.newsletters);
+    loadingSwitch.watch($scope.emails);
 
     function compare(a,b) {
       if (a.newsletter_id < b.newsletter_id)
@@ -25,29 +26,23 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
       return 0;
     }
 
-    $scope.getNewsletterData = function (name, index) {
-      $scope.newsletter = Newsletters.get({ name: name }, function (data) {
+    $scope.getEmailData = function (email) {
+      $scope.email = Emails.get({ name: email.name }, function (data) {
 
-        $scope.newsletters[index].subject = data.subject;
-        $scope.newsletters[index].identity = data.identity;
-        $scope.newsletters[index].total_recipients = data.total_recipients;
+        var index = $scope.emails.indexOf(email);
+
+        $scope.emails[index].subject = data.subject;
+        $scope.emails[index].identity = data.identity;
+        $scope.emails[index].total_recipients = data.total_recipients;
 
         if (data.date_schedule !== null) {
           var date_schedule = moment(data.date_schedule + '-07:00');
 
+          $scope.emails[index].schedule = date_schedule.format('ddd D/M HH:mm');
+          $scope.emails[index].fromnow = moment(date_schedule).fromNow();
+
           if (moment.utc().diff(date_schedule) < 0 ) {
-            $scope.newsletters[index].schedule = date_schedule.format('dddd D-MM HH:mm');
-            $scope.newsletters[index].fromnow = moment(date_schedule).fromNow();
-
-            // var schedule = Schedules.get({ name: name }, function () {
-            //   if (schedule.date) {
-            //     console.log(moment.utc(schedule.date));
-            //     $scope.newsletters[index].schedule = schedule.date;
-            //     $scope.newsletters[index].fromnow = moment(schedule.date).fromNow();
-            //   }
-            // });
-
-            // loadingSwitch.watch(schedule);
+            $scope.emails[index].scheduled = true;
           }
 
         }
@@ -56,13 +51,16 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
         notifications.showError(err);
       });
 
-      loadingSwitch.watch($scope.newsletter);
+      loadingSwitch.watch($scope.email);
     };
 
-    $scope.deleteSchedule = function (name, index) {
-      var deleting = Schedules.delete({ name: name }, function () {
-        $scope.newsletters[index].schedule = null;
-        $scope.newsletters[index].fromnow = null;
+    $scope.deleteSchedule = function (email) {
+      var deleting = Schedules.delete({ name: email.name }, function () {
+
+        var index = $scope.emails.indexOf(email);
+
+        $scope.emails[index].schedule = null;
+        $scope.emails[index].fromnow = null;
       }, function (error) {
         console.log('Error', error);
         notifications.showError(error.data.error);

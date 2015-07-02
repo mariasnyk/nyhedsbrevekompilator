@@ -6,28 +6,26 @@
         class="form-control input-sm"
         placeholder="Filter"
         type="text"
-        ng-model="newsletterFilter">
+        ng-model="emailFilter">
       <table class="table table-hover">
         <tr>
-          <th>Navn</th>
-          <th>Emne</th>
-          <th>Identitet</th>
-          <th>Modtagere</th>
-          <th>Udsendes</th>
+          <th>Internt navn</th>
+          <th>Emnefelt</th>
+          <th></th>
+          <th></th>
         </tr>
-        <tr ng-repeat="newsletter in newsletters | filter: newsletterFilter">
-          <td>{{ newsletter.name }}</td>
+        <tr ng-repeat="email in emails | filter: emailFilter">
+          <td>{{ email.name }}</td>
           <td>
-            <button class="btn btn-info" ng-hide="newsletter.subject" ng-click="getNewsletterData(newsletter.name, $index)">Vis detaljer</button>
-            <div ng-show="newsletter.subject">{{ newsletter.subject }}</div>
+            <button class="btn btn-info btn-xs" ng-hide="email.subject" ng-click="getEmailData(email)">Vis detaljer</button>
+            <div ng-show="email.subject">{{ email.subject }}</div>
           </td>
-          <td><span class="label" style="background-color: #{{ newsletter.identity | tocolor}};">{{ newsletter.identity }}</span></td>
-          <td align="center">
-            <span class="badge">{{ newsletter.total_recipients }}</<span></td>
-          <td align="right">
-            <div ng-show="newsletter.schedule"><abbr title="{{ newsletter.schedule }}">{{ newsletter.fromnow }}</abbr></div>
-            <button class="btn btn-danger btn-xs btn-block" ng-show="newsletter.schedule" ng-click="deleteSchedule(newsletter.name, $index)">Annuller</button>
+          <td><div ng-show="email.total_recipients">{{ email.total_recipients }} modtagere</div></td>
+          <td>
+            <div><abbr title="{{ email.schedule }}">{{ email.fromnow }}</abbr></div>
+            <button class="btn btn-danger btn-xs btn-block" ng-show="email.scheduled" ng-click="deleteSchedule(email)">Annuller</button>
           </td>
+          <!-- <td><span class="label" style="background-color: #{{ email.identity | tocolor}};">{{ email.identity }}</span></td> -->
         </tr>
       </table>
     </div>
