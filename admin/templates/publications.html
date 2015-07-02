@@ -24,7 +24,7 @@
           <td><div ng-show="email.total_recipients"><span class="badge">{{ email.total_recipients }}</span> modtagere</div></td>
           <td>
             <div><abbr title="{{ email.schedule }}">{{ email.fromnow }}</abbr></div>
-            <button class="btn btn-danger btn-xs btn-block" ng-show="email.scheduled" ng-click="deleteSchedule(email)">Annuller</button>
+            <button ng-show="email.scheduled" class="btn btn-danger btn-xs btn-block" ng-click="deleteSchedule(email)">Annuller</button>
             <div ng-show="email.draft"><mark>Annulleret</mark></div>
             <div ng-show="email.unknown_schedule"><abbr title="Tidspunkt for udsendelse er ukendt">Ukendt</abbr></div>
           </td>

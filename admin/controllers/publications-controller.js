@@ -43,13 +43,15 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
           $scope.emails[index].schedule = date_schedule.format('ddd D/M HH:mm');
           $scope.emails[index].fromnow = date_schedule.fromNow();
 
-          if (moment().diff(date_schedule) < 0 ) {
+          if (data.can_edit === true) {
             $scope.emails[index].scheduled = true;
           }
-        } else if (data.can_edit === true) {
-          $scope.emails[index].draft = true;
         } else {
-          $scope.emails[index].unknown_schedule = true;
+          if (data.can_edit === true) {
+            $scope.emails[index].draft = true;
+          } else {
+            $scope.emails[index].unknown_schedule = true;
+          }
         }
 
       }, function (err) {

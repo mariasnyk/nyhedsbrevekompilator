@@ -325,11 +325,14 @@ module.exports.register = function (plugin, options, next) {
           newsletter.subject = data.subject;
           newsletter.after = 5;
 
-          data.timestamp = moment().add(newsletter.after, 'minutes').unix();
+          var schedule = moment().add(newsletter.after, 'minutes');
+          // schedule.local();
+
+          data.timestamp = schedule.unix();
 
           newsletter.email_html = templates.render(newsletter.template_html, data);
           newsletter.email_plain = templates.render(newsletter.template_plain, data);
-          newsletter.name = newsletter.name + ' ' + moment().format("ddd D MMM YYYY HH:mm");
+          newsletter.name = newsletter.name + ' ' + schedule.format("ddd D MMM YYYY HH:mm");
 
           var checksum = calculateChecksum(data);
 
