@@ -25,7 +25,8 @@
           <td>
             <div><abbr title="{{ email.schedule }}">{{ email.fromnow }}</abbr></div>
             <button class="btn btn-danger btn-xs btn-block" ng-show="email.scheduled" ng-click="deleteSchedule(email)">Annuller</button>
-            <div ng-show="email.cancelled"><mark>Ikke sendt</mark></div>
+            <div ng-show="email.draft"><mark>Annulleret</mark></div>
+            <div ng-show="email.unknown_schedule"><abbr title="Tidspunkt for udsendelse er ukendt">Ukendt</abbr></div>
           </td>
           <!-- <td><span class="label" style="background-color: #{{ email.identity | tocolor}};">{{ email.identity }}</span></td> -->
         </tr>
