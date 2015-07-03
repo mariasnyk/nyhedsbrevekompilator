@@ -76,6 +76,23 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
         $scope.emails[index].schedule = null;
         $scope.emails[index].fromnow = null;
         $scope.emails[index].draft = true;
+        $scope.emails[index].scheduled = false;
+
+      }, function (error) {
+        console.log('Error', error);
+        notifications.showError(error.data.error);
+      });
+
+      loadingSwitch.watch(deleting, 'Deleting');
+    };
+
+    $scope.deleteEmail = function (email) {
+      var deleting = Emails.delete({ name: email.name }, function () {
+
+        var index = $scope.emails.indexOf(email);
+        $scope.emails.splice(index, 1);
+
+        $scope.emails[index].schedule = null;
 
       }, function (error) {
         console.log('Error', error);
