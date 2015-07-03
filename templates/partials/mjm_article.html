@@ -1,26 +1,24 @@
 {% if node !== null %}
-<a
-  href="{{ node.url }}?{{ tracking }}&newsl_access={{ node.newsl_access }}"
-  title="{{ node.title }}"
-  style="display: block; text-decoration: none; line-height: 23px; text-align: left"
-  target="_blank">
 
-  <div style="width: {{ width }}px;">
-    {% set image_count = 0; %}
-    {% for image in node.images %}
-      {% set image_count = loop.index; %}
-      {% if loop.last %}
-        <img  style="width: {{ width }}px;"
-              width="{{ width }}"
-              alt="{{ image.title }}"
-              src="{{ image.image }}"
-              border="0" />
-      {% endif %}
-    {% endfor %}
-  </div>
+<div style="width: {{ width }}px;">
+  {% set image_count = 0; %}
+  {% for image in node.images %}
+    {% set image_count = loop.index; %}
+    {% if loop.last %}
+    <a href="{{ node.url }}?{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
+      <img  style="width: {{ width }}px;"
+            width="{{ width }}"
+            alt="{{ image.title }}"
+            src="{{ image.image }}"
+            border="0" />
+    </a>
+    {% endif %}
+  {% endfor %}
+</div>
 
-  <div style="width: {{ width }}px;">
+<div style="width: {{ width }}px;">
 
+  <a href="{{ node.url }}?{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
     <div style="text-align: left; line-height: 100%; padding-top: 5px;">
       {% if primary_article %}
       <font
@@ -36,18 +34,22 @@
       </font>
       {% endif %}
     </div>
+  </a>
 
-    {% if primary_article && node.summary %}
-    <p>
+  {% if primary_article && node.summary %}
+  <a href="{{ node.url }}?{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
+    <div style="text-align: left; line-height: 100%; padding-top: 5px; text-decoration: none;">
       <font
         color="#1A1A1A"
         style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 18px; text-rendering: optimizeLegibility;">
         {{ node.summary }}
       </font>
-    </p>
-    {% endif %}
+    </div>
+  </a>
+  {% endif %}
 
-    {% if node.calltoaction %}
+  {% if node.calltoaction %}
+  <a href="{{ node.url }}?{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
     <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
       <font
         color="#1A1A1A"
@@ -55,8 +57,10 @@
         {{ node.calltoaction }}
       </font>
     </div>
+  </a>
 
-    {% elif node.type === 'image_gallery' %}
+  {% elif node.type === 'image_gallery' %}
+  <a href="{{ node.url }}?{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
     <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
       <font
         color="#1A1A1A"
@@ -64,8 +68,10 @@
         Se <span>{{ image_count }}</span> billeder
       </font>
     </div>
+  </a>
 
-    {% elif node.type === 'webtv_link' %}
+  {% elif node.type === 'webtv_link' %}
+  <a href="{{ node.url }}?{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
     <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
       <font
         color="#1A1A1A"
@@ -73,7 +79,7 @@
         Se TV-klip
       </font>
     </div>
-    {% endif %}
-  </div>
-</a>
+  </a>
+  {% endif %}
+</div>
 {% endif %}

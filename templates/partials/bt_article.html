@@ -1,4 +1,5 @@
 {% if node !== null %}
+
 {% set highlight = null %}
 {% if node.taxonomyTags.presentationTags %}
   {% for tag in node.taxonomyTags.presentationTags %}
@@ -50,36 +51,33 @@
   {% endfor %}
 {% endif %}
 
-<a
-  href="{{ node.url }}?{{ tracking }}"
-  title="{{ node.title }}"
-  style="width: {{ width }}px; height: 100%; display: inline-block; text-decoration: none; line-height: 23px; text-align: left; background-color: {{ background }};"
-  target="_blank">
+<div style="width: {{ width }}px; height: 100%; display: inline-block; background-color: {{ background }}; font-size: 0; line-height: 0px;">
 
-  <div style="width: {{ width }}px; height: 100%; display: inline-block; background-color: {{ background }}; font-size: 0; line-height: 0px;">
+  {% if image_count > 0 %}
+    {% for image in node.images %}
+      {% if loop.last %}
+      <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+        <img
+          style="width: {{ width }}px;"
+          width="{{ width }}"
+          alt="{{ image.title }}"
+          src="{{ image.image }}"
+          border="0" />
+      </a>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
 
-    {% if image_count > 0 %}
-      {% for image in node.images %}
-        {% if loop.last %}
-          <img
-            style="width: {{ width }}px;"
-            width="{{ width }}"
-            alt="{{ image.title }}"
-            src="{{ image.image }}"
-            border="0" />
-        {% endif %}
-      {% endfor %}
+  <div style="width: {{ width }}px;">
+
+    {% if background !== '#ffffff' %}
+    <div style="background-color: {{ background }}; padding-top: 5px; padding-right: 5px; padding-bottom: 10px; padding-left: 5px;">
+    {% else %}
+    <div style="padding-top: 2px;">
     {% endif %}
 
-    <div style="width: {{ width }}px;">
-
-      {% if background !== '#ffffff' %}
-      <div style="background-color: {{ background }}; padding-top: 5px; padding-right: 5px; padding-bottom: 10px; padding-left: 5px;">
-      {% else %}
-      <div style="padding-top: 2px;">
-      {% endif %}
-
-        {% set title = node.title | highlighter(highlight) %}
+      {% set title = node.title | highlighter(highlight) %}
+      <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
         <div style="text-align: left; line-height: 100%;">
           <font
             color="{{ highlight_color }}"
@@ -92,8 +90,10 @@
             {{ title.rest }}
           </font>
         </div>
+      </a>
 
-        {% if node.custom_summary %}
+      {% if node.custom_summary %}
+      <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
         <div style="text-align: left; line-height: 100%; padding-top: 10px;">
           <font
             color="#1A1A1A"
@@ -101,9 +101,11 @@
             {% autoescape false %} {{ node.custom_summary | safe }} {% endautoescape %}
           </font>
         </div>
-        {% endif %}
+      </a>
+      {% endif %}
 
-        {% if node.calltoaction %}
+      {% if node.calltoaction %}
+      <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
         <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
           <font
             color="#d00000"
@@ -111,8 +113,10 @@
             {{ node.calltoaction }}
           </font>
         </div>
+      </a>
 
-        {% elif node.type === 'webtv_link' %}
+      {% elif node.type === 'webtv_link' %}
+      <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
         <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
           <font
             color="#d00000"
@@ -120,8 +124,10 @@
             Se TV-klip
           </font>
         </div>
+      </a>
 
-        {% elif node.type === 'image_gallery' %}
+      {% elif node.type === 'image_gallery' %}
+      <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
         <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
           <font
             color="#d00000"
@@ -129,22 +135,22 @@
             Se <span>{{ image_count }}</span> billeder
           </font>
         </div>
-        {% endif %}
+      </a>
+      {% endif %}
 
-        {% if plus %}
-        <div style="text-align: left; line-height: 100%; padding-top: 10px">
-          <span style="padding: 0px 3px 0 1px; border-radius: 3px / 2px 0; background: #8FC447;">
-            <font
-              color="#ffffff"
-              style="font-family: {{ font_family|safe }}; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
-              + PLUS
-            </font>
-          </span>
-        </div>
-        {% endif %}
-
+      {% if plus %}
+      <div style="text-align: left; line-height: 100%; padding-top: 10px">
+        <span style="padding: 0px 3px 0 1px; border-radius: 3px / 2px 0; background: #8FC447;">
+          <font
+            color="#ffffff"
+            style="font-family: {{ font_family|safe }}; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
+            + PLUS
+          </font>
+        </span>
       </div>
+      {% endif %}
+
     </div>
   </div>
-</a>
+</div>
 {% endif %}
