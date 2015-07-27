@@ -12,14 +12,14 @@ RUN wget -O - http://nodejs.org/dist/v0.12.5/node-v0.12.5-linux-x64.tar.gz \
     --exclude="ChangeLog" -C "/usr/local"
 
 # Set the working directory.
-WORKDIR /userdb
+WORKDIR /nyhedsbrevekompilator
 
 # Copying the code into image. Be aware no config files are including.
-COPY ./admin /userdb/admin
-COPY ./node_modules /userdb/node_modules
-COPY ./src /userdb/src
-COPY ./templates /userdb/templates
-COPY ./testdata /userdb/testdata
+COPY ./admin /nyhedsbrevekompilator/admin
+COPY ./node_modules /nyhedsbrevekompilator/node_modules
+COPY ./src /nyhedsbrevekompilator/src
+COPY ./templates /nyhedsbrevekompilator/templates
+COPY ./testdata /nyhedsbrevekompilator/testdata
 
 # Exposing our endpoint to Docker.
 EXPOSE  8000

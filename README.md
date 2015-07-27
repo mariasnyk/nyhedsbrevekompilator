@@ -1,8 +1,8 @@
 =======
-Email Marketing and UserDB platform
+Redaktionelle nyhedsbreve
 ======
 
-This is the application for Email Marketing with an API and a web interface to admin the newsletters, preview the content, initiate the send out. The application will be built in Node.js and the web framework Hapijs. The application will be run through a Docker container.
+This is the application for editorial newsletters with an API and a web interface to admin the newsletters, preview the content, initiate the send out. The application will be built in Node.js and the web framework Hapijs. The application will be run through a Docker container.
 
 ## Run from Docker
 
@@ -71,7 +71,7 @@ First, you need Node (incl. NPM). Download Node (The zipped Binaries - not the i
 
 Unpack the ZIP into a directory.
 
-Download userdb source from git (either using git or zip from [https://github.com/bmdako/userdb/archive/master.zip](https://github.com/bmdako/userdb/archive/master.zip)). Place the userdb source in a folder next to node. Open a terminal and change directory to it.
+Download the source from git (either using git or zip from [https://github.com/BerlingskeMedia/nyhedsbrevekompilator/archive/master.zip](https://github.com/BerlingskeMedia/nyhedsbrevekompilator/archive/master.zip)). Place the source in a folder next to node. Open a terminal and change directory to it.
 
 First, install the application dependencies by running: 
 
