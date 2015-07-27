@@ -5,8 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "build": "docker build -t bmdako/userdb:$npm_package_version . && docker tag -f bmdako/userdb:$npm_package_version bmdako/userdb:latest",
-    "push": "docker push bmdako/userdb:$npm_package_version && docker push bmdako/userdb:latest"
+    "build": "docker build -t bmdako/nyhedsbrevekompilator:$npm_package_version . && docker tag -f bmdako/nyhedsbrevekompilator:$npm_package_version bmdako/nyhedsbrevekompilator:latest",
+    "push": "docker push bmdako/nyhedsbrevekompilator:$npm_package_version && docker push bmdako/nyhedsbrevekompilator:latest"
   },
   "author": "Berlingske Media",
   "license": "ISC",

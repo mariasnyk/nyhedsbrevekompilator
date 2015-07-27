@@ -20,7 +20,7 @@ sudo docker run \
     [...]
 --dns=xx.xx.xx.xxx \
 --publish=xxx:8000 \
--d bmdako/userdb
+-d bmdako/nyhedsbrevekompilator
 ```
 
 All the `--env` parameters are the environent variables to allow the app to connect to dependent services eg. SendGrid. These will be supplied separately.
@@ -48,14 +48,14 @@ npm install --production
 Next, to create a build run (The source code and the Node modules will be copied onto the Docker image.):
 
 ```
-sudo docker build -t bmdako/userdb .
+sudo docker build -t bmdako/nyhedsbrevekompilator .
 ``` 
 
 
 Lastly, to upload the newly built version of the image to Docker Hub, run (You must have been granted permissions.): 
 
 ```
-sudo docker push bmdako/userdb
+sudo docker push bmdako/nyhedsbrevekompilator
 ```
 
 Now the images is ready to deployed. See section *Run from Docker*.
