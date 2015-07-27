@@ -10,27 +10,34 @@
 {% endif %}
 
 {% set background = "#ffffff" %}
-{% set images = Object.keys(node.images); %}
-{% set image_count = images.length; %}
+
+{% set image_count = 0; %}
+{% if node.images | typeof === 'object' %}
+  {% set images_keys = Object.keys(node.images); %}
+  {% set image_count = images_keys.length; %}
+{% endif %}
+
 {% if image_count === 0 %}
   {% set background = "#f1f1f1" %}
 {% endif %}
 
 <div style="width: {{ width }}px; height: 100%; display: inline-block; background-color: {{ background }}; font-size: 0; line-height: 0px;">
 
-  {% set image_found = false; %}
-  {% for image in node.images %}
-    {% if !image_found && image.relation | hasValue('default') %}
-      {% set image_found = true; %}
-      <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
-        <img  style="width: {{ width }}px;"
-              width="{{ width }}"
-              alt="{{ image.title }}"
-              src="{{ image.image }}"
-              border="0" />
-      </a>
-    {% endif %}
-  {% endfor %}
+  {% if image_count > 0 %}
+    {% set image_found = false; %}
+    {% for image in node.images %}
+      {% if !image_found && image.relation | hasValue('default') %}
+        {% set image_found = true; %}
+        <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+          <img  style="width: {{ width }}px;"
+                width="{{ width }}"
+                alt="{{ image.title }}"
+                src="{{ image.image }}"
+                border="0" />
+        </a>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
 
   <div style="width: {{ width }}px;">
 

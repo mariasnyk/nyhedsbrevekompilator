@@ -49,11 +49,14 @@ swig.setFilter('yyyymmdd', function (timestamp) {
   return moment.unix(timestamp).format('YYYYMMDD');
 });
 
-
 swig.setFilter('hasValue', function (listOfValues, value) {
   return Object.prototype.toString.call(listOfValues) !== '[object Array]' ?
     false :
     listOfValues.indexOf(value) > -1;
+});
+
+swig.setFilter('typeof', function (variable) {
+  return typeof variable;
 });
 
 

@@ -1,9 +1,13 @@
 {% if node !== null %}
 
+{% set image_count = 0; %}
+{% if node.images | typeof === 'object' %}
+  {% set images_keys = Object.keys(node.images); %}
+  {% set image_count = images_keys.length; %}
+{% endif %}
+
 <div style="width: {{ width }}px;">
-  {% set image_count = 0; %}
   {% for image in node.images %}
-    {% set image_count = loop.index; %}
     {% if loop.last %}
     <a href="{{ node.url }}?{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
       <img  style="width: {{ width }}px;"

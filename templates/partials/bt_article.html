@@ -34,8 +34,12 @@
   {% endfor %}
 {% endif %}
 
-{% set images = Object.keys(node.images); %}
-{% set image_count = images.length; %}
+{% set image_count = 0; %}
+{% if node.images | typeof === 'object' %}
+  {% set images_keys = Object.keys(node.images); %}
+  {% set image_count = images_keys.length; %}
+{% endif %}
+
 {% if image_count === 0 %}
   {% set background = "#000000" %}
   {% set color = "#ffffff" %}
