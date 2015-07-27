@@ -1,7 +1,7 @@
 {
-  "name": "userdb",
+  "name": "nyhedsbrevekompilator",
   "version": "1.0.0",
-  "description": "User DB",
+  "description": "Redaktionelle nyhedsbreve kompilator",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
@@ -12,7 +12,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bmdako/userdb"
+    "url": "https://github.com/BerlingskeMedia/nyhedsbrevekompilator"
   },
   "dependencies": {
     "checksum": "^0.1.1",
