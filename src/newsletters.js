@@ -18,7 +18,7 @@ module.exports.register = function (plugin, options, next) {
     path: '/admin/{param*}',
     handler: {
       directory: {
-        path: 'admin',
+        path: 'client',
         index: true
       }
     }

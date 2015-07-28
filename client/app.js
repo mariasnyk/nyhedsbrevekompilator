@@ -10,21 +10,21 @@ app.config(['$routeProvider', function ($routeProvider) {
       redirectTo: '/' })
     .when( '/', {
       page_title: 'Nyhedsbreve',
-      templateUrl: 'templates/newsletter-dashboard.html',
+      templateUrl: 'partials/newsletter-dashboard.html',
       controller: 'NewsletterDashboardController' })
     .when( '/udsendelser', {
       page_title: 'Udsendte nyhedsbreve',
-      templateUrl: 'templates/publications.html',
+      templateUrl: 'partials/publications.html',
       controller: 'PublicationsController' })
     .when( '/stats', {
       page_title: 'Statistiker',
-      templateUrl: 'templates/stats.html',
+      templateUrl: 'partials/stats.html',
       controller: 'StatsController' })
     .when( '/:ident', {
-      templateUrl: 'templates/newsletter-sender.html',
+      templateUrl: 'partials/newsletter-sender.html',
       controller: 'NewsletterSenderController' })
     .when( '/:ident/edit', {
-      templateUrl: 'templates/newsletter-editor.html',
+      templateUrl: 'partials/newsletter-editor.html',
       controller: 'NewsletterEditorController' })
     .otherwise({
       redirectTo: '/' });

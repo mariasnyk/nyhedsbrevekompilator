@@ -6,24 +6,15 @@ var Hapi = require('hapi'),
     templates = require('./templates');
 
 
-// A plugin to redirect GET requests on / to admin interface
-var admin = {
+var client = {
   register: function (plugin, options, next) {
 
     plugin.route({
       method: 'get',
-      path: '/',
-      handler: function (request, reply) {
-        reply.redirect('/nyhedsbreve');
-      }
-    });
-
-    plugin.route({
-      method: 'get',
-      path: '/nyhedsbreve/{param*}',
+      path: '/{param*}',
       handler: {
         directory: {
-          path: 'admin',
+          path: 'client',
           index: true
         }
       }
@@ -33,8 +24,8 @@ var admin = {
   }
 };
 
-admin.register.attributes = {
-  name: 'admin',
+client.register.attributes = {
+  name: 'client',
   version: '1.0.0'
 };
 
@@ -49,9 +40,10 @@ var server = new Hapi.Server({
 
 server.connection({ port: 8000 });
 
-server.register(admin, cb);
+server.register(client, { routes: { prefix: '/nyhedsbreve' } }, cb);
 server.register(templates, { routes: { prefix: '/templates' } }, cb);
 server.register(newsletters, { routes: { prefix: '/newsletters' } }, cb);
+server.route({ method: 'GET', path: '/', handler: function (request, reply) { reply.redirect('/nyhedsbreve'); } });
 
 
 if (!module.parent) {

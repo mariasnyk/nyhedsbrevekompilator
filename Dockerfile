@@ -15,7 +15,7 @@ RUN wget -O - http://nodejs.org/dist/v0.12.5/node-v0.12.5-linux-x64.tar.gz \
 WORKDIR /nyhedsbrevekompilator
 
 # Copying the code into image. Be aware no config files are including.
-COPY ./admin /nyhedsbrevekompilator/admin
+COPY ./client /nyhedsbrevekompilator/client
 COPY ./node_modules /nyhedsbrevekompilator/node_modules
 COPY ./src /nyhedsbrevekompilator/src
 COPY ./templates /nyhedsbrevekompilator/templates
