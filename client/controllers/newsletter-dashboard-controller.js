@@ -8,12 +8,17 @@ app.controller('NewsletterDashboardController', ['$scope', '$routeParams', '$loc
     loadingSwitch.watch($scope.newsletters);
 
     $scope.createNewsletter = function (name) {
+
+      if (name === undefined || name === null || name === '') {
+        return notifications.showError('Indtast navn');
+      }
+
       var saving = Newsletters.save({ name: name }, function (result) {
         $location.url('/' + result.ident + '/edit' );
       }, function (error) {
         console.log('Create newsletter error:', error);
         if (error.data.message) {
-          notifications.showError(error.data.message);  
+          notifications.showError(error.data.message);
         } else {
           notifications.showError(error.statusText !== undefined ? error.statusText : 'Unknown error' );
         }
