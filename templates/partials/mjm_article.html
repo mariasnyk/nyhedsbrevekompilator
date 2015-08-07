@@ -24,7 +24,7 @@
 
   <a href="{{ node.url }}?{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
     <div style="text-align: left; line-height: 100%; padding-top: 5px;">
-      {% if primary_article %}
+      {% if node.primary_article %}
       <font
         color="#1A1A1A"
         style="font-family: {{ font_family_bold|safe }}; font-size: 36px; line-height: 36px; font-weight: bold; text-rendering: optimizeLegibility;">
@@ -40,7 +40,7 @@
     </div>
   </a>
 
-  {% if primary_article && node.summary %}
+  {% if node.primary_article && node.summary %}
   <a href="{{ node.url }}?{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
     <div style="text-align: left; line-height: 100%; padding-top: 5px; text-decoration: none;">
       <font

@@ -103,7 +103,7 @@
                 <div style="max-width: 614px; display: inline-block; background-color: #ffffff; font-size; 0; line-height: 0px;">
                   {% set width=614 %}
                   {% set node = nodes[0]; %}
-                  {% set primary_article = true; %}
+                  {% set node.primary_article = true; %}
                   {% include "mjm_article.html" %}
                 </div>
               </td>
@@ -136,7 +136,6 @@
                     <!-- Right story -->
                     {% set width=300 %}
                     {% set node = nodes[loop.index0 - 1]; %}
-                    {% set primary_article = false; %}
                     {% include "mjm_article.html" %}
                   </div>
                 </td>
@@ -145,7 +144,6 @@
                     <!-- Left story -->
                     {% set width=300 %}
                     {% set node = nodes[loop.index0]; %}
-                    {% set primary_article = false; %}
                     {% include "mjm_article.html" %}
                   </div>
                 </td>

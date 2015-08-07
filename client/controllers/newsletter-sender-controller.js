@@ -86,6 +86,10 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     };
 
     $scope.hasCategory = function (category) {
+      if ($scope.newsletter.categories === undefined) {
+        return false;
+      }
+
       return $scope.newsletter.categories.some(function (cat) {
         if (typeof category === 'string') {
           return cat === category;
