@@ -91,29 +91,21 @@
   <div class="row">
     <div class="col-xs-12">
       <ul class="nav nav-tabs">
-        <!-- <li role="presentation" ng-click="currentTab = 'subject'" ng-class="{active:currentTab === 'subject'}"><a>Emnefelt</a></li> -->
-        <li role="presentation" ng-click="currentTab = 'html'; updateHtmlPreview();" ng-class="{active:currentTab === 'html'}" _class="active">
-          <a>
-            HTML
-          </a>
+        <li role="presentation" ng-click="currentTab = 'html_tab'; updateHtmlPreview();" ng-class="{active:currentTab === 'html_tab'}">
+          <a>HTML</a>
         </li>
-        <li role="presentation" ng-click="currentTab = 'text'; updatePlainPreview();" ng-class="{active:currentTab === 'text'}">
-          <a>
-            TEXT
-          </a>
+        <li role="presentation" ng-click="currentTab = 'text_tab'; updatePlainPreview();" ng-class="{active:currentTab === 'text_tab'}">
+          <a>TEXT</a>
         </li>
-        <li role="presentation" ng-click="currentTab = 'data';" ng-class="{active:currentTab === 'data'}"><a>Tilpas indhold</a></li>
+        <li role="presentation" ng-click="currentTab = 'data_tab';" ng-class="{active:currentTab === 'data_tab'}">
+          <a>Tilpas indhold</a>
+        </li>
       </ul>
     </div>
   </div>
 
-  <div ng-include="currentTab"></div>
 
-  <a class="debug_link" target="_blank" href="/templates/{{ newsletter.template_html }}?u={{ safe_bond_url }}&debug=true">Debug link</a>
-</div>
-
-<script type="text/ng-template" id="html">
-  <div class="row">
+  <div class="row" ng-show="currentTab === 'html_tab'">
     <div class="col-xs-12">
       <div class="panel panel-default">
         <div class="panel-body">
@@ -128,10 +120,9 @@
       </div>
     </div>
   </div>
-</script>
 
-<script type="text/ng-template" id="text">
-  <div class="row">
+
+  <div class="row" ng-show="currentTab === 'text_tab'">
     <div class="col-xs-12">
       <div class="panel panel-default">
         <div class="panel-body">
@@ -146,10 +137,9 @@
       </div>
     </div>
   </div>
-</script>
 
-<script type="text/ng-template" id="data">
-  <div class="row" id="newsletter-data-form">
+
+  <div class="row" id="newsletter-data-form" ng-show="currentTab === 'data_tab'">
     <div class="col-xs-12">
       <div class="panel panel-default">
         <div class="panel-body">
@@ -176,12 +166,13 @@
                   placeholder="Rubrik"/>
                 <div
                   class="checkbox"
+                  ng-init="node.show_body = true"
                   ng-if="$index === 0 && hasCategory(['Berlingske', 'Business'])">
                   <label>
                     <input
                       type="checkbox"
                       ng-model="node.show_body">
-                      Briefing
+                      Anvend br&oslash;dtekst istedet for underrubrik
                   </label>
                 </div>
                 <textarea
@@ -195,15 +186,13 @@
                   ng-change="changeNodeTitle()"
                   ng-blur="blurNodeTitle()"
                   placeholder="Underrubrik"></textarea>
-                <textarea
-                  class="form-control"
-                  type="text"
-                  rows="10"
-                  ng-show="node.show_body"
-                  ng-model="node.body"
-                  ng-change="changeNodeTitle()"
-                  ng-blur="blurNodeTitle()"
-                  placeholder="Br&oslash;dtekst"></textarea>
+                <div class="panel panel-default" ng-show="node.show_body">
+                  <div class="panel-body">
+                    <small>
+                      <div ng-bind-html="node.body"></div>
+                    </small>
+                  </div>
+                </div>
                 <textarea
                   class="form-control"
                   type="text"
@@ -217,6 +206,7 @@
                 <input
                   class="form-control"
                   type="text"
+                  ng-hide="node.show_body"
                   ng-model="node.calltoaction"
                   ng-change="changeNodeTitle()"
                   ng-blur="blurNodeTitle()"
@@ -239,4 +229,6 @@
       </div>
     </div>
   </div>
-</script>
+
+  <a class="debug_link" target="_blank" href="/templates/{{ newsletter.template_html }}?u={{ safe_bond_url }}&debug=true">Debug link</a>
+</div>

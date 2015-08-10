@@ -1,7 +1,7 @@
 app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', '$q', 'notifications', 'loadingSwitch',
   function ($scope, $routeParams, $location, $resource, $sce, $http, $q, notifications, loadingSwitch) {
 
-    $scope.currentTab = 'html';
+    $scope.currentTab = 'html_tab';
 
     var Newsletters = $resource('/newsletters/:ident', { ident: '@ident' });
     var Identities = $resource('/newsletters/identities');
