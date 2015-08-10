@@ -4,7 +4,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     $scope.currentTab = 'html_tab';
 
     var Newsletters = $resource('/newsletters/:ident', { ident: '@ident' });
-    var Identities = $resource('/newsletters/identities');
+    var Identities = $resource('/newsletters/identities/:identity', { identity: '@identity' });
     var Lists = $resource('/newsletters/lists/:list', { list: '@list' });
 
     $scope.dirty = false;
@@ -30,22 +30,23 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
       getControlroomUrl();
 
-      // Populating the drop downs so newsletter values are visible
-      $scope.html_templates = [$scope.newsletter.template_html];
-      $scope.plain_templates = [$scope.newsletter.template_plain];
-      $scope.identities = [$scope.newsletter.identity];
-      $scope.lists = [$scope.newsletter.list];
       $scope.safe_bond_url = encodeURIComponent($scope.newsletter.bond_url);
-
-      // TODO: Maybe we should validate the Identity also, like we do with Lists
 
       // Validating the list still exists in SendGrid
       Lists.query({ list: $scope.newsletter.list}, function (response) {
         if (response[0] === undefined || response[0].list !== $scope.newsletter.list) {
           console.log('Couldn\'t find list ' + $scope.newsletter.list + ' in SendGrid.');
-          $scope.lists = ['ERROR'];
+          notifications.showError('Afsender fejler');
         }
       }, resourceErrorHandler);
+
+      // Validating the identity still exists in SendGrid
+      Identities.get({ identity: $scope.newsletter.identity}, function (response) {
+        // Found it and everything is OK.
+      }, function (response) {
+        console.log('Couldn\'t find identity ' + $scope.newsletter.identity + ' in SendGrid.');
+        notifications.showError('Modtagerliste fejler');
+      });
 
     }, resourceErrorHandler);
 
