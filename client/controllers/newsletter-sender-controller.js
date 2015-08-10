@@ -158,6 +158,25 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
     function getBondDataAndUpdatePreviews () {
       return getBondData().success(function () {
+
+        // This is a hack.
+        // We want to set show_body=true as a default value. This is actually already done on ng-init in the template newsletter-sender-html.
+        // But because this whole Angularv app is not built using directives that can communicate, we're loading the newsletter preview before our view is fully loaded.
+
+        // See the right way here: https://docs.angularjs.org/guide/directive#creating-directives-that-communicate
+        // This approach requires a major refactoring.
+
+        if ($scope.newsletter.categories && $scope.bonddata.nodes[0]) {
+          var wantsToShowBodyDefault = $scope.newsletter.categories.some(function (category) {
+            return ['Berlingske', 'Business'].indexOf(category) > -1;
+          });
+
+          if (wantsToShowBodyDefault) {
+            $scope.bonddata.nodes[0].show_body = true;
+          }
+        }
+        // Hack end
+
         updatePreviews();
       });
     }
