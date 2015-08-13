@@ -168,7 +168,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
         if ($scope.newsletter.categories && $scope.bonddata.nodes[0]) {
           var wantsToShowBodyDefault = $scope.newsletter.categories.some(function (category) {
-            return ['Berlingske', 'Business'].indexOf(category) > -1;
+            return ['Business Morgen'].indexOf(category) > -1;
           });
 
           if (wantsToShowBodyDefault) {
