@@ -1,4 +1,4 @@
-{% if node !== null %}
+{% if node !== undefined && node !== null %}
 
 {% set image_count = 0; %}
 {% if node.images | typeof === 'object' %}

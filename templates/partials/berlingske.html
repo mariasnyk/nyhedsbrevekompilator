@@ -110,8 +110,10 @@
                 <div style="max-width: 614px; display: inline-block; background-color: #ffffff; font-size; 0; line-height: 0px;">
                   {% set width=614 %}
                   {% set node = nodes[0]; %}
-                  {% set node.primary_article = true; %}
-                  {% include "berlingske_article.html" %}
+                  {% if node !== undefined && node !== null %}
+                    {% set node.primary_article = true; %}
+                    {% include "berlingske_article.html" %}
+                  {% endif %}
                 </div>
               </td>
             </tr>
