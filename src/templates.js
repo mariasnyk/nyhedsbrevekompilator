@@ -70,13 +70,15 @@ module.exports.register = function (plugin, options, next) {
         var data = require(path.join(testdataDir, request.query.f));
         prepareData(data);
         reply(data);
-      } else {
+      } else if (request.query.u) {
         getDataFromBond(request.query.u, function (err, data) {
           if (err) return reply(err).code(500);
           if (data === null) return reply().code(404);
 
           reply(data);
         });
+      } else {
+        return reply().code(400);
       }
     }
   });
