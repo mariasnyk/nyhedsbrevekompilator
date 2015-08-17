@@ -165,6 +165,18 @@
             </font>
           </div>
         </a>
+
+        {% else %}
+        <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+          <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
+            <font
+              color="#d00000"
+              style="font-family: {{ font_family_sans|safe }}; text-decoration: underline; font-weight: bold; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+              L&aelig;s mere
+            </font>
+          </div>
+        </a>
+
         {% endif %}
       {% endif %}
     </div>
