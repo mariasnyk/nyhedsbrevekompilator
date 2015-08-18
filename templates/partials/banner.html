@@ -1,5 +1,4 @@
 {% set kw2 = timestamp | yyyymmdd %}
-{% set upair = kw + '_' + cu %}
 
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
@@ -27,8 +26,8 @@
                 </font>
                 <br>
                 {% endif %}
-                <a target="_blank" href="http://ad1.emediate.dk/eas?cu={{ cu }};ty=ct;kw={{ kw }};kw2={{ kw2 }};upair={{ upair }}" title="">
-                  <img class="full" src="http://ad1.emediate.dk/eas?cu={{ cu }};cre=img;kw={{ kw }};kw2={{ kw2 }};upair={{ upair }}" alt="" border="0" style="max-width: 100%; display: block;" width="100%" />
+                <a target="_blank" href="http://ad1.emediate.dk/eas?cu={{ cu }};ty=ct;kw={{ kw }};kw2={{ kw2 }};upair=[ekstern_id]" title="">
+                  <img class="full" src="http://ad1.emediate.dk/eas?cu={{ cu }};cre=img;kw={{ kw }};kw2={{ kw2 }};upair=[ekstern_id]" alt="" border="0" style="max-width: 100%; display: block;" width="100%" />
                 </a>
               </div>
             </td>
