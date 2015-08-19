@@ -7,7 +7,7 @@ app.controller('StatsController', ['$scope', '$routeParams', '$location', '$reso
     $scope.end_date = new Date();
 
     $scope.stats_parameters = {
-      aggregated_by: "month", //day|week|month
+      aggregated_by: "day", //day|week|month
       categories: []
     };
 
