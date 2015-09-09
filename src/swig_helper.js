@@ -56,7 +56,7 @@ swig.setFilter('hasValue', function (listOfValues, value) {
 });
 
 swig.setFilter('typeof', function (variable) {
-  return typeof variable;
+  return Object.prototype.toString.call( variable );
 });
 
 

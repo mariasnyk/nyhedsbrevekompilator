@@ -303,11 +303,38 @@ function download (url, callback) {
 
 
 function prepareData (data) {
+  orderBondImages(data);
   data.subject = subjectSuggestion(data);
   addPaywallToken(data);
   return data;
 }
 
+function orderBondImages (data) {
+  if (data === null) return;
+
+  if (data.type === 'nodequeue' || data.type === 'latest_news') {
+    for (var i = data.nodes.length - 1; i >= 0; i--) {
+      orderBondImages(data.nodes[i]);
+    };
+  } else if (data.images !== undefined && data.images !== null && Object.prototype.toString.call( data.images ) === '[object Object]') {
+    var images = [];
+    Object.keys(data.images).forEach(function (key) {
+      images.push(data.images[key]);
+    });
+    delete data.images;
+    data.images = images.sort(sortImages);
+  }
+}
+
+function sortImages(bondImageA, bondImageB) {
+  if (bondImageA.position < bondImageB.position) {
+    return -1;
+  } else if (bondImageA.position > bondImageB.position) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
 
 function subjectSuggestion (data) {
   if (data === null) return '';

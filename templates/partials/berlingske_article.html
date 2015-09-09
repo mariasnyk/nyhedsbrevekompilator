@@ -12,9 +12,11 @@
 {% set background = "#ffffff" %}
 
 {% set image_count = 0; %}
-{% if node.images | typeof === 'object' %}
+{% if node.images | typeof === '[object Object]' %}
   {% set images_keys = Object.keys(node.images); %}
   {% set image_count = images_keys.length; %}
+{% elif node.images | typeof === '[object Array]' %}
+  {% set image_count = node.images.length; %}
 {% endif %}
 
 {% if image_count === 0 %}

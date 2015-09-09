@@ -1,21 +1,25 @@
 {% if node !== undefined && node !== null %}
 
 {% set image_count = 0; %}
-{% if node.images | typeof === 'object' %}
+{% if node.images | typeof === '[object Object]' %}
   {% set images_keys = Object.keys(node.images); %}
   {% set image_count = images_keys.length; %}
+{% elif node.images | typeof === '[object Array]' %}
+  {% set image_count = node.images.length; %}
 {% endif %}
 
 <div style="width: {{ width }}px;">
+  {% set image_found = false; %}
   {% for image in node.images %}
-    {% if loop.last %}
-    <a href="{{ node.url }}?{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
-      <img  style="width: {{ width }}px;"
-            width="{{ width }}"
-            alt="{{ image.title }}"
-            src="{{ image.image }}"
-            border="0" />
-    </a>
+    {% if !image_found && image.relation | hasValue('default') %}
+      {% set image_found = true; %}
+      <a href="{{ node.url }}?{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
+        <img  style="width: {{ width }}px;"
+              width="{{ width }}"
+              alt="{{ image.title }}"
+              src="{{ image.image }}"
+              border="0" />
+      </a>
     {% endif %}
   {% endfor %}
 </div>
