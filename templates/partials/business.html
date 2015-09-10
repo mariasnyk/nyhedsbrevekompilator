@@ -1,6 +1,73 @@
-{% extends "berlingske.html" %}
+{% extends "basic.html" %}
 
 {% set home_url = "http://www.business.dk"; %}
+
+{% block font_face %}
+  @font-face {
+    font-family: "berlingske";
+      src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.eot");
+      src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.eot?#iefix") format("embedded-opentype"),
+           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.woff2") format("woff2"),
+           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.woff") format("woff"),
+           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+  }
+
+  @font-face {
+    font-family: "berlingske_bold";
+      src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.eot");
+      src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.eot?#iefix") format("embedded-opentype"),
+           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.woff2") format("woff2"),
+           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.woff") format("woff"),
+           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+  }
+
+  @font-face {
+    font-family: "berlingske_sans_bold";
+      src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.eot");
+      src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.eot?#iefix") format("embedded-opentype"),
+           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.woff2") format("woff2"),
+           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.woff") format("woff"),
+           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+  }
+{% endblock %}
+
+{% set font_family="berlingske, Georgia, 'Times New Roman', Times, serif" %}
+{% set font_family_bold="berlingske_bold, Georgia, 'Times New Roman', Times, serif" %}
+{% set font_family_sans="berlingske_sans_bold, 'Helvetica Neue', Helvetica, Arial, sans-serif" %}
+
+{% set article_template = "berlingske_article.html"; %}
+
+{% block top_logo %}
+  <div style="text-align: left; line-height: 100%; padding-left: 20px;">
+    <font
+      color="#1A1A1A"
+      style="font-family: {{ font_family_sans|safe }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
+      {{ timestamp | unix('dddd D. MMMM YYYY') }}
+    </font>
+  </div>
+  <img style="width: 100%;" src="{{ logo_src }}" width="654" usemap="#imgmap">
+  <map name="imgmap">
+    <area shape="rect" coords="0,0,520,97" href="{{ home_url }}?{{ tracking }}">
+    <area shape="rect" coords="520,0,654,97" href="{{ buy_subscription_href }}">
+  </map>
+{% endblock %}
+
+{% block read_more %}
+  <hr style="height: 1px; border: 0; background: #dddddd">
+  <a href="{{ home_url }}?{{ tracking }}" style="text-decoration: none;">
+    <div style="margin: 20px; width: 200px; background-color: #13183D; padding: 10px; border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; -opera-border-radius: 4px;">
+      <font color="#ffffff" style="font-family: {{ font_family_sans|safe }}; font-size: 20px; line-height: 30px; text-rendering: optimizeLegibility;">
+        Se flere historier
+      </font>
+    </div>
+  </a>
+{% endblock %}
 
 {% block social %}
 <div style="margin: 20px 0px 0px 0px;">
