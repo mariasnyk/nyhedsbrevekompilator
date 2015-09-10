@@ -1,304 +1,95 @@
-<!DOCTYPE html>
-<html>
-{% spaceless %}
-<head lang="en">
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>{{ subject }}</title>
-  <style type="text/css">
-    /* From  https://github.com/mailchimp/email-blueprints/blob/master/responsive-templates/base_boxed_body_image_2column_query.html */
+{% extends "basic.html" %}
 
-    /* /\/\/\/\/\/\/\/\/ CLIENT-SPECIFIC STYLES /\/\/\/\/\/\/\/\/ */
-    #outlook a{padding:0;} /* Force Outlook to provide a "view in browser" message */
-    .ReadMsgBody{width:100%;} .ExternalClass{width:100%;} /* Force Hotmail to display emails at full width */
-    .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;} /* Force Hotmail to display normal line spacing */
-    body, table, td, p, a, li, blockquote{-webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;} /* Prevent WebKit and Windows mobile changing default text sizes */
-    table, td{mso-table-lspace:0pt; mso-table-rspace:0pt;} /* Remove spacing between tables in Outlook 2007 and up */
-    img{-ms-interpolation-mode:bicubic;} /* Allow smoother rendering of resized image in Internet Explorer */
-    /* /\/\/\/\/\/\/\/\/ RESET STYLES /\/\/\/\/\/\/\/\/ */
-    body{margin:0; padding:0;}
-    img{border:0; height:auto; line-height: 100%; outline:none; text-decoration:none;}
-    table{border-collapse:collapse !important;}
-    body, #bodyTable, #bodyCell{height:100% !important; margin:0; padding:0; width:100% !important;}
+{% set home_url = "http://www.b.dk"; %}
 
-    @font-face {
-      font-family: "berlingske";
-        src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.eot");
-        src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.eot?#iefix") format("embedded-opentype"),
-             url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.woff2") format("woff2"),
-             url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.woff") format("woff"),
-             url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.ttf") format("truetype");
-        font-weight: 400;
-        font-style: normal;
-    }
+{% block font_face %}
+  @font-face {
+    font-family: "berlingske";
+      src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.eot");
+      src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.eot?#iefix") format("embedded-opentype"),
+           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.woff2") format("woff2"),
+           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.woff") format("woff"),
+           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+  }
 
-    @font-face {
-      font-family: "berlingske_bold";
-        src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.eot");
-        src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.eot?#iefix") format("embedded-opentype"),
-             url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.woff2") format("woff2"),
-             url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.woff") format("woff"),
-             url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.ttf") format("truetype");
-        font-weight: 400;
-        font-style: normal;
-    }
+  @font-face {
+    font-family: "berlingske_bold";
+      src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.eot");
+      src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.eot?#iefix") format("embedded-opentype"),
+           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.woff2") format("woff2"),
+           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.woff") format("woff"),
+           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+  }
 
-    @font-face {
-      font-family: "berlingske_sans_bold";
-        src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.eot");
-        src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.eot?#iefix") format("embedded-opentype"),
-             url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.woff2") format("woff2"),
-             url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.woff") format("woff"),
-             url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.ttf") format("truetype");
-        font-weight: 400;
-        font-style: normal;
-    }
-  </style>
-</head>
+  @font-face {
+    font-family: "berlingske_sans_bold";
+      src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.eot");
+      src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.eot?#iefix") format("embedded-opentype"),
+           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.woff2") format("woff2"),
+           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.woff") format("woff"),
+           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+  }
+{% endblock %}
 
 {% set font_family="berlingske, Georgia, 'Times New Roman', Times, serif" %}
 {% set font_family_bold="berlingske_bold, Georgia, 'Times New Roman', Times, serif" %}
 {% set font_family_sans="berlingske_sans_bold, 'Helvetica Neue', Helvetica, Arial, sans-serif" %}
 
-<body style="background-color: #f9f9f9; margin: 0px;">
+{% set article_template = "berlingske_article.html"; %}
 
-  <!--[if (gte mso 9)|(IE)]>
-  <table width="654" align="center" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-          <td>
-  <![endif]-->
+{% block top_logo %}
+  <div style="text-align: left; line-height: 100%; padding-left: 20px;">
+    <font
+      color="#1A1A1A"
+      style="font-family: {{ font_family_sans|safe }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
+      {{ timestamp | unix('dddd D. MMMM YYYY') }}
+    </font>
+  </div>
+  <img style="width: 100%;" src="{{ logo_src }}" width="654" usemap="#imgmap">
+  <map name="imgmap">
+    <area shape="rect" coords="0,0,520,97" href="{{ home_url }}?{{ tracking }}">
+    <area shape="rect" coords="520,0,654,97" href="{{ buy_subscription_href }}">
+  </map>
+{% endblock %}
 
-  <!-- The almighty table -->
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="white" style="margin: auto; max-width: 654px;">
-    <tr>
-      <td align="center" valign="top">
-        <!-- Click-here-stuff -->
-        <p>
-          <a href="[weblink]">
-            <font color="#333333" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 12px; line-height: 12px; text-rendering: optimizeLegibility;">
-              Se nyhedsbrevet i din browser
-            </font>
-          </a>
-        </p>
-      </td>
-    </tr>
-    <tr>
-      <td align="center" valign="top">
-        <!-- Top logo -->
-        <div style="text-align: left; line-height: 100%; padding-left: 20px;">
-          <font
-            color="#1A1A1A"
-            style="font-family: {{ font_family_sans|safe }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
-            {{ timestamp | unix('dddd D. MMMM YYYY') }}
-          </font>
-        </div>
-        <img style="width: 100%;" src="{{ logo_src }}" width="654" usemap="#imgmap">
-        <map name="imgmap">
-          <area shape="rect" coords="0,0,520,97" href="{{ home_url }}?{{ tracking }}">
-          <area shape="rect" coords="520,0,654,97" href="{{ buy_subscription_href }}">
-        </map>
-      </td>
-    </tr>
-    <tr>
-      <td align="center" valign="top">
-        <!-- Wide banner -->
-        {% block wide_banner_1 %}
-        {% endblock %}
-        <!-- Wide banner -->
-      </td>
-    </tr>
-    <tr>
-      <td align="center" valign="top">
-        <!-- Big story -->
-        <div style="padding: 20px 20px;">
-          <table width="100%" cellpadding="0" cellspacing="0" border="0">
-            <tr>
-              <td width="100%" align="center" valign="top">
-                <div style="max-width: 614px; display: inline-block; background-color: #ffffff; font-size; 0; line-height: 0px;">
-                  {% set width=614 %}
-                  {% set node = nodes[0]; %}
-                  {% if node !== undefined && node !== null %}
-                    {% set node.primary_article = true; %}
-                    {% include "berlingske_article.html" %}
-                  {% endif %}
-                </div>
-              </td>
-            </tr>
-          </table>
-        </div>
-        <!-- Big story END -->
-      </td>
-    </tr>
-    <tr>
-      <td align="center" valign="top">
-        {% block story_appendix %}
-        {% endblock %}
-      </td>
-    </tr>
-    <tr>
-      <td align="center" valign="top">
-        <!-- Wide banner -->
-        {% block wide_banner_2 %}
-        {% endblock %}
-        <!-- Wide banner -->
-      </td>
-    </tr>
-    {% for node in nodes %}
-      {% if loop.index0 !== 0 && loop.index0 % 2 === 0 %}
-      <tr>
-        <td align="center" valign="top">
-          <!-- Two-column stories -->
-          <div style="padding: 20px 20px;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-              <tr>
-                <td width="50%" align="center" valign="top">
-                  <div style="max-width: 300px; padding-right: 7px; display: inline-block; background-color: #ffffff; font-size; 0; line-height: 0px;">
-                    <!-- Right story -->
-                    {% set width=300 %}
-                    {% set node = nodes[loop.index0 - 1]; %}
-                    {% include "berlingske_article.html" %}
-                  </div>
-                </td>
-                <td width="50%" align="center" valign="top">
-                  <div style="max-width: 300px; padding-left: 7px; display: inline-block; background-color: #ffffff; font-size; 0; line-height: 0px;">
-                    <!-- Left story -->
-                    {% set width=300 %}
-                    {% set node = nodes[loop.index0]; %}
-                    {% include "berlingske_article.html" %}
-                  </div>
-                </td>
-              </tr>
-            </table>
-          </div>
-          <!-- Two-column stories END -->
-        </td>
-      </tr>
-      {% endif %}
-      {% if loop.index === 5 %}
-      <tr>
-        <td align="center" valign="top">
-          <!-- First 4:3 beerbox banner -->
-          {% block box_banner_1 %}
-          {% endblock %}
-          <!-- 4:3 beerbox banner END -->
-        </td>
-      </tr>
-      {% endif %}
-    {% endfor %}
-    <tr>
-      <td align="center" valign="top">
-        {% block read_more %}
-        <!-- Read more -->
-        <hr style="height: 1px; border: 0; background: #dddddd">
-        <a href="{{ home_url }}?{{ tracking }}" style="text-decoration: none;">
-          <div style="margin: 20px; width: 200px; background-color: #13183D; padding: 10px; border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; -opera-border-radius: 4px;">
-            <font color="#ffffff" style="font-family: {{ font_family_sans|safe }}; font-size: 20px; line-height: 30px; text-rendering: optimizeLegibility;">
-              Se flere historier
-            </font>
-          </div>
-        </a>
-        <!-- Read more END -->
-        {% endblock %}
-      </td>
-    </tr>
-    <tr>
-      <td align="center" valign="top">
-        <!-- Second 4:3 beerbox banner -->
-        {% block box_banner_2 %}
-        {% endblock %}
-        <!-- 4:3 beerbox banner END -->
-      </td>
-    </tr>
-    <tr>
-      <td align="center" valign="top">
-        <!-- Wide banner -->
-        {% block wide_banner_3 %}
-        {% endblock %}
-        <!-- Wide banner -->
-      </td>
-    </tr>
-    <tr>
-      <td width="100%" height="24" style="font-size: 0px; line-height: 0px;">&nbsp;</td>
-    </tr>
-    <tr>
-      <td align="center" valign="top">
-        <hr style="height: 1px; border: 0; background: #dddddd">
-      </td>
-    </tr>
-    <tr>
-      <td align="center" valign="top">
-        {% block social %}
-        <div style="padding: 20px 0px 0px 0px;">
-          <font color="#000000" style="font-family: {{ font_family|safe }}; font-size: 24px; line-height: 36px; text-rendering: optimizeLegibility;">
-            F&Oslash;LG BERLINGSKE
-          </font>
-        </div>
-        <div style="padding: 20px 0px;">
-          <div style="padding: 0px 15px; display: inline-block;">
-            <a target="_blank" href="http://link.berlingskemedia.dk/berlingske_facebook" style="text-decoration: none;">
-              <img src="http://nlstatic.berlingskemedia.dk/images/facebook.png" width="12" />
-            </a>
-          </div>
-          <div style="padding: 0px 15px; display: inline-block;">
-            <a target="_blank" href="http://link.berlingskemedia.dk/berlingske_twitter" style="text-decoration: none;">
-              <img src="http://nlstatic.berlingskemedia.dk/images/twitter.png" width="26" />
-            </a>
-          </div>
-          <div style="padding: 0px 15px; display: inline-block;">
-            <a target="_blank" href="http://link.berlingskemedia.dk/berlingske_instagram" style="text-decoration: none;">
-              <img src="http://nlstatic.berlingskemedia.dk/images/instagram.png" width="24" />
-            </a>
-          </div>
-        </div>
-        {% endblock %}
-      </td>
-    </tr>
-    <tr>
-      <td align="center" valign="top">
-        <div style="margin: 0px 0px;">
-          <a target="_blank" href="http://www.berlingskemedia.dk/ophavsret-og-vilkaar/" style="margin: 0px 10px; text-decoration: none;">
-            <font color="#666666" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
-              Ophavsret og vilk&aring;r
-            </font>
-          </a>
-          <font color="#666666" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
-            &middot;
-          </font>
-          <a target="_blank" href="http://www.berlingskemedia.dk/annoncor/" style="margin: 0px 10px;  text-decoration: none;">
-            <font color="#666666" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
-              Annonceinfo
-            </font>
-          </a>
-          <font color="#666666" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
-            &middot;
-          </font>
-          <a target="_blank" href="{{ unsubscribe_href }}" style="margin: 0px 10px;  text-decoration: none;">
-            <font color="#666666" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
-              Afmeld nyhedsbrev
-            </font>
-          </a>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td width="100%" height="14" style="font-size:0px; line-height: 0px;">&nbsp;</td>
-    </tr>
-  </table>
+{% block read_more %}
+  <hr style="height: 1px; border: 0; background: #dddddd">
+  <a href="{{ home_url }}?{{ tracking }}" style="text-decoration: none;">
+    <div style="margin: 20px; width: 200px; background-color: #13183D; padding: 10px; border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; -opera-border-radius: 4px;">
+      <font color="#ffffff" style="font-family: {{ font_family_sans|safe }}; font-size: 20px; line-height: 30px; text-rendering: optimizeLegibility;">
+        Se flere historier
+      </font>
+    </div>
+  </a>
+{% endblock %}
 
-  {% if debug %}
-    {% include "debuginfo.html" %}
-  {% endif %}
-
-  <!--[if (gte mso 9)|(IE)]>
-      </td>
-    </tr>
-  </table>
-  <![endif]-->
-
-  <!-- Litmus -->
-  <style>@media print{ #_t { background-image: url('https://eq1o05ge.emltrk.com/eq1o05ge?p&d=[email]');}} div.OutlookMessageHeader {background-image:url('https://eq1o05ge.emltrk.com/eq1o05ge?f&d=[email]')} table.moz-email-headers-table {background-image:url('https://eq1o05ge.emltrk.com/eq1o05ge?f&d=[email]')} blockquote #_t {background-image:url('https://eq1o05ge.emltrk.com/eq1o05ge?f&d=[email]')} #MailContainerBody #_t {background-image:url('https://eq1o05ge.emltrk.com/eq1o05ge?f&d=[email]')}</style><div id="_t"></div>
-  <img src="https://eq1o05ge.emltrk.com/eq1o05ge?d=[email]" width="1" height="1" border="0" />
-</body>
-{% endspaceless %}
-</html>
+{% block social %}
+  <div style="padding: 20px 0px 0px 0px;">
+    <font color="#000000" style="font-family: {{ font_family|safe }}; font-size: 24px; line-height: 36px; text-rendering: optimizeLegibility;">
+      F&Oslash;LG BERLINGSKE
+    </font>
+  </div>
+  <div style="padding: 20px 0px;">
+    <div style="padding: 0px 15px; display: inline-block;">
+      <a target="_blank" href="http://link.berlingskemedia.dk/berlingske_facebook" style="text-decoration: none;">
+        <img src="http://nlstatic.berlingskemedia.dk/images/facebook.png" width="12" />
+      </a>
+    </div>
+    <div style="padding: 0px 15px; display: inline-block;">
+      <a target="_blank" href="http://link.berlingskemedia.dk/berlingske_twitter" style="text-decoration: none;">
+        <img src="http://nlstatic.berlingskemedia.dk/images/twitter.png" width="26" />
+      </a>
+    </div>
+    <div style="padding: 0px 15px; display: inline-block;">
+      <a target="_blank" href="http://link.berlingskemedia.dk/berlingske_instagram" style="text-decoration: none;">
+        <img src="http://nlstatic.berlingskemedia.dk/images/instagram.png" width="24" />
+      </a>
+    </div>
+  </div>
+{% endblock %}

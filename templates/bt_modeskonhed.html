@@ -2,7 +2,6 @@
 {% set disableBTbackground = true; %}
 
 {% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + timestamp | yyyymmdd + "&ns_linkname=bt_modeskonhed"; %}
-{% set home_url = "http://www.bt.dk/sektion/modeogskonhed"; %}
 {% set logo_src = "http://nlstatic.berlingskemedia.dk/headers/bt_mode.png"; %}
 {% set unsubscribe_href = "http://profil.berlingskemedia.dk/tilmeldt/112?id=[ekstern_id]" %}
 {% set buy_subscription_href = "http://sjma.dk/lpcms/landingpage/bt1.php?cid=BT-140218-CP-MALEDIT1NB&ns_campaign=_abonnementnyhedsbreve_toplink_bt&ns_mchannel=na&ns_source=nyhedsbreve&ns_linkname=nl_uspecificeret&ns_fee=3" %}
@@ -35,21 +34,4 @@
 {% set hide_annonce_background = false; %}
 {% set hide_annonce_label = false; %}
 {% include "partials/banner.html" %}
-{% endblock %}
-
-{% block permission_intro %}
-{% endblock %}
-
-{% block permission_1 %}
-{% set cu = "28359"; %}
-{% set hide_annonce_background = true; %}
-{% set hide_annonce_label = true; %}
-{# include "partials/banner.html" #}
-{% endblock %}
-
-{% block permission_2 %}
-{% set cu = "28360"; %}
-{% set hide_annonce_background = true; %}
-{% set hide_annonce_label = true; %}
-{# include "partials/banner.html" #}
 {% endblock %}
