@@ -166,13 +166,20 @@
                   placeholder="Rubrik"/>
                 <div
                   class="checkbox"
-                  ng-if="$index === 0 && hasCategory(['Berlingske', 'Business'])">
+                  ng-if="$index === 0 && hasCategory(['Berlingske', 'Business', 'AOK'])">
                   <label>
                     <input
                       type="checkbox"
                       ng-model="node.show_body">
                       Anvend br&oslash;dtekst istedet for underrubrik
                   </label>
+                </div>
+                <div class="panel panel-default" ng-show="node.show_body">
+                  <div class="panel-body">
+                    <small>
+                      <div ng-bind-html="node.body"></div>
+                    </small>
+                  </div>
                 </div>
                 <textarea
                   class="form-control"
@@ -185,13 +192,6 @@
                   ng-change="changeNodeTitle()"
                   ng-blur="blurNodeTitle()"
                   placeholder="Underrubrik"></textarea>
-                <div class="panel panel-default" ng-show="node.show_body">
-                  <div class="panel-body">
-                    <small>
-                      <div ng-bind-html="node.body"></div>
-                    </small>
-                  </div>
-                </div>
                 <textarea
                   class="form-control"
                   type="text"
