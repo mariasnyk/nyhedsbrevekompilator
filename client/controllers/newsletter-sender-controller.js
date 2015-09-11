@@ -249,7 +249,10 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
       var note = '';
 
-      if ($scope.schedule_at_specified) {
+      if ($scope.send_now) {
+        $scope.newsletter.after = 0;
+        note = 'med det samme';
+      } else if ($scope.schedule_at_specified) {
         var temp = moment($scope.schedule_at);
         $scope.newsletter.at = temp.toISOString();
         note = temp.fromNow();

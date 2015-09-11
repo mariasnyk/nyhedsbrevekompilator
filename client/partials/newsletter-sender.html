@@ -67,7 +67,7 @@
         </button>
         <div class="checkbox">
           <label>
-            <input type="checkbox" ng-change="scheduleChanged()" ng-model="schedule_at_specified"> V&aelig;lg tidspunkt for udsendelse
+            <input type="checkbox" ng-change="scheduleChanged()" ng-model="schedule_at_specified" ng-disabled="send_now"> V&aelig;lg tidspunkt for udsendelse
           </label>
         </div>
         <div class="dropdown form-group" ng-show="schedule_at_specified">
@@ -80,6 +80,11 @@
           <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
             <datetimepicker ng-change="scheduleChanged()" ng-model="schedule_at" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"/>
           </ul>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" ng-change="scheduleChanged()" ng-model="send_now" ng-disabled="schedule_at_specified"> Send med det samme
+          </label>
         </div>
       </div>
     </div>
