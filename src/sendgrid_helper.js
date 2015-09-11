@@ -119,7 +119,7 @@ function createMarketingEmail (newsletter, callback) {
         return callback({ error: 'Error when adding recipients to marketing email.' });
       }
 
-      console.log('Marketing email ' + newsletter.name + ' created.' );
+      console.log(Date().toString() + ': Marketing email ' + newsletter.name + ' created.' );
       callback(null, result);
     });
   });
@@ -198,9 +198,9 @@ function addSendGridSchedule (name, at, after, callback) {
     if (temp.isValid()) {
       if (moment().isBefore(temp)) {
         body = body + '&at=' + temp.toISOString();
-        console.log('Scheduling email ' + name + ' at ' + at);
+        console.log(Date().toString() + ': Scheduling email ' + name + ' at ' + at);
       } else {
-        console.log('Scheduling email ' + name + ' now because ' + at + ' is in the past.');
+        console.log(Date().toString() + ': Scheduling email ' + name + ' now because ' + at + ' is in the past.');
       }
     } else {
       return callback({ message: 'Field at (' + at + ') is not a valid ISO date.' });
@@ -212,10 +212,10 @@ function addSendGridSchedule (name, at, after, callback) {
       return callback({ message: 'Field after (' + after + ') is not a valid positive number.' });
     } else {
       body = body + '&after=' + temp.toString();
-      console.log('Scheduling email ' + name + ' after ' + after);
+      console.log(Date().toString() + ': Scheduling email ' + name + ' after ' + after);
     }
   } else {
-    console.log('Scheduling email ' + name + ' now');
+    console.log(Date().toString() + ': Scheduling email ' + name + ' now');
   }
 
   callSendGrid('/api/newsletter/schedule/add.json', body, callback);
