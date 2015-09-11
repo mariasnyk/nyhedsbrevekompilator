@@ -1,6 +1,6 @@
 {
   "name": "nyhedsbrevekompilator",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Redaktionelle nyhedsbreve kompilator",
   "main": "src/server.js",
   "scripts": {
