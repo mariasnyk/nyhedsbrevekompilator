@@ -137,27 +137,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
         $scope.newsletter.subject =  data.subject;
         $scope.newsletter.checksum = data.checksum;
         $scope.bonddatadirty = false;
-      })
-      .error(function (err) {
-        notifications.showError('Failed to get data from ' + $scope.newsletter.bond_url);
-      });
-      
-      loadingSwitch.watch(get_bonddata);
-      return get_bonddata;
-    }
-    $scope.getBondData = getBondData;
-
-
-    function updatePreviews () {
-      var a = updateHtmlPreview();
-      var b = updatePlainPreview();
-      return $q.all([a,b]);
-    }
-    $scope.updatePreviews = updatePreviews;
-
-
-    function getBondDataAndUpdatePreviews () {
-      return getBondData().success(function () {
 
         // This is a hack.
         // We want to set show_body=true as a default value. This is actually already done on ng-init in the template newsletter-sender-html.
@@ -177,10 +156,32 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
         }
         // Hack end
 
+      })
+      .error(function (err) {
+        notifications.showError('Failed to get data from ' + $scope.newsletter.bond_url);
+      });
+
+      loadingSwitch.watch(get_bonddata);
+      return get_bonddata;
+    }
+
+
+    function getBondDataAndUpdatePreviews () {
+      return getBondData().success(function () {
         updatePreviews();
       });
     }
     $scope.getBondDataAndUpdatePreviews = getBondDataAndUpdatePreviews;
+
+
+    function updatePreviews () {
+      var a = updateHtmlPreview();
+      var b = updatePlainPreview();
+      return $q.all([a,b]).then(function () {
+        $scope.bonddatadirty = false;
+      });
+    }
+    $scope.updatePreviews = updatePreviews;
 
 
     function updateHtmlPreview () {
@@ -215,11 +216,9 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
         $scope.trusted_html_email_preview = '<p>Error</p>';
       });
 
-      $scope.bonddatadirty = false;
       loadingSwitch.watch(get_html);
       return get_html;
     }
-    $scope.updateHtmlPreview = updateHtmlPreview;
 
 
     function updatePlainPreview () {
@@ -242,7 +241,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       loadingSwitch.watch(get_plain);
       return get_plain;
     }
-    $scope.updatePlainPreview = updatePlainPreview;
 
 
     $scope.sendNewsletter = function () {
