@@ -16,15 +16,15 @@ module.exports.register = function (plugin, options, next) {
   plugin.route({
     method: 'get',
     path: '/admin/{param*}',
-    handler: {
-      directory: {
-        path: 'client',
-        index: true
-      }
-    }
-    // handler: function (request, reply) {
-    //   reply.redirect('/nyhedsbreve');
+    // handler: {
+    //   directory: {
+    //     path: 'client',
+    //     index: true
+    //   }
     // }
+    handler: function (request, reply) {
+      reply.redirect('/nyhedsbreve');
+    }
   });
 
   plugin.route({
