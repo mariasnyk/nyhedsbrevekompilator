@@ -1,5 +1,7 @@
 {% extends "partials/berlingske.html" %}
 
+{% set home_url = "http://www.politiko.dk"; %}
+
 {% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + timestamp | yyyymmdd + "&ns_linkname=berlingske_politiko"; %}
 {% set logo_src = "http://nlstatic.berlingskemedia.dk/headers/berlingske_politiko.png"; %}
 {% set unsubscribe_href = "http://profil.berlingskemedia.dk/tilmeldt/154?id=[ekstern_id]" %}

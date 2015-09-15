@@ -1,5 +1,7 @@
 {% extends "partials/bt.html" %}
 
+{% set home_url = "http://www.bt.dk"; %}
+
 {% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + timestamp | yyyymmdd + "&ns_linkname=bt_morgen"; %}
 {% set logo_src = "http://nlstatic.berlingskemedia.dk/headers/bt_morgen.png"; %}
 {% set unsubscribe_href = "http://profil.berlingskemedia.dk/tilmeldt/24?id=[ekstern_id]" %}

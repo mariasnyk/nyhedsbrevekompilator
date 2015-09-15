@@ -1,5 +1,7 @@
 {% extends "partials/berlingske.html" %}
 
+{% set home_url = "http://www.b.dk"; %}
+
 {% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + timestamp | yyyymmdd + "&ns_linkname=berlingske_rejseliv"; %}
 {% set logo_src = "http://nlstatic.berlingskemedia.dk/headers/berlingske_rejseliv_ramme.png"; %}
 {% set unsubscribe_href = "http://profil.berlingskemedia.dk/tilmeldt/35?id=[ekstern_id]" %}
