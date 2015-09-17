@@ -5,8 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "build": "docker build -t bmdako/nyhedsbrevekompilator:$npm_package_version . && docker tag -f bmdako/nyhedsbrevekompilator:$npm_package_version bmdako/nyhedsbrevekompilator:latest",
-    "push": "docker push bmdako/nyhedsbrevekompilator:$npm_package_version && docker push bmdako/nyhedsbrevekompilator:latest"
+    "build": "docker build -t berlingskemedia/nyhedsbrevekompilator:$npm_package_version . && docker tag -f berlingskemedia/nyhedsbrevekompilator:$npm_package_version berlingskemedia/nyhedsbrevekompilator:latest",
+    "push": "docker push berlingskemedia/nyhedsbrevekompilator:$npm_package_version && docker push berlingskemedia/nyhedsbrevekompilator:latest"
   },
   "author": "Berlingske Media",
   "license": "ISC",
