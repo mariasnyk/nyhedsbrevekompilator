@@ -130,7 +130,11 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
         return;
       }
 
-      var get_bonddata = $http.get('/templates/data?u=' + encodeURIComponent($scope.newsletter.bond_url))
+      // This is a simple way to prevent the caching issue on BOND.
+      // By adding a simple query parameter, BOND caching doesn't know the URL.
+      var bond_url_with_caching_prevention = $scope.newsletter.bond_url + '&cache=' + Date.now();
+
+      var get_bonddata = $http.get('/templates/data?u=' + encodeURIComponent(bond_url_with_caching_prevention))
       //var get_bonddata = $http.get('/templates/data?f=bt.json')
       .success(function (data) {
         $scope.bonddata = data;
@@ -158,7 +162,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
       })
       .error(function (err) {
-        notifications.showError('Failed to get data from ' + $scope.newsletter.bond_url);
+        notifications.showError('Failed to get data from ' + bond_url_with_caching_prevention);
       });
 
       loadingSwitch.watch(get_bonddata);
