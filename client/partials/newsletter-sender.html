@@ -138,6 +138,7 @@
         </div>
       </div>
     </div>
+
   </div>
 
 
@@ -231,5 +232,9 @@
     </div>
   </div>
 
-  <a class="debug_link" target="_blank" href="/templates/{{ newsletter.template_html }}?u={{ safe_bond_url }}&debug=true">Debug link</a>
+  <a class="debug_link" target="_blank" href="/templates/{{ newsletter.template_html }}?u={{ safe_bond_url }}&debug=true">Debug link HTML</a>
+  <a class="debug_link" download="{{ newsletter.name }}" href="/templates/{{ newsletter.template_html }}?u={{ safe_bond_url }}">Download HTML</a>
+  <a class="debug_link" target="_blank" href="/templates/{{ newsletter.template_plain }}?u={{ safe_bond_url }}&debug=true">Debug link Plain</a>
+  <a class="debug_link" download="{{ newsletter.name }}" href="/templates/{{ newsletter.template_plain }}?u={{ safe_bond_url }}">Download Plain</a>
+  <button class="debug_link btn btn-link" ng-click="showEmailHtml()">Vis email indhold</button>
 </div>

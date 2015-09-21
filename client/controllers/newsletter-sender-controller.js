@@ -292,4 +292,11 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
       loadingSwitch.watch(drafting, 'Opretter');
     };
+
+    $scope.showEmailHtml = function () {
+      var preview = window.open();
+      preview.document.open();
+      preview.document.write($scope.newsletter.email_html);
+      preview.document.close();
+    };
   }]);

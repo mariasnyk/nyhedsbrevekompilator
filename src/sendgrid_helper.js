@@ -70,7 +70,7 @@ module.exports.deleteEmailSchedule = function (name, callback) {
 function standardCallback (callback) {
   return function (err, data) {
     if (err) {
-      console.log(err);
+      console.log(Date().toString(), err);
       callback(err);
     } else {
       callback(null, data);
@@ -98,11 +98,11 @@ function createMarketingEmail (newsletter, callback) {
 
   addSendGridMarketingEmail(newsletter.identity, newsletter.name, newsletter.subject, newsletter.email_plain, newsletter.email_html, function (err, result) {
     if (err) {
-      console.log(err);
-      //return callback({ error: 'Error when creating new marketing email.' });
+      console.log(Date().toString(), 'Error when creating marketing email ' + newsletter.name, err);
       return callback(err);
     }
 
+    console.log(Date().toString(), 'Marketing email ' + newsletter.name + ' created.' );
 
     // Adding the newsletter name as a mandatory category
     if (newsletter.categories === undefined || newsletter.categories === null) {
@@ -115,11 +115,12 @@ function createMarketingEmail (newsletter, callback) {
 
     addSendGridRecipients(newsletter.list, newsletter.name, function (err, result) {
       if (err) {
-        console.log(err);
-        return callback({ error: 'Error when adding recipients to marketing email.' });
+        console.log(Date().toString(), 'Error when adding recipients to marketing email ' + newsletter.name, err);
+        return callback(err);
       }
 
-      console.log(Date().toString() + ': Marketing email ' + newsletter.name + ' created.' );
+      console.log(Date().toString() + ': Recipients ' + newsletter.list + ' to email ' + newsletter.name + ' added.');
+
       callback(null, result);
     });
   });
@@ -251,6 +252,7 @@ function callSendGrid (path, body, callback) {
   req.end();
 
   req.on('error', function (e) {
+    console.log(Date().toString(), 'Error on request to ' + path, e);
     callback(e);
   });
 }
@@ -283,6 +285,7 @@ function callSendGridV3 (method, path, body, callback) {
   req.end();
 
   req.on('error', function (e) {
+    console.log(Date().toString(), 'Error on request to ' + path, e);
     callback(e);
   });
 }
@@ -304,8 +307,9 @@ function parseReponse (callback) {
         throw ex;
       }
 
-      if (data.error || res.statusCode > 300)
+      if (data.error || res.statusCode > 300) {
         callback(data, null);
+      }
       else
         callback(null, data);
     });
