@@ -123,6 +123,22 @@
     </div>
   </div>
 
+  <div class="row" ng-show="currentTab === 'raw_html_tab'">
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <p ng-show="loading_html_preview">Loading...</p>
+          <p class="text-right">
+            <button type="button" class="btn btn-default btn-xs" ng-click="updatePreviews()" ng-disabled="loading">
+              <span class="glyphicon glyphicon-refresh"></span>
+            </button>
+          </p>
+          <textarea ng-hide="loading_html_preview" class="form-control newsletter-preview" style="background-color: white;" ng-model="newsletter.email_html"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <div class="row" ng-show="currentTab === 'text_tab'">
     <div class="col-xs-12">
@@ -234,7 +250,7 @@
 
   <a class="debug_link" target="_blank" href="/templates/{{ newsletter.template_html }}?u={{ safe_bond_url }}&debug=true">Debug link HTML</a>
   <a class="debug_link" download="{{ newsletter.name }}" href="/templates/{{ newsletter.template_html }}?u={{ safe_bond_url }}">Download HTML</a>
+  <a class="debug_link" ng-click="currentTab = 'raw_html_tab'; updatePreviews();">Vis rå HTML</a>
   <a class="debug_link" target="_blank" href="/templates/{{ newsletter.template_plain }}?u={{ safe_bond_url }}&debug=true">Debug link Plain</a>
   <a class="debug_link" download="{{ newsletter.name }}" href="/templates/{{ newsletter.template_plain }}?u={{ safe_bond_url }}">Download Plain</a>
-  <button class="debug_link btn btn-link" ng-click="showEmailHtml()">Vis email indhold</button>
 </div>
