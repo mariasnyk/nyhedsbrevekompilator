@@ -1,29 +1,62 @@
-{% extends "partials/aok.html" %}
+{% extends "brands/aok.html" %}
 
 {% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + timestamp | yyyymmdd + "&ns_linkname=AOK_weekend"; %}
 {% set home_url = "http://www.aok.dk"; %}
 {% set logo_src = "http://nlstatic.berlingskemedia.dk/headers/aok_weekend.png"; %}
 {% set unsubscribe_href = "http://profil.berlingskemedia.dk/tilmeldt/17?id=[ekstern_id]" %}
-{% set buy_subscription_href = "http://www.aok.dk"; %}
 
 {% set kw = "AOK_weekend"; %}
 
-{% block wide_banner_2 %}
-{% set cu = "29863"; %}
-{% include "partials/banner.html" %}
-{% endblock %}
+{% block content %}
+  {% set node = nodes[0]; %}
+  {% include "new_partials/briefing_article.html" %}
 
-{% block wide_banner_3 %}
-{% set cu = "29864"; %}
-{% include "partials/banner.html" %}
-{% endblock %}
+  {% set node = nodes[1]; %}
+  {% set node.show_tag = true; %}
+  {% set node.show_title = true; %}
+  {% set node.show_summary = false; %}
+  {% include "new_partials/single_column.html" with
+    {
+      article_template: "aok_article.html",
+      article: node
+    } %}
 
-{% block box_banner_1 %}
-{% set cu = "29861"; %}
-{% include "partials/banner.html" %}
-{% endblock %}
+  {% include "new_partials/banner.html" with { cu: "29863" } %}
 
-{% block box_banner_2 %}
-{% set cu = "29862"; %}
-{% include "partials/banner.html" %}
+  <tr>
+    <td align="center" valign="top">
+      <div style="text-align: left; line-height: 100%; padding-left: 20px; padding-right: 20px; padding-top: 3px; padding-bottom: 5px;">
+        <span style="padding: 1px 0px 3px 0px;">
+          <font color="#1A1A1A"
+            style="font-family: {{ font_family_bold|safe }}; font-size: 22px; line-height: 22px; font-weight: bold; text-rendering: optimizeLegibility;">
+            DET SKER I K&Oslash;BENHAVN
+          </font>
+        </span>
+      </div>
+    </td>
+  </tr>
+
+  {% include "new_partials/single_column.html" with
+    {
+      article_template: "aok_title_over_image.html",
+      article: nodes[2]
+    } %}
+
+
+  {% for node in nodes %}
+    {% if max_nodes > 0 && loop.index > max_nodes %}
+      {# This is empty on purpose. #}
+    {% elif loop.index0 >= 3 && loop.index0 % 2 === 0 %}
+      {% include "new_partials/two_column.html" with
+      {
+        article_template: "aok_article.html",
+        articleA: nodes[loop.index0 - 1],
+        articleB: nodes[loop.index0]
+      } %}
+    {% endif %}
+  {% endfor %}
+
+
+  {% include "new_partials/banner.html" with { cu: "29864" } %}
+
 {% endblock %}

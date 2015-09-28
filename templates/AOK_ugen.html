@@ -11,7 +11,7 @@
 
 {% block content %}
   {% set node = nodes[0]; %}
-  {% include "new_partials/briefing.html" %}
+  {% include "new_partials/briefing_article.html" %}
 
   {% set node = nodes[1]; %}
   {% set node.show_tag = true; %}
@@ -23,8 +23,7 @@
       article: node
     } %}
 
-  {% set cu = "29863"; %}
-  {% include "new_partials/banner.html" %}
+  {% include "new_partials/banner.html" with { cu: "29863" } %}
 
   <tr>
     <td align="center" valign="top">
@@ -60,7 +59,6 @@
   {% endfor %}
 
 
-  {% set cu = "29864"; %}
-  {% include "new_partials/banner.html" %}
+  {% include "new_partials/banner.html" with { cu: "29864" } %}
 
 {% endblock %}
