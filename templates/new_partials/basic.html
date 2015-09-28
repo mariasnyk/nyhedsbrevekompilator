@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+{% spaceless %}
+<head lang="en">
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ subject }}</title>
+  <style type="text/css">
+    /* From  https://github.com/mailchimp/email-blueprints/blob/master/responsive-templates/base_boxed_body_image_2column_query.html */
+
+    /* /\/\/\/\/\/\/\/\/ CLIENT-SPECIFIC STYLES /\/\/\/\/\/\/\/\/ */
+    #outlook a{padding:0;} /* Force Outlook to provide a "view in browser" message */
+    .ReadMsgBody{width:100%;} .ExternalClass{width:100%;} /* Force Hotmail to display emails at full width */
+    .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;} /* Force Hotmail to display normal line spacing */
+    body, table, td, p, a, li, blockquote{-webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;} /* Prevent WebKit and Windows mobile changing default text sizes */
+    table, td{mso-table-lspace:0pt; mso-table-rspace:0pt;} /* Remove spacing between tables in Outlook 2007 and up */
+    img{-ms-interpolation-mode:bicubic;} /* Allow smoother rendering of resized image in Internet Explorer */
+    /* /\/\/\/\/\/\/\/\/ RESET STYLES /\/\/\/\/\/\/\/\/ */
+    body{margin:0; padding:0;}
+    img{border:0; height:auto; line-height: 100%; outline:none; text-decoration:none;}
+    table{border-collapse:collapse !important;}
+    body, #bodyTable, #bodyCell{height:100% !important; margin:0; padding:0; width:100% !important;}
+
+    {% block font_face %}
+    {% endblock %}
+  </style>
+</head>
+
+<body style="background-color: #f9f9f9; margin: 0px;">
+
+  <!--[if (gte mso 9)|(IE)]>
+  <table width="654" align="center" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+          <td>
+  <![endif]-->
+
+  <!-- The almighty table -->
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="white" style="margin: auto; max-width: 654px;">
+    <tr>
+      <td align="center" valign="top">
+        <!-- Click-here-stuff -->
+        <p>
+          <a href="[weblink]">
+            <font color="#333333" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 12px; line-height: 12px; text-rendering: optimizeLegibility;">
+              Se nyhedsbrevet i din browser
+            </font>
+          </a>
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="top">
+        <!-- Top logo -->
+        {% block top_logo %}
+        {% endblock %}
+      </td>
+    </tr>
+
+    {% block content %}
+    {% endblock %}
+
+    <tr>
+      <td width="100%" height="24" style="font-size: 0px; line-height: 0px;">&nbsp;</td>
+    </tr>
+    <tr>
+      <td align="center" valign="top">
+        <hr style="height: 1px; border: 0; background: #dddddd">
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="top">
+        {% block social %}
+        {% endblock %}
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="top">
+        <hr style="height: 1px; border: 0; background: #dddddd;">
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="top">
+        <div style="margin: 0px 0px;">
+          <a target="_blank" href="http://www.berlingskemedia.dk/ophavsret-og-vilkaar/" style="margin: 0px 10px; text-decoration: none;">
+            <font color="#666666" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
+              Ophavsret og vilk&aring;r
+            </font>
+          </a>
+          <font color="#666666" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
+            &middot;
+          </font>
+          <a target="_blank" href="http://www.berlingskemedia.dk/annoncor/" style="margin: 0px 10px;  text-decoration: none;">
+            <font color="#666666" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
+              Annonceinfo
+            </font>
+          </a>
+          <font color="#666666" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
+            &middot;
+          </font>
+          <a target="_blank" href="{{ unsubscribe_href }}" style="margin: 0px 10px;  text-decoration: none;">
+            <font color="#666666" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
+              Afmeld nyhedsbrev
+            </font>
+          </a>
+          {% block footer %}
+          {% endblock %}
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td width="100%" height="14" style="font-size:0px; line-height: 0px;">&nbsp;</td>
+    </tr>
+  </table>
+
+  {% if debug %}
+    {% include "../partials/debuginfo.html" %}
+  {% endif %}
+
+  <!--[if (gte mso 9)|(IE)]>
+      </td>
+    </tr>
+  </table>
+  <![endif]-->
+
+</body>
+{% endspaceless %}
+</html>

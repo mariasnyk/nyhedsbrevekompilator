@@ -1,0 +1,15 @@
+{% if node !== undefined && node !== null %}
+  <tr>
+    <td align="center" valign="top">
+      <div style="padding: 20px 20px; height: 100%; display: inline-block; background-color: {{ background }}; font-size: 0; line-height: 0px;">
+        <div style="text-align: left; line-height: 100%; padding-top: 5px; text-decoration: none;">
+          <font
+            color="#1A1A1A"
+            style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 22px; text-rendering: optimizeLegibility;">
+            {% autoescape false %} {{ node.body | safe }} {% endautoescape %}
+          </font>
+        </div>
+      </div>
+    </td>
+  </tr>
+{% endif %}

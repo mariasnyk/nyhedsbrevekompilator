@@ -1,0 +1,27 @@
+{% if node !== undefined && node !== null %}
+  <div style="height: 100%; display: inline-block; font-size: 0; line-height: 0px; position: relative;">
+
+    {% set image_found = false; %}
+    {% for image in node.images %}
+      {% if !image_found && image.relation | hasValue('default') %}
+        {% set image_found = true; %}
+        <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+          <div style="opacity: .4; background-color: black; position: absolute; left: 0; top: 0; height: 100%; width: {{ width }}px;"></div>
+          <img  style="width: {{ width }}px;"
+                width="{{ width }}"
+                alt="{{ image.title }}"
+                src="{{ image.image }}"
+                border="0" />
+          <div style="position: absolute; top: 40%; text-align: center; padding: 20px;">
+            <font
+              color="#ffffff"
+              style="font-family: {{ font_family_bold|safe }}; font-size: 22px; line-height: 22px; text-transform: uppercase; text-rendering: optimizeLegibility;">
+              {{ node.title }}
+            </font>
+          </div>
+        </a>
+      {% endif %}
+    {% endfor %}
+
+  </div>
+{% endif %}

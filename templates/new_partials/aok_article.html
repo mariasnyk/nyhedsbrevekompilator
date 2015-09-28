@@ -1,0 +1,108 @@
+{% if node !== undefined && node !== null %}
+  {% set primary_tag = null %}
+  {% if node.taxonomyTags.primary %}
+    {% for tag in node.taxonomyTags.primary %}
+      {% if tag.id != "2" %} {% set primary_tag = tag.tag %} {# wwww.b.dk #}
+      {% else %} {% set primary_tag = "Nyheder" %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {% set image_count = 0; %}
+  {% if node.images | typeof === '[object Object]' %}
+    {% set images_keys = Object.keys(node.images); %}
+    {% set image_count = images_keys.length; %}
+  {% elif node.images | typeof === '[object Array]' %}
+    {% set image_count = node.images.length; %}
+  {% endif %}
+
+  <div style="width: {{ width }}px; height: 100%; display: inline-block; font-size: 0; line-height: 0px;">
+
+    {% if image_count > 0 && node.hide_image !== true %}
+      {% set image_found = false; %}
+      {% for image in node.images %}
+        {% if !image_found && image.relation | hasValue('default') %}
+          {% set image_found = true; %}
+          <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+            <img  style="width: {{ width }}px;"
+                  width="{{ width }}"
+                  alt="{{ image.title }}"
+                  src="{{ image.image }}"
+                  border="0" />
+          </a>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    <div style="width: {{ width }}px; padding-top: 2px;">
+
+      {% if primary_tag %}
+      <div style="text-align: left; line-height: 100%; padding-top: 3px; padding-bottom: 5px;">
+        <span style="padding: 1px 0px 3px 0px;">
+          <font
+            color="#3795a0"
+            style="font-family: {{ font_family_bold|safe }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
+            {{ primary_tag }}
+          </font>
+        </span>
+      </div>
+      {% endif %}
+
+      <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+        <div style="text-align: left; line-height: 100%; padding-top: 5px; text-decoration: none;">
+          <font
+            color="#1A1A1A"
+            style="font-family: {{ font_family|safe }}; font-size: 25px; line-height: 25px; text-rendering: optimizeLegibility;">
+            {{ node.title }}
+          </font>
+        </div>
+      </a>
+
+      {% if node.show_body %}
+      <div style="text-align: left; line-height: 100%; padding-top: 5px; text-decoration: none;">
+        <font
+          color="#1A1A1A"
+          style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 22px; text-rendering: optimizeLegibility;">
+          {% autoescape false %} {{ node.body | safe }} {% endautoescape %}
+        </font>
+      </div>
+      {% else %}
+
+      {% if (node.primary_article && node.summary) || always_show_article_summary === true %}
+      <a href="{{ node.url }}?{{ tracking }}" target="_blank"  style="text-decoration: none;">
+        <div style="text-align: left; line-height: 100%; padding-top: 5px; text-decoration: none;">
+          <font
+            color="#1A1A1A"
+            style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 22px; text-rendering: optimizeLegibility;">
+            {{ node.summary }}
+          </font>
+        </div>
+      </a>
+      {% endif %}
+
+      {% if node.custom_summary %}
+      <a href="{{ node.url }}?{{ tracking }}" target="_blank"  style="text-decoration: none;">
+        <div style="text-align: left; line-height: 100%; padding-top: 10px;">
+          <font
+            color="#1A1A1A"
+            style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 22px; text-rendering: optimizeLegibility;">
+            {% autoescape false %} {{ node.custom_summary | safe }} {% endautoescape %}
+          </font>
+        </div>
+      </a>
+      {% endif %}
+
+      {% if node.calltoaction %}
+      <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+        <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
+          <font
+            color="#d00000"
+            style="font-family: {{ font_family_bold|safe }}; text-decoration: underline; font-weight: bold; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+            {{ node.calltoaction }}
+          </font>
+        </div>
+      </a>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
