@@ -20,7 +20,8 @@
       {
         article_template: "aok_article.html",
         article: node
-      } %}
+      }
+    %}
   {% endif %}
 
   <tr>
@@ -37,11 +38,12 @@
   </tr>
 
   {% include "new_partials/two_column.html" with
-  {
-    article_template: "aok_article.html",
-    articleA: nodes[2],
-    articleB: nodes[3]
-  } %}
+    {
+      article_template: "aok_title_over_image.html",
+      articleA: nodes[2],
+      articleB: nodes[3]
+    }
+  %}
 
   {% include "new_partials/banner.html" with { cu: "29864" } %}
 

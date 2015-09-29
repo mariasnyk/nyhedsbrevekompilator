@@ -6,18 +6,26 @@
       {% if !image_found && image.relation | hasValue('default') %}
         {% set image_found = true; %}
         <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
-          <div style="opacity: .4; background-color: black; position: absolute; left: 0; top: 0; height: 100%; width: {{ width }}px;"></div>
+          <div style="opacity: .4; background-color: black; position: absolute; left: 0; top: 0; bottom: 0; right: 0;"></div>
           <img  style="width: {{ width }}px;"
                 width="{{ width }}"
                 alt="{{ image.title }}"
                 src="{{ image.image }}"
                 border="0" />
-          <div style="position: absolute; top: 40%; text-align: center; padding: 20px;">
-            <font
-              color="#ffffff"
-              style="font-family: {{ font_family_bold|safe }}; font-size: 22px; line-height: 22px; text-transform: uppercase; text-rendering: optimizeLegibility;">
-              {{ node.title }}
-            </font>
+          <div style="position: absolute; left: 0; top: 0; bottom: 0; right: 0;">
+            <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
+              <tbody>
+                <tr>
+                  <td align="center" valign="center">
+                    <font
+                      color="#ffffff"
+                      style="font-family: {{ font_family_bold|safe }}; font-size: 22px; line-height: 22px; text-transform: uppercase; text-rendering: optimizeLegibility;">
+                      {{ node.title }}
+                    </font>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </a>
       {% endif %}
