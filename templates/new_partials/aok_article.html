@@ -1,22 +1,14 @@
 {% if node !== undefined && node !== null %}
-  {% set primary_tag = null %}
-  {% if node.taxonomyTags.primary %}
-    {% for tag in node.taxonomyTags.primary %}
-      {% if tag.id != "2" %} {% set primary_tag = tag.tag %} {# wwww.b.dk #}
-      {% else %} {% set primary_tag = "Nyheder" %}
-      {% endif %}
-    {% endfor %}
-  {% endif %}
-
-  {% set image_count = 0; %}
-  {% if node.images | typeof === '[object Object]' %}
-    {% set images_keys = Object.keys(node.images); %}
-    {% set image_count = images_keys.length; %}
-  {% elif node.images | typeof === '[object Array]' %}
-    {% set image_count = node.images.length; %}
-  {% endif %}
 
   <div style="width: {{ width }}px; height: 100%; display: inline-block; font-size: 0; line-height: 0px;">
+
+    {% set image_count = 0; %}
+    {% if node.images | typeof === '[object Object]' %}
+      {% set images_keys = Object.keys(node.images); %}
+      {% set image_count = images_keys.length; %}
+    {% elif node.images | typeof === '[object Array]' %}
+      {% set image_count = node.images.length; %}
+    {% endif %}
 
     {% if image_count > 0 && node.hide_image !== true %}
       {% set image_found = false; %}
@@ -35,6 +27,15 @@
     {% endif %}
 
     <div style="width: {{ width }}px; padding-top: 2px;">
+
+      {% set primary_tag = null %}
+      {% if node.taxonomyTags.primary %}
+        {% for tag in node.taxonomyTags.primary %}
+          {% if tag.id != "2" %} {% set primary_tag = tag.tag %} {# wwww.b.dk #}
+          {% else %} {% set primary_tag = "Nyheder" %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
 
       {% if primary_tag %}
       <div style="text-align: left; line-height: 100%; padding-top: 3px; padding-bottom: 5px;">
