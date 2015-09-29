@@ -8,8 +8,12 @@
 {% set kw = "AOK_ugen"; %}
 
 {% block content %}
-  {% set node = nodes[0]; %}
-  {% include "new_partials/briefing_article.html" %}
+  {% include "new_partials/single_column.html" with
+    {
+      article_template: "briefing_article.html",
+      article: nodes[0]
+    }
+  %}
 
   {% set node = nodes[1]; %}
   {% set node.show_tag = true; %}
@@ -25,14 +29,16 @@
 
   <tr>
     <td align="center" valign="top">
-      <div style="text-align: left; line-height: 100%; padding-left: 20px; padding-right: 20px; padding-top: 3px; padding-bottom: 5px;">
-        <span style="padding: 1px 0px 3px 0px;">
-          <font color="#1A1A1A"
-            style="font-family: {{ font_family_bold|safe }}; font-size: 22px; line-height: 22px; font-weight: bold; text-rendering: optimizeLegibility;">
-            DET SKER I K&Oslash;BENHAVN
-          </font>
-        </span>
-      </div>
+      <table width="614" cellpadding="0" cellspacing="10" border="0">
+        <tr>
+          <td>
+            <font color="#1A1A1A"
+              style="font-family: {{ font_family_bold|safe }}; font-size: 22px; line-height: 22px; font-weight: bold; text-rendering: optimizeLegibility;">
+              DET SKER I K&Oslash;BENHAVN
+            </font>
+          </td>
+        </tr>
+      </table>
     </td>
   </tr>
 

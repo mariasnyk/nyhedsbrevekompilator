@@ -1,32 +1,36 @@
 {% if node !== undefined && node !== null %}
+  <!-- AOK article -->
+  <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
+    <tbody>
 
-  <div style="width: {{ width }}px; height: 100%; display: inline-block; font-size: 0; line-height: 0px;">
+      {% set image_count = 0; %}
+      {% if node.images | typeof === '[object Object]' %}
+        {% set images_keys = Object.keys(node.images); %}
+        {% set image_count = images_keys.length; %}
+      {% elif node.images | typeof === '[object Array]' %}
+        {% set image_count = node.images.length; %}
+      {% endif %}
 
-    {% set image_count = 0; %}
-    {% if node.images | typeof === '[object Object]' %}
-      {% set images_keys = Object.keys(node.images); %}
-      {% set image_count = images_keys.length; %}
-    {% elif node.images | typeof === '[object Array]' %}
-      {% set image_count = node.images.length; %}
-    {% endif %}
+      {% if image_count > 0 && node.hide_image !== true %}
+        {% set image_found = false; %}
+        {% for image in node.images %}
+          {% if !image_found && image.relation | hasValue('default') %}
+            {% set image_found = true; %}
+            <tr>
+              <td align="center" valign="top">
+                <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+                  <img  style="width: {{ width }}px;"
+                        width="{{ width }}"
+                        alt="{{ image.title }}"
+                        src="{{ image.image }}"
+                        border="0" />
+                </a>
+              </td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
 
-    {% if image_count > 0 && node.hide_image !== true %}
-      {% set image_found = false; %}
-      {% for image in node.images %}
-        {% if !image_found && image.relation | hasValue('default') %}
-          {% set image_found = true; %}
-          <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
-            <img  style="width: {{ width }}px;"
-                  width="{{ width }}"
-                  alt="{{ image.title }}"
-                  src="{{ image.image }}"
-                  border="0" />
-          </a>
-        {% endif %}
-      {% endfor %}
-    {% endif %}
-
-    <div style="width: {{ width }}px; padding-top: 2px;">
 
       {% set primary_tag = null %}
       {% if node.taxonomyTags.primary %}
@@ -38,72 +42,85 @@
       {% endif %}
 
       {% if primary_tag %}
-      <div style="text-align: left; line-height: 100%; padding-top: 3px; padding-bottom: 5px;">
-        <span style="padding: 1px 0px 3px 0px;">
+      <tr>
+        <td align="left" valign="top">
           <font
             color="#3795a0"
-            style="font-family: {{ font_family_bold|safe }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
+            style="font-family: {{ font_family_bold|safe }}; font-size: 11px; line-height: 16px; text-transform: uppercase; text-rendering: optimizeLegibility;">
             {{ primary_tag }}
           </font>
-        </span>
-      </div>
+        </td>
+      </tr>
       {% endif %}
 
-      <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
-        <div style="text-align: left; line-height: 100%; padding-top: 5px; text-decoration: none;">
-          <font
-            color="#1A1A1A"
-            style="font-family: {{ font_family|safe }}; font-size: 25px; line-height: 25px; text-rendering: optimizeLegibility;">
-            {{ node.title }}
-          </font>
-        </div>
-      </a>
+      <tr>
+        <td align="left" valign="top">
+          <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+            <font
+              color="#1A1A1A"
+              style="font-family: {{ font_family|safe }}; font-size: 25px; line-height: 25px; text-rendering: optimizeLegibility;">
+              {{ node.title }}
+            </font>
+          </a>
+        </td>
+      </tr>
 
       {% if node.show_body %}
-      <div style="text-align: left; line-height: 100%; padding-top: 5px; text-decoration: none;">
-        <font
-          color="#1A1A1A"
-          style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 22px; text-rendering: optimizeLegibility;">
-          {% autoescape false %} {{ node.body | safe }} {% endautoescape %}
-        </font>
-      </div>
+      <tr>
+        <td align="left" valign="top">
+          <font
+            color="#1A1A1A"
+            style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 22px; text-rendering: optimizeLegibility;">
+            {% autoescape false %} {{ node.body | safe }} {% endautoescape %}
+          </font>
+        </td>
+      </tr>
       {% else %}
 
       {% if (node.primary_article && node.summary) || always_show_article_summary === true %}
-      <a href="{{ node.url }}?{{ tracking }}" target="_blank"  style="text-decoration: none;">
-        <div style="text-align: left; line-height: 100%; padding-top: 5px; text-decoration: none;">
-          <font
-            color="#1A1A1A"
-            style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 22px; text-rendering: optimizeLegibility;">
-            {{ node.summary }}
-          </font>
-        </div>
-      </a>
+      <tr>
+        <td align="left" valign="top">
+          <a href="{{ node.url }}?{{ tracking }}" target="_blank"  style="text-decoration: none;">
+            <font
+              color="#1A1A1A"
+              style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 22px; text-rendering: optimizeLegibility;">
+              {{ node.summary }}
+            </font>
+          </a>
+        </td>
+      </tr>
       {% endif %}
 
       {% if node.custom_summary %}
-      <a href="{{ node.url }}?{{ tracking }}" target="_blank"  style="text-decoration: none;">
-        <div style="text-align: left; line-height: 100%; padding-top: 10px;">
-          <font
-            color="#1A1A1A"
-            style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 22px; text-rendering: optimizeLegibility;">
-            {% autoescape false %} {{ node.custom_summary | safe }} {% endautoescape %}
-          </font>
-        </div>
-      </a>
+      <tr>
+        <td align="left" valign="top">
+          <a href="{{ node.url }}?{{ tracking }}" target="_blank"  style="text-decoration: none;">
+            <font
+              color="#1A1A1A"
+              style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 22px; text-rendering: optimizeLegibility;">
+              {% autoescape false %} {{ node.custom_summary | safe }} {% endautoescape %}
+            </font>
+          </a>
+        </td>
+      </tr>
       {% endif %}
 
       {% if node.calltoaction %}
-      <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
-        <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
-          <font
-            color="#d00000"
-            style="font-family: {{ font_family_bold|safe }}; text-decoration: underline; font-weight: bold; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
-            {{ node.calltoaction }}
-          </font>
-        </div>
-      </a>
+      <tr>
+        <td align="left" valign="top">
+          <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+            <div style="padding: 10px 0px;">
+              <font
+                color="#d00000"
+                style="font-family: {{ font_family_bold|safe }}; text-decoration: underline; font-weight: bold; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+                {{ node.calltoaction }}
+              </font>
+            </div>
+          </a>
+        </td>
+      </tr>
       {% endif %}
-    </div>
-  </div>
+    </tbody>
+  </table>
+  <!-- AOK article END -->
 {% endif %}
