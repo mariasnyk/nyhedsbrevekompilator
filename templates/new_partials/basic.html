@@ -103,7 +103,7 @@
               Afmeld nyhedsbrev
             </font>
           </a>
-          {% block footer %}
+          {% block legal_link %}
           {% endblock %}
         </div>
       </td>
@@ -111,6 +111,10 @@
     <tr>
       <td width="100%" height="14" style="font-size:0px; line-height: 0px;">&nbsp;</td>
     </tr>
+
+    {% block footer %}
+    {% endblock %}
+
   </table>
 
   {% if debug %}
