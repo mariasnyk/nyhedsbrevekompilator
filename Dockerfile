@@ -19,7 +19,6 @@ COPY ./client /nyhedsbrevekompilator/client
 COPY ./node_modules /nyhedsbrevekompilator/node_modules
 COPY ./src /nyhedsbrevekompilator/src
 COPY ./templates /nyhedsbrevekompilator/templates
-COPY ./testdata /nyhedsbrevekompilator/testdata
 
 # Exposing our endpoint to Docker.
 EXPOSE  8000
