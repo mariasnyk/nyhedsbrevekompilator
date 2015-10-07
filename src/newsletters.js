@@ -33,7 +33,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       sendgrid.getIdentities(function (err, data) {
         if (err)
-          reply(err).code(500);
+          reply(err);
         else
           reply(data.map(function (identity) {
             return identity.identity;
@@ -48,7 +48,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       sendgrid.getIdentity(request.params.id, function (err, data) {
         if (err)
-          reply(err).code(500);
+          reply(err);
         else
           reply(data);
       });
@@ -61,7 +61,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       sendgrid.getLists(function (err, data) {
         if (err)
-          reply(err).code(500);
+          reply(err);
         else
           reply(data.map(function (list) {
             return list.list;
@@ -76,7 +76,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       sendgrid.getList(request.params.list, function (err, data) {
         if (err)
-          reply(err).code(500);
+          reply(err);
         else
           reply(data);
       });
@@ -89,7 +89,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       sendgrid.getCategories(function (err, data) {
         if (err)
-          reply(err).code(500);
+          reply(err);
         else
           reply(data.map(function (category) {
             return category.category;
@@ -105,7 +105,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       sendgrid.getStats(request.url.search, function (err, data) {
         if (err)
-          reply(err).code(500);
+          reply(err);
         else
           reply(data);
       });
@@ -118,7 +118,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       sendgrid.getEmails(request.query.name, function (err, data) {
         if (err)
-          reply(err).code(500);
+          reply(err);
         else
           reply(data);
       });
@@ -131,7 +131,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       sendgrid.getEmailSchedule(request.params.name, function (err, data) {
         if (err)
-          reply(err).code(500);
+          reply(err);
         else
           reply(data);
       });
@@ -144,7 +144,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       sendgrid.deleteEmailSchedule(request.params.name, function (err, data) {
         if (err)
-          reply(err).code(500);
+          reply(err);
         else
           reply(data);
       });
@@ -157,7 +157,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       sendgrid.getEmail(request.params.name, function (err, data) {
         if (err)
-          reply(err).code(500);
+          reply(err);
         else
           reply(data);
       });
@@ -170,7 +170,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       sendgrid.deleteEmail(request.params.name, function (err, data) {
         if (err)
-          reply(err).code(500);
+          reply(err);
         else
           reply(data);
       });
@@ -183,7 +183,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
       queryAllNewsletters(function (err, newsletters) {
         if (err)
-          reply(err).code(500);
+          reply(err);
         else
           reply(newsletters);
       });
@@ -195,7 +195,7 @@ module.exports.register = function (plugin, options, next) {
     path: '/{ident}',
     handler: function (request, reply) {
       queryOneNewsletter(request.params.ident, function (err, newsletter) {
-        if (err) return reply(err).code(500);
+        if (err) return reply(err);
         else if (newsletter === null)
           reply().code(404);
         else
@@ -222,7 +222,7 @@ module.exports.register = function (plugin, options, next) {
           insertNewsletter(ident, newsletter, function (err, result) {
             if (err) {
               console.log(err);
-              reply(err).code(500);
+              reply(err);
             } else {
               reply({ message: 'Inserted', ident: ident, id: result.insertId });
             }
@@ -239,7 +239,7 @@ module.exports.register = function (plugin, options, next) {
       queryOneNewsletter(request.params.ident, function (err, result) {
         if (err) {
           console.log(err);
-          reply(err).code(500);
+          reply(err);
         } else if (result === null) {
           reply({ message: 'Newsletter ' + request.params.ident + ' does not exists'}).code(404);
         } else {
@@ -249,7 +249,7 @@ module.exports.register = function (plugin, options, next) {
           updateNewsletter(request.params.ident, newsletter, function (err, result) {
             if (err) {
               console.log(err);
-              reply(err).code(500);
+              reply(err);
             } else {
               reply({ message: 'Updated' });
             }
@@ -286,7 +286,7 @@ module.exports.register = function (plugin, options, next) {
     },
     handler: function (request, reply) {
       sendgrid.createMarketingEmail(request.payload, function (err, result) {
-        if (err) reply(err).code(500);
+        if (err) reply(err);
         else reply(result);
       });
     }
@@ -304,7 +304,7 @@ module.exports.register = function (plugin, options, next) {
       var newsletter = request.payload;
 
       sendgrid.sendMarketingEmail(newsletter, function (err, result) {
-        if (err) reply(err).code(500);
+        if (err) reply(err);
         else reply({ message: 'Sent' });
       });
     }
@@ -315,12 +315,12 @@ module.exports.register = function (plugin, options, next) {
     path: '/{ident}/send',
     handler: function (request, reply) {
       queryOneNewsletter(request.params.ident, function (err, newsletter) {
-        if (err) return reply(err).code(500);
+        if (err) return reply(err);
         if (newsletter === null) return reply().code(404);
         if (newsletter.scheduling_disabled === true) return reply().code(403);
 
         templates.bond(newsletter.bond_url, function (err, data) {
-          if (err) return reply(err).code(500);
+          if (err) return reply(err);
 
           newsletter.subject = data.subject;
           newsletter.after = 5;
@@ -337,13 +337,13 @@ module.exports.register = function (plugin, options, next) {
           var checksum = calculateChecksum(data);
 
           validateLastChecksum(newsletter.list, checksum, function (err) {
-            if (err) return reply(err).code(500);
+            if (err) return reply(err);
 
             sendgrid.sendMarketingEmail(newsletter, function (err, result) {
-              if (err) return reply(err).code(500);
+              if (err) return reply(err);
 
               updateLastChecksum(newsletter.list, checksum, function (err) {
-                if (err) return reply(err).code(500);
+                if (err) return reply(err);
                 else {
                   result.message = 'Sent';
                   result.name = newsletter.name;
