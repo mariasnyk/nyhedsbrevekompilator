@@ -3,11 +3,12 @@
 {% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + timestamp | yyyymmdd + "&ns_linkname=AOK_ugen"; %}
 {% set home_url = "http://www.aok.dk"; %}
 {% set logo_src = "http://nlstatic.berlingskemedia.dk/headers/aok_ugen.png"; %}
-{% set unsubscribe_href = "http://profil.berlingskemedia.dk/tilmeldt/48?id=[ekstern_id]" %}
+{% set unsubscribe_href = "http://profil.berlingskemedia.dk/tilmeldt/17?id=[ekstern_id]" %}
 
 {% set kw = "AOK_ugen"; %}
 
 {% block content %}
+
   {% include "new_partials/single_column.html" with
     {
       article_template: "briefing_article.html",
@@ -15,15 +16,12 @@
     }
   %}
 
-  {% set node = nodes[1]; %}
-  {% set node.show_tag = true; %}
-  {% set node.show_title = true; %}
-  {% set node.show_summary = false; %}
   {% include "new_partials/single_column.html" with
     {
       article_template: "aok_article.html",
-      article: node
-    } %}
+      article: nodes[1]
+    }
+  %}
 
   {% include "new_partials/banner.html" with { cu: "29863" } %}
 
@@ -46,6 +44,14 @@
     {
       article_template: "aok_title_over_image.html",
       article: nodes[2]
+    }
+  %}
+
+  {% include "new_partials/single_column.html" with
+    {
+      article_template: "aok_article.html",
+      article: nodes[2],
+      show_tag: false
     }
   %}
 

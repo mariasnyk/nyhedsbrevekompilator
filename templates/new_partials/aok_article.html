@@ -41,11 +41,11 @@
         {% endfor %}
       {% endif %}
 
-      {% if primary_tag %}
+      {% if primary_tag && show_tag !== false %}
       <tr>
         <td align="left" valign="top">
           <font
-            color="#3795a0"
+            color="#808080"
             style="font-family: {{ font_family_bold|safe }}; font-size: 11px; line-height: 16px; text-transform: uppercase; text-rendering: optimizeLegibility;">
             {{ primary_tag }}
           </font>
@@ -64,18 +64,6 @@
           </a>
         </td>
       </tr>
-
-      {% if node.show_body %}
-      <tr>
-        <td align="left" valign="top">
-          <font
-            color="#1A1A1A"
-            style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 22px; text-rendering: optimizeLegibility;">
-            {% autoescape false %} {{ node.body | safe }} {% endautoescape %}
-          </font>
-        </td>
-      </tr>
-      {% else %}
 
       {% if (node.primary_article && node.summary) || always_show_article_summary === true %}
       <tr>

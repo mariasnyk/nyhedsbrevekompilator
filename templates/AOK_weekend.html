@@ -8,6 +8,7 @@
 {% set kw = "AOK_weekend"; %}
 
 {% block content %}
+
   {% include "new_partials/single_column.html" with
     {
       article_template: "briefing_article.html",
@@ -15,15 +16,12 @@
     }
   %}
 
-  {% set node = nodes[1]; %}
-  {% set node.show_tag = true; %}
-  {% set node.show_title = true; %}
-  {% set node.show_summary = false; %}
   {% include "new_partials/single_column.html" with
     {
       article_template: "aok_article.html",
-      article: node
-    } %}
+      article: nodes[1]
+    }
+  %}
 
   {% include "new_partials/banner.html" with { cu: "29863" } %}
 

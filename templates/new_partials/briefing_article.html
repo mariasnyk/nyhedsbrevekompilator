@@ -1,19 +1,32 @@
 {% if node !== undefined && node !== null %}
   <!-- Briefing article -->
-  <div>
+  <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
+    <tbody>
+      <tr>
+        <td align="left" valign="top">
           <font
             color="#1A1A1A"
             style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 22px; text-rendering: optimizeLegibility;">
             {% autoescape false %} {{ node.body | safe }} {% endautoescape %}
           </font>
-        </div>
-<!--   <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
-    <tbody>
-      <tr>
-        <td align="left" valign="top">
         </td>
       </tr>
+      {% if node.calltoaction %}
+      <tr>
+        <td align="left" valign="top">
+          <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+            <div style="padding: 10px 0px;">
+              <font
+                color="#d00000"
+                style="font-family: {{ font_family_bold|safe }}; text-decoration: underline; font-weight: bold; font-size: 16px; line-height: 16px; text-rendering: optimizeLegibility;">
+                {{ node.calltoaction }}
+              </font>
+            </div>
+          </a>
+        </td>
+      </tr>
+      {% endif %}
     </tbody>
-  </table> -->
+  </table>
   <!-- Briefing article END -->
 {% endif %}

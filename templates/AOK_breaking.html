@@ -8,42 +8,47 @@
 {% set kw = "AOK_breaking"; %}
 
 {% block content %}
-  {% set node = nodes[0]; %}
-  {% include "new_partials/briefing_article.html" %}
 
-  {% set node = nodes[1]; %}
-  {% if node !== undefined %}
-    {% set node.show_tag = true; %}
-    {% set node.show_title = true; %}
-    {% set node.show_summary = false; %}
-    {% include "new_partials/single_column.html" with
-      {
-        article_template: "aok_article.html",
-        article: node
-      }
-    %}
-  {% endif %}
-
-  <tr>
-    <td align="center" valign="top">
-      <div style="text-align: left; line-height: 100%; padding-left: 20px; padding-right: 20px; padding-top: 3px; padding-bottom: 5px;">
-        <span style="padding: 1px 0px 3px 0px;">
-          <font color="#1A1A1A"
-            style="font-family: {{ font_family_bold|safe }}; font-size: 22px; line-height: 22px; font-weight: bold; text-rendering: optimizeLegibility;">
-            DET SKER I K&Oslash;BENHAVN
-          </font>
-        </span>
-      </div>
-    </td>
-  </tr>
-
-  {% include "new_partials/two_column.html" with
+  {% include "new_partials/single_column.html" with
     {
-      article_template: "aok_title_over_image.html",
-      articleA: nodes[2],
-      articleB: nodes[3]
+      article_template: "briefing_article.html",
+      article: nodes[0]
     }
   %}
+
+  {% include "new_partials/single_column.html" with
+    {
+      article_template: "aok_article.html",
+      article: nodes[1]
+    }
+  %}
+
+  {% if nodes.length > 2 %}
+    <tr>
+      <td align="center" valign="top">
+        <table width="614" cellpadding="0" cellspacing="10" border="0">
+          <tr>
+            <td>
+              <font color="#1A1A1A"
+                style="font-family: {{ font_family_bold|safe }}; font-size: 22px; line-height: 22px; font-weight: bold; text-rendering: optimizeLegibility;">
+                DET SKER I K&Oslash;BENHAVN
+              </font>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    {% include "new_partials/two_column.html" with
+      {
+        article_template: "aok_title_over_image.html",
+        articleA: nodes[2],
+        articleB: nodes[3]
+      }
+    %}
+
+  {% endif %}
+
 
   {% include "new_partials/banner.html" with { cu: "29864" } %}
 

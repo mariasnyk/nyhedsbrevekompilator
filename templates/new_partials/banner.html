@@ -1,33 +1,42 @@
-{% set kw2 = timestamp | yyyymmdd %}
+{% if kw2 === undefined %}
+  {% set kw2 = timestamp | yyyymmdd %}
+{% endif %}
 
 <tr>
+  <td height="14">&nbsp;</td>
+</tr>
+<tr>
   <td align="center" valign="top">
-    <table width="654" cellpadding="0" cellspacing="0" border="0">
+    <table width="654" cellpadding="0" cellspacing="0" border="0" bgcolor="#ececec">
       <tr>
-        <td height="14">&nbsp;</td>
-      </tr>
-      <tr>
-        <td align="center" valign="top" bgcolor="#ececec">
+        <td align="center" valign="top">
           <table width="614" cellpadding="0" cellspacing="0" border="0">
             <tr>
-              <td>
-                <div style="text-align: left;">
-                  <font color="#333333" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 10px; line-height: 10px;  text-rendering: optimizeLegibility;">
-                    ANNONCE
-                  </font>
-                  <br>
-                  <a target="_blank" href="http://ad1.emediate.dk/eas?cu={{ cu }};ty=ct;kw={{ kw }};kw2={{ kw2 }};upair={{ kw }}_{{ kw2 }}_[user_id]" title="">
-                    <img class="full" src="http://ad1.emediate.dk/eas?cu={{ cu }};cre=img;kw={{ kw }};kw2={{ kw2 }};upair={{ kw }}_{{ kw2 }}_[user_id]" alt="" border="0" style="max-width: 100%; display: block;" width="100%" />
-                  </a>
-                </div>
+              <td height="6"></td>
+            </tr>
+            <tr>
+              <td height="10">
+                <font color="#333333" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 10px; line-height: 10px;  text-rendering: optimizeLegibility;">
+                  ANNONCE
+                </font>
               </td>
+            </tr>
+            <tr>
+              <td>
+                <a target="_blank" href="http://ad1.emediate.dk/eas?cu={{ cu }};ty=ct;kw={{ kw }};kw2={{ kw2 }};upair={{ kw }}_{{ kw2 }}_[user_id]" title="">
+                  <img class="full" src="http://ad1.emediate.dk/eas?cu={{ cu }};cre=img;kw={{ kw }};kw2={{ kw2 }};upair={{ kw }}_{{ kw2 }}_[user_id]" alt="" border="0" style="max-width: 100%; display: block;" />
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td height="20">&nbsp;</td>
             </tr>
           </table>
         </td>
       </tr>
-      <tr>
-        <td height="14">&nbsp;</td>
-      </tr>
     </table>
   </td>
+</tr>
+<tr>
+  <td height="14">&nbsp;</td>
 </tr>

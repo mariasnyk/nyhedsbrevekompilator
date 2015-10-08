@@ -179,13 +179,14 @@
                 <input
                   class="form-control"
                   type="text"
+                  ng-hide="$index === 0 && hasCategory('AOK')"
                   ng-model="node.title"
                   ng-change="changeNodeTitle()"
                   ng-blur="blurNodeTitle()"
                   placeholder="Rubrik"/>
                 <div
                   class="checkbox"
-                  ng-if="$index === 0 && hasCategory(['Berlingske', 'Business', 'AOK'])">
+                  ng-if="$index === 0 && hasCategory(['Berlingske', 'Business'])">
                   <label>
                     <input
                       type="checkbox"

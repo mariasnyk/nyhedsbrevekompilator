@@ -46,7 +46,11 @@ swig.setFilter('tracking', function (format, after, at) {
 });
 
 swig.setFilter('yyyymmdd', function (timestamp) {
-  return moment.unix(timestamp).format('YYYYMMDD');
+  if (timestamp === '') {
+    return moment().format('YYYYMMDD');
+  } else {
+    return moment.unix(timestamp).format('YYYYMMDD');
+  }
 });
 
 swig.setFilter('hasValue', function (listOfValues, value) {
