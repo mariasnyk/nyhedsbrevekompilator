@@ -36,14 +36,18 @@
             </font>
           </td>
         </tr>
+        <tr>
+          <td height="6"></td>
+        </tr>
       </table>
     </td>
   </tr>
 
   {% include "new_partials/single_column.html" with
     {
-      article_template: "aok_title_over_image.html",
-      article: nodes[2]
+      article_template: "aok_article.html",
+      article: nodes[2],
+      show_tag: false
     }
   %}
 
@@ -54,9 +58,14 @@
     {% elif loop.index0 >= 3 && loop.index0 % 2 === 0 %}
       {% include "new_partials/two_column.html" with
         {
-          article_template: "aok_article.html",
-          articleA: nodes[loop.index0 - 1],
-          articleB: nodes[loop.index0]
+          articleA: {
+            article_template: "aok_article.html",
+            article: nodes[loop.index0 - 1]
+          },
+          articleB: {
+            article_template: "aok_article.html",
+            article: nodes[loop.index0]
+          }
         }
       %}
     {% endif %}

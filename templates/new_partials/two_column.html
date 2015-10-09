@@ -6,13 +6,13 @@
         <td height="100%" width="50%" align="center" valign="top">
           <div style="max-width: 300px; padding-right: 7px; display: inline-block; background-color: #ffffff; font-size; 0; line-height: 0px;">
             <!-- Right story -->
-            {% include article_template with { node: articleA, width: 300 } %}
+            {% include articleA.article_template with { node: articleA.article, width: 300 } %}
           </div>
         </td>
         <td height="100%" width="50%" align="center" valign="top">
           <div style="max-width: 300px; padding-left: 7px; display: inline-block; background-color: #ffffff; font-size; 0; line-height: 0px;">
             <!-- Left story -->
-            {% include article_template with { node: articleB, width: 300 } %}
+            {% include articleB.article_template with { node: articleB.article, width: 300 } %}
           </div>
         </td>
       </tr>

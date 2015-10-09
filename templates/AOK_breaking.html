@@ -35,15 +35,24 @@
               </font>
             </td>
           </tr>
+          <tr>
+            <td height="6"></td>
+          </tr>
         </table>
       </td>
     </tr>
 
     {% include "new_partials/two_column.html" with
       {
-        article_template: "aok_title_over_image.html",
-        articleA: nodes[2],
-        articleB: nodes[3]
+        articleA: {
+          article_template: "aok_article.html",
+          article: nodes[2]
+        },
+        articleB: {
+          article_template: "aok_article.html",
+          article: nodes[3]
+        },
+        show_tag: false
       }
     %}
 
