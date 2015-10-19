@@ -57,12 +57,10 @@
       </td>
     </tr>
 
+    {# === This is the main block === #}
     {% block content %}
     {% endblock %}
 
-    <tr>
-      <td width="100%" height="24" style="font-size: 0px; line-height: 0px;">&nbsp;</td>
-    </tr>
     <tr>
       <td align="center" valign="top">
         <hr style="height: 1px; border: 0; background: #dddddd">
@@ -95,6 +93,7 @@
               Annonceinfo
             </font>
           </a>
+          {% if unsubscribe_href %}
           <font color="#666666" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
             &middot;
           </font>
@@ -103,6 +102,7 @@
               Afmeld nyhedsbrev
             </font>
           </a>
+          {% endif %}
           {% block legal_link %}
           {% endblock %}
         </div>
@@ -112,8 +112,12 @@
       <td width="100%" height="14" style="font-size:0px; line-height: 0px;">&nbsp;</td>
     </tr>
 
-    {% block footer %}
-    {% endblock %}
+    <tr>
+      <td align="center" valign="top">
+        {% block footer %}
+        {% endblock %}
+      </td>
+    </tr>
 
   </table>
 
