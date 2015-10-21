@@ -263,16 +263,15 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
         note = 'om 5 minutter';
       }
 
-      var sending = $http.post('/newsletters/send', $scope.newsletter)
-      .success(function () {
+      var sending = $http.post('/newsletters/send', $scope.newsletter).then(function (success) {
+        console.log('Success', success);
         $scope.newsletter_sent = true;
         notifications.showSuccess('Email ' + $scope.newsletter.name + ' sendes ' + note + '.');
-      })
-      .error(function (data, status) {
-        console.log('Error', status, data);
-        var error = data.message ? data.message :
-                    data.error ? data.error :
-                    data;
+      }, function (error) {
+        console.log('Error', error);
+        // var error = data.message ? data.message :
+        //             data.error ? data.error :
+        //             data;
 
         notifications.showError('Error: ' + error);
       });
