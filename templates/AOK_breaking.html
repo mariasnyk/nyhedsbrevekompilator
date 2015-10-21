@@ -11,15 +11,8 @@
 
   {% include "new_partials/single_column.html" with
     {
-      article_template: "briefing_article.html",
-      article: nodes[0]
-    }
-  %}
-
-  {% include "new_partials/single_column.html" with
-    {
       article_template: "aok_article.html",
-      article: nodes[1]
+      article: nodes[0]
     }
   %}
 
@@ -46,11 +39,11 @@
       {
         articleA: {
           article_template: "aok_article.html",
-          article: nodes[2]
+          article: nodes[1]
         },
         articleB: {
           article_template: "aok_article.html",
-          article: nodes[3]
+          article: nodes[2]
         },
         show_tag: false
       }
