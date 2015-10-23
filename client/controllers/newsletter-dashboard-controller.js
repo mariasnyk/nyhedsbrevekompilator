@@ -3,7 +3,12 @@ app.controller('NewsletterDashboardController', ['$scope', '$routeParams', '$loc
 
     //var Newsletters = $resource('/newsletters/:name', { name: '@name' });
     var Newsletters = $resource('/newsletters/');
-    $scope.newsletters = Newsletters.query();
+    $scope.newsletters = Newsletters.query(null, function (response) {
+      // Body
+    }, function (response) {
+      console.log('query newsletters error', response);
+      notifications.showError('Fejl ved indlæsning af nyhedsbreve');
+    });
 
     loadingSwitch.watch($scope.newsletters);
 

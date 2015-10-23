@@ -57,6 +57,8 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       console.log('Error fetching ' + $routeParams.ident, response);
       if (response.status === 404) {
         $location.url('/');
+      } else {
+        notifications.showError('Fejl ved indlæsning af nyhedsbrev');
       }
     }
 
@@ -269,11 +271,11 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
         notifications.showSuccess('Email ' + $scope.newsletter.name + ' sendes ' + note + '.');
       }, function (error) {
         console.log('Error', error);
-        // var error = data.message ? data.message :
-        //             data.error ? data.error :
-        //             data;
-
-        notifications.showError('Error: ' + error);
+        if (error.status === 401) {
+          notifications.showError('Nyhedsbrev med samme navn eksisterer allerede');
+        } else {
+          notifications.showError('Fejl: ' + error);
+        }
       });
 
       loadingSwitch.watch(sending, 'Sender');

@@ -7,11 +7,22 @@ var http = require('http'),
     url = require('url'),
     moment = require('moment'),
     userdb = require('./userdb_client.js'),
+    nyhedsbrevedb = require('./mongodb_client.js'),
     templates = require('./templates.js');
 
 moment.locale('da');
 
 module.exports.register = function (plugin, options, next) {
+
+  plugin.route({
+    method: 'get',
+    path: '/mongo',
+    handler: function (request, reply) {
+      var a = nyhedsbrevedb.collection('nyhedsbreve').find({});
+      console.log(a)
+      reply('ok');
+    }
+  });
 
   plugin.route({
     method: 'get',
@@ -286,8 +297,11 @@ module.exports.register = function (plugin, options, next) {
     },
     handler: function (request, reply) {
       sendgrid.createMarketingEmail(request.payload, function (err, result) {
-        if (err) reply(err).code(500);
-        else reply(result);
+        if (err) {
+          reply(err).code(err.statusCode ? err.statusCode : 500);
+        } else {
+          reply(result);
+        }
       });
     }
   });
@@ -304,8 +318,11 @@ module.exports.register = function (plugin, options, next) {
       var newsletter = request.payload;
 
       sendgrid.sendMarketingEmail(newsletter, function (err, result) {
-        if (err) reply(err).code(500);
-        else reply({ message: 'Sent' });
+        if (err) {
+          reply(err).code(err.statusCode ? err.statusCode : 500);
+        } else {
+          reply(result);
+        }
       });
     }
   });

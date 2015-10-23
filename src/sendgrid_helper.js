@@ -276,9 +276,6 @@ function callSendGridV3 (method, path, body, callback) {
     }
   };
 
-//  console.log('Basic ' + authorization);
-//https://api.sendgrid.com/v3/categories/stats?aggregated_by=month&categories=BT+Mode+%26+Sk%C3%B8nhed&end_date=2015-02-23&start_date=2015-01-24
-//                                            ?aggregated_by=month&categories=BT+Mode+%26+Sk%C3%B8nhed&end_date=2015-02-23&start_date=2015-01-24
   var req = https.request(options, parseReponse(callback));
 
   req.write(body === null ? '' : body);
@@ -308,6 +305,7 @@ function parseReponse (callback) {
       }
 
       if (data.error || res.statusCode > 300) {
+        data.statusCode = res.statusCode;
         callback(data, null);
       }
       else
