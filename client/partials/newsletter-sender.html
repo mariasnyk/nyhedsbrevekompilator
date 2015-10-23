@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
-      <a title="Til oversigt" class="btn" ng-class="{'btn-warning': dirty, 'btn-default': !dirty}" ng-href="#/">
+      <a title="Til oversigt" class="btn btn-default" ng-href="#/">
         Til oversigt <span class="glyphicon glyphicon-chevron-left"></span>
       </a>
     </div>
@@ -20,14 +20,20 @@
           class="form-control"
           type="text"
           ng-model="newsletter.name"
-          ng-change="setDirty()"
+          ng-change="newsletter_name_dirty = true"
           ng-disabled="newsletter_sent"
           placeholder="Insert name"/>
         <small>Note: <em>Navn</em> bruges til statistik og opf&oslash;lgning. Ikke som tidspunkt for udsendelse.<br>Bannere og tracking er dateret med <strong>{{ schedule_date }}</strong></small>
       </div>
       <div class="form-group">
         <label for="subject">Emnefelt</label>
-        <input id="subject" type="text" class="form-control" ng-model="newsletter.subject" ng-disabled="newsletter_sent">
+        <input
+          id="subject"
+          class="form-control"
+          type="text"
+          ng-change="newsletter_subject_dirty = true"
+          ng-model="newsletter.subject"
+          ng-disabled="newsletter_sent">
       </div>
     </div>
     <div class="col-md-4 col-sm-12">

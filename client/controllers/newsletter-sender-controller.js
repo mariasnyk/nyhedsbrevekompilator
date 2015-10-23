@@ -62,24 +62,23 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       }
     }
 
-    $scope.setDirty = function () {
-      $scope.dirty = true;
-    };
-
     $scope.changeNodeTitle = function () {
       $scope.bonddatadirty = true;
+      suggestMarketingEmailSubject();
     };
 
     $scope.moveNode = function (from, to) {
       if (to !== -1) {
         $scope.bonddata.nodes.splice(to, 0, $scope.bonddata.nodes.splice(from,1)[0]);
         $scope.bonddatadirty = true;
+        suggestMarketingEmailSubject();
       }
     };
 
     $scope.removeNode = function (index) {
       $scope.bonddata.nodes.splice(index,1);
       $scope.bonddatadirty = true;
+      suggestMarketingEmailSubject();
     };
 
     $scope.scheduleChanged = function () {
@@ -110,11 +109,42 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
         : moment().add($scope.schedule_after, 'minutes').format("ddd D MMM YYYY");
     }
 
+    function suggestMarketingEmailSubject () {
+      var maxLength = 255;
+
+      if (!$scope.newsletter_subject_dirty || $scope.newsletter.subject === '') {
+
+        // In case the subject was cleared manually to get a fresh suggestion
+        $scope.newsletter_subject_dirty = false;
+
+        if ($scope.bonddata === null) {
+          $scope.newsletter.subject = '';
+        } else if ($scope.bonddata.type === 'nodequeue' || $scope.bonddata.type === 'latest_news') {
+          var temp = [];
+          for (var i = 0; i < 3; i++) {
+            if ($scope.bonddata.nodes[i] && $scope.bonddata.nodes[i].title) {
+              temp.push($scope.bonddata.nodes[i].title);
+            }
+          }
+          $scope.newsletter.subject = temp.join(' | ').substring(0, maxLength);
+        } else if ($scope.bonddata.type === 'node') {
+          $scope.newsletter.subject = $scope.bonddata.title.substring(0, maxLength);
+        } else {
+          $scope.newsletter.subject = '';
+        }
+      }
+    }
+
     function suggestMarketingEmailName () {
-      //$scope.newsletter.name = $scope.original_newsletters_name + ' ' + moment().add($scope.newsletter.after, 'minutes').format("ddd D MMM YYYY");
-      $scope.newsletter.name = $scope.original_newsletters_name + ' ' + ($scope.schedule_at_specified
-        ? moment($scope.schedule_at).format('ddd D MMM YYYY')
-        : moment().add($scope.schedule_after, 'minutes').format("ddd D MMM YYYY"));
+      if (!$scope.newsletter_name_dirty || $scope.newsletter.name === '') {
+        // In case the name was cleared manually to get a fresh suggestion
+        $scope.newsletter_name_dirty = false;
+
+        //$scope.newsletter.name = $scope.original_newsletters_name + ' ' + moment().add($scope.newsletter.after, 'minutes').format("ddd D MMM YYYY");
+        $scope.newsletter.name = $scope.original_newsletters_name + ' ' + ($scope.schedule_at_specified
+          ? moment($scope.schedule_at).format('ddd D MMM YYYY')
+          : moment().add($scope.schedule_after, 'minutes').format("ddd D MMM YYYY"));
+      }
     }
 
     function getControlroomUrl () {
@@ -136,13 +166,11 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       // By adding a simple query parameter, BOND caching doesn't know the URL.
       var bond_url_with_caching_prevention = $scope.newsletter.bond_url + '&cache=' + Date.now();
 
-      var get_bonddata = $http.get('/templates/data?u=' + encodeURIComponent(bond_url_with_caching_prevention))
-      //var get_bonddata = $http.get('/templates/data?f=bt.json')
-      .success(function (data) {
-        $scope.bonddata = data;
-        $scope.newsletter.subject =  data.subject;
-        $scope.newsletter.checksum = data.checksum;
+      var get_bonddata = $http.get('/templates/data?u=' + encodeURIComponent(bond_url_with_caching_prevention)).then(function (response) {
+        $scope.bonddata = response.data;
+        $scope.newsletter.checksum = response.data.checksum;
         $scope.bonddatadirty = false;
+        suggestMarketingEmailSubject();
 
         // This is a hack.
         // We want to set show_body=true as a default value. This is actually already done on ng-init in the template newsletter-sender-html.
@@ -161,9 +189,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
           }
         }
         // Hack end
-
-      })
-      .error(function (err) {
+      }, function (response) {
         notifications.showError('Failed to get data from ' + bond_url_with_caching_prevention);
       });
 
@@ -173,7 +199,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
 
     function getBondDataAndUpdatePreviews () {
-      return getBondData().success(function () {
+      return getBondData().then(function () {
         updatePreviews();
       });
     }
