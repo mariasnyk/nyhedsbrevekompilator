@@ -26,14 +26,14 @@ app.controller('StatsController', ['$scope', '$routeParams', '$location', '$reso
       $scope.stats_parameters.start_date = $filter('date')($scope.start_date, "yyyy-MM-dd");
       $scope.stats_parameters.end_date = $filter('date')($scope.end_date, "yyyy-MM-dd");
 
-      console.log($scope.stats_parameters);
       $scope.statsData = [];
 
       var quering = Stats.query($scope.stats_parameters,
       function (data) {
-        console.log('data', data);
         data.forEach(function (value) {
           value.stats.forEach(function (stat) {
+            meas(stat.metrics);
+
             $scope.statsData.push({
               date: value.date,
               name: stat.name,
@@ -42,7 +42,6 @@ app.controller('StatsController', ['$scope', '$routeParams', '$location', '$reso
             });
           });
         });
-        console.log($scope.statsData);
       },
       function (err) {
         console.log('err', err);
@@ -51,6 +50,18 @@ app.controller('StatsController', ['$scope', '$routeParams', '$location', '$reso
 
       loadingSwitch.watch(quering);
     };
+
+    function meas (metrics) {
+      metrics.open_rate = peas(metrics.unique_opens, metrics.delivered, 2);
+      metrics.open_rate_display = peas(metrics.unique_opens, metrics.delivered, 0);
+      metrics.click_rate = peas(metrics.unique_opens, metrics.delivered, 2);
+      metrics.click_rate_display = peas(metrics.unique_clicks, metrics.unique_opens, 0);
+    }
+
+    function peas (a, b, c) {
+      var res = (a / (b / 100)).toFixed(c);
+      return res === 'NaN' ? 0 : res;
+    }
   }]);
 
 

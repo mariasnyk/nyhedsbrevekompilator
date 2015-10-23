@@ -61,10 +61,10 @@
           <td><div class="text-right">{{ data.metrics.delivered }}</div></td>
           <td><div class="text-right">{{ data.metrics.opens }}</div></td>
           <td><div class="text-right">{{ data.metrics.unique_opens }}</div></td>
-          <td><div class="text-right">{{ ( data.metrics.unique_opens / ( data.metrics.delivered / 100 )).toFixed(2) }}%</div></td>
+          <td><div class="text-right">{{ data.metrics.open_rate_display }}%</div></td>
           <td><div class="text-right">{{ data.metrics.clicks }}</div></td>
           <td><div class="text-right">{{ data.metrics.unique_clicks }}</div></td>
-          <td><div class="text-right">{{ (data.metrics.unique_clicks / ( data.metrics.unique_opens / 100 )).toFixed(2) }}%</div></td>
+          <td><div class="text-right">{{ data.metrics.click_rate_display }}%</div></td>
           <td><div class="text-right">{{ data.metrics.blocks }}</div></td>
           <td><div class="text-right">{{ data.metrics.bounces }}</div></td>
           <td><div class="text-right">{{ data.metrics.spam_reports }}</div></td>
