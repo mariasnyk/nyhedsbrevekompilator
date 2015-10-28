@@ -7,7 +7,7 @@ var http = require('http'),
     url = require('url'),
     moment = require('moment'),
     userdb = require('./userdb_client.js'),
-    nyhedsbrevedb = require('./mongodb_client.js'),
+    // nyhedsbrevedb = require('./mongodb_client.js'),
     templates = require('./templates.js');
 
 moment.locale('da');
