@@ -1,3 +1,5 @@
+var google;
+
 app.controller('StatsController', ['$scope', '$routeParams', '$location', '$resource', '$sce', '$http', '$filter', 'notifications', 'loadingSwitch',
   function ($scope, $routeParams, $location, $resource, $sce, $http, $filter, notifications, loadingSwitch) {
     var Categories = $resource('/newsletters/categories');
@@ -96,4 +98,6 @@ app.directive('chart', function() {
 // google.setOnLoadCallback(function() {
 //     angular.bootstrap(document.body, ['myApp']);
 // });
-google.load('visualization', '1', {packages: ['corechart']});
+if (google !== undefined) {
+  google.load('visualization', '1', {packages: ['corechart']});
+}

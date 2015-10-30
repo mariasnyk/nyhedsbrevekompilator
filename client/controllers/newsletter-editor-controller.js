@@ -19,9 +19,13 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     // This is done so that drop-downs are populated and the equivalent newsletter value is selected in the drop-down.
     var all = $q.all([$scope.identities.$promise, $scope.categories.$promise, $scope.lists.$promise, $scope.html_templates.$promise, $scope.plain_templates.$promise]).then(function () {
       $scope.newsletter = Newsletters.get({ ident: $routeParams.ident }, function () { /* All OK. */ }, resourceErrorHandler);
-
+console.log('$scope.newsletter', $scope.newsletter)
       loadingSwitch.watch($scope.newsletter);
+    }).catch(function (error, result) {
+      console.log('catch', error, result)
     });
+    console.log($q)
+    console.log(all)
 
     loadingSwitch.watch(all);
 

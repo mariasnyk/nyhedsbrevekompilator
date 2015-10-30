@@ -7,22 +7,12 @@ var http = require('http'),
     url = require('url'),
     moment = require('moment'),
     userdb = require('./userdb_client.js'),
-    // nyhedsbrevedb = require('./mongodb_client.js'),
+    mongodb = require('./mongodb_client.js'),
     templates = require('./templates.js');
 
 moment.locale('da');
 
 module.exports.register = function (plugin, options, next) {
-
-  plugin.route({
-    method: 'get',
-    path: '/mongo',
-    handler: function (request, reply) {
-      var a = nyhedsbrevedb.collection('nyhedsbreve').find({});
-      console.log(a)
-      reply('ok');
-    }
-  });
 
   plugin.route({
     method: 'get',
@@ -192,12 +182,7 @@ module.exports.register = function (plugin, options, next) {
     method: 'get',
     path: '/',
     handler: function (request, reply) {
-      queryAllNewsletters(function (err, newsletters) {
-        if (err)
-          reply(err).code(500);
-        else
-          reply(newsletters);
-      });
+      mongodb.nyhedsbreve().find({}).toArray(reply);
     }
   });
 
@@ -205,13 +190,20 @@ module.exports.register = function (plugin, options, next) {
     method: 'get',
     path: '/{ident}',
     handler: function (request, reply) {
-      queryOneNewsletter(request.params.ident, function (err, newsletter) {
-        if (err) return reply(err).code(500);
-        else if (newsletter === null)
+      mongodb.nyhedsbreve().find({ident: request.params.ident}).toArray(function (error, newsletters) {
+        if (newsletters.length === 1) {
+          reply(newsletters[0]);
+        } else {
           reply().code(404);
-        else
-          reply(newsletter);
+        }
       });
+      // queryOneNewsletter(request.params.ident, function (err, newsletter) {
+      //   if (err) return reply(err).code(500);
+      //   else if (newsletter === null)
+      //     reply().code(404);
+      //   else
+      //     reply(newsletter);
+      // });
     }
   });
 
@@ -222,24 +214,42 @@ module.exports.register = function (plugin, options, next) {
       if (request.payload.name === undefined || request.payload.name === null || request.payload.name === '') {
         return reply('Field name missing').code(400);
       }
+      // TODO: Validate the payload
 
-      var ident = slugify(request.payload.name);
+      var newsletter = request.payload;
+      newsletter.ident = slugify(newsletter.name);
 
-      queryOneNewsletter(ident, function (err, result) {
-        if (result === null) {
-
-          var newsletter = convertPayloadToNewsletter(request.payload);
-
-          insertNewsletter(ident, newsletter, function (err, result) {
-            if (err) {
-              console.log(err);
-              reply(err).code(500);
+      mongodb.nyhedsbreve().find({ident: newsletter.ident}).toArray(function (error, newsletters) {
+        console.log(newsletters);
+        if (newsletters.length === 0) {
+          mongodb.nyhedsbreve().insertOne(newsletter, function (error, result) {
+            console.log(error, result);
+            if (error) {
+              reply(error).code(500);
             } else {
-              reply({ message: 'Inserted', ident: ident, id: result.insertId });
+              reply(result.ops[0]);
             }
           });
+        } else {
+          reply().code(409);
         }
       });
+
+      // queryOneNewsletter(ident, function (err, result) {
+      //   if (result === null) {
+
+      //     var newsletter = convertPayloadToNewsletter(request.payload);
+
+      //     insertNewsletter(ident, newsletter, function (err, result) {
+      //       if (err) {
+      //         console.log(err);
+      //         reply(err).code(500);
+      //       } else {
+      //         reply({ message: 'Inserted', ident: ident, id: result.insertId });
+      //       }
+      //     });
+      //   }
+      // });
     }
   });
 
@@ -440,20 +450,31 @@ function undefinedOrBlank (input) {
 
 
 function queryOneNewsletter (ident, callback) {
-  var sql = [
-    'SELECT ident, data',
-    'FROM mashed_composer',
-    'WHERE ident = ' + userdb.escape(ident)].join(' ');
 
-  userdb.queryOne(sql, function (err, result) {
-    if (err) return callback(err);
-    else if (result === null)
+  mongodb.nyhedsbreve().find({ident: ident}).toArray(function (error, newsletters) {
+    console.log(queryAllNewsletters);
+    if (newsletters.length === 0) {
       callback(null, null);
-    else {
-      var newsletter = JSON.parse(new Buffer(result.data, 'base64').toString('utf8'));
-      callback(null, newsletter);
+    } else {
+
+      callback(null, newsletters[0]);
     }
   });
+
+  // var sql = [
+  //   'SELECT ident, data',
+  //   'FROM mashed_composer',
+  //   'WHERE ident = ' + userdb.escape(ident)].join(' ');
+
+  // userdb.queryOne(sql, function (err, result) {
+  //   if (err) return callback(err);
+  //   else if (result === null)
+  //     callback(null, null);
+  //   else {
+  //     var newsletter = JSON.parse(new Buffer(result.data, 'base64').toString('utf8'));
+  //     callback(null, newsletter);
+  //   }
+  // });
 }
 
 

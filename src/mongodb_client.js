@@ -20,3 +20,7 @@ module.exports.close = function(callback) {
 module.exports.collection = function(collectionName) {
   return db.collection(collectionName);
 };
+
+module.exports.nyhedsbreve = function () {
+  return db.collection('nyhedsbreve');
+};
