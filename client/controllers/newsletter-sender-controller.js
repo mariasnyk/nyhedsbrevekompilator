@@ -13,7 +13,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     $scope.schedule_after = 15;
     $scope.schedule_at = moment().add(1, 'hours').startOf('hour');
 
-    // $scope.schedule_date = $scope.schedule_at_specified ? moment($scope.schedule_at).
     setScheduleDateLabel();
 
     $scope.newsletter_ident = $routeParams.ident;
@@ -106,7 +105,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     function setScheduleDateLabel () {
       $scope.schedule_date = $scope.schedule_at_specified
         ? moment($scope.schedule_at).format('ddd D MMM YYYY')
-        : moment().add($scope.schedule_after, 'minutes').format("ddd D MMM YYYY");
+        : moment().add($scope.schedule_after, 'minutes').format("dddd [d.] D MMMM YYYY");
     }
 
     function suggestMarketingEmailSubject () {
@@ -143,7 +142,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
         //$scope.newsletter.name = $scope.original_newsletters_name + ' ' + moment().add($scope.newsletter.after, 'minutes').format("ddd D MMM YYYY");
         $scope.newsletter.name = $scope.original_newsletters_name + ' ' + ($scope.schedule_at_specified
           ? moment($scope.schedule_at).format('ddd D MMM YYYY')
-          : moment().add($scope.schedule_after, 'minutes').format("ddd D MMM YYYY"));
+          : moment().add($scope.schedule_after, 'minutes').format("dddd [d.] D MMMM YYYY"));
       }
     }
 
