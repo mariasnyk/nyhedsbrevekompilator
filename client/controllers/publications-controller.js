@@ -37,7 +37,7 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
         $scope.emails[index].html = data.html;
 
         if (data.date_schedule !== null) {
-          var date_schedule = moment.utc(data.date_schedule + '-07:00');
+          var date_schedule = moment.utc(data.date_schedule + '-08:00');
           date_schedule.local();
 
           $scope.emails[index].schedule = date_schedule.format('ddd D/M HH:mm');
