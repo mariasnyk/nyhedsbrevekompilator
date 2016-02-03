@@ -44,24 +44,28 @@
       {% if primary_tag && show_tag !== false %}
       <tr>
         <td align="left" valign="top">
-          <font
-            color="#808080"
-            style="font-family: {{ font_family_bold|safe }}; font-size: 11px; line-height: 16px; text-transform: uppercase; text-rendering: optimizeLegibility;">
-            {{ primary_tag }}
-          </font>
+          <div style="margin-top: 5px; margin-bottom: 5px;">
+            <font
+              color="#808080"
+              style="font-family: {{ font_family_bold|safe }}; font-size: 11px; line-height: 16px; text-transform: uppercase; text-rendering: optimizeLegibility;">
+              {{ primary_tag }}
+            </font>
+          </div>
         </td>
       </tr>
       {% endif %}
 
       <tr>
         <td align="left" valign="top">
-          <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
-            <font
-              color="#1A1A1A"
-              style="font-family: {{ font_family|safe }}; font-size: 25px; line-height: 25px; text-rendering: optimizeLegibility;">
-              {{ node.title }}
-            </font>
-          </a>
+          <div style="margin-bottom: 10px;">
+            <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+              <font
+                color="#1A1A1A"
+                style="font-family: {{ font_family|safe }}; font-size: 25px; line-height: 25px; text-rendering: optimizeLegibility;">
+                {{ node.title }}
+              </font>
+            </a>
+          </div>
         </td>
       </tr>
 

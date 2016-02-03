@@ -1,0 +1,99 @@
+{% extends "../new_partials/basic.html" %}
+
+{% set ophavsret_href = "http://www.aoa.dk/ophavsret"; %}
+{% set annonceinfo_href = "http://www.aoa.dk/annonceinfo"; %}
+
+{% block font_face %}
+
+  @font-face {
+    font-family: 'montserrat_regular';
+    src: url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/Montserrat-Regular.eot');
+    src: url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/Montserrat-Regular.eot?#iefix') format('embedded-opentype'),
+         url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/Montserrat-Regular.woff') format('woff'),
+         url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/Montserrat-Regular.ttf') format('truetype'),
+         url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/Montserrat-Regular.svg#Montserrat-Regular') format('svg');
+  }
+
+  @font-face {
+    font-family: 'montserrat_bold';
+    src: url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/Montserrat-Bold.eot');
+    src: url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/Montserrat-Bold.eot?#iefix') format('embedded-opentype'),
+         url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/Montserrat-Bold.woff') format('woff'),
+         url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/Montserrat-Bold.ttf') format('truetype'),
+         url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/Montserrat-Bold.svg#Montserrat-Bold') format('svg');
+  }
+
+{% endblock %}
+
+{% set font_family="montserrat_regular, 'Helvetica Neue', Helvetica" %}
+{% set font_family_bold="montserrat_bold, 'Helvetica Bold', Helvetica" %}
+
+{% block weblink %}
+<p>
+  <font color="#000000" style="font-family: {{ font_family|safe }}; font-size: 12px; line-height: 12px; text-rendering: optimizeLegibility;">
+    Problemer med at l&aelig;se nyhedsbrevet?
+  </font>
+  <a href="[weblink]">
+    <font color="#6495ED" style="font-family: {{ font_family|safe }}; font-size: 12px; line-height: 12px; text-rendering: optimizeLegibility;">
+      Klik her
+    </font>
+  </a>
+</p>
+{% endblock %}
+
+{% block top_logo %}
+  <a href="{{ home_url }}?{{ tracking }}">
+    <img style="width: 100%;" src="{{ logo_src }}" width="654">
+  </a>
+{% endblock %}
+
+{% block social %}
+<table width="614" cellpadding="0" cellspacing="10" border="0">
+  <tr>
+    <td height="20">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center" valign="top">
+      <font color="#000000" style="font-family: {{ font_family|safe }}; font-size: 24px; line-height: 36px; text-rendering: optimizeLegibility;">
+        F&oslash;lg AOA
+      </font>
+    </td>
+  </tr>
+  <tr>
+    <td height="20">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center" valign="top">
+      <div style="padding: 0px 15px; display: inline-block;">
+        <a target="_blank" href="http://link.berlingskemedia.dk/aoa_facebook" style="text-decoration: none;">
+          <img src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/images/facebook.png" width="12" />
+        </a>
+      </div>
+      <div style="padding: 0px 15px; display: inline-block;">
+        <a target="_blank" href="http://link.berlingskemedia.dk/aoa_twitter" style="text-decoration: none;">
+          <img src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/images/twitter.png" width="26" />
+        </a>
+      </div>
+      <div style="padding: 0px 15px; display: inline-block;">
+        <a target="_blank" href="http://link.berlingskemedia.dk/aoa_instagram" style="text-decoration: none;">
+          <img src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/images/instagram.png" width="24" />
+        </a>
+      </div>
+<!--       <div style="padding: 0px 15px; display: inline-block;">
+        <a target="_blank" href="http://link.berlingskemedia.dk/aok_google_plus" style="text-decoration: none;">
+          <img src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/images/google_plus.png" width="28" />
+        </a>
+      </div> -->
+    </td>
+  </tr>
+  <tr>
+    <td height="20">&nbsp;</td>
+  </tr>
+</table>
+{% endblock %}
+
+{% block footer %}
+  <a href="{{ home_url }}?{{ tracking }}">
+    <img src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/images/aoa-skyline-670x100.png"/>
+  </a>
+{% endblock %}

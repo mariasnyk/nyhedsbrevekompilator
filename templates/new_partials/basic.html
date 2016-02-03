@@ -40,6 +40,7 @@
     <tr>
       <td align="center" valign="top">
         <!-- Click-here-stuff -->
+        {% block weblink %}
         <p>
           <a href="[weblink]">
             <font color="#333333" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 12px; line-height: 12px; text-rendering: optimizeLegibility;">
@@ -47,6 +48,7 @@
             </font>
           </a>
         </p>
+        {% endblock %}
       </td>
     </tr>
     <tr>
@@ -80,7 +82,7 @@
     <tr>
       <td align="center" valign="top">
         <div style="margin: 0px 0px;">
-          <a target="_blank" href="http://www.berlingskemedia.dk/ophavsret-og-vilkaar/" style="margin: 0px 10px; text-decoration: none;">
+          <a target="_blank" href="{% if ophavsret_href %}{{ ophavsret_href }}{% else %}http://www.berlingskemedia.dk/ophavsret-og-vilkaar/{% endif %}" style="margin: 0px 10px; text-decoration: none;">
             <font color="#666666" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
               Ophavsret og vilk&aring;r
             </font>
@@ -88,7 +90,7 @@
           <font color="#666666" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
             &middot;
           </font>
-          <a target="_blank" href="http://www.berlingskemedia.dk/annoncor/" style="margin: 0px 10px;  text-decoration: none;">
+          <a target="_blank" href="{% if annonceinfo_href %}{{ annonceinfo_href }}{% else %}http://www.berlingskemedia.dk/annoncor/{% endif %}" style="margin: 0px 10px;  text-decoration: none;">
             <font color="#666666" style="font-family: 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif; font-size: 14px; line-height: 14px; text-rendering: optimizeLegibility;">
               Annonceinfo
             </font>
