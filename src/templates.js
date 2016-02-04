@@ -309,6 +309,7 @@ function prepareData (data) {
   return data;
 }
 
+
 function orderBondImages (data) {
   if (data === null) return;
 
@@ -326,6 +327,7 @@ function orderBondImages (data) {
   }
 }
 
+
 function sortImages(bondImageA, bondImageB) {
   if (bondImageA.position < bondImageB.position) {
     return -1;
@@ -335,6 +337,7 @@ function sortImages(bondImageA, bondImageB) {
     return 0;
   }
 }
+
 
 function subjectSuggestion (data) {
   if (data === null) return '';

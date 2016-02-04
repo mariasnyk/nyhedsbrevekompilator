@@ -17,39 +17,42 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
     $scope.newsletter_ident = $routeParams.ident;
 
-    // If we're not editing the newsletter, we don't need to fetch the dop-down data from e.g. SendGrid
     $scope.newsletter = Newsletters.get({ident: $routeParams.ident}, function () {
-
       $scope.original_newsletters_name = $scope.newsletter.name;
       $scope.$parent.page_title = $scope.original_newsletters_name;
-
-      suggestMarketingEmailName();
-
-      getBondDataAndUpdatePreviews();
-
-      getControlroomUrl();
-
       $scope.safe_bond_url = encodeURIComponent($scope.newsletter.bond_url);
+    }, resourceErrorHandler);
 
+    loadingSwitch.watch($scope.newsletter);
+
+    $scope.newsletter.$promise
+    .then(suggestMarketingEmailName)
+    .then(getControlroomUrl)
+    .then(validateNewsletterRecepientList)
+    .then(validateNewslettersIdentity)
+    .then(getBondDataAndUpdatePreviews)
+
+
+    function validateNewsletterRecepientList () {
       // Validating the list still exists in SendGrid
       Lists.query({ list: $scope.newsletter.list}, function (response) {
-        if (response[0] === undefined || response[0].list !== $scope.newsletter.list) {
-          console.log('Couldn\'t find list ' + $scope.newsletter.list + ' in SendGrid.');
-          notifications.showError('Afsender fejler');
-        }
-      }, resourceErrorHandler);
+        // Found it and everything is OK.
+      }, function (response) {
+        console.log('Couldn\'t find list ' + $scope.newsletter.list + ' in SendGrid.');
+        notifications.showError('Modtagerliste eksisterer ikke');
+      });
+    }
 
+
+    function validateNewslettersIdentity () {
       // Validating the identity still exists in SendGrid
       Identities.get({ identity: $scope.newsletter.identity}, function (response) {
         // Found it and everything is OK.
       }, function (response) {
         console.log('Couldn\'t find identity ' + $scope.newsletter.identity + ' in SendGrid.');
-        notifications.showError('Modtagerliste fejler');
+        notifications.showError('Afsender eksisterer ikke');
       });
-
-    }, resourceErrorHandler);
-
-    loadingSwitch.watch($scope.newsletter);
+    }
 
 
     function resourceErrorHandler (response) {
@@ -146,6 +149,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       }
     }
 
+
     function getControlroomUrl () {
       var get = $http.get('/templates/controlroom?u=' + $scope.newsletter.bond_url)
       .success(function  (data) {
@@ -153,6 +157,16 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       });
       return get;
     }
+
+
+    function getBondDataAndUpdatePreviews () {
+      return getBondData()
+      .then(suggestMarketingEmailSubject)
+      .then(setShowBodyDefaults)
+      .then(AOAWeekendspecific)
+      .then(updatePreviews);
+    }
+    $scope.getBondDataAndUpdatePreviews = getBondDataAndUpdatePreviews;
 
 
     function getBondData () {
@@ -169,25 +183,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
         $scope.bonddata = response.data;
         $scope.newsletter.checksum = response.data.checksum;
         $scope.bonddatadirty = false;
-        suggestMarketingEmailSubject();
-
-        // This is a hack.
-        // We want to set show_body=true as a default value. This is actually already done on ng-init in the template newsletter-sender-html.
-        // But because this whole Angularv app is not built using directives that can communicate, we're loading the newsletter preview before our view is fully loaded.
-
-        // See the right way here: https://docs.angularjs.org/guide/directive#creating-directives-that-communicate
-        // This approach requires a major refactoring.
-
-        if ($scope.newsletter.categories && $scope.bonddata.nodes[0]) {
-          var wantsToShowBodyDefault = $scope.newsletter.categories.some(function (category) {
-            return ['Business Morgen'].indexOf(category) > -1;
-          });
-
-          if (wantsToShowBodyDefault) {
-            $scope.bonddata.nodes[0].show_body = true;
-          }
-        }
-        // Hack end
       }, function (response) {
         notifications.showError('Failed to get data from ' + bond_url_with_caching_prevention);
       });
@@ -197,12 +192,53 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     }
 
 
-    function getBondDataAndUpdatePreviews () {
-      return getBondData().then(function () {
-        updatePreviews();
-      });
+
+
+    function setShowBodyDefaults () {
+      // This is a hack.
+      // We want to set show_body=true as a default value. This is actually already done on ng-init in the template newsletter-sender-html.
+      // But because this whole Angularv app is not built using directives that can communicate, we're loading the newsletter preview before our view is fully loaded.
+
+      // See the right way here: https://docs.angularjs.org/guide/directive#creating-directives-that-communicate
+      // This approach requires a major refactoring.
+
+      if ($scope.newsletter.categories && $scope.bonddata.nodes[0]) {
+        var wantsToShowBodyDefault = $scope.newsletter.categories.some(function (category) {
+          return ['Business Morgen'].indexOf(category) > -1;
+        });
+
+        if (wantsToShowBodyDefault) {
+          $scope.bonddata.nodes[0].show_body = true;
+        }
+      }
+      // Hack end
     }
-    $scope.getBondDataAndUpdatePreviews = getBondDataAndUpdatePreviews;
+
+
+    function AOAWeekendspecific () {
+      if ($scope.newsletter.categories == undefined) {
+        return;
+      }
+
+      var isAOAweekend = $scope.newsletter.categories.some(function (category) {
+        return ['AOA Weekend'].indexOf(category) > -1;
+      });
+
+      if (isAOAweekend) {
+        var AOAanbefalerUrl = 'http://edit.berlingskemedia.net/bondapi/nodequeue/5935.ave-json?image_preset=620x355-c'.concat('&cache=',Date.now());
+
+        var get_AOAdata = $http.get('/templates/data?u=' + encodeURIComponent(AOAanbefalerUrl)).then(function (response) {
+          $scope.bonddata.aoa_anbefaler = response.data;
+        }, function (response) {
+          notifications.showError('Failed to get data from ' + AOAanbefalerUrl);
+        });
+
+        loadingSwitch.watch(get_AOAdata);
+        return get_AOAdata;
+      } else {
+        return;
+      }
+    }
 
 
     function updatePreviews () {
