@@ -33,6 +33,16 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     .then(getBondDataAndUpdatePreviews)
 
 
+    function getBondDataAndUpdatePreviews () {
+      return getBondData()
+      .then(suggestMarketingEmailSubject)
+      .then(setShowBodyDefaults)
+      .then(AOAWeekendspecific)
+      .then(updatePreviews);
+    }
+    $scope.getBondDataAndUpdatePreviews = getBondDataAndUpdatePreviews;
+
+
     function validateNewsletterRecepientList () {
       // Validating the list still exists in SendGrid
       Lists.query({ list: $scope.newsletter.list}, function (response) {
@@ -64,10 +74,12 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       }
     }
 
+
     $scope.changeNodeTitle = function () {
       $scope.bonddatadirty = true;
       suggestMarketingEmailSubject();
     };
+
 
     $scope.moveNode = function (from, to) {
       if (to !== -1) {
@@ -77,17 +89,20 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       }
     };
 
+
     $scope.removeNode = function (index) {
       $scope.bonddata.nodes.splice(index,1);
       $scope.bonddatadirty = true;
       suggestMarketingEmailSubject();
     };
 
+
     $scope.scheduleChanged = function () {
       suggestMarketingEmailName();
       updatePreviews();
       setScheduleDateLabel();
     };
+
 
     $scope.hasCategory = function (category) {
       if ($scope.newsletter.categories === undefined) {
@@ -105,11 +120,13 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       });
     };
 
+
     function setScheduleDateLabel () {
       $scope.schedule_date = $scope.schedule_at_specified
         ? moment($scope.schedule_at).format('ddd D MMM YYYY')
         : moment().add($scope.schedule_after, 'minutes').format("dddd [d.] D MMMM YYYY");
     }
+
 
     function suggestMarketingEmailSubject () {
       var maxLength = 255;
@@ -137,6 +154,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       }
     }
 
+
     function suggestMarketingEmailName () {
       if (!$scope.newsletter_name_dirty || $scope.newsletter.name === '') {
         // In case the name was cleared manually to get a fresh suggestion
@@ -157,16 +175,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       });
       return get;
     }
-
-
-    function getBondDataAndUpdatePreviews () {
-      return getBondData()
-      .then(suggestMarketingEmailSubject)
-      .then(setShowBodyDefaults)
-      .then(AOAWeekendspecific)
-      .then(updatePreviews);
-    }
-    $scope.getBondDataAndUpdatePreviews = getBondDataAndUpdatePreviews;
 
 
     function getBondData () {
@@ -192,8 +200,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     }
 
 
-
-
     function setShowBodyDefaults () {
       // This is a hack.
       // We want to set show_body=true as a default value. This is actually already done on ng-init in the template newsletter-sender-html.
@@ -211,7 +217,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
           $scope.bonddata.nodes[0].show_body = true;
         }
       }
-      // Hack end
     }
 
 
@@ -235,8 +240,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
         loadingSwitch.watch(get_AOAdata);
         return get_AOAdata;
-      } else {
-        return;
       }
     }
 
