@@ -389,6 +389,9 @@ function getControlroomUrl (input) {
 
   if (bond.host.indexOf('edit.') === 0) {
     bond_base_url = bond.protocol + '//' + bond.host;
+  } else if (bond.host.indexOf('common.') === 0) {
+    bond_base_url = bond.protocol + '//' + bond.host;
+    bond_base_url = bond.protocol + '//edit.berlingskemedia.net';
   } else if (bond.host.substr(-3) === '.dk') {
     bond_base_url = bond.protocol + '//edit.berlingskemedia.net';
   }
