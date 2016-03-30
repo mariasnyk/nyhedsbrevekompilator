@@ -230,7 +230,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       });
 
       if (isAOAweekend) {
-        var AOAanbefalerUrl = 'http://edit.berlingskemedia.net/bondapi/nodequeue/5935.ave-json?image_preset=620x355-c'.concat('&cache=',Date.now());
+        var AOAanbefalerUrl = 'http://common.berlingskemedia.net/bondapi/nodequeue/5935.ave-json?image_preset=620x355-c'.concat('&cache=',Date.now());
 
         var get_AOAdata = $http.get('/templates/data?u=' + encodeURIComponent(AOAanbefalerUrl)).then(function (response) {
           $scope.bonddata.aoa_anbefaler = response.data;
