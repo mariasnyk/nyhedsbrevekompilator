@@ -309,6 +309,7 @@ function prepareData (data) {
   return data;
 }
 
+
 function orderBondImages (data) {
   if (data === null) return;
 
@@ -326,6 +327,7 @@ function orderBondImages (data) {
   }
 }
 
+
 function sortImages(bondImageA, bondImageB) {
   if (bondImageA.position < bondImageB.position) {
     return -1;
@@ -335,6 +337,7 @@ function sortImages(bondImageA, bondImageB) {
     return 0;
   }
 }
+
 
 function subjectSuggestion (data) {
   if (data === null) return '';
@@ -386,6 +389,9 @@ function getControlroomUrl (input) {
 
   if (bond.host.indexOf('edit.') === 0) {
     bond_base_url = bond.protocol + '//' + bond.host;
+  } else if (bond.host.indexOf('common.') === 0) {
+    bond_base_url = bond.protocol + '//' + bond.host;
+    bond_base_url = bond.protocol + '//edit.berlingskemedia.net';
   } else if (bond.host.substr(-3) === '.dk') {
     bond_base_url = bond.protocol + '//edit.berlingskemedia.net';
   }

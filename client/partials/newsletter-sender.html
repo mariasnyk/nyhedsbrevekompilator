@@ -23,7 +23,7 @@
           ng-change="newsletter_name_dirty = true"
           ng-disabled="newsletter_sent"
           placeholder="Insert name"/>
-        <small>Note: <em>Navn</em> bruges til statistik og opf&oslash;lgning. Ikke som tidspunkt for udsendelse.<br>Bannere og tracking er dateret med <strong>{{ schedule_date }}</strong></small>
+        <small>Note: <em>Navn</em> bruges til statistik og opf&oslash;lgning. Ikke som tidspunkt for udsendelse og kan derfor ændres frit.<br>Bannere og tracking er dateret med <strong>{{ schedule_date }}</strong></small>
       </div>
       <div class="form-group">
         <label for="subject">Emnefelt</label>
@@ -37,28 +37,31 @@
       </div>
     </div>
     <div class="col-md-4 col-sm-12">
-      <dl class="dl-horizontal well">
-        <dt>
-          <a title="Indstillinger" class="btn btn-link btn-xs" ng-href="#/{{newsletter_ident}}/edit">
-            <span class="glyphicon glyphicon-edit"></span>
-          </a>
-          Nyhedsbrev
-        </dt>
-        <dd>{{ original_newsletters_name }}
-        </dd>
-        <dt>Afsender</dt>
-        <dd>{{ newsletter.identity }}</dd>
-        <dt>Modtagerliste</dt>
-        <dd>{{ newsletter.list }}</dd>
-        <dt>Kategorier</dt>
-        <dd>
-          <ul class="list-inline">
-            <li ng-repeat="category in newsletter.categories">
-              <span class="label label-info" style="background-color:#{{category|tocolor}}">{{category}}</span>
-            </li>
-          </ul>
-        </dd>
-      </dl>
+      <div>
+        <label>Rediger indstillinger</label>
+        <a title="Rediger indstillinger " class="btn btn-link btn-xs" ng-href="#/{{newsletter_ident}}/edit">
+          <span class="glyphicon glyphicon-edit"></span>
+        </a>
+      </div>
+      <div>
+        <label>Nyhedsbrev</label>
+        {{ original_newsletters_name }}
+      </div>
+      <div>
+        <label>Afsender</label>
+        {{ newsletter.identity }}</div>
+      <div>
+        <label>Modtagerliste</label>
+        {{ newsletter.list }}
+      </div>
+      <div>
+        <label>Kategorier</label>
+        <ul class="list-inline">
+          <li ng-repeat="category in newsletter.categories">
+            <span class="label label-info" style="background-color:#{{category|tocolor}}">{{category}}</span>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 

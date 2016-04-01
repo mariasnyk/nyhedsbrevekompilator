@@ -7,7 +7,7 @@ RUN apt-get update
 RUN apt-get install -y wget
 
 # Downloading and installing Node.
-RUN wget -O - http://nodejs.org/dist/v0.12.5/node-v0.12.5-linux-x64.tar.gz \
+RUN wget -O - http://nodejs.org/dist/v4.2.2/node-v4.2.2-linux-x64.tar.gz \
     | tar xzf - --strip-components=1 --exclude="README.md" --exclude="LICENSE" \
     --exclude="ChangeLog" -C "/usr/local"
 

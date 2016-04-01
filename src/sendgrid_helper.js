@@ -53,6 +53,7 @@ module.exports.getEmail = function (name, callback) {
 
 
 module.exports.deleteEmail = function (name, callback) {
+  console.log(Date().toString(), 'Deleting email ' + name);
   callSendGrid('/api/newsletter/delete.json', 'name=' + encodeURIComponent(name), standardCallback(callback));
 };
 
@@ -63,6 +64,7 @@ module.exports.getEmailSchedule = function (name, callback) {
 
 
 module.exports.deleteEmailSchedule = function (name, callback) {
+  console.log(Date().toString(), 'Deleting schedule ' + name);
   callSendGrid('/api/newsletter/schedule/delete.json', 'name=' + encodeURIComponent(name), standardCallback(callback));
 };
 
@@ -119,7 +121,7 @@ function createMarketingEmail (newsletter, callback) {
         return callback(err);
       }
 
-      console.log(Date().toString() + ': Recipients ' + newsletter.list + ' to email ' + newsletter.name + ' added.');
+      console.log(Date().toString(), 'Recipients ' + newsletter.list + ' to email ' + newsletter.name + ' added.');
 
       callback(null, result);
     });
@@ -199,9 +201,9 @@ function addSendGridSchedule (name, at, after, callback) {
     if (temp.isValid()) {
       if (moment().isBefore(temp)) {
         body = body + '&at=' + temp.toISOString();
-        console.log(Date().toString() + ': Scheduling email ' + name + ' at ' + at);
+        console.log(Date().toString(), ' Scheduling email ' + name + ' at ' + at);
       } else {
-        console.log(Date().toString() + ': Scheduling email ' + name + ' now because ' + at + ' is in the past.');
+        console.log(Date().toString(), 'Scheduling email ' + name + ' now because ' + at + ' is in the past.');
       }
     } else {
       return callback({ message: 'Field at (' + at + ') is not a valid ISO date.' });
@@ -213,10 +215,10 @@ function addSendGridSchedule (name, at, after, callback) {
       return callback({ message: 'Field after (' + after + ') is not a valid positive number.' });
     } else {
       body = body + '&after=' + temp.toString();
-      console.log(Date().toString() + ': Scheduling email ' + name + ' after ' + after);
+      console.log(Date().toString(), 'Scheduling email ' + name + ' after ' + after);
     }
   } else {
-    console.log(Date().toString() + ': Scheduling email ' + name + ' now');
+    console.log(Date().toString(), 'Scheduling email ' + name + ' now');
   }
 
   callSendGrid('/api/newsletter/schedule/add.json', body, callback);

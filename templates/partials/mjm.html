@@ -1,35 +1,35 @@
 {% extends "basic.html" %}
-
+https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.eot
 {% block font_face %}
   @font-face {
     font-family: "berlingske";
-      src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.eot");
-      src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.eot?#iefix") format("embedded-opentype"),
-           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.woff2") format("woff2"),
-           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.woff") format("woff"),
-           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.ttf") format("truetype");
+      src: url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.eot");
+      src: url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.eot?#iefix") format("embedded-opentype"),
+           url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.woff2") format("woff2"),
+           url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.woff") format("woff"),
+           url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Regular-webfont.ttf") format("truetype");
       font-weight: 400;
       font-style: normal;
   }
 
   @font-face {
     font-family: "berlingske_bold";
-      src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.eot");
-      src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.eot?#iefix") format("embedded-opentype"),
-           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.woff2") format("woff2"),
-           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.woff") format("woff"),
-           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.ttf") format("truetype");
+      src: url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.eot");
+      src: url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.eot?#iefix") format("embedded-opentype"),
+           url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.woff2") format("woff2"),
+           url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.woff") format("woff"),
+           url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BerlingskeText-Bold-webfont.ttf") format("truetype");
       font-weight: 400;
       font-style: normal;
   }
 
   @font-face {
     font-family: "berlingske_sans_bold";
-      src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.eot");
-      src: url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.eot?#iefix") format("embedded-opentype"),
-           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.woff2") format("woff2"),
-           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.woff") format("woff"),
-           url("http://nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.ttf") format("truetype");
+      src: url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.eot");
+      src: url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.eot?#iefix") format("embedded-opentype"),
+           url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.woff2") format("woff2"),
+           url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.woff") format("woff"),
+           url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BerlingskeSans-Bold-webfont.ttf") format("truetype");
       font-weight: 400;
       font-style: normal;
   }
@@ -44,8 +44,8 @@
 {% block top_logo %}
   <img style="width: 100%;" src="{{ logo_src }}" width="654" usemap="#imgmap">
   <map name="imgmap">
-    <area shape="rect" coords="0,0,491,57" href="{{ home_url }}?{{ tracking }}">
-    <area shape="rect" coords="491,0,654,57" href="{{ buy_subscription_href }}">
+    <area shape="rect" coords="0,0,240,57" href="{{ home_url }}?{{ tracking }}">
+    <area shape="rect" coords="240,0,654,57" href="{{ buy_subscription_href }}">
   </map>
 {% endblock %}
 

@@ -8,7 +8,7 @@ var pool = mysql.createPool({
   port: process.env.RDS_PORT ? process.env.RDS_PORT : null,
   user: process.env.RDS_USERNAME,
   password: process.env.RDS_PASSWORD,
-  database: process.env.RDS_DATABASE ? process.env.RDS_DATABASE : null 
+  database: process.env.RDS_DATABASE ? process.env.RDS_DATABASE : null
 });
 
 // Testing we can connect to database
@@ -33,7 +33,7 @@ module.exports.queryOne = function (sql, callback) {
   pool.query(sql, function (err, result) {
     if (err) {
       console.log(err);
-      throw err; 
+      throw err;
     }
     else if (result.length === 0)
       callback(null, null);
