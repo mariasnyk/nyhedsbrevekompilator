@@ -2,6 +2,8 @@
 'use strict';
 
 var Hapi = require('hapi'),
+    inert = require('inert'),
+    vision = require('vision'),
     newsletters = require('./newsletters'),
     templates = require('./templates');
 
@@ -40,10 +42,14 @@ var server = new Hapi.Server({
 
 server.connection({ port: 8000 });
 
-server.register(client, { routes: { prefix: '/nyhedsbreve' } }, cb);
+server.register(inert, cb);
+server.register(vision, cb);
+// server.register(client, { routes: { prefix: '/nyhedsbreve' } }, cb);
+server.register(client, cb);
 server.register(templates, { routes: { prefix: '/templates' } }, cb);
 server.register(newsletters, { routes: { prefix: '/newsletters' } }, cb);
-server.route({ method: 'GET', path: '/', handler: function (request, reply) { reply.redirect('/nyhedsbreve'); } });
+// server.route({ method: 'GET', path: '/', handler: function (request, reply) { reply.redirect('/nyhedsbreve'); } });
+server.route({ method: 'GET', path: '/nyhedsbreve', handler: function (request, reply) { reply.redirect('/'); } });
 
 
 if (!module.parent) {

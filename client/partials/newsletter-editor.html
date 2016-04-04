@@ -116,6 +116,28 @@
         </div>
       </div>
       <div class="form-group">
+        <label for="tags_control" class="col-sm-2 control-label">Tilføj tag</label>
+        <div class="col-sm-5">
+          <input id="tags_control" class="form-control" type="text" ng-model="newTag" ng-keyup="addCategory($event)" placeholder="Skriv her">
+          <ul class="dropdown-menu autocomplete" ng-show="newTag">
+            <li ng-repeat="tag in filteredTag=(tags | filter:newTag)">
+              <a ng-click="addTag('', tag)">{{tag}}</a>
+            </li>
+            <li>
+              <a>Tryk <span class="label label-default">ENTER</span> for at oprette</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-5">
+          <label for="tags_control">Tags</label>
+          <ul class="list-inline">
+            <li ng-repeat="tag in newsletter.tags track by $index">
+              <span id="tag-{{tag}}" class="label label-info"  style="background-color:#{{tag|tocolor}}">{{tag}} <span class="glyphicon glyphicon-remove" ng-click="removeTag($index)"></span>&nbsp;</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="form-group">
         <label for="scheduling_disabled" class="col-sm-2 control-label">Hindre automatisk udsendelse</label>
         <div class="col-sm-5">
           <input type="checkbox" ng-change="setDirty()" ng-model="newsletter.scheduling_disabled"> Dette sikrer at nyhedsbrevet ikke udsendes selvom der er tilknyttet automatisk schedulering.

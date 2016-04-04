@@ -19,13 +19,10 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     // This is done so that drop-downs are populated and the equivalent newsletter value is selected in the drop-down.
     var all = $q.all([$scope.identities.$promise, $scope.categories.$promise, $scope.lists.$promise, $scope.html_templates.$promise, $scope.plain_templates.$promise]).then(function () {
       $scope.newsletter = Newsletters.get({ ident: $routeParams.ident }, function () { /* All OK. */ }, resourceErrorHandler);
-console.log('$scope.newsletter', $scope.newsletter)
       loadingSwitch.watch($scope.newsletter);
     }).catch(function (error, result) {
       console.log('catch', error, result)
     });
-    console.log($q)
-    console.log(all)
 
     loadingSwitch.watch(all);
 
@@ -39,34 +36,41 @@ console.log('$scope.newsletter', $scope.newsletter)
 
 
     $scope.addCategory = function (clickEvent, category) {
-      if ($scope.newsletter.categories === undefined) {
-        $scope.newsletter.categories = [];
+      addItemToArray(clickEvent, 'categories', 'newCategory');
+    };
+
+    $scope.addCategory = function (clickEvent, tag) {
+      addItemToArray(clickEvent, 'tags', 'newTag');
+    };
+
+    function addItemToArray (clickEvent, item_array, item_scope) {
+      if ($scope.newsletter[item_array] === undefined) {
+        $scope.newsletter[item_array] = [];
       }
 
-      if (category) {
-        $scope.newCategory = category
-      }
-
-      if (clickEvent.keyCode === 13 || category) {
-        if ($scope.newCategory !== '') {
-          $scope.newCategory.split(',').forEach( function (category) {
-            category = category.trim();
-            if ($scope.newsletter.categories.indexOf(category) === -1) {
-              $scope.newsletter.categories.push(category);
+      if (clickEvent.keyCode === 13) {
+        if ($scope[item_scope] !== '') {
+          $scope[item_scope].split(',').forEach( function (item) {
+            item = item.trim();
+            if ($scope.newsletter[item_array].indexOf(item) === -1) {
+              $scope.newsletter[item_array].push(item);
               $scope.dirty = true;
             }
           });
-          $scope.newCategory = '';
+          $scope[item_scope] = '';
         }
       }
-    };
-
+    }
 
     $scope.removeCategory = function (categoryIndex) {
       $scope.newsletter.categories.splice(categoryIndex, 1);
       $scope.dirty = true;
     };
 
+    $scope.removeTag = function (tagIndex) {
+      $scope.newsletter.tags.splice(tagIndex, 1);
+      $scope.dirty = true;
+    };
 
     $scope.saveNewsletter = function () {
       var saving = Newsletters.save({ ident: $routeParams.ident }, $scope.newsletter, function (success) {
@@ -93,7 +97,6 @@ console.log('$scope.newsletter', $scope.newsletter)
         loadingSwitch.watch(deleting, 'Deleting');
       }
     };
-
 
     $scope.setDirty = function () {
       $scope.dirty = true;

@@ -7,12 +7,7 @@ var fs = require('fs'),
     url = require('url'),
     swig = require('./swig_helper.js'),
     checksum = require('checksum'),
-    templatesDir = path.join(__dirname, '/../templates'),
-    testdataDir = path.join(__dirname, '/../testdata');
-
-if (!fs.existsSync(testdataDir)) {
-  fs.mkdirSync(testdataDir);
-}
+    templatesDir = path.join(__dirname, '/../templates');
 
 module.exports.render = function (templateName, data, callback) {
   var template = path.join(templatesDir, templateName);
@@ -66,11 +61,7 @@ module.exports.register = function (plugin, options, next) {
       }
     },
     handler: function (request, reply) {
-      if (request.query.f) {
-        var data = require(path.join(testdataDir, request.query.f));
-        prepareData(data);
-        reply(data);
-      } else if (request.query.u) {
+    if (request.query.u) {
         getDataFromBond(request.query.u, function (err, data) {
           if (err) return reply(err).code(500);
           if (data === null) return reply().code(404);
@@ -94,19 +85,7 @@ module.exports.register = function (plugin, options, next) {
     },
     handler: function (request, reply) {
 
-      if (request.query.f) {
-        var data = require(path.join(testdataDir, request.query.f));
-        prepareData(data);
-        data.debug = request.query.debug === 'true';
-
-        reply
-        .view(request.params.template, data)
-        .header('Transfer-Encoding', 'chunked')
-        .header('Content-Type', contentTypeHeader(request.params.template));
-
-      // Requesting a specific template with a BOND node as data input
-      } else if (request.query.u) {
-
+      if (request.query.u) {
         getDataFromBond(request.query.u, function (err, data) {
           if (err) {
             reply(err).code(500);
@@ -199,7 +178,28 @@ module.exports.register = function (plugin, options, next) {
     path: '/controlroom',
     handler: function (request, reply) {
       if (request.query.u) {
-        var controlroom_url = getControlroomUrl(request.query.u);
+        var controlroom_url = '';
+        var bond = url.parse(request.query.u);
+        var bond_base_url = '';
+
+        if (bond.host.indexOf('edit.') === 0) {
+          bond_base_url = bond.protocol + '//' + bond.host;
+        } else if (bond.host.indexOf('common.') === 0) {
+          bond_base_url = bond.protocol + '//' + bond.host;
+          bond_base_url = bond.protocol + '//edit.berlingskemedia.net';
+        } else if (bond.host.substr(-3) === '.dk') {
+          bond_base_url = bond.protocol + '//edit.berlingskemedia.net';
+        }
+
+        var id = bond.path.substring(bond.path.lastIndexOf('/') + 1, bond.path.indexOf('.ave-json'));
+
+        if (bond.path.indexOf("/bondapi/nodequeue/") === 0) {
+          controlroom_url = bond_base_url + '/admin/content/nodequeue/' + id + '/view';
+        } else if (bond.path.indexOf("/bondapi/node/") === 0) {
+          controlroom_url = bond_base_url + '/node/' + id + '/view';
+        } else {
+          controlroom_url = '';
+        }
 
         reply({ url: controlroom_url })
         .header('X-Controlroom-url', encodeURIComponent(controlroom_url));
@@ -239,14 +239,6 @@ function validateQueryFU (value, options, next) {
       next({ message: 'Url ' + value.u + ' invalid protocol' });
     else
       next();
-  } else if (value.f) {
-    var testdataPath = path.join(testdataDir, value.f);
-
-    if (!fs.existsSync(testdataPath) || !fs.statSync(testdataPath).isFile())
-      next({ message: 'Testdata ' + testdataPath + ' not found' });
-    else
-      next();
-
   } else {
     next();
   }
@@ -257,8 +249,13 @@ function getDataFromBond (url, callback) {
   download(url, function (err, data) {
     if (err) {
       callback(err);
-    } else if (data === null || data.type === undefined) {
-      callback({ message: 'Invalind BOND data' });
+    } else if (data === null) {
+      callback({ message: 'Invalind data' });
+    } else if (data.type !== undefined && ['nodequeue', 'latest_news', 'news_article'].indexOf(data.type) > -1) {
+      orderBondImages(data);
+      data.subject = subjectSuggestion(data);
+      addPaywallToken(data);
+      callback(null, data);
     // } else if (data.type === 'nodequeue' && data.nodes.length === 0 ) {
       // callback(null, null);
 
@@ -269,7 +266,6 @@ function getDataFromBond (url, callback) {
       //     title: null,
       //     nodes: [] }
     } else {
-      prepareData(data);
       callback(null, data);
     }
   });
@@ -299,14 +295,6 @@ function download (url, callback) {
     console.log('Got error while requesting HTML (' + url + '): ' + e.message);
     callback(e, null);
   });
-}
-
-
-function prepareData (data) {
-  orderBondImages(data);
-  data.subject = subjectSuggestion(data);
-  addPaywallToken(data);
-  return data;
 }
 
 
@@ -379,30 +367,5 @@ function contentTypeHeader (template) {
     return 'text/html; charset=utf-8';
   } else {
     return 'text/plain; charset=utf-8';
-  }
-}
-
-
-function getControlroomUrl (input) {
-  var bond = url.parse(input);
-  var bond_base_url = '';
-
-  if (bond.host.indexOf('edit.') === 0) {
-    bond_base_url = bond.protocol + '//' + bond.host;
-  } else if (bond.host.indexOf('common.') === 0) {
-    bond_base_url = bond.protocol + '//' + bond.host;
-    bond_base_url = bond.protocol + '//edit.berlingskemedia.net';
-  } else if (bond.host.substr(-3) === '.dk') {
-    bond_base_url = bond.protocol + '//edit.berlingskemedia.net';
-  }
-
-  var id = bond.path.substring(bond.path.lastIndexOf('/') + 1, bond.path.indexOf('.ave-json'));
-
-  if (bond.path.indexOf("/bondapi/nodequeue/") === 0) {
-    return bond_base_url + '/admin/content/nodequeue/' + id + '/view';
-  } else if (bond.path.indexOf("/bondapi/node/") === 0) {
-    return bond_base_url + '/node/' + id + '/view';
-  } else {
-    return '';
   }
 }

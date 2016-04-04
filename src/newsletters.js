@@ -6,23 +6,45 @@ var http = require('http'),
     sendgrid = require('./sendgrid_helper.js'),
     url = require('url'),
     moment = require('moment'),
+    Joi = require('joi'),
     userdb = require('./userdb_client.js'),
     mongodb = require('./mongodb_client.js'),
     templates = require('./templates.js');
 
 moment.locale('da');
 
+var newsletter_schema = {
+  _id: Joi.string().strip(),
+  ident: Joi.string().alphanum(),
+  last_modified: Joi.any().strip(),
+  last_checksum: Joi.any().strip(),
+  incomplete: Joi.any().strip(),
+  name: Joi.string().min(1).max(255),
+  identity: Joi.string().min(1).max(255),
+  list: Joi.string().min(1).max(255),
+  bond_url: Joi.string().uri({scheme: ['http', 'https']}),
+  template_html: Joi.string().min(1).max(100),
+  template_plain: Joi.string().min(1).max(100),
+  categories: Joi.array().items(Joi.string().min(1).max(100)),
+  tags: Joi.array().items(Joi.string().min(1).max(100)),
+  scheduling_disabled: Joi.boolean()
+};
+
+var send_draft_schema = {
+  list: Joi.string().min(1).max(100).required(),
+  identity: Joi.string().min(1).max(100).required(),
+  subject: Joi.string().min(1).max(255).required(),
+  email_html: Joi.any().required(),
+  email_plain: Joi.any().required(),
+  at: Joi.string(),
+  after: Joi.string()
+};
+
 module.exports.register = function (plugin, options, next) {
 
   plugin.route({
     method: 'get',
     path: '/admin/{param*}',
-    // handler: {
-    //   directory: {
-    //     path: 'client',
-    //     index: true
-    //   }
-    // }
     handler: function (request, reply) {
       reply.redirect('/nyhedsbreve');
     }
@@ -190,42 +212,36 @@ module.exports.register = function (plugin, options, next) {
     method: 'get',
     path: '/{ident}',
     handler: function (request, reply) {
-      mongodb.nyhedsbreve().find({ident: request.params.ident}).toArray(function (error, newsletters) {
-        if (newsletters.length === 1) {
-          reply(newsletters[0]);
+      mongodb.nyhedsbreve().findOne({ident: request.params.ident}, function (err, newsletter) {
+        if (newsletter !== null) {
+          reply(newsletter);
         } else {
           reply().code(404);
         }
       });
-      // queryOneNewsletter(request.params.ident, function (err, newsletter) {
-      //   if (err) return reply(err).code(500);
-      //   else if (newsletter === null)
-      //     reply().code(404);
-      //   else
-      //     reply(newsletter);
-      // });
     }
   });
 
   plugin.route({
     method: 'post',
     path: '/',
+    config: {
+        validate: {
+            payload: {
+              name: Joi.string().min(1).max(100).required()
+            }
+        }
+    },
     handler: function (request, reply) {
-      if (request.payload.name === undefined || request.payload.name === null || request.payload.name === '') {
-        return reply('Field name missing').code(400);
-      }
-      // TODO: Validate the payload
 
-      var newsletter = request.payload;
-      newsletter.ident = slugify(newsletter.name);
+      request.payload.ident = slugify(request.payload.name);
+      request.payload.incomplete = true;
 
-      mongodb.nyhedsbreve().find({ident: newsletter.ident}).toArray(function (error, newsletters) {
-        console.log(newsletters);
-        if (newsletters.length === 0) {
-          mongodb.nyhedsbreve().insertOne(newsletter, function (error, result) {
-            console.log(error, result);
-            if (error) {
-              reply(error).code(500);
+      mongodb.nyhedsbreve().findOne({ident: request.payload.ident}, function (err, newsletter) {
+        if (newsletter === null) {
+          mongodb.nyhedsbreve().insertOne(request.payload, function (err, result) {
+            if (err) {
+              reply(err).code(500);
             } else {
               reply(result.ops[0]);
             }
@@ -234,48 +250,72 @@ module.exports.register = function (plugin, options, next) {
           reply().code(409);
         }
       });
-
-      // queryOneNewsletter(ident, function (err, result) {
-      //   if (result === null) {
-
-      //     var newsletter = convertPayloadToNewsletter(request.payload);
-
-      //     insertNewsletter(ident, newsletter, function (err, result) {
-      //       if (err) {
-      //         console.log(err);
-      //         reply(err).code(500);
-      //       } else {
-      //         reply({ message: 'Inserted', ident: ident, id: result.insertId });
-      //       }
-      //     });
-      //   }
-      // });
     }
   });
 
   plugin.route({
-    method: ['post','put'],
+    method: 'post',
     path: '/{ident}',
-    handler: function (request, reply) {
-      queryOneNewsletter(request.params.ident, function (err, result) {
-        if (err) {
-          console.log(err);
-          reply(err).code(500);
-        } else if (result === null) {
-          reply({ message: 'Newsletter ' + request.params.ident + ' does not exists'}).code(404);
-        } else {
-
-          var newsletter = convertPayloadToNewsletter(request.payload);
-
-          updateNewsletter(request.params.ident, newsletter, function (err, result) {
-            if (err) {
-              console.log(err);
-              reply(err).code(500);
-            } else {
-              reply({ message: 'Updated' });
-            }
-          });
+    config: {
+        validate: {
+            params: {
+              ident: Joi.string().min(1).max(100)
+            },
+            payload: newsletter_schema
         }
+    },
+    handler: function (request, reply) {
+
+      request.payload.incomplete = [
+        request.payload.identity,
+        request.payload.bond_url,
+        request.payload.template_html,
+        request.payload.template_plain,
+        request.payload.list].some(undefinedOrBlank);
+
+      mongodb.nyhedsbreve().updateOne( {ident: request.params.ident},
+        {
+          $set: request.payload,
+          $currentDate: { "last_modified": true }
+      }, function (err, response) {
+          if (response.result.nModified === 1) {
+          reply();
+        } else {
+          reply().code(404);
+        }
+      });
+
+      function undefinedOrBlank (input) {
+        return input === undefined ||
+          (typeof input === 'string' ? input.length === 0 : false);
+      }
+    }
+  });
+
+  plugin.route({
+    method: 'put',
+    path: '/{ident}',
+    config: {
+      validate: {
+        params: {
+          ident: Joi.string().min(1).max(100)
+        },
+        payload: newsletter_schema
+      }
+    },
+    handler: function (request, reply) {
+      mongodb.nyhedsbreve().replaceOne({ident: request.params.ident},
+        request.payload,
+        function (err, response) {
+          if (response.result.nModified === 1) {
+            mongodb.nyhedsbreve().updateOne(
+              {ident: request.params.ident},
+              {$currentDate: { "last_modified": true }});
+
+            reply();
+          } else {
+            reply().code(404);
+          }
       });
     }
   });
@@ -283,15 +323,23 @@ module.exports.register = function (plugin, options, next) {
   plugin.route({
     method: 'delete',
     path: '/{ident}',
+    config: {
+      validate: {
+        params: {
+          ident: Joi.string().min(1).max(100)
+        }
+      }
+    },
     handler: function (request, reply) {
-      deleteNewsletter(request.params.ident, function (err, result) {
+      mongodb.nyhedsbreve().deleteOne({ident: request.params.ident}, function (err, response) {
         if (err) {
-          console.log(err);
-          reply().code(500);
-        } else if (result.affectedRows === 0) {
-          reply().code(404);
-        } else {
+            return reply(err);
+        }
+
+        if (response.result.n === 1) {
           reply();
+        } else {
+          reply().code(404);
         }
       });
     }
@@ -302,7 +350,7 @@ module.exports.register = function (plugin, options, next) {
     path: '/draft',
     config: {
       validate: {
-        payload: validateNewsletterPayload
+        payload: send_draft_schema
       }
     },
     handler: function (request, reply) {
@@ -321,13 +369,12 @@ module.exports.register = function (plugin, options, next) {
     path: '/send',
     config: {
       validate: {
-        payload: validateNewsletterPayload
+        payload: send_draft_schema
       }
     },
     handler: function (request, reply) {
-      var newsletter = request.payload;
 
-      sendgrid.sendMarketingEmail(newsletter, function (err, result) {
+      sendgrid.sendMarketingEmail(request.payload, function (err, result) {
         if (err) {
           reply(err).code(err.statusCode ? err.statusCode : 500);
         } else {
@@ -340,8 +387,15 @@ module.exports.register = function (plugin, options, next) {
   plugin.route({
     method: 'post',
     path: '/{ident}/send',
+    config: {
+      validate: {
+        params: {
+          ident: Joi.string().min(1).max(100)
+        }
+      }
+    },
     handler: function (request, reply) {
-      queryOneNewsletter(request.params.ident, function (err, newsletter) {
+      mongodb.nyhedsbreve().findOne({ident: request.params.ident}, function (err, newsletter) {
         if (err) return reply(err).code(500);
         if (newsletter === null) return reply().code(404);
         if (newsletter.scheduling_disabled === true) return reply().code(403);
@@ -349,38 +403,68 @@ module.exports.register = function (plugin, options, next) {
         templates.bond(newsletter.bond_url, function (err, data) {
           if (err) return reply(err).code(500);
 
-          newsletter.subject = data.subject;
-          newsletter.after = 5;
+          var new_checksum = calculateChecksum(data);
 
-          var schedule = moment().add(newsletter.after, 'minutes');
-          // schedule.local();
+          if (new_checksum === newsletter.last_checksum) {
+            var message = 'Last checksum is identical for newsletter ' + newsletter.name;
+            console.log(message);
+            return reply({ message: message }).code(400);
+          }
 
+          var nyhedsbrev = {
+            list: newsletter.list,
+            identity: newsletter.identity,
+            subject: data.subject,
+            after: 5
+          };
+
+          var schedule = moment().add(nyhedsbrev.after, 'minutes');
           data.timestamp = schedule.unix();
+          nyhedsbrev.email_html = templates.render(newsletter.template_html, data);
+          nyhedsbrev.email_plain = templates.render(newsletter.template_plain, data);
+          nyhedsbrev.name = newsletter.name + ' ' + schedule.format("ddd D MMM YYYY HH:mm");
 
-          newsletter.email_html = templates.render(newsletter.template_html, data);
-          newsletter.email_plain = templates.render(newsletter.template_plain, data);
-          newsletter.name = newsletter.name + ' ' + schedule.format("ddd D MMM YYYY HH:mm");
-
-          var checksum = calculateChecksum(data);
-
-          validateLastChecksum(newsletter.list, checksum, function (err) {
+          sendgrid.sendMarketingEmail(nyhedsbrev, function (err, result) {
             if (err) return reply(err).code(500);
 
-            sendgrid.sendMarketingEmail(newsletter, function (err, result) {
-              if (err) return reply(err).code(500);
-
-              updateLastChecksum(newsletter.list, checksum, function (err) {
-                if (err) return reply(err).code(500);
-                else {
-                  result.message = 'Sent';
-                  result.name = newsletter.name;
-                  reply(result);
-                }
-              });
+            mongodb.nyhedsbreve().updateOne({ident: request.params.ident},
+              {$set: {'last_checksum': new_checksum}},
+              function (err, result) {
+                if (err) console.log(err);
             });
+
+            result.message = 'Sent';
+            result.name = nyhedsbrev.name;
+            reply(result);
           });
         });
       });
+    }
+  });
+
+  plugin.route({
+    method: 'post',
+    path: '/{ident}/clear_last_checksum',
+    config: {
+      validate: {
+        params: {
+          ident: Joi.string().min(1).max(100)
+        }
+      }
+    },
+    handler: function (request, reply) {
+      mongodb.nyhedsbreve().updateOne({ident: request.params.ident},
+        {$unset: {'last_checksum': ''}},
+        function (err, result) {
+          if (err) {
+            reply(err).code(500);
+          } else if (result.nModified === 1) {
+            reply()
+          } else {
+            reply().code(404);
+          }
+        }
+      );
     }
   });
 
@@ -400,163 +484,6 @@ function slugify (name) {
     .replace(/\-\-+/g, '-')      // Replace multiple - with single -
     .replace(/^-+/, '')          // Trim - from start of text
     .replace(/-+$/, '');         // Trim - from end of text
-}
-
-
-function convertPayloadToNewsletter (payload) {
-  var newsletter = {
-    name: payload.name,
-    identity: payload.identity,
-    bond_url: payload.bond_url,
-    bond: url.parse(payload.bond_url !== undefined ? payload.bond_url : '', true),
-    template_html: payload.template_html,
-    template_plain: payload.template_plain,
-    categories: payload.categories,
-    list: payload.list,
-    scheduling_disabled: payload.scheduling_disabled
-  };
-
-  return new Buffer(JSON.stringify(newsletter)).toString('base64');
-}
-
-
-function queryAllNewsletters (callback) {
-  var sql = [
-    'SELECT ident, data',
-    'FROM mashed_composer',
-    'ORDER BY ident ASC'].join(' ');
-
-  userdb.query(sql, function (err, result) {
-    if (err) return callback(err);
-
-    callback(null, result.map(function (newsletter) {
-      var data = JSON.parse(new Buffer(newsletter.data, 'base64').toString('utf8'));
-      return {
-        ident: newsletter.ident,
-        name: data.name,
-        list: data.list,
-        categories: data.categories,
-        incomplete: [data.identity, data.bond_url, data.template_html, data.template_plain, data.list].some(undefinedOrBlank)
-      };
-    }));
-  });
-}
-
-
-function undefinedOrBlank (input) {
-  return input === undefined ||
-    (typeof input === 'string' ? input.length === 0 : false);
-}
-
-
-function queryOneNewsletter (ident, callback) {
-
-  mongodb.nyhedsbreve().find({ident: ident}).toArray(function (error, newsletters) {
-    console.log(queryAllNewsletters);
-    if (newsletters.length === 0) {
-      callback(null, null);
-    } else {
-
-      callback(null, newsletters[0]);
-    }
-  });
-
-  // var sql = [
-  //   'SELECT ident, data',
-  //   'FROM mashed_composer',
-  //   'WHERE ident = ' + userdb.escape(ident)].join(' ');
-
-  // userdb.queryOne(sql, function (err, result) {
-  //   if (err) return callback(err);
-  //   else if (result === null)
-  //     callback(null, null);
-  //   else {
-  //     var newsletter = JSON.parse(new Buffer(result.data, 'base64').toString('utf8'));
-  //     callback(null, newsletter);
-  //   }
-  // });
-}
-
-
-function insertNewsletter (ident, data, callback) {
-  var sql = [
-    'INSERT INTO mashed_composer',
-    '(ident, data)',
-    'VALUES (',
-    userdb.escape(ident) + ',',
-    userdb.escape(data) + ')'].join (' ');
-
-  userdb.query(sql, callback);
-}
-
-
-function updateNewsletter (ident, data, callback) {
-  var sql = [
-    'UPDATE mashed_composer',
-    'SET data = ' + userdb.escape(data),
-    'WHERE ident = ' + userdb.escape(ident)].join (' ');
-
-  userdb.query(sql, callback);
-}
-
-
-function deleteNewsletter (ident, callback) {
-  var sql = 'DELETE FROM mashed_composer WHERE ident = ' + userdb.escape(ident);
-  userdb.query(sql, callback);
-}
-
-
-function validateLastChecksum (list, checksum, callback) {
-  var sql = 'SELECT last_checksum FROM mashed_composer_checksums WHERE list = ' + userdb.escape(list);
-
-  userdb.queryOne(sql, function (err, result) {
-    if (result !== null && result.last_checksum === checksum) {
-      var message = 'Last checksum is identical for recipient list ' + list;
-      console.log(message);
-      callback({ message: message });
-    } else {
-      callback(null, { message: 'Checksum OK' });
-    }
-  });
-}
-
-
-function updateLastChecksum (list, checksum, callback) {
-  var sql = [
-    'INSERT INTO mashed_composer_checksums (list, last_checksum)',
-    'VALUES (',
-    [userdb.escape(list), userdb.escape(checksum)].join(','),
-    ')',
-    'ON DUPLICATE KEY UPDATE',
-    'last_checksum = ', userdb.escape(checksum)
-  ].join(' ');
-
-  userdb.query(sql, callback);
-}
-
-
-function validateNewsletterPayload (value, options, next) {
-  var errors = [];
-
-  if (value.list === undefined)
-    errors.push('Field list is missing.');
-
-  if (value.identity === undefined)
-    errors.push('Field identity is missing.');
-
-  if (value.subject === undefined)
-    errors.push('Field subject is missing.');
-
-  if (value.email_html === undefined)
-    errors.push('Field email_html is missing.');
-
-  if (value.email_plain === undefined)
-    errors.push('Field email_plain is missing.');
-
-  if (errors.length > 0)
-    next({ message: errors.join(' '), errors: errors});
-  else
-    next();
 }
 
 
