@@ -39,7 +39,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       addItemToArray(clickEvent, 'categories', 'newCategory');
     };
 
-    $scope.addCategory = function (clickEvent, tag) {
+    $scope.addTags = function (clickEvent, tag) {
       addItemToArray(clickEvent, 'tags', 'newTag');
     };
 
@@ -73,6 +73,10 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     };
 
     $scope.saveNewsletter = function () {
+
+      // We're not allowing changing the ident at this time.
+      delete $scope.newsletter.ident;
+
       var saving = Newsletters.save({ ident: $routeParams.ident }, $scope.newsletter, function (success) {
         notifications.showSuccess('Gemt');
         console.log('Success saving template.');
