@@ -118,7 +118,7 @@
       <div class="form-group">
         <label for="tags_control" class="col-sm-2 control-label">Tilføj tag</label>
         <div class="col-sm-5">
-          <input id="tags_control" class="form-control" type="text" ng-model="newTag" ng-keyup="addCategory($event)" placeholder="Skriv her">
+          <input id="tags_control" class="form-control" type="text" ng-model="newTag" ng-keyup="addTag($event)" placeholder="Skriv her">
           <ul class="dropdown-menu autocomplete" ng-show="newTag">
             <li ng-repeat="tag in filteredTag=(tags | filter:newTag)">
               <a ng-click="addTag('', tag)">{{tag}}</a>

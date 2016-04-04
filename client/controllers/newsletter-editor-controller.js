@@ -39,7 +39,7 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
       addItemToArray(clickEvent, 'categories', 'newCategory');
     };
 
-    $scope.addTags = function (clickEvent, tag) {
+    $scope.addTag = function (clickEvent, tag) {
       addItemToArray(clickEvent, 'tags', 'newTag');
     };
 
