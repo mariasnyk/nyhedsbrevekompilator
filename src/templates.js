@@ -5,6 +5,7 @@ var fs = require('fs'),
     path = require('path'),
     http = require('http'),
     url = require('url'),
+    Joi = require('joi'),
     swig = require('./swig_helper.js'),
     checksum = require('checksum'),
     templatesDir = path.join(__dirname, '/../templates');
@@ -57,7 +58,9 @@ module.exports.register = function (plugin, options, next) {
     path: '/data',
     config: {
       validate: {
-        query: validateQueryFU
+        query: {
+          u: Joi.string().uri()
+        }
       }
     },
     handler: function (request, reply) {
@@ -80,7 +83,9 @@ module.exports.register = function (plugin, options, next) {
     config: {
       validate: {
         params: validateTemplate,
-        query: validateQueryFU
+        query: {
+          u: Joi.string().uri()
+        }
       }
     },
     handler: function (request, reply) {
@@ -106,6 +111,15 @@ module.exports.register = function (plugin, options, next) {
         .view(request.params.template)
         .header('Content-Type', contentTypeHeader(request.params.template));
       }
+    }
+  });
+
+  plugin.route({
+    method: 'GET',
+    path: '/features/{template*}',
+    handler: function (request, reply) {
+      // TODO: Let's build an enpoint where all tags in a template can be found and sent to the frontend
+      reply().code(501);
     }
   });
 
@@ -226,22 +240,6 @@ function validateTemplate (value, options, next) {
     next({ message: 'Template ' + templatePath + ' not found' });
   else
     next();
-}
-
-
-function validateQueryFU (value, options, next) {
-  if (value.u) {
-    var uri = url.parse(value.u);
-
-    if (uri.protocol === null || uri.host === null)
-      next({ message: 'Url ' + value.u + ' invalid' });
-    else if (['http:', 'https:'].indexOf(uri.protocol) === -1)
-      next({ message: 'Url ' + value.u + ' invalid protocol' });
-    else
-      next();
-  } else {
-    next();
-  }
 }
 
 
