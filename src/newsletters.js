@@ -7,7 +7,6 @@ var http = require('http'),
     url = require('url'),
     moment = require('moment'),
     Joi = require('joi'),
-    userdb = require('./userdb_client.js'),
     mongodb = require('./mongodb_client.js'),
     templates = require('./templates.js');
 
