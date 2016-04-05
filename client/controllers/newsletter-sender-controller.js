@@ -353,19 +353,28 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
       var note = '';
 
+      var payload = {
+        name: $scope.newsletter.name,
+        list: $scope.newsletter.list,
+        identity: $scope.newsletter.identity,
+        subject: $scope.newsletter.subject,
+        email_html: $scope.newsletter.email_html,
+        email_plain: $scope.newsletter.email_plain
+      };
+
       if ($scope.send_now) {
-        $scope.newsletter.after = 0;
+        payload.after = 0;
         note = 'med det samme';
       } else if ($scope.schedule_at_specified) {
         var temp = moment($scope.schedule_at);
-        $scope.newsletter.at = temp.toISOString();
+        payload.at = temp.toISOString();
         note = temp.fromNow();
       } else {
-        $scope.newsletter.after = 5;
+        payload.after = 5;
         note = 'om 5 minutter';
       }
 
-      var sending = $http.post('/newsletters/send', $scope.newsletter).then(function (success) {
+      var sending = $http.post('/newsletters/send', payload).then(function (success) {
         console.log('Success', success);
         $scope.newsletter_sent = true;
         notifications.showSuccess('Email ' + $scope.newsletter.name + ' sendes ' + note + '.');
@@ -383,7 +392,16 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
 
     $scope.draftNewsletter = function () {
-      var drafting = $http.post('/newsletters/draft', $scope.newsletter)
+      var payload = {
+        name: $scope.newsletter.name,
+        list: $scope.newsletter.list,
+        identity: $scope.newsletter.identity,
+        subject: $scope.newsletter.subject,
+        email_html: $scope.newsletter.email_html,
+        email_plain: $scope.newsletter.email_plain
+      };
+
+      var drafting = $http.post('/newsletters/draft', payload)
       .success(function () {
         notifications.showSuccess('Kladde ' + $scope.newsletter.name + ' oprettet');
       })

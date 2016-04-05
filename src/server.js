@@ -4,9 +4,12 @@
 var Hapi = require('hapi'),
     inert = require('inert'),
     vision = require('vision'),
+    moment = require('moment'),
     newsletters = require('./newsletters'),
     templates = require('./templates');
 
+// This will set the locale for all plugins using moment
+moment.locale('da');
 
 var client = {
   register: function (plugin, options, next) {

@@ -170,7 +170,7 @@ function addSendGridMarketingEmail (identity, name, subject, text, html, callbac
     '&text=' + encodeURIComponent(text) +
     '&html=' + encodeURIComponent(html);
 
-  callSendGrid('/api/newsletter/add.json', body, callback); 
+  callSendGrid('/api/newsletter/add.json', body, callback);
 }
 
 
@@ -180,7 +180,7 @@ function addSendGridRecipients (list, name, callback) {
     'list=' + encodeURIComponent(list) +
     '&name=' + encodeURIComponent(name);
 
-  callSendGrid('/api/newsletter/recipients/add.json', body, callback); 
+  callSendGrid('/api/newsletter/recipients/add.json', body, callback);
 }
 
 function addSendGridSchedule (name, at, after, callback) {
@@ -201,7 +201,7 @@ function addSendGridSchedule (name, at, after, callback) {
     if (temp.isValid()) {
       if (moment().isBefore(temp)) {
         body = body + '&at=' + temp.toISOString();
-        console.log(Date().toString(), ' Scheduling email ' + name + ' at ' + at);
+        console.log(Date().toString(), 'Scheduling email ' + name + ' at ' + at);
       } else {
         console.log(Date().toString(), 'Scheduling email ' + name + ' now because ' + at + ' is in the past.');
       }

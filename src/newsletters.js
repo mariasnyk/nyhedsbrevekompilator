@@ -10,8 +10,6 @@ var http = require('http'),
     mongodb = require('./mongodb_client.js'),
     templates = require('./templates.js');
 
-moment.locale('da');
-
 var newsletter_schema = {
   _id: Joi.string().strip(),
   ident: Joi.string().alphanum(),
@@ -30,6 +28,7 @@ var newsletter_schema = {
 };
 
 var send_draft_schema = {
+  name: Joi.string().min(1).max(100).required(),
   list: Joi.string().min(1).max(100).required(),
   identity: Joi.string().min(1).max(100).required(),
   subject: Joi.string().min(1).max(255).required(),
