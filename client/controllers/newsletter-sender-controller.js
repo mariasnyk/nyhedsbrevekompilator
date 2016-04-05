@@ -120,6 +120,26 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       });
     };
 
+    $scope.hasTag = function (tags, every) {
+      if ($scope.newsletter.tags === undefined) {
+        return false;
+      } else if (typeof tags === 'string') {
+        return $scope.newsletter.tags.indexOf(tags) > -1;
+      } else if(tags instanceof Array) {
+        if (every) {
+          return tags.every(function (tag) {
+            return $scope.newsletter.tags.indexOf(tag) > -1;
+          });
+        } else {
+          return tags.some(function (tag) {
+            return $scope.newsletter.tags.indexOf(tag) > -1;
+          });
+        }
+      } else {
+        return false;
+      }
+    };
+
 
     function setScheduleDateLabel () {
       $scope.schedule_date = $scope.schedule_at_specified
@@ -169,11 +189,27 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
 
     function getControlroomUrl () {
-      var get = $http.get('/templates/controlroom?u=' + $scope.newsletter.bond_url)
-      .success(function  (data) {
-        $scope.controlroom_url = data.url;
-      });
-      return get;
+      var bond = new URL($scope.newsletter.bond_url);
+      var bond_base_url = '';
+
+      if (bond.host.indexOf('edit.') === 0) {
+        bond_base_url = bond.protocol + '//' + bond.host;
+      } else if (bond.host.indexOf('common.') === 0) {
+        bond_base_url = bond.protocol + '//' + bond.host;
+        bond_base_url = bond.protocol + '//edit.berlingskemedia.net';
+      } else if (bond.host.substr(-3) === '.dk') {
+        bond_base_url = bond.protocol + '//edit.berlingskemedia.net';
+      }
+
+      var id = bond.pathname.substring(bond.pathname.lastIndexOf('/') + 1, bond.pathname.indexOf('.ave-json'));
+
+      if (bond.pathname.indexOf("/bondapi/nodequeue/") === 0) {
+        $scope.controlroom_url = bond_base_url + '/admin/content/nodequeue/' + id + '/view';
+      } else if (bond.pathname.indexOf("/bondapi/node/") === 0) {
+        $scope.controlroom_url = bond_base_url + '/node/' + id + '/view';
+      } else {
+        $scope.controlroom_url = '';
+      }
     }
 
 
@@ -187,6 +223,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       // By adding a simple query parameter, BOND caching doesn't know the URL.
       var bond_url_with_caching_prevention = $scope.newsletter.bond_url + '&cache=' + Date.now();
 
+      // We're getting the data from BOND through the backend because of missing CORS headers
       var get_bonddata = $http.get('/templates/data?u=' + encodeURIComponent(bond_url_with_caching_prevention)).then(function (response) {
         $scope.bonddata = response.data;
         $scope.newsletter.checksum = response.data.checksum;
@@ -198,7 +235,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       loadingSwitch.watch(get_bonddata);
       return get_bonddata;
     }
-
 
     function setShowBodyDefaults () {
       // This is a hack.
@@ -363,5 +399,9 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       preview.document.open();
       preview.document.write($scope.newsletter.email_html);
       preview.document.close();
+    };
+
+    $scope.consoleLogData = function (data) {
+      console.log(data);
     };
   }]);

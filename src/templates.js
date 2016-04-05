@@ -187,43 +187,6 @@ module.exports.register = function (plugin, options, next) {
     }
   });
 
-  plugin.route({
-    method: 'get',
-    path: '/controlroom',
-    handler: function (request, reply) {
-      if (request.query.u) {
-        var controlroom_url = '';
-        var bond = url.parse(request.query.u);
-        var bond_base_url = '';
-
-        if (bond.host.indexOf('edit.') === 0) {
-          bond_base_url = bond.protocol + '//' + bond.host;
-        } else if (bond.host.indexOf('common.') === 0) {
-          bond_base_url = bond.protocol + '//' + bond.host;
-          bond_base_url = bond.protocol + '//edit.berlingskemedia.net';
-        } else if (bond.host.substr(-3) === '.dk') {
-          bond_base_url = bond.protocol + '//edit.berlingskemedia.net';
-        }
-
-        var id = bond.path.substring(bond.path.lastIndexOf('/') + 1, bond.path.indexOf('.ave-json'));
-
-        if (bond.path.indexOf("/bondapi/nodequeue/") === 0) {
-          controlroom_url = bond_base_url + '/admin/content/nodequeue/' + id + '/view';
-        } else if (bond.path.indexOf("/bondapi/node/") === 0) {
-          controlroom_url = bond_base_url + '/node/' + id + '/view';
-        } else {
-          controlroom_url = '';
-        }
-
-        reply({ url: controlroom_url })
-        .header('X-Controlroom-url', encodeURIComponent(controlroom_url));
-
-      } else {
-        return reply().code(400);
-      }
-    }
-  });
-
   next();
 };
 
