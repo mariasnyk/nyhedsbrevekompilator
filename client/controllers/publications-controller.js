@@ -3,10 +3,16 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
     var Emails = $resource('/newsletters/emails/:name', { name: '@name' });
     var Schedules = $resource('/newsletters/emails/schedule/:name', { name: '@name' });
 
-    $scope.emails = Emails.query(function () {
+    var page_size = 30;
+
+    var all_emails = Emails.query(function () {
 
       // Sorting by id for chronically order
-      $scope.emails.sort(compare);
+      all_emails.sort(compare);
+
+      $scope.page_count = new Array(Math.floor(all_emails.length / page_size) + 1);
+
+      paginateEmails();
 
       // Getting details for the first x emails
       for (var i = 0; i < 3; i++) {
@@ -16,7 +22,7 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
       }
     });
 
-    loadingSwitch.watch($scope.emails);
+    loadingSwitch.watch(all_emails);
 
     function compare(a,b) {
       if (a.newsletter_id < b.newsletter_id)
@@ -25,6 +31,32 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
         return -1;
       return 0;
     }
+
+    function paginateEmails (page_index) {
+      if (page_index === undefined) {
+        page_index = 0;
+      }
+
+      var page_start = page_index * page_size;
+      var page_end = page_start + page_size;
+      $scope.emails = all_emails.slice(page_start, page_end);
+
+      // Just a simple way to display page count on the navigator
+      $scope.page_index = page_index + 1;
+    }
+    $scope.paginateEmails = paginateEmails;
+
+    $scope.searchEmails = function (clickEvent) {
+      if ($scope.emailFilter === '') {
+        $scope.searchEnabled = false;
+        paginateEmails();
+      } else if (clickEvent.keyCode === 13) {
+        $scope.searchEnabled = true;
+        $scope.emails = all_emails.filter(function (email) {
+          return email.name.toLowerCase().indexOf($scope.emailFilter.toLowerCase()) > -1;
+        });
+      }
+    };
 
     $scope.getEmailData = function (email) {
       $scope.email = Emails.get({ name: email.name }, function (data) {

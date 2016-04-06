@@ -4,9 +4,12 @@
     <div class="col-xs-12">
       <input
         class="form-control input-sm"
-        placeholder="Filter"
+        placeholder="Søg"
         type="text"
-        ng-model="emailFilter">
+        ng-model="emailFilter"
+        ng-keyup="searchEmails($event)">
+    </div>
+    <div class="col-xs-12">
       <table class="table table-hover">
         <tr>
           <th>Internt navn</th>
@@ -14,24 +17,34 @@
           <th></th>
           <th>Planlagt</th>
         </tr>
-        <tr ng-repeat="email in emails | filter: emailFilter">
-          <td>{{ email.name }}</td>
-          <td>
+        <tr ng-repeat="email in emails">
+          <td class="col-sm-3">{{ email.name }}</td>
+          <td class="col-sm-7">
             <button class="btn btn-info btn-xs" ng-hide="email.subject" ng-click="getEmailData(email)">Vis detaljer</button>
-            <div ng-show="email.subject">{{ email.subject }}</div>
-            <button class="btn btn-link btn-xs" ng-show="email.html" ng-click="showEmailHtml(email.html)">Vis email indhold</button>
+            <div ng-if="email.subject">{{ email.subject }}</div>
+            <button class="btn btn-link btn-xs" ng-if="email.html" ng-click="showEmailHtml(email.html)">Vis email indhold</button>
           </td>
-          <td><div ng-show="email.total_recipients"><span class="badge">{{ email.total_recipients }}</span> modtagere</div></td>
-          <td>
+          <td class="col-sm-1"><div ng-if="email.total_recipients"><span class="badge">{{ email.total_recipients }}</span> modtagere</div></td>
+          <td class="col-sm-1">
             <div><abbr title="{{ email.schedule }}">{{ email.fromnow }}</abbr></div>
-            <button ng-show="email.scheduled" class="btn btn-danger btn-xs btn-block" ng-click="deleteSchedule(email)">Annuller</button>
-            <p ng-show="email.draft"><abbr title="Udsendelsen er annulleret">Annulleret</abbr></p>
-            <button ng-show="email.draft" class="btn btn-danger btn-xs btn-block" ng-click="deleteEmail(email)">Slet</button>
-            <p ng-show="email.unknown_schedule"><abbr title="Tidspunkt for udsendelse er ukendt">Ukendt</abbr></p>
+            <button ng-if="email.scheduled" class="btn btn-danger btn-xs btn-block" ng-click="deleteSchedule(email)">Annuller</button>
+            <p ng-if="email.draft"><abbr title="Udsendelsen er annulleret">Annulleret</abbr></p>
+            <button ng-if="email.draft" class="btn btn-danger btn-xs btn-block" ng-click="deleteEmail(email)">Slet</button>
+            <p ng-if="email.unknown_schedule"><abbr title="Tidspunkt for udsendelse er ukendt">Ukendt</abbr></p>
           </td>
           <!-- <td><span class="label" style="background-color: #{{ email.identity | tocolor}};">{{ email.identity }}</span></td> -->
         </tr>
       </table>
+    </div>
+    <div class="col-xs-12">
+      <p>Side {{page_index}}</p>
+      <nav>
+        <ul class="pagination pagination-sm">
+          <li ng-repeat="count in page_count track by $index" ng-class="{disabled: searchEnabled}">
+            <a href="" ng-click="paginateEmails($index)">{{$index + 1}}</a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </div>
