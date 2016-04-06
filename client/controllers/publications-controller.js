@@ -37,7 +37,13 @@ app.controller('PublicationsController', ['$scope', '$routeParams', '$location',
         $scope.emails[index].html = data.html;
 
         if (data.date_schedule !== null) {
-          var date_schedule = moment.utc(data.date_schedule + '-08:00');
+          // data_schedule from SendGrid is Pacific Time Zone / Pacific Standard Time (PST)
+          var date_schedule;
+          if (moment(data.date_schedule).isDST()) {
+            date_schedule = moment.utc(data.date_schedule + '-07:00');
+          } else {
+            date_schedule = moment.utc(data.date_schedule + '-08:00');
+          }
           date_schedule.local();
 
           $scope.emails[index].schedule = date_schedule.format('ddd D/M HH:mm');
