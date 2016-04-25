@@ -363,14 +363,14 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       };
 
       if ($scope.send_now) {
-        payload.after = 0;
+        payload.after = "0";
         note = 'med det samme';
       } else if ($scope.schedule_at_specified) {
         var temp = moment($scope.schedule_at);
         payload.at = temp.toISOString();
         note = temp.fromNow();
       } else {
-        payload.after = 5;
+        payload.after = "5";
         note = 'om 5 minutter';
       }
 
