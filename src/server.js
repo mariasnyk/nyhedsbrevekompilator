@@ -43,7 +43,7 @@ var server = new Hapi.Server({
   }
 });
 
-server.connection({ port: 8000 });
+server.connection({ port: process.env.PORT ? process.env.PORT : 8000 });
 
 server.register(inert, cb);
 server.register(vision, cb);
@@ -57,7 +57,7 @@ server.route({ method: 'GET', path: '/nyhedsbreve', handler: function (request, 
 
 if (!module.parent) {
   server.start(function() {
-    console.log('Server started on port 8000.');
+    console.log('Server started on ' + server.info.uri + '.');
   });
 }
 
