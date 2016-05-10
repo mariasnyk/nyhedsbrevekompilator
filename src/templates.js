@@ -84,7 +84,8 @@ module.exports.register = function (plugin, options, next) {
       validate: {
         params: validateTemplate,
         query: {
-          u: Joi.string().uri()
+          u: Joi.string().uri(),
+          debug: Joi.boolean()
         }
       }
     },
@@ -97,7 +98,7 @@ module.exports.register = function (plugin, options, next) {
           } else if (data === null) {
             reply().code(404);
           } else {
-            data.debug = request.query.debug === 'true';
+            data.debug = request.query.debug === true;
 
             reply
             .view(request.params.template, data)
@@ -238,6 +239,8 @@ function download (url, callback) {
 
     if (response.statusCode === 401) {
       return callback (null, null);
+    } else if (response.statusCode === 302) {
+      return download (response.headers.location, callback);
     } else if (response.statusCode !== 200) {
       return callback (response.statusCode, null);
     }

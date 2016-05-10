@@ -156,7 +156,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
         // In case the subject was cleared manually to get a fresh suggestion
         $scope.newsletter_subject_dirty = false;
 
-        if ($scope.bonddata === null) {
+        if ($scope.bonddata === undefined || $scope.bonddata === null) {
           $scope.newsletter.subject = '';
         } else if ($scope.bonddata.type === 'nodequeue' || $scope.bonddata.type === 'latest_news') {
           var temp = [];
@@ -225,10 +225,16 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
       // We're getting the data from BOND through the backend because of missing CORS headers
       var get_bonddata = $http.get('/templates/data?u=' + encodeURIComponent(bond_url_with_caching_prevention)).then(function (response) {
+
+        if (['nodequeue', 'latest_news'].indexOf(response.data.type) === -1) {
+          notifications.showWarning('Data fra Bond er ikke en nodekø.')
+        }
+
         $scope.bonddata = response.data;
         $scope.newsletter.checksum = response.data.checksum;
         $scope.bonddatadirty = false;
       }, function (response) {
+        console.error(response);
         notifications.showError('Failed to get data from ' + bond_url_with_caching_prevention);
       });
 
