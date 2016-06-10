@@ -1,6 +1,6 @@
 {% extends "brands/aok.html" %}
 
-{% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + timestamp | yyyymmdd + "&ns_linkname=AOK_weekend"; %}
+{% set tracking = "utm_source=newsletter&utm_medium=email&utm_content=red_nb-" + timestamp | yyyymmdd + "&utm_campaign=AOK_weekend"; %}
 {% set home_url = "http://www.aok.dk"; %}
 {% set logo_src = "https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/headers/aok_weekend.png"; %}
 {% set unsubscribe_href = "http://profil.berlingskemedia.dk/tilmeldt/17?id=[ekstern_id]" %}
