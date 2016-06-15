@@ -250,9 +250,9 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       // See the right way here: https://docs.angularjs.org/guide/directive#creating-directives-that-communicate
       // This approach requires a major refactoring.
 
-      if ($scope.newsletter.categories && $scope.bonddata.nodes[0]) {
-        var wantsToShowBodyDefault = $scope.newsletter.categories.some(function (category) {
-          return ['Business Morgen'].indexOf(category) > -1;
+      if ($scope.newsletter.tags && $scope.bonddata.nodes[0]) {
+        var wantsToShowBodyDefault = $scope.newsletter.tags.some(function (tag) {
+          return ['feature_showbodydefault'].indexOf(tag) > -1;
         });
 
         if (wantsToShowBodyDefault) {
