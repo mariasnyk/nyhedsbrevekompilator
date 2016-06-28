@@ -1,6 +1,7 @@
 {% extends "partials/aoa.html" %}
 
-{% set tracking = "utm_source=newsletter&utm_medium=email&utm_content=red_nb-" + timestamp | yyyymmdd + "&utm_campaign=AOA_shopping"; %}
+{# set tracking = "utm_source=newsletter&utm_medium=email&utm_content=red_nb-" + timestamp | yyyymmdd + "&utm_campaign=AOA_shopping"; #}
+{% set tracking = "ns_campaign=&ns_mchannel=Mailing&ns_source=red_nb-" + timestamp | yyyymmdd + "&ns_linkname=AOA_shopping"; %}
 {% set logo_src = "https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/headers/aoa_shopping.png"; %}
 {% set unsubscribe_href = "http://profil.berlingskemedia.dk/tilmeldt/116?id=[ekstern_id]" %}
 {% set buy_subscription_href = "http://www.aoa.dk"; %}
