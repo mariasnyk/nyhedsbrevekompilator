@@ -359,6 +359,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       var payload = {
         name: $scope.newsletter.name,
         list: $scope.newsletter.list,
+        categories: $scope.newsletter.categories,
         identity: $scope.newsletter.identity,
         subject: $scope.newsletter.subject,
         email_html: $scope.newsletter.email_html,

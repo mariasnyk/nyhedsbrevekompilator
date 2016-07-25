@@ -30,6 +30,7 @@ var newsletter_schema = {
 var send_draft_schema = {
   name: Joi.string().min(1).max(100).required(),
   list: Joi.string().min(1).max(100).required(),
+  categories: Joi.array().items(Joi.string().min(1).max(100)),
   identity: Joi.string().min(1).max(100).required(),
   subject: Joi.string().min(1).max(255).required(),
   email_html: Joi.any().required(),
