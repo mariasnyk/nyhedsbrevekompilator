@@ -11,6 +11,7 @@ var mongodb_database = process.env.MONGODB_DATABASE !== undefined ? process.env.
 MongoClient.connect('mongodb://' + mongodb_host + ':' + mongodb_port + '/' + mongodb_database, function(err, database) {
   db = database;
   if (err) throw err;
+  else console.log('Connecting to Mongo on', database.options.url);
 });
 
 module.exports.close = function(callback) {
