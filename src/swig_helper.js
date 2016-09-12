@@ -60,20 +60,17 @@ swig.setFilter('hasValue', function (listOfValues, value) {
 });
 
 swig.setFilter('tagValue', function(inputTags, tagName){
-  console.log('tagValue', inputTags, tagName);
   if(inputTags === undefined || inputTags === null || Object.prototype.toString.call(inputTags) !== '[object Array]') {
     return;
   }
 
   var tag = inputTags.find(function(t){
-    console.log('t', t);
     return t.indexOf(tagName) === 0;
   });
 
   if(tag){
     return tag.split(':')[1];
   }
-  console.log('found', tag);
 });
 
 swig.setFilter('typeof', function (variable) {
