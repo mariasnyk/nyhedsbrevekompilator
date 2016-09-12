@@ -1,6 +1,11 @@
 /*jshint node: true */
 'use strict';
 
+var http = require('http'),
+    url = require('url'),
+    Joi = require('joi'),
+    checksum = require('checksum');
+
 module.exports.register = function (plugin, options, next) {
 
   plugin.route({

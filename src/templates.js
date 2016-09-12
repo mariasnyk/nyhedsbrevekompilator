@@ -3,12 +3,9 @@
 
 var fs = require('fs'),
     path = require('path'),
-    http = require('http'),
-    url = require('url'),
     Joi = require('joi'),
     swig = require('./swig_helper.js'),
-    checksum = require('checksum'),
-    bonddata = require('bonddata'),
+    bonddata = require('./bonddata'),
     templatesDir = path.join(__dirname, '/../templates');
 
 module.exports.render = function (templateName, data, callback) {
