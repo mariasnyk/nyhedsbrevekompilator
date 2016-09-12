@@ -374,7 +374,7 @@ module.exports.register = function (plugin, options, next) {
     },
     handler: function (request, reply) {
 
-      sendgrid.sendMarketingEmail(request.payload, function (err, result) {
+      sendgrid.createAndScheduleMarketingEmail(request.payload, function (err, result) {
         if (err) {
           reply(err).code(err.statusCode ? err.statusCode : 500);
         } else {
@@ -424,7 +424,7 @@ module.exports.register = function (plugin, options, next) {
           nyhedsbrev.email_plain = templates.render(newsletter.template_plain, data);
           nyhedsbrev.name = newsletter.name + ' ' + schedule.format("ddd D MMM YYYY HH:mm");
 
-          sendgrid.sendMarketingEmail(nyhedsbrev, function (err, result) {
+          sendgrid.createAndScheduleMarketingEmail(nyhedsbrev, function (err, result) {
             if (err) return reply(err).code(500);
 
             mongodb.nyhedsbreve().updateOne({ident: request.params.ident},

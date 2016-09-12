@@ -81,7 +81,7 @@ function standardCallback (callback) {
 }
 
 
-module.exports.sendMarketingEmail = function (newsletter, callback) {
+module.exports.createAndScheduleMarketingEmail = function (newsletter, callback) {
 
   createMarketingEmail(newsletter, function (err, result) {
     if (err) return callback(err);
