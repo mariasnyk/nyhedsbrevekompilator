@@ -6,7 +6,8 @@ var Hapi = require('hapi'),
     vision = require('vision'),
     moment = require('moment'),
     newsletters = require('./newsletters'),
-    templates = require('./templates');
+    templates = require('./templates'),
+    bonddata = require('./bonddata');
 
 // This will set the locale for all plugins using moment
 moment.locale('da');
@@ -53,6 +54,7 @@ server.register(templates, { routes: { prefix: '/templates' } }, cb);
 server.register(newsletters, { routes: { prefix: '/newsletters' } }, cb);
 // server.route({ method: 'GET', path: '/', handler: function (request, reply) { reply.redirect('/nyhedsbreve'); } });
 server.route({ method: 'GET', path: '/nyhedsbreve', handler: function (request, reply) { reply.redirect('/'); } });
+server.register(bonddata, { routes: { prefix: '/bonddata' } }, cb);
 
 
 if (!module.parent) {

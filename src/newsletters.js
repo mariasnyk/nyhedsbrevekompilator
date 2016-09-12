@@ -8,7 +8,8 @@ var http = require('http'),
     moment = require('moment'),
     Joi = require('joi'),
     mongodb = require('./mongodb_client.js'),
-    templates = require('./templates.js');
+    templates = require('./templates.js'),
+    bonddata = require('./bonddata.js');
 
 var newsletter_schema = {
   _id: Joi.string().strip(),
@@ -399,7 +400,7 @@ module.exports.register = function (plugin, options, next) {
         if (newsletter === null) return reply().code(404);
         if (newsletter.scheduling_disabled === true) return reply().code(403);
 
-        templates.bond(newsletter.bond_url, function (err, data) {
+        bonddata.get(newsletter.bond_url, function (err, data) {
           if (err) return reply(err).code(500);
 
           var new_checksum = calculateChecksum(data);

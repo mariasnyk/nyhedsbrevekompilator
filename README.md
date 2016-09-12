@@ -49,10 +49,10 @@ Next, to create a build run (The source code and the Node modules will be copied
 
 ```
 sudo docker build -t bmdako/nyhedsbrevekompilator .
-``` 
+```
 
 
-Lastly, to upload the newly built version of the image to Docker Hub, run (You must have been granted permissions.): 
+Lastly, to upload the newly built version of the image to Docker Hub, run (You must have been granted permissions.):
 
 ```
 sudo docker push bmdako/nyhedsbrevekompilator
@@ -73,7 +73,7 @@ Unpack the ZIP into a directory.
 
 Download the source from git (either using git or zip from [https://github.com/BerlingskeMedia/nyhedsbrevekompilator/archive/master.zip](https://github.com/BerlingskeMedia/nyhedsbrevekompilator/archive/master.zip)). Place the source in a folder next to node. Open a terminal and change directory to it.
 
-First, install the application dependencies by running: 
+First, install the application dependencies by running:
 
 ```
 npm install
@@ -185,7 +185,7 @@ returns:
 }
 ```
 
-## XXX [GET /templates/data]
+## XXX [GET /bonddata]
 Returns JSON BONDAPI data from a URL
 
 ## Newsletter collection [GET /newsletters]

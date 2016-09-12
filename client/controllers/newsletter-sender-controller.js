@@ -224,7 +224,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       var bond_url_with_caching_prevention = $scope.newsletter.bond_url + '&cache=' + Date.now();
 
       // We're getting the data from BOND through the backend because of missing CORS headers
-      var get_bonddata = $http.get('/templates/data?u=' + encodeURIComponent(bond_url_with_caching_prevention)).then(function (response) {
+      var get_bonddata = $http.get('/bonddata?u=' + encodeURIComponent(bond_url_with_caching_prevention)).then(function (response) {
 
         if (['nodequeue', 'latest_news'].indexOf(response.data.type) === -1) {
           notifications.showWarning('Data fra Bond er ikke en nodekø.')
@@ -271,7 +271,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       if (isAOAweekend) {
         var AOAanbefalerUrl = 'http://common.berlingskemedia.net/bondapi/nodequeue/5935.ave-json?image_preset=620x355-c'.concat('&cache=',Date.now());
 
-        var get_AOAdata = $http.get('/templates/data?u=' + encodeURIComponent(AOAanbefalerUrl)).then(function (response) {
+        var get_AOAdata = $http.get('/bonddata?u=' + encodeURIComponent(AOAanbefalerUrl)).then(function (response) {
           $scope.bonddata.aoa_anbefaler = response.data;
         }, function (response) {
           notifications.showError('Failed to get data from ' + AOAanbefalerUrl);
