@@ -1,12 +1,7 @@
 var gulp = require('gulp'),
     jshint = require('gulp-jshint'),
     spawn = require('child_process').spawn,
-    path = require('path'),
-    fs = require ('fs'),
-    http = require ('http'),
-    swig = require('./src/swig_helper.js'),
-    templatesDir = path.join(__dirname, 'templates'),
-    testdataDir = path.join(__dirname, 'testdata');
+    path = require('path');
 
 
 gulp.task('default', ['serve']);
@@ -45,71 +40,3 @@ gulp.task('lint', function() {
 gulp.task('build', ['lint', 'test'], function() {
   // TODO
 });
-
-/*
-  Use the task "testdata" to create a JSON-file with data from BOND.
-    Make sure the testdata filename follows the format: <templateName>.json
-  Use the task "tests" to render the templates.
-    Each template used testdata from <templateName>.json
-*/
-
-gulp.task('testdata', function () {
-  downloadTestdata('bt', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/31.ave-json?image_preset=620x355-c');
-  downloadTestdata('bt_nyheder', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/102.ave-json?image_preset=620x355-c');
-  downloadTestdata('bt_breaking', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5893.ave-json?image_preset=620x355-c');
-  downloadTestdata('bt_eftermiddag', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5891.ave-json?image_preset=620x355-c');
-  downloadTestdata('bt_mode', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5857.ave-json?image_preset=620x355-c');
-  downloadTestdata('bt_morgen', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5890.ave-json?image_preset=620x355-c');
-  downloadTestdata('bt_nyhedsquiz', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5895.ave-json?image_preset=620x355-c');
-  downloadTestdata('bt_plus', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5894.ave-json?image_preset=620x355-c');
-  downloadTestdata('bt_sport', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5892.ave-json?image_preset=620x355-c');
-
-  downloadTestdata('arhus_update', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1599.ave-json?image_preset=620x355-c');
-  downloadTestdata('randers_update', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1600.ave-json?image_preset=620x355-c');
-  downloadTestdata('holstebrostruer_update', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1601.ave-json?image_preset=620x355-c');
-  downloadTestdata('dagbladetringskjern', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1602.ave-json?image_preset=620x355-c');
-  downloadTestdata('lemvig_update', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5846.ave-json?image_preset=620x355-c');
-  downloadTestdata('viborg-folkeblad', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/1604.ave-json?image_preset=620x355-c');
-
-  downloadTestdata('berlingske_morgen', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5897.ave-json?image_preset=620x355-c');
-  downloadTestdata('berlingske_middag', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5842.ave-json?image_preset=620x355-c');
-  downloadTestdata('berlingske_aften', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5898.ave-json?image_preset=620x355-c');
-  downloadTestdata('berlingske_weekend', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5899.ave-json?image_preset=620x355-c');
-  downloadTestdata('berlingske_breaking', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5900.ave-json?image_preset=620x355-c');
-  downloadTestdata('berlingske_fri-weekend', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5901.ave-json?image_preset=620x355-c');
-  downloadTestdata('berlingske_rejseliv', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5906.ave-json?image_preset=620x355-c');
-  downloadTestdata('berlingske_nyhedsquiz', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5905.ave-json?image_preset=620x355-c');
-  downloadTestdata('berlingske_politiko', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5902.ave-json?image_preset=620x355-c');
-  downloadTestdata('berlingske_politiko-breaking', 'http://edit.berlingskemedia.net.white.bond.u.net/bondapi/nodequeue/5903.ave-json?image_preset=620x355-c');
-});
-
-function downloadTestdata (name, url) {
-  var filename = name + '.json';
-  console.log('Downloading', url, 'as', filename);
-
-  if (!fs.existsSync(testdataDir)) {
-    fs.mkdirSync(testdataDir);
-  }
-
-  http.get(url, function( response ) {
-
-    if (response.statusCode !== 200) {
-      console.error('Got response error', response.statusCode, 'on', url);
-      return;
-    }
-
-    var data = '';
-    response.setEncoding('utf8');
-
-    response.on('data', function ( chunk ) {
-      data += chunk;
-    });
-
-    response.on('end', function() {
-      fs.writeFileSync(path.join(testdataDir, filename), data);
-      console.log('Testdata', filename, 'written');
-    });
-  }).on('error', function(e) {
-    console.error('Got error while requesting HTML (' + url + '): ' + e.message);
-  });
-}
