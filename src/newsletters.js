@@ -420,6 +420,7 @@ module.exports.register = function (plugin, options, next) {
 
           var schedule = moment().add(nyhedsbrev.after, 'minutes');
           data.timestamp = schedule.unix();
+          data.tags = newsletter.tags;
           nyhedsbrev.email_html = templates.render(newsletter.template_html, data);
           nyhedsbrev.email_plain = templates.render(newsletter.template_plain, data);
           nyhedsbrev.name = newsletter.name + ' ' + schedule.format("ddd D MMM YYYY HH:mm");

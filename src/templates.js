@@ -8,7 +8,7 @@ var fs = require('fs'),
     bonddata = require('./bonddata'),
     templatesDir = path.join(__dirname, '/../templates');
 
-module.exports.render = function (templateName, data, callback) {
+function render(templateName, data, callback) {
   var template = path.join(templatesDir, templateName);
 
   if (!fs.existsSync(template)) {
@@ -18,6 +18,8 @@ module.exports.render = function (templateName, data, callback) {
 
   return swig.renderFile(template, data);
 };
+
+module.exports.render = render;
 
 module.exports.register = function (plugin, options, next) {
 
@@ -109,8 +111,12 @@ module.exports.register = function (plugin, options, next) {
       }
     },
     handler: function (request, reply) {
-      reply
-      .view(request.params.template, request.payload)
+      // reply
+      // .view(request.params.template, request.payload)
+      // .header('Transfer-Encoding', 'chunked')
+      // .header('Content-Type', contentTypeHeader(request.params.template));
+      var content = render(request.params.template, request.payload);
+      reply(content)
       .header('Transfer-Encoding', 'chunked')
       .header('Content-Type', contentTypeHeader(request.params.template));
     }

@@ -1,5 +1,7 @@
 {% if node !== undefined && node !== null %}
 
+{% set article_url_appendage = tags | tagValue('article_url_appendage') %}
+
 {% set primary_tag = null %}
 {% if node.taxonomyTags.primary %}
   {% for tag in node.taxonomyTags.primary %}
@@ -30,7 +32,7 @@
     {% for image in node.images %}
       {% if !image_found && image.relation | hasValue('default') %}
         {% set image_found = true; %}
-        <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+        <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
           <img  style="width: {{ width }}px;"
                 width="{{ width }}"
                 src="{{ image.image }}"
@@ -60,7 +62,7 @@
       </div>
       {% endif %}
 
-      <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+      <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
         <div style="text-align: left; line-height: 100%; padding-top: 5px; text-decoration: none;">
           {% if node.primary_article %}
           <font

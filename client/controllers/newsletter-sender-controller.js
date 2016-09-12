@@ -305,6 +305,8 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
         ? moment($scope.schedule_at).unix()
         : moment().add($scope.schedule_after, 'minutes').unix();
 
+      $scope.bonddata.tags = $scope.newsletter.tags;
+
       var get_html = $http.post('/templates/' + $scope.newsletter.template_html, $scope.bonddata)
       .success(function (data, status, getHeaders) {
         // var headers = getHeaders();

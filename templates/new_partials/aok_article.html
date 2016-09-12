@@ -1,4 +1,7 @@
 {% if node !== undefined && node !== null %}
+
+  {% set article_url_appendage = tags | tagValue('article_url_appendage') %}
+
   <!-- AOK article -->
   <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
     <tbody>
@@ -18,7 +21,7 @@
             {% set image_found = true; %}
             <tr>
               <td align="center" valign="top">
-                <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+                <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
                   <img  style="width: {{ width }}px;"
                         width="{{ width }}"
                         src="{{ image.image }}"
@@ -57,7 +60,7 @@
       <tr>
         <td align="left" valign="top">
           <div style="margin-bottom: 10px;">
-            <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+            <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
               <font
                 color="#1A1A1A"
                 style="font-family: {{ font_family|safe }}; font-size: 25px; line-height: 28px; text-rendering: optimizeLegibility;">
@@ -71,7 +74,7 @@
       {% if (node.primary_article && node.summary) || always_show_article_summary === true %}
       <tr>
         <td align="left" valign="top">
-          <a href="{{ node.url }}?{{ tracking }}" target="_blank"  style="text-decoration: none;">
+          <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank"  style="text-decoration: none;">
             <font
               color="#1A1A1A"
               style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 22px; text-rendering: optimizeLegibility;">
@@ -85,7 +88,7 @@
       {% if node.custom_summary %}
       <tr>
         <td align="left" valign="top">
-          <a href="{{ node.url }}?{{ tracking }}" target="_blank"  style="text-decoration: none;">
+          <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank"  style="text-decoration: none;">
             <font
               color="#1A1A1A"
               style="font-family: {{ font_family|safe }}; text-decoration: none; font-size: 18px; line-height: 22px; text-rendering: optimizeLegibility;">
@@ -99,7 +102,7 @@
       {% if node.calltoaction %}
       <tr>
         <td align="left" valign="top">
-          <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+          <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
             <div style="padding: 10px 0px;">
               <font
                 color="#d00000"

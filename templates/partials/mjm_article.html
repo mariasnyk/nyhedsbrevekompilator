@@ -1,5 +1,7 @@
 {% if node !== undefined && node !== null %}
 
+{% set article_url_appendage = tags | tagValue('article_url_appendage') %}
+
 {% set image_count = 0; %}
 {% if node.images | typeof === '[object Object]' %}
   {% set images_keys = Object.keys(node.images); %}
@@ -13,7 +15,7 @@
   {% for image in node.images %}
     {% if !image_found && image.relation | hasValue('default') %}
       {% set image_found = true; %}
-      <a href="{{ node.url }}?{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
+      <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
         <img  style="width: {{ width }}px;"
               width="{{ width }}"
               src="{{ image.image }}"
@@ -25,7 +27,7 @@
 
 <div style="width: {{ width }}px;">
 
-  <a href="{{ node.url }}?{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
+  <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
     <div style="text-align: left; line-height: 100%; padding-top: 5px;">
       {% if node.primary_article %}
       <font
@@ -44,7 +46,7 @@
   </a>
 
   {% if node.primary_article && node.summary %}
-  <a href="{{ node.url }}?{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
+  <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
     <div style="text-align: left; line-height: 100%; padding-top: 5px; text-decoration: none;">
       <font
         color="#1A1A1A"
@@ -56,7 +58,7 @@
   {% endif %}
 
   {% if node.calltoaction %}
-  <a href="{{ node.url }}?{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
+  <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
     <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
       <font
         color="#1A1A1A"
@@ -67,7 +69,7 @@
   </a>
 
   {% elif node.type === 'image_gallery' %}
-  <a href="{{ node.url }}?{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
+  <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
     <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
       <font
         color="#1A1A1A"
@@ -78,7 +80,7 @@
   </a>
 
   {% elif node.type === 'webtv_link' %}
-  <a href="{{ node.url }}?{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
+  <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}&newsl_access={{ node.newsl_access }}" target="_blank" style="text-decoration: none;">
     <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
       <font
         color="#1A1A1A"
