@@ -319,6 +319,8 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
         console.log('updateHtmlPreview error', data);
         if (data.message) {
           notifications.showError(data.message);
+        } else if (data.statusText) {
+          notifications.showError(data.statusText);
         } else {
           notifications.showError('Error');
         }
@@ -384,12 +386,16 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
         console.log('Success', success);
         $scope.newsletter_sent = true;
         notifications.showSuccess('Email ' + $scope.newsletter.name + ' sendes ' + note + '.');
-      }, function (error) {
-        console.log('Error', error);
-        if (error.status === 401) {
+      }, function (err) {
+        console.error(err);
+        if (err.status === 401) {
           notifications.showError('Nyhedsbrev med samme navn eksisterer allerede');
+        } else if (err.message) {
+          notifications.showError(err.message);
+        } else if (err.statusText) {
+          notifications.showError(err.statusText);
         } else {
-          notifications.showError('Fejl: ' + error);
+          notifications.showError('Fejl: ' + err);
         }
       });
 
