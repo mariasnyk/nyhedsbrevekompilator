@@ -1,0 +1,26 @@
+{% extends "partials/bt.html" %}
+
+{% set home_url = "http://www.bt.dk"; %}
+
+{% set tracking = "utm_source=newsletter&utm_medium=email&utm_content=red_nb-" + timestamp | yyyymmdd + "&utm_campaign=bt_morgen"; %}
+{% set logo_src = "https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/headers/bt_morgen.png"; %}
+{% set unsubscribe_href = "http://profil.berlingskemedia.dk/tilmeldt/24?id=[ekstern_id]" %}
+{% set buy_subscription_href = "http://abonnement.bt.dk/abonnementer/?utm_source=nyhedsbreve&utm_medium=nl_abonnementlink&utm_term=AL-151222-CP-WKLEDIT1WK&utm_content=koeb_abonnement&utm_campaign=abonnementer_bt" %}
+
+{% set kw = "bt_morgen"; %}
+
+{% block wide_banner_2 %}
+{% include "partials/passendo_banner.html" with { placementID: "72" } %}
+{% endblock %}
+
+{% block wide_banner_3 %}
+{# Intet banner #}
+{% endblock %}
+
+{% block box_banner_1 %}
+{% include "partials/passendo_banner.html" with { placementID: "95" } %}
+{% endblock %}
+
+{% block box_banner_2 %}
+{% include "partials/passendo_banner.html" with { placementID: "84" } %}
+{% endblock %}
