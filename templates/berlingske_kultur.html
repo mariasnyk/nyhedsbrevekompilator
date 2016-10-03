@@ -3,24 +3,27 @@
 {% set home_url = "http://www.b.dk/kultur"; %}
 
 {% set tracking = "utm_source=newsletter&utm_medium=email&utm_content=red_nb-" + timestamp | yyyymmdd + "&utm_campaign=berlingske_kultur"; %}
-{% set logo_src = "https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/headers/berlingske_ramme.png"; %}
+{% set logo_src = "https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/headers/berlingske_kultur.jpg"; %}
 {% set unsubscribe_href = "http://profil.berlingskemedia.dk/tilmeldt/1001?id=[ekstern_id]" %}
 {% set buy_subscription_href = "http://abonnement.b.dk/berlingske-alle-produkter-abonnementslink/?utm_source=nyhedsbreve&utm_medium=nl_abonnementlink&utm_term=AL-151222-CP-WKLEDIT1WK&utm_content=koeb_abonnement&utm_campaign=abonnementer_berlingske" %}
 
 {% set kw = "berlingske_kultur"; %}
 
 {% block wide_banner_2 %}
-{% include "partials/adbutler_banner.html" with { setID: "206034" } %}
+{# include "partials/adbutler_banner.html" with { setID: "206034" } #}
 {% endblock %}
 
 {% block wide_banner_3 %}
-{% include "partials/adbutler_banner.html" with { setID: "206035" } %}
+{# include "partials/adbutler_banner.html" with { setID: "206035" } #}
 {% endblock %}
 
 {% block box_banner_1 %}
-{% include "partials/adbutler_banner.html" with { setID: "206095" } %}
+{# include "partials/adbutler_banner.html" with { setID: "206095" } #}
 {% endblock %}
 
 {% block box_banner_2 %}
-{% include "partials/adbutler_banner.html" with { setID: "206244" } %}
+{# include "partials/adbutler_banner.html" with { setID: "206244" } #}
+{% endblock %}
+
+{% block social %}
 {% endblock %}
