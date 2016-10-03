@@ -79,8 +79,6 @@ swig.setFilter('typeof', function (variable) {
 
 
 swig.setFilter('stringreplace', function (input, substr, newSubStr) {
-  console.log('stringreplace', input, substr, newSubStr);
-  console.log('ss', input.replace(substr, newSubStr));
   return input.replace(substr, newSubStr);
 });
 
