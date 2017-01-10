@@ -36,28 +36,33 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
 
     $scope.addCategory = function (clickEvent, category) {
-      addItemToArray(clickEvent, 'categories', 'newCategory');
+      console.log('dfdfd', category);
+      addItemToArray(clickEvent, 'categories', 'newCategory', category);
     };
 
     $scope.addTag = function (clickEvent, tag) {
-      addItemToArray(clickEvent, 'tags', 'newTag');
+      addItemToArray(clickEvent, 'tags', 'newTag', tag);
     };
 
-    function addItemToArray (clickEvent, item_array, item_scope) {
+    function addItemToArray (clickEvent, item_array, item_scope, itemClickedWithMouse) {
       if ($scope.newsletter[item_array] === undefined) {
         $scope.newsletter[item_array] = [];
       }
 
-      if (clickEvent.keyCode === 13) {
-        if ($scope[item_scope] !== '') {
-          $scope[item_scope].split(',').forEach( function (item) {
-            item = item.trim();
-            if ($scope.newsletter[item_array].indexOf(item) === -1) {
-              $scope.newsletter[item_array].push(item);
-              $scope.dirty = true;
-            }
-          });
-          $scope[item_scope] = '';
+      var enterWasPressed = clickEvent.originalEvent instanceof KeyboardEvent && clickEvent.keyCode === 13;
+      var mouseWasClicked = clickEvent.originalEvent instanceof MouseEvent;
+
+      if (enterWasPressed || mouseWasClicked) {
+        // If the items was clicked with a mouse, then we use that.
+        // Insted we take the value that the user has entered in the input-element (scope)
+        var item = itemClickedWithMouse ? itemClickedWithMouse : $scope[item_scope];
+        item = item.trim();
+        if (item.length > 0) {
+          if ($scope.newsletter[item_array].indexOf(item) === -1) {
+            $scope.newsletter[item_array].push(item);
+            $scope.dirty = true;
+            $scope[item_scope] = '';
+          }
         }
       }
     }
