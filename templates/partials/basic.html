@@ -76,7 +76,11 @@
                   {% set node = nodes[0]; %}
                   {% if node !== undefined && node !== null %}
                     {% set node.primary_article = true; %}
-                    {% include article_template %}
+                    {% if primary_article_template !== undefined && primary_article_template !== null && primary_article_template !== true %}
+                      {% include primary_article_template %}
+                    {% else %}
+                      {% include article_template %}
+                    {% endif %}
                   {% endif %}
                 </div>
               </td>

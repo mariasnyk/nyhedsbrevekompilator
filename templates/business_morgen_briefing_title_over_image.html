@@ -1,0 +1,27 @@
+{% set primary_article_template = "business_briefing_article.html"; %}
+
+{% extends "partials/business.html" %}
+
+
+{% set tracking = "utm_source=newsletter&utm_medium=email&utm_content=red_nb-" + timestamp | yyyymmdd + "&utm_campaign=business_morgen"; %}
+{% set logo_src = "https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/headers/business_morgen.png"; %}
+{% set unsubscribe_href = "http://profil.berlingskemedia.dk/tilmeldt/9?id=[ekstern_id]" %}
+{% set buy_subscription_href = "http://abonnement.b.dk/berlingske-alle-produkter-abonnementslink/?utm_source=nyhedsbreve&utm_medium=nl_abonnementlink&utm_term=AL-151222-CP-WKLEDIT1WK&utm_content=koeb_abonnement&utm_campaign=abonnementer_berlingske" %}
+
+{% set kw = "business_morgen"; %}
+
+{% block wide_banner_2 %}
+{% include "partials/adbutler_banner.html" with { setID: "205999" } %}
+{% endblock %}
+
+{% block wide_banner_3 %}
+{% include "partials/adbutler_banner.html" with { setID: "206000" } %}
+{% endblock %}
+
+{% block box_banner_1 %}
+{% include "partials/adbutler_banner.html" with { setID: "206200" } %}
+{% endblock %}
+
+{% block box_banner_2 %}
+{% include "partials/adbutler_banner.html" with { setID: "206278" } %}
+{% endblock %}
