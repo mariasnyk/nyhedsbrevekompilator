@@ -103,16 +103,6 @@
         </a>
         {% endif %}
 
-        {% if node.taxonomyTags.presentationTags | hasTag("334794", "id")  %}
-        <div style="text-align: left; line-height: 100%; padding-top: 10px;">
-          <font
-            color="#1A1A1A"
-            style="font-family: {{ font_family_sans|safe }}; text-decoration: none; font-size: 11.2px; color: rgba(0,0,0,0.5); line-height: 16.8px; text-rendering: optimizeLegibility;">
-              <span class="subscriber-notice">FOR ABONNENTER</span>
-          </font>
-        </div>
-        {% endif %}
-
         {% if node.custom_summary %}
         <a href="{{ hotfix_url }}?{{ tracking }}" target="_blank"  style="text-decoration: none;">
           <div style="text-align: left; line-height: 100%; padding-top: 10px;">

@@ -73,6 +73,29 @@ swig.setFilter('tagValue', function(inputTags, tagName){
   }
 });
 
+
+// Usage eg.
+//  node.taxonomyTags.presentationTags | hasTag("334794", "id")
+//  node.taxonomyTags.presentationTags | hasTag("www.b.dk > Artikel > I abonnement", "fullName")
+swig.setFilter('hasTag', function(tags, tagValue, tagField){
+
+  if (!tags instanceof Array || typeof tags === 'string') {
+    return false;
+  }
+
+  if (tagValue === undefined || tagValue === null) {
+    return false;
+  }
+
+  if(tagField === undefined){
+    tagField = 'id';
+  }
+
+  return tags.some(function(tag){
+    return tag[tagField] === tagValue;
+  });
+});
+
 swig.setFilter('typeof', function (variable) {
   return Object.prototype.toString.call( variable );
 });
