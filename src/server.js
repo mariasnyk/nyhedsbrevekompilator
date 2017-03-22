@@ -7,7 +7,9 @@ var Hapi = require('hapi'),
     moment = require('moment'),
     newsletters = require('./newsletters'),
     templates = require('./templates'),
-    bonddata = require('./bonddata');
+    bonddata = require('./bonddata'),
+    good = require('good'),
+    goodConsole = require('good-console');
 
 // This will set the locale for all plugins using moment
 moment.locale('da');
@@ -44,8 +46,21 @@ var server = new Hapi.Server({
   }
 });
 
+var goodOpts = {
+  reporters: {
+    cliReporter: [{
+      module: 'good-squeeze',
+      name: 'Squeeze',
+      args: [{ log: '*', response: '*' }]
+    }, {
+      module: 'good-console'
+    }, 'stdout']
+  }
+};
+
 server.connection({ port: process.env.PORT ? process.env.PORT : 8000 });
 
+server.register({register: good, options: goodOpts}, cb);
 server.register(inert, cb);
 server.register(vision, cb);
 // server.register(client, { routes: { prefix: '/nyhedsbreve' } }, cb);
