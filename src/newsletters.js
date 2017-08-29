@@ -4,6 +4,7 @@
 var http = require('http'),
     checksum = require('checksum'),
     sendgrid = require('./sendgrid_helper.js'),
+    exacttarget = require('./exacttarget_helper'),
     url = require('url'),
     moment = require('moment'),
     Joi = require('joi'),
