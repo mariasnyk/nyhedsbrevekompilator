@@ -6,11 +6,7 @@ var https = require('https'),
     clientSecret = process.env.EXACTTARGET_APP_CLIENT_SECRET,
     authResponse = {};
 
-getExactTargetAuthtoken((response) => {
-  console.log('res', response);
-
-  setTimeout(getExactTargetAuthtoken, response.expiresIn * 1000)
-});
+getExactTargetAuthtoken();
 
 console.log('Connecting to ExactTarget using ClientID', process.env.EXACTTARGET_APP_CLIENT_ID);
 
@@ -543,7 +539,10 @@ function callExactTarget (method, path, body, callback) {
 
 function getExactTargetAuthtoken (callback) {
   if (callback === undefined || typeof callback !== 'function'){
-    callback = function(){};
+    callback = function(response){
+      // Refreshing the token 30 seconds before it expires
+      setTimeout(getExactTargetAuthtoken, (response.expiresIn - 30) * 1000);
+    };
   }
 
   var options = {
