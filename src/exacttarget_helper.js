@@ -303,6 +303,43 @@ module.exports.getDeleteContactStatus =  function(operationID, callback){
   callExactTarget('GET', '/contacts/v1/contacts/actions/delete/status?operationID='.concat(operationID), standardCallback(callback));
 };
 
+module.exports.createEmailAsset = function(data, callback) {
+
+  var payload = {
+    contentType: "application/vnd.etmc.email.Message",
+    name: data.name,
+    channels: {
+      email: true,
+      web: false
+    },
+    views: {
+      html: {
+        content: data.email_html
+      },
+      subjectline: {
+        contentType: "application/vnd.etmc.email.View; kind=subjectline",
+        content: data.subject
+      }
+    },
+    category: {
+      id: data.folderId
+    },
+    assetType: {
+      name: "htmlemail",
+      id: 208
+    }
+  };
+
+  if (data.contextId) {
+    payload.sharingProperties = {
+      sharedWith: [data.contextId],
+      sharingType: "local"
+    }
+  }
+
+  callExactTarget('POST', '/asset/v1/content/assets', payload, standardCallback(callback));
+};
+
 
 function getDeleteOptions(callback) {
 

@@ -19,6 +19,8 @@ var newsletter_schema = {
   last_checksum: Joi.any().strip(),
   incomplete: Joi.any().strip(),
   name: Joi.string().min(1).max(255),
+  folderId: Joi.string().min(1).max(100),
+  contextId: Joi.string().allow('').max(100),
   identity: Joi.string().min(1).max(255),
   list: Joi.string().min(1).max(255),
   bond_url: Joi.string().uri({scheme: ['http', 'https']}),
@@ -32,6 +34,8 @@ var newsletter_schema = {
 var send_draft_schema = {
   name: Joi.string().min(1).max(100).required(),
   list: Joi.string().min(1).max(100).required(),
+  folderId: Joi.string().min(1).max(100).required(),
+  contextId: Joi.string().allow('').max(100),
   categories: Joi.array().items(Joi.string().min(1).max(100)),
   identity: Joi.string().min(1).max(100).required(),
   subject: Joi.string().min(1).max(255).required(),
@@ -367,7 +371,7 @@ module.exports.register = function (plugin, options, next) {
 
   plugin.route({
     method: 'post',
-    path: '/send',
+    path: '/upload',
     config: {
       validate: {
         payload: send_draft_schema
@@ -375,13 +379,21 @@ module.exports.register = function (plugin, options, next) {
     },
     handler: function (request, reply) {
 
-      sendgrid.createAndScheduleMarketingEmail(request.payload, function (err, result) {
+      exacttarget.createEmailAsset(request.payload, function (err, result) {
         if (err) {
           reply(err).code(err.statusCode ? err.statusCode : 500);
         } else {
           reply(result);
         }
       });
+
+      // sendgrid.createAndScheduleMarketingEmail(request.payload, function (err, result) {
+      //   if (err) {
+      //     reply(err).code(err.statusCode ? err.statusCode : 500);
+      //   } else {
+      //     reply(result);
+      //   }
+      // });
     }
   });
 

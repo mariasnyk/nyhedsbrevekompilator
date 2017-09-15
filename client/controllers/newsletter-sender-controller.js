@@ -97,11 +97,11 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     };
 
 
-    $scope.scheduleChanged = function () {
-      suggestMarketingEmailName();
-      updatePreviews();
-      setScheduleDateLabel();
-    };
+    // $scope.scheduleChanged = function () {
+    //   suggestMarketingEmailName();
+    //   updatePreviews();
+    //   setScheduleDateLabel();
+    // };
 
 
     $scope.hasCategory = function (category) {
@@ -356,13 +356,15 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     }
 
 
-    $scope.sendNewsletter = function () {
+    $scope.uploadNewsletter = function () {
 
       var note = '';
 
       var payload = {
         name: $scope.newsletter.name,
         list: $scope.newsletter.list,
+        folderId: $scope.newsletter.folderId,
+        contextId: $scope.newsletter.contextId,
         categories: $scope.newsletter.categories,
         identity: $scope.newsletter.identity,
         subject: $scope.newsletter.subject,
@@ -370,21 +372,21 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
         email_plain: $scope.newsletter.email_plain
       };
 
-      if ($scope.send_now) {
-        payload.after = "0";
-        note = 'med det samme';
-      } else if ($scope.schedule_at_specified) {
-        var temp = moment($scope.schedule_at);
-        payload.at = temp.toISOString();
-        note = temp.fromNow();
-      } else {
-        payload.after = "5";
-        note = 'om 5 minutter';
-      }
+      // if ($scope.send_now) {
+      //   payload.after = "0";
+      //   note = 'med det samme';
+      // } else if ($scope.schedule_at_specified) {
+      //   var temp = moment($scope.schedule_at);
+      //   payload.at = temp.toISOString();
+      //   note = temp.fromNow();
+      // } else {
+      //   payload.after = "5";
+      //   note = 'om 5 minutter';
+      // }
 
-      var sending = $http.post('/newsletters/send', payload).then(function (success) {
+      var sending = $http.post('/newsletters/upload', payload).then(function (success) {
         console.log('Success', success);
-        $scope.newsletter_sent = true;
+        $scope.newsletter_uploaded = true;
         notifications.showSuccess('Email ' + $scope.newsletter.name + ' sendes ' + note + '.');
       }, function (err) {
         console.error(err);
