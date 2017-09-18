@@ -12,14 +12,6 @@ app.config(['$routeProvider', function ($routeProvider) {
       page_title: 'Nyhedsbreve',
       templateUrl: 'partials/newsletter-dashboard.html',
       controller: 'NewsletterDashboardController' })
-    .when( '/udsendelser', {
-      page_title: 'Udsendte nyhedsbreve',
-      templateUrl: 'partials/publications.html',
-      controller: 'PublicationsController' })
-    .when( '/stats', {
-      page_title: 'Statistiker',
-      templateUrl: 'partials/stats.html',
-      controller: 'StatsController' })
     .when( '/:ident', {
       templateUrl: 'partials/newsletter-sender.html',
       controller: 'NewsletterSenderController' })

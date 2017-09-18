@@ -4,8 +4,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     $scope.currentTab = 'html_tab';
 
     var Newsletters = $resource('/newsletters/:ident', { ident: '@ident' });
-    var Identities = $resource('/newsletters/identities/:identity', { identity: '@identity' });
-    var Lists = $resource('/newsletters/lists/:list', { list: '@list' });
 
     $scope.dirty = false;
 
@@ -28,8 +26,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     $scope.newsletter.$promise
     .then(suggestMarketingEmailName)
     .then(getControlroomUrl)
-    .then(validateNewsletterRecepientList)
-    .then(validateNewslettersIdentity)
     .then(getBondDataAndUpdatePreviews)
 
 
@@ -41,28 +37,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       .then(updatePreviews);
     }
     $scope.getBondDataAndUpdatePreviews = getBondDataAndUpdatePreviews;
-
-
-    function validateNewsletterRecepientList () {
-      // Validating the list still exists in SendGrid
-      Lists.query({ list: $scope.newsletter.list}, function (response) {
-        // Found it and everything is OK.
-      }, function (response) {
-        console.log('Couldn\'t find list ' + $scope.newsletter.list + ' in SendGrid.');
-        notifications.showError('Modtagerliste eksisterer ikke');
-      });
-    }
-
-
-    function validateNewslettersIdentity () {
-      // Validating the identity still exists in SendGrid
-      Identities.get({ identity: $scope.newsletter.identity}, function (response) {
-        // Found it and everything is OK.
-      }, function (response) {
-        console.log('Couldn\'t find identity ' + $scope.newsletter.identity + ' in SendGrid.');
-        notifications.showError('Afsender eksisterer ikke');
-      });
-    }
 
 
     function resourceErrorHandler (response) {
@@ -362,11 +336,9 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
       var payload = {
         name: $scope.newsletter.name,
-        list: $scope.newsletter.list,
-        folderId: $scope.newsletter.folderId,
-        contextId: $scope.newsletter.contextId,
+        folder_id: $scope.newsletter.folder_id,
+        context_id: $scope.newsletter.context_id,
         categories: $scope.newsletter.categories,
-        identity: $scope.newsletter.identity,
         subject: $scope.newsletter.subject,
         email_html: $scope.newsletter.email_html,
         email_plain: $scope.newsletter.email_plain
@@ -387,7 +359,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       var sending = $http.post('/newsletters/upload', payload).then(function (success) {
         console.log('Success', success);
         $scope.newsletter_uploaded = true;
-        notifications.showSuccess('Email ' + $scope.newsletter.name + ' sendes ' + note + '.');
+        notifications.showSuccess('Email ' + $scope.newsletter.name + ' oprettet.');
       }, function (err) {
         console.error(err);
         if (err.status === 401) {
@@ -404,27 +376,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       loadingSwitch.watch(sending, 'Sender');
     };
 
-
-    $scope.draftNewsletter = function () {
-      var payload = {
-        name: $scope.newsletter.name,
-        list: $scope.newsletter.list,
-        identity: $scope.newsletter.identity,
-        subject: $scope.newsletter.subject,
-        email_html: $scope.newsletter.email_html,
-        email_plain: $scope.newsletter.email_plain
-      };
-
-      var drafting = $http.post('/newsletters/draft', payload)
-      .success(function () {
-        notifications.showSuccess('Kladde ' + $scope.newsletter.name + ' oprettet');
-      })
-      .error(function (data, status) {
-        console.log('Error', status, data);
-      });
-
-      loadingSwitch.watch(drafting, 'Opretter');
-    };
 
     $scope.showEmailHtml = function () {
       var preview = window.open();

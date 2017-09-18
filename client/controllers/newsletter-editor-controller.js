@@ -36,7 +36,6 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
 
 
     $scope.addCategory = function (clickEvent, category) {
-      console.log('dfdfd', category);
       addItemToArray(clickEvent, 'categories', 'newCategory', category);
     };
 

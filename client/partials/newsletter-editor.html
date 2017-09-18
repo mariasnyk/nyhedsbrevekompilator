@@ -34,7 +34,7 @@
           <input
             id="folderId_control"
             class="form-control"
-            ng-model="newsletter.folderId"
+            ng-model="newsletter.folder_id"
             ng-change="setDirty()"
             placeholder="Insert folder ID"/>
           </div>
@@ -45,36 +45,9 @@
           <input
             id="contextId_control"
             class="form-control"
-            ng-model="newsletter.contextId"
+            ng-model="newsletter.context_id"
             ng-change="setDirty()"
             placeholder="Insert context ID"/>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="identity_control" class="col-sm-2 control-label">Afsender</label>
-        <div class="col-sm-10">
-          <select
-            id="identity_control"
-            class="form-control"
-            ng-model="newsletter.identity"
-            ng-options="identity for identity in identities"
-            ng-change="setDirty()"
-            ng-required="true">
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="list_control" class="col-sm-2 control-label">Modtagerliste</label>
-        <div class="col-sm-10">
-          <select
-            id="list_control"
-            class="form-control"
-            ng-model="newsletter.list"
-            ng-options="list for list in lists"
-            ng-change="setDirty()"
-            ng-required="true">
-            <option value=""></option>
-          </select>
         </div>
       </div>
       <div class="form-group">

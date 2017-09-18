@@ -3,7 +3,6 @@
 
 var http = require('http'),
     checksum = require('checksum'),
-    sendgrid = require('./sendgrid_helper.js'),
     exacttarget = require('./exacttarget_helper'),
     url = require('url'),
     moment = require('moment'),
@@ -12,17 +11,16 @@ var http = require('http'),
     templates = require('./templates.js'),
     bonddata = require('./bonddata.js');
 
-var newsletter_schema = {
+
+const newsletter_schema = {
   _id: Joi.string().strip(),
   ident: Joi.string().alphanum(),
   last_modified: Joi.any().strip(),
   last_checksum: Joi.any().strip(),
   incomplete: Joi.any().strip(),
   name: Joi.string().min(1).max(255),
-  folderId: Joi.string().min(1).max(100),
-  contextId: Joi.string().allow('').max(100),
-  identity: Joi.string().min(1).max(255),
-  list: Joi.string().min(1).max(255),
+  folder_id: Joi.string().min(1).max(100),
+  context_id: Joi.string().allow('').max(100),
   bond_url: Joi.string().uri({scheme: ['http', 'https']}),
   template_html: Joi.string().min(1).max(100),
   template_plain: Joi.string().min(1).max(100),
@@ -31,19 +29,17 @@ var newsletter_schema = {
   scheduling_disabled: Joi.boolean()
 };
 
-var send_draft_schema = {
+
+const exacttarget_email_asset = {
   name: Joi.string().min(1).max(100).required(),
-  list: Joi.string().min(1).max(100).required(),
-  folderId: Joi.string().min(1).max(100).required(),
-  contextId: Joi.string().allow('').max(100),
+  folder_id: Joi.string().min(1).max(100).required(),
+  context_id: Joi.string().allow('').max(100),
   categories: Joi.array().items(Joi.string().min(1).max(100)),
-  identity: Joi.string().min(1).max(100).required(),
   subject: Joi.string().min(1).max(255).required(),
   email_html: Joi.any().required(),
-  email_plain: Joi.any().required(),
-  at: Joi.string(),
-  after: Joi.string()
+  email_plain: Joi.any().required()
 };
+
 
 module.exports.register = function (plugin, options, next) {
 
@@ -52,156 +48,6 @@ module.exports.register = function (plugin, options, next) {
     path: '/admin/{param*}',
     handler: function (request, reply) {
       reply.redirect('/nyhedsbreve');
-    }
-  });
-
-  plugin.route({
-    method: 'get',
-    path: '/identities',
-    handler: function (request, reply) {
-      sendgrid.getIdentities(function (err, data) {
-        if (err)
-          reply(err).code(500);
-        else
-          reply(data.map(function (identity) {
-            return identity.identity;
-          }));
-      });
-    }
-  });
-
-  plugin.route({
-    method: 'get',
-    path: '/identities/{id}',
-    handler: function (request, reply) {
-      sendgrid.getIdentity(request.params.id, function (err, data) {
-        if (err)
-          reply(err).code(500);
-        else
-          reply(data);
-      });
-    }
-  });
-
-  plugin.route({
-    method: 'get',
-    path: '/lists',
-    handler: function (request, reply) {
-      sendgrid.getLists(function (err, data) {
-        if (err)
-          reply(err).code(500);
-        else
-          reply(data.map(function (list) {
-            return list.list;
-          }));
-      });
-    }
-  });
-
-  plugin.route({
-    method: 'get',
-    path: '/lists/{list}',
-    handler: function (request, reply) {
-      sendgrid.getList(request.params.list, function (err, data) {
-        if (err)
-          reply(err).code(500);
-        else
-          reply(data);
-      });
-    }
-  });
-
-  plugin.route({
-    method: 'get',
-    path: '/categories',
-    handler: function (request, reply) {
-      sendgrid.getCategories(function (err, data) {
-        if (err)
-          reply(err).code(500);
-        else
-          reply(data.map(function (category) {
-            return category.category;
-          }));
-      });
-    }
-  });
-
-  // E.g. /categories/stats?start_date=2015-01-01&end_date=2015-01-02&categories=cat1&categories=cat2
-  plugin.route({
-    method: 'get',
-    path: '/categories/stats',
-    handler: function (request, reply) {
-      sendgrid.getStats(request.url.search, function (err, data) {
-        if (err)
-          reply(err).code(500);
-        else
-          reply(data);
-      });
-    }
-  });
-
-  plugin.route({
-    method: 'get',
-    path: '/emails',
-    handler: function (request, reply) {
-      sendgrid.getEmails(request.query.name, function (err, data) {
-        if (err)
-          reply(err).code(500);
-        else
-          reply(data);
-      });
-    }
-  });
-
-  plugin.route({
-    method: 'get',
-    path: '/emails/schedule/{name}',
-    handler: function (request, reply) {
-      sendgrid.getEmailSchedule(request.params.name, function (err, data) {
-        if (err)
-          reply(err).code(500);
-        else
-          reply(data);
-      });
-    }
-  });
-
-  plugin.route({
-    method: 'delete',
-    path: '/emails/schedule/{name}',
-    handler: function (request, reply) {
-      sendgrid.deleteEmailSchedule(request.params.name, function (err, data) {
-        if (err)
-          reply(err).code(500);
-        else
-          reply(data);
-      });
-    }
-  });
-
-  plugin.route({
-    method: 'get',
-    path: '/emails/{name}',
-    handler: function (request, reply) {
-      sendgrid.getEmail(request.params.name, function (err, data) {
-        if (err)
-          reply(err).code(500);
-        else
-          reply(data);
-      });
-    }
-  });
-
-  plugin.route({
-    method: 'delete',
-    path: '/emails/{name}',
-    handler: function (request, reply) {
-      sendgrid.deleteEmail(request.params.name, function (err, data) {
-        if (err)
-          reply(err).code(500);
-        else
-          reply(data);
-      });
     }
   });
 
@@ -350,31 +196,13 @@ module.exports.register = function (plugin, options, next) {
     }
   });
 
-  plugin.route({
-    method: 'post',
-    path: '/draft',
-    config: {
-      validate: {
-        payload: send_draft_schema
-      }
-    },
-    handler: function (request, reply) {
-      sendgrid.createMarketingEmail(request.payload, function (err, result) {
-        if (err) {
-          reply(err).code(err.statusCode ? err.statusCode : 500);
-        } else {
-          reply(result);
-        }
-      });
-    }
-  });
 
   plugin.route({
     method: 'post',
     path: '/upload',
     config: {
       validate: {
-        payload: send_draft_schema
+        payload: exacttarget_email_asset
       }
     },
     handler: function (request, reply) {
@@ -387,13 +215,6 @@ module.exports.register = function (plugin, options, next) {
         }
       });
 
-      // sendgrid.createAndScheduleMarketingEmail(request.payload, function (err, result) {
-      //   if (err) {
-      //     reply(err).code(err.statusCode ? err.statusCode : 500);
-      //   } else {
-      //     reply(result);
-      //   }
-      // });
     }
   });
 
@@ -425,32 +246,35 @@ module.exports.register = function (plugin, options, next) {
           }
 
           var nyhedsbrev = {
-            list: newsletter.list,
-            identity: newsletter.identity,
-            subject: data.subject,
-            after: 5
+            folder_id: newsletter.folder_id,
+            context_id: newsletter.context_id,
+            subject: data.subject
           };
 
-          var schedule = moment().add(nyhedsbrev.after, 'minutes');
+          var schedule = moment();
           data.timestamp = schedule.unix();
           data.tags = newsletter.tags;
           nyhedsbrev.email_html = templates.render(newsletter.template_html, data);
           nyhedsbrev.email_plain = templates.render(newsletter.template_plain, data);
           nyhedsbrev.name = newsletter.name + ' ' + schedule.format("ddd D MMM YYYY HH:mm");
 
-          sendgrid.createAndScheduleMarketingEmail(nyhedsbrev, function (err, result) {
-            if (err) return reply(err).code(500);
+          exacttarget.createEmailAsset(nyhedsbrev, function (err, result) {
+            if (err) {
+              reply(err).code(err.statusCode ? err.statusCode : 500);
+            } else {
 
-            mongodb.nyhedsbreve().updateOne({ident: request.params.ident},
-              {$set: {'last_checksum': new_checksum}},
-              function (err, result) {
-                if (err) console.log(err);
-            });
+              mongodb.nyhedsbreve().updateOne({ident: request.params.ident},
+                {$set: {'last_checksum': new_checksum}},
+                function (err, result) {
+                  if (err) console.log(err);
+              });
 
-            result.message = 'Sent';
-            result.name = nyhedsbrev.name;
-            reply(result);
+              result.message = 'Sent';
+              result.name = nyhedsbrev.name;
+              reply(result);
+            }
           });
+
         });
       });
     }
