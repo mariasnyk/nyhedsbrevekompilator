@@ -56,14 +56,6 @@
         {{ newsletter.context_id }}
       </div>
       <div>
-        <label>Kategorier</label>
-        <ul class="list-inline">
-          <li ng-repeat="category in newsletter.categories">
-            <span class="label label-info" style="background-color:#{{category|tocolor}}">{{category}}</span>
-          </li>
-        </ul>
-      </div>
-      <div>
         <label>Tags / features</label>
         <ul class="list-inline">
           <li ng-repeat="tag in newsletter.tags">

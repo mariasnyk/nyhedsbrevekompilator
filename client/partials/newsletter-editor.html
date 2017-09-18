@@ -89,28 +89,6 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="category_control" class="col-sm-2 control-label">Tilføj kategori</label>
-        <div class="col-sm-5">
-          <input id="category_control" class="form-control" type="text" ng-model="newCategory" ng-keyup="addCategory($event)" placeholder="Skriv her">
-          <ul class="dropdown-menu autocomplete" ng-show="newCategory">
-            <li ng-repeat="category in filteredCategories=(categories | filter:newCategory)">
-              <a ng-click="addCategory($event, category)">{{category}}</a>
-            </li>
-            <li>
-              <a>Tryk <span class="label label-default">ENTER</span> for at oprette</a>
-            </li>
-          </ul>
-        </div>
-        <div class="col-sm-5">
-          <label for="category_control">Kategorier</label>
-          <ul class="list-inline">
-            <li ng-repeat="category in newsletter.categories track by $index">
-              <span id="category-{{category}}" class="label label-info"  style="background-color:#{{category|tocolor}}">{{category}} <span class="glyphicon glyphicon-remove" ng-click="removeCategory($index)"></span>&nbsp;</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="form-group">
         <label for="tags_control" class="col-sm-2 control-label">Tilføj tag</label>
         <div class="col-sm-5">
           <input id="tags_control" class="form-control" type="text" ng-model="newTag" ng-keyup="addTag($event)" placeholder="Skriv her">

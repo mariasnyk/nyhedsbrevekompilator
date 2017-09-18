@@ -24,7 +24,6 @@ const newsletter_schema = {
   bond_url: Joi.string().uri({scheme: ['http', 'https']}),
   template_html: Joi.string().min(1).max(100),
   template_plain: Joi.string().min(1).max(100),
-  categories: Joi.array().items(Joi.string().min(1).max(100)),
   tags: Joi.array().items(Joi.string().min(1).max(100)),
   scheduling_disabled: Joi.boolean()
 };
@@ -34,7 +33,6 @@ const exacttarget_email_asset = {
   name: Joi.string().min(1).max(100).required(),
   folder_id: Joi.string().min(1).max(100).required(),
   context_id: Joi.string().allow('').max(100),
-  categories: Joi.array().items(Joi.string().min(1).max(100)),
   subject: Joi.string().min(1).max(255).required(),
   email_html: Joi.any().required(),
   email_plain: Joi.any().required()
