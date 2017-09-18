@@ -42,6 +42,10 @@ textarea.newsletter-preview
   cursor: pointer;
 }
 
+table.newsletters tr td p {
+  padding-top: 10px;
+}
+
 #newsletter-data-form .node {
   margin-top: 12px;
 }
