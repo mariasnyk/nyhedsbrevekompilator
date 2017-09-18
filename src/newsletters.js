@@ -19,7 +19,7 @@ const newsletter_schema = {
   last_checksum: Joi.any().strip(),
   incomplete: Joi.any().strip(),
   name: Joi.string().min(1).max(255),
-  folder_id: Joi.string().min(1).max(100),
+  folder_id: Joi.string().allow('').max(100),
   context_id: Joi.string().allow('').max(100),
   bond_url: Joi.string().uri({scheme: ['http', 'https']}),
   template_html: Joi.string().min(1).max(100),
@@ -31,9 +31,9 @@ const newsletter_schema = {
 
 const exacttarget_email_asset = {
   name: Joi.string().min(1).max(100).required(),
-  folder_id: Joi.string().min(1).max(100).required(),
-  context_id: Joi.string().allow('').max(100),
   subject: Joi.string().min(1).max(255).required(),
+  folder_id: Joi.string().allow('').max(100),
+  context_id: Joi.string().allow('').max(100),
   email_html: Joi.any().required(),
   email_plain: Joi.any().required()
 };
