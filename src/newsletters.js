@@ -19,6 +19,8 @@ const newsletter_schema = {
   last_checksum: Joi.any().strip(),
   incomplete: Joi.any().strip(),
   name: Joi.string().min(1).max(255),
+  identity: Joi.any().strip(),
+  list: Joi.any().strip(),
   folder_id: Joi.string().allow('').max(100),
   context_id: Joi.string().allow('').max(100),
   bond_url: Joi.string().uri({scheme: ['http', 'https']}),
