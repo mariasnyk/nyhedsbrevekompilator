@@ -4,8 +4,14 @@
       <a title="Til oversigt" class="btn btn-default" ng-href="#/">
         Til oversigt <span class="glyphicon glyphicon-chevron-left"></span>
       </a>
-      <a title="Vejledning" class="btn btn-info" target="_blank" ng-href="https://docs.google.com/a/berlingskemedia.dk/document/d/1RSQZZGaPiBMO6sK5j_d9MQmLFyO7F3beL6_kwYxQYts/edit?usp=sharing">
-        Åbn vejledning
+      <a title="Vejledning" class="btn btn-warning" target="_blank" ng-href="https://docs.google.com/a/berlingskemedia.dk/document/d/1RSQZZGaPiBMO6sK5j_d9MQmLFyO7F3beL6_kwYxQYts/edit?usp=sharing">
+        Åbn vejledning <span class="glyphicon glyphicon-file"></span>
+      </a>
+      <button type="button" class="btn btn-success" ng-click="uploadNewsletter()" ng-disabled="loading || bonddatadirty || newsletter_uploaded">
+        Opret i Marketing Cloud <span class="glyphicon glyphicon-envelope"></span>
+      </button>
+      <a title="Marketing Cloud" class="btn btn-info" target="_blank" ng-href="https://mc.s7.exacttarget.com/cloud/#app/Email/C12/Default.aspx?entityType=none&entityID=0%23Content">
+        Åbn Marketing Cloud <span class="glyphicon glyphicon-send"></span>
       </a>
     </div>
   </div>
@@ -72,9 +78,7 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="form-inline">
-        <button type="button" class="btn btn-success" ng-click="uploadNewsletter()" ng-disabled="loading || bonddatadirty || newsletter_uploaded">
-          Opret <span class="glyphicon glyphicon-envelope"></span>
-        </button>
+
         <!--<div class="checkbox">-->
           <!--<label>-->
             <!--<input type="checkbox" ng-change="scheduleChanged()" ng-model="schedule_at_specified" ng-disabled="send_now"> V&aelig;lg tidspunkt for udsendelse-->
