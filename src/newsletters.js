@@ -86,7 +86,6 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
 
       request.payload.ident = slugify(request.payload.name);
-      request.payload.incomplete = true;
 
       mongodb.nyhedsbreve().findOne({ident: request.payload.ident}, function (err, newsletter) {
         if (newsletter === null) {
@@ -116,13 +115,6 @@ module.exports.register = function (plugin, options, next) {
         }
     },
     handler: function (request, reply) {
-
-      request.payload.incomplete = [
-        request.payload.identity,
-        request.payload.bond_url,
-        request.payload.template_html,
-        request.payload.template_plain,
-        request.payload.list].some(undefinedOrBlank);
 
       mongodb.nyhedsbreve().updateOne( {ident: request.params.ident},
         {
