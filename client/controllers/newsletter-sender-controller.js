@@ -362,7 +362,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
         notifications.showSuccess('Email ' + $scope.newsletter.name + ' oprettet.');
       }, function (err) {
         console.error(err);
-        if (err.status === 401) {
+        if (err.status === 400 && err.data.errorcode === 10006) {
           notifications.showError('Nyhedsbrev med samme navn eksisterer allerede');
         } else if (err.message) {
           notifications.showError(err.message);

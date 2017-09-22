@@ -37,7 +37,8 @@ const exacttarget_email_asset = {
   folder_id: Joi.string().allow('').max(100),
   context_id: Joi.string().allow('').max(100),
   email_html: Joi.any().required(),
-  email_plain: Joi.any().required()
+  email_plain: Joi.any().required(),
+  categories: Joi.array().items(Joi.string().min(1).max(100))
 };
 
 
@@ -252,6 +253,7 @@ module.exports.register = function (plugin, options, next) {
 
           exacttarget.createEmailAsset(nyhedsbrev, function (err, result) {
             if (err) {
+              console.error(err);
               reply(err).code(err.statusCode ? err.statusCode : 500);
             } else {
 
