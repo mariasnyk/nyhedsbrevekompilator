@@ -23,6 +23,7 @@ const newsletter_schema = {
   list: Joi.any().strip(),
   folder_id: Joi.string().allow('').max(100),
   context_id: Joi.string().allow('').max(100),
+  categories: Joi.array().items(Joi.string().min(1).max(100)),
   bond_url: Joi.string().uri({scheme: ['http', 'https']}),
   template_html: Joi.string().min(1).max(100),
   template_plain: Joi.string().min(1).max(100),
