@@ -2,22 +2,16 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
   function ($scope, $routeParams, $location, $resource, $sce, $http, $q, notifications, loadingSwitch) {
 
     var Newsletters = $resource('/newsletters/:ident', { ident: '@ident' });
-    var Identities = $resource('/newsletters/identities');
-    var Categories = $resource('/newsletters/categories');
-    var Lists = $resource('/newsletters/lists/:list', { list: '@list' });
     var Templates = $resource('/templates/:name', { name: '@name' });
 
     $scope.dirty = false;
 
-    $scope.identities = Identities.query();
-    $scope.categories = Categories.query();
-    $scope.lists = Lists.query();
     $scope.html_templates = Templates.query({filter:'.html'});
     $scope.plain_templates = Templates.query({filter:'.plain'});
 
     // Waiting for the drop-down data to be fetched before we query the newsletter.
     // This is done so that drop-downs are populated and the equivalent newsletter value is selected in the drop-down.
-    var all = $q.all([$scope.identities.$promise, $scope.categories.$promise, $scope.lists.$promise, $scope.html_templates.$promise, $scope.plain_templates.$promise]).then(function () {
+    var all = $q.all([$scope.html_templates.$promise, $scope.plain_templates.$promise]).then(function () {
       $scope.newsletter = Newsletters.get({ ident: $routeParams.ident }, function () { /* All OK. */ }, resourceErrorHandler);
       loadingSwitch.watch($scope.newsletter);
     }).catch(function (error, result) {
@@ -33,12 +27,6 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         $location.url('/');
       }
     }
-
-
-    $scope.addCategory = function (clickEvent, category) {
-      console.log('dfdfd', category);
-      addItemToArray(clickEvent, 'categories', 'newCategory', category);
-    };
 
     $scope.addTag = function (clickEvent, tag) {
       addItemToArray(clickEvent, 'tags', 'newTag', tag);
@@ -66,11 +54,6 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
         }
       }
     }
-
-    $scope.removeCategory = function (categoryIndex) {
-      $scope.newsletter.categories.splice(categoryIndex, 1);
-      $scope.dirty = true;
-    };
 
     $scope.removeTag = function (tagIndex) {
       $scope.newsletter.tags.splice(tagIndex, 1);

@@ -1,10 +1,6 @@
-#topmenu
-{
-  margin-top: 20px;
-}
-
 #mainApp
 {
+  margin-top: 20px;
   margin-bottom: 40px;
 }
 
@@ -44,6 +40,10 @@ textarea.newsletter-preview
 
 .nav-tabs a {
   cursor: pointer;
+}
+
+table.newsletters tr td p {
+  padding-top: 10px;
 }
 
 #newsletter-data-form .node {

@@ -4,6 +4,15 @@
       <a title="Til oversigt" class="btn btn-default" ng-href="#/">
         Til oversigt <span class="glyphicon glyphicon-chevron-left"></span>
       </a>
+      <a title="Vejledning" class="btn btn-warning" target="_blank" ng-href="https://docs.google.com/a/berlingskemedia.dk/document/d/1RSQZZGaPiBMO6sK5j_d9MQmLFyO7F3beL6_kwYxQYts/edit?usp=sharing">
+        Åbn vejledning <span class="glyphicon glyphicon-file"></span>
+      </a>
+      <button type="button" class="btn btn-success" ng-click="uploadNewsletter()" ng-disabled="loading || bonddatadirty || newsletter_uploaded">
+        Opret i Marketing Cloud <span class="glyphicon glyphicon-envelope"></span>
+      </button>
+      <a title="Marketing Cloud" class="btn btn-info" target="_blank" ng-href="https://mc.s7.exacttarget.com/cloud/#app/Email/C12/Default.aspx?entityType=none&entityID=0%23Content">
+        Åbn Marketing Cloud <span class="glyphicon glyphicon-send"></span>
+      </a>
     </div>
   </div>
 
@@ -21,7 +30,7 @@
           type="text"
           ng-model="newsletter.name"
           ng-change="newsletter_name_dirty = true"
-          ng-disabled="newsletter_sent"
+          ng-disabled="newsletter_uploaded"
           placeholder="Insert name"/>
         <small>Note: <em>Navn</em> bruges til statistik og opf&oslash;lgning. Ikke som tidspunkt for udsendelse og kan derfor ændres frit.<br>Bannere og tracking er dateret med <strong>{{ schedule_date }}</strong></small>
       </div>
@@ -33,7 +42,7 @@
           type="text"
           ng-change="newsletter_subject_dirty = true"
           ng-model="newsletter.subject"
-          ng-disabled="newsletter_sent">
+          ng-disabled="newsletter_uploaded">
       </div>
     </div>
     <div class="col-md-4 col-sm-12">
@@ -48,19 +57,12 @@
         {{ original_newsletters_name }}
       </div>
       <div>
-        <label>Afsender</label>
-        {{ newsletter.identity }}</div>
-      <div>
-        <label>Modtagerliste</label>
-        {{ newsletter.list }}
+        <label>Folder</label>
+        {{ newsletter.folder_id }}
       </div>
       <div>
-        <label>Kategorier</label>
-        <ul class="list-inline">
-          <li ng-repeat="category in newsletter.categories">
-            <span class="label label-info" style="background-color:#{{category|tocolor}}">{{category}}</span>
-          </li>
-        </ul>
+        <label>Shared with Business Unit</label>
+        {{ newsletter.context_id }}
       </div>
       <div>
         <label>Tags / features</label>
@@ -76,30 +78,28 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="form-inline">
-        <button type="button" class="btn btn-success" ng-click="sendNewsletter()" ng-disabled="loading || bonddatadirty || newsletter_sent">
-          Send <span class="glyphicon glyphicon-envelope"></span>
-        </button>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" ng-change="scheduleChanged()" ng-model="schedule_at_specified" ng-disabled="send_now"> V&aelig;lg tidspunkt for udsendelse
-          </label>
-        </div>
-        <div class="dropdown form-group" ng-show="schedule_at_specified">
-          <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown">
-            <div class="input-group">
-              <input type="text" class="form-control" ng-model="schedule_at" ng-change="scheduleChanged()">
-              <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-            </div>
-          </a>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-            <datetimepicker ng-change="scheduleChanged()" ng-model="schedule_at" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"/>
-          </ul>
-        </div>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" ng-change="scheduleChanged()" ng-model="send_now" ng-disabled="schedule_at_specified"> Send med det samme
-          </label>
-        </div>
+
+        <!--<div class="checkbox">-->
+          <!--<label>-->
+            <!--<input type="checkbox" ng-change="scheduleChanged()" ng-model="schedule_at_specified" ng-disabled="send_now"> V&aelig;lg tidspunkt for udsendelse-->
+          <!--</label>-->
+        <!--</div>-->
+        <!--<div class="dropdown form-group" ng-show="schedule_at_specified">-->
+          <!--<a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown">-->
+            <!--<div class="input-group">-->
+              <!--<input type="text" class="form-control" ng-model="schedule_at" ng-change="scheduleChanged()">-->
+              <!--<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>-->
+            <!--</div>-->
+          <!--</a>-->
+          <!--<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">-->
+            <!--<datetimepicker ng-change="scheduleChanged()" ng-model="schedule_at" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"/>-->
+          <!--</ul>-->
+        <!--</div>-->
+        <!--<div class="checkbox">-->
+          <!--<label>-->
+            <!--<input type="checkbox" ng-change="scheduleChanged()" ng-model="send_now" ng-disabled="schedule_at_specified"> Send med det samme-->
+          <!--</label>-->
+        <!--</div>-->
       </div>
     </div>
   </div>
