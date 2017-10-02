@@ -130,9 +130,9 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
         // In case the subject was cleared manually to get a fresh suggestion
         $scope.newsletter_subject_dirty = false;
 
-        if ($scope.newsletter.tags.indexOf('bt_subject_naming') > -1) {
+        if ($scope.newsletter.tags && $scope.newsletter.tags.indexOf('bt_subject_naming') > -1) {
           $scope.newsletter.subject = 'Nyhedsbrev: ' + $scope.newsletter.name;
-        } else if ($scope.newsletter.tags.indexOf('name_to_subject') > -1) {
+        } else if ($scope.newsletter.tags && $scope.newsletter.tags.indexOf('name_to_subject') > -1) {
           $scope.newsletter.subject = $scope.newsletter.name;
         } else if ($scope.bonddata === undefined || $scope.bonddata === null) {
           $scope.newsletter.subject = '';
