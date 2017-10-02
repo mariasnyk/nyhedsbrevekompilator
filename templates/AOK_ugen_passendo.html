@@ -1,0 +1,88 @@
+{% extends "brands/aok.html" %}
+
+{% set tracking = "utm_source=newsletter&utm_medium=email&utm_content=red_nb-" + timestamp | yyyymmdd + "&utm_campaign=AOK_ugen"; %}
+{% set home_url = "http://www.aok.dk"; %}
+{% set logo_src = "https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/headers/aok_ugen.png"; %}
+{% set unsubscribe_href = "https://profil.berlingskemedia.dk/tilmeldt/17?id=%%ExternalId%%" %}
+
+{% set kw = "AOK_ugen"; %}
+
+{% block content %}
+
+  <tr>
+    <td height="20">&nbsp;</td>
+  </tr>
+
+  {% include "new_partials/single_column.html" with
+    {
+      article_template: "briefing_article.html",
+      article: nodes[0]
+    }
+  %}
+
+  {% include "new_partials/single_column.html" with
+    {
+      article_template: "aok_article.html",
+      article: nodes[1]
+    }
+  %}
+
+  {% include "new_partials/passendo_banner.html" with { placementID: "139" } %}
+
+  <tr>
+    <td align="center" valign="top">
+      <table width="614" cellpadding="0" cellspacing="10" border="0">
+        <tr>
+          <td>
+            <font color="#1A1A1A"
+              style="font-family: {{ font_family_bold|safe }}; font-size: 22px; line-height: 22px; font-weight: bold; text-rendering: optimizeLegibility;">
+              DET SKER I K&Oslash;BENHAVN
+            </font>
+          </td>
+        </tr>
+        <tr>
+          <td height="6"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  {# include "new_partials/single_column.html" with
+    {
+      article_template: "aok_title_over_image.html",
+      article: nodes[2]
+    }
+  #}
+
+  {% include "new_partials/single_column.html" with
+    {
+      article_template: "aok_article.html",
+      article: nodes[2],
+      show_tag: false
+    }
+  %}
+
+
+  {% for node in nodes %}
+    {% if max_nodes > 0 && loop.index > max_nodes %}
+      {# This is empty on purpose. #}
+    {% elif loop.index0 >= 3 && loop.index0 % 2 === 0 %}
+      {% include "new_partials/two_column.html" with
+        {
+          articleA: {
+            article_template: "aok_article.html",
+            article: nodes[loop.index0 - 1]
+          },
+          articleB: {
+            article_template: "aok_article.html",
+            article: nodes[loop.index0]
+          }
+        }
+      %}
+    {% endif %}
+  {% endfor %}
+
+
+  {% include "new_partials/passendo_banner.html" with { placementID: "94" } %}
+
+{% endblock %}
