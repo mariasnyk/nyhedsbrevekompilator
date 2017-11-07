@@ -45,8 +45,8 @@
   <div style="text-align: left; line-height: 100%; padding-left: 20px;">
     <font
       color="#1A1A1A"
-      style="font-family: {{ font_family_sans|safe }}; font-size: 11px; line-height: 11px; text-transform: uppercase; text-rendering: optimizeLegibility;">
-      {{ timestamp | unix('dddd D. MMMM YYYY') }}
+      style="font-family: {{ font_family_sans|safe }}; font-size: 11px; line-height: 11px; text-rendering: optimizeLegibility;">
+      %%=v(@ugedag)=%% %%xtday%%. %%=v(@maaned)=%% %%xtyear%%
     </font>
   </div>
   <img style="width: 100%;" src="{{ logo_src }}" width="654" usemap="#imgmap">

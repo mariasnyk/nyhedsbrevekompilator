@@ -29,6 +29,54 @@
 
 <body style="background-color: #f9f9f9; margin: 0px;">
 
+  <!-- AMPscript for getting danish day and month names -->
+  <script runat=server language=ampscript>
+      Var @ugedag
+      IF xtdayofweek == "Monday" THEN
+        Set @ugedag = "MANDAG"
+      ELSEIF xtdayofweek == "Tuesday" THEN
+        Set @ugedag = "TIRSDAG"
+      ELSEIF xtdayofweek == "Wednesday" THEN
+        Set @ugedag = "ONSDAG"
+      ELSEIF xtdayofweek == "Thursday" THEN
+        Set @ugedag = "TORSDAG"
+      ELSEIF xtdayofweek == "Friday" THEN
+        Set @ugedag = "FREDAG"
+      ELSEIF xtdayofweek == "Saturday" THEN
+        Set @ugedag = "LØRDAG"
+      ELSEIF xtdayofweek == "Sunday" THEN
+        Set @ugedag = "SØNDAG"
+      ENDIF
+    </script>
+    <script runat=server language=ampscript>
+      Var @maaned
+      IF xtmonthnumeric == 1 THEN
+        Set @maaned = "JANUAR"
+      ELSEIF xtmonthnumeric == 2 THEN
+        Set @maaned = "FEBRUAR"
+      ELSEIF xtmonthnumeric == 3 THEN
+        Set @maaned = "MARTS"
+      ELSEIF xtmonthnumeric == 4 THEN
+        Set @maaned = "APRIL"
+      ELSEIF xtmonthnumeric == 5 THEN
+        Set @maaned = "MAJ"
+      ELSEIF xtmonthnumeric == 6 THEN
+        Set @maaned = "JUNI"
+      ELSEIF xtmonthnumeric == 7 THEN
+        Set @maaned = "JULI"
+      ELSEIF xtmonthnumeric == 8 THEN
+        Set @maaned = "AUGUST"
+      ELSEIF xtmonthnumeric == 9 THEN
+        Set @maaned = "SEPTEMBER"
+      ELSEIF xtmonthnumeric == 10 THEN
+        Set @maaned = "OKTOBER"
+      ELSEIF xtmonthnumeric == 11 THEN
+        Set @maaned = "NOVEMBER"
+      ELSEIF xtmonthnumeric == 12 THEN
+        Set @maaned = "DECEMBER"
+      ENDIF
+    </script>
+
   <!--[if (gte mso 9)|(IE)]>
   <table width="654" align="center" cellpadding="0" cellspacing="0" border="0">
       <tr>
