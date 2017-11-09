@@ -1,0 +1,51 @@
+{% extends "partials/berlingske.html" %}
+
+{% set home_url = "http://www.politiko.dk"; %}
+
+{% set tracking = "utm_source=newsletter&utm_medium=email&utm_content=red_nb-" + timestamp | yyyymmdd + "&utm_campaign=berlingske_politiko"; %}
+{% set logo_src = "https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/headers/62274_654x80_Berl_Politiko_0117.jpg"; %}
+{% set unsubscribe_href = "https://profil.berlingskemedia.dk/tilmeldt/154?id=%%ExternalId%%" %}
+{% set buy_subscription_href = "https://abonnement.b.dk/berlingske-abonnementer/?utm_source=own_newsletters_ed&utm_medium=berlingske&utm_content=nl_link&utm_campaign=abonnementer_berlingske&ns_fee=AL-151222-CP-WKLEDIT1WK" %}
+
+{% set kw = "berlingske_politiko"; %}
+
+{% block wide_banner_2 %}
+{% include "partials/passendo_banner.html" with { placementID: "141" } %}
+{% endblock %}
+
+{% block wide_banner_3 %}
+{# include "partials/passendo_banner.html" with { placementID: "XXX" } #}
+{% endblock %}
+
+{% block box_banner_1 %}
+{% include "partials/passendo_banner.html" with { placementID: "88" } %}
+{% endblock %}
+
+{% block box_banner_2 %}
+{% include "partials/passendo_banner.html" with { placementID: "89" } %}
+{% endblock %}
+
+{% block social %}
+<div style="padding: 20px 0px 0px 0px;">
+  <font color="#000000" style="font-family: {{ font_family }}; font-size: 24px; line-height: 36px; text-rendering: optimizeLegibility;">
+    F&Oslash;LG POLITIKO
+  </font>
+</div>
+<div style="padding: 20px 0px;">
+  <div style="padding: 0px 15px; display: inline-block;">
+    <a target="_blank" href="https://www.facebook.com/politikodk" style="text-decoration: none;">
+      <img src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/images/facebook.png" width="12" />
+    </a>
+  </div>
+  <div style="padding: 0px 15px; display: inline-block;">
+    <a target="_blank" href="https://twitter.com/politikodk" style="text-decoration: none;">
+      <img src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/images/twitter.png" width="26" />
+    </a>
+  </div>
+  <div style="padding: 0px 15px; display: inline-block;">
+    <a target="_blank" href="https://plus.google.com/109955490186573935714/posts" style="text-decoration: none;">
+      <img src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/images/google_plus.png" width="28" />
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "partials/business.html" %}
+
+{% set tracking = "utm_source=newsletter&utm_medium=email&utm_content=red_nb-" + timestamp | yyyymmdd + "&utm_campaign=business_magasin"; %}
+{% set logo_src = "https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/headers/business_magasin.png"; %}
+{% set unsubscribe_href = "https://profil.berlingskemedia.dk/tilmeldt/21?id=%%ExternalId%%" %}
+{% set buy_subscription_href = "http://abonnement.business.dk/berlingske-business-abonnementer?utm_source=nyhedsbreve&utm_medium=nl_abonnementlink&utm_term=AL-151222-CP-WKLEDIT1WK&utm_content=koeb_abonnement&utm_campaign=abonnementer_business&ns_fee=AL-151222-CP-WKLEDIT1WK" %}
+
+{% set kw = "business_magasin"; %}
+
+{% block wide_banner_2 %}
+{% include "partials/passendo_banner.html" with { placementID: "126" } %}
+{% endblock %}
+
+{% block wide_banner_3 %}
+{# include "partials/passendo_banner.html" with { placementID: "XXX" } #}
+{% endblock %}
+
+{% block box_banner_1 %}
+{% include "partials/passendo_banner.html" with { placementID: "85" } %}
+{% endblock %}
+
+{% block box_banner_2 %}
+{% include "partials/passendo_banner.html" with { placementID: "91" } %}
+{% endblock %}
