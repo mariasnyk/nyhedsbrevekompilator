@@ -11,40 +11,7 @@ getExactTargetAuthtoken();
 console.log('Connecting to ExactTarget using ClientID', process.env.EXACTTARGET_APP_CLIENT_ID);
 
 
-module.exports.createEmailAsset = function(data, callback) {
-
-  var payload = {
-    contentType: "application/vnd.etmc.email.Message",
-    name: data.name,
-    channels: {
-      email: true,
-      web: false
-    },
-    views: {
-      html: {
-        content: data.email_html
-      },
-      subjectline: {
-        contentType: "application/vnd.etmc.email.View; kind=subjectline",
-        content: data.subject
-      }
-    },
-    category: {
-      id: data.folder_id
-    },
-    assetType: {
-      name: "htmlemail",
-      id: 208
-    }
-  };
-
-  if (data.context_id) {
-    payload.sharingProperties = {
-      sharedWith: [data.context_id],
-      sharingType: "local"
-    }
-  }
-
+module.exports.createEmailAsset = function(payload, callback) {
   callExactTarget('POST', '/asset/v1/content/assets', payload, standardCallback(callback));
 };
 

@@ -21,25 +21,65 @@ const newsletter_schema = {
   name: Joi.string().min(1).max(255),
   identity: Joi.any().strip(),
   list: Joi.any().strip(),
-  folder_id: Joi.string().allow('').max(100),
+  folder_id: [Joi.number(), Joi.string().allow('').max(100)],
   context_id: Joi.string().allow('').max(100),
   categories: Joi.array().items(Joi.string().min(1).max(100)),
   bond_url: Joi.string().uri({scheme: ['http', 'https']}),
   template_html: Joi.string().min(1).max(100),
   template_plain: Joi.string().min(1).max(100),
   tags: Joi.array().items(Joi.string().min(1).max(100)),
+  AdditionalEmailAttribute1: Joi.string().min(1).max(100).allow('', null),
+  AdditionalEmailAttribute2: Joi.string().min(1).max(100).allow('', null),
+  AdditionalEmailAttribute3: Joi.string().min(1).max(100).allow('', null),
+  AdditionalEmailAttribute4: Joi.string().min(1).max(100).allow('', null),
+  AdditionalEmailAttribute5: Joi.string().min(1).max(100).allow('', null),
   scheduling_disabled: Joi.strip()
 };
 
+const AdditionalEmailAttribute_schema = Joi.object().keys({
+  DisplayName: Joi.string().min(1).max(100),
+  Name: Joi.string().min(1).max(100),
+  Value: Joi.string().min(1).max(100),
+  Order: Joi.number(),
+  Channel: Joi.string().min(1).max(100),
+  AttributeType: Joi.string().min(1).max(100)
+});
 
 const exacttarget_email_asset = {
+  contentType: Joi.string().min(1).max(100).required(),
   name: Joi.string().min(1).max(100).required(),
-  subject: Joi.string().min(1).max(255).required(),
-  folder_id: Joi.string().allow('').max(100),
-  context_id: Joi.string().allow('').max(100),
-  email_html: Joi.any().required(),
-  email_plain: Joi.any().required(),
-  categories: Joi.array().items(Joi.string().min(1).max(100))
+  channels: Joi.object().keys({
+    email: Joi.boolean(),
+    web: Joi.boolean()
+  }),
+  views: Joi.object().keys({
+    html: Joi.object().keys({
+      content: Joi.string()
+    }).required(),
+    subjectline: Joi.object().keys({
+      contentType: Joi.string(),
+      content: Joi.string().min(1).max(255).required()
+    }).required()
+  }),
+  category: Joi.object().keys({
+    id: Joi.number()
+  }),
+  assetType: Joi.object().keys({
+    name: Joi.string().valid('htmlemail'),
+    id: Joi.number().valid(208)
+  }),
+  sharingProperties: Joi.object().keys({
+    sharedWith: Joi.array().items(Joi.string().min(1).max(100)),
+    sharingType: Joi.string().valid('local')
+  }),
+  data: Joi.object().keys({
+    email: Joi.object().keys({
+      options: Joi.object().keys({
+        characterEncoding: Joi.string()
+      }),
+      attributes: Joi.array().items(AdditionalEmailAttribute_schema)
+    })
+  })
 };
 
 

@@ -336,29 +336,102 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
     $scope.uploadNewsletter = function () {
 
-      var note = '';
-
       var payload = {
+        contentType: "application/vnd.etmc.email.Message",
         name: $scope.newsletter.name,
-        folder_id: $scope.newsletter.folder_id,
-        context_id: $scope.newsletter.context_id,
-        categories: $scope.newsletter.categories,
-        subject: $scope.newsletter.subject,
-        email_html: $scope.newsletter.email_html,
-        email_plain: $scope.newsletter.email_plain
+        channels: {
+          email: true,
+          web: false
+        },
+        views: {
+          html: {
+            content: $scope.newsletter.email_html
+          },
+          subjectline: {
+            contentType: "application/vnd.etmc.email.View; kind=subjectline",
+            content: $scope.newsletter.subject
+          }
+        },
+        category: {
+          id: $scope.newsletter.folder_id
+        },
+        assetType: {
+          name: "htmlemail",
+          id: 208
+        },
+        data: {
+          email: {
+            options: {
+              characterEncoding: "utf-8"
+            },
+            attributes: []
+          }
+        }
       };
 
-      // if ($scope.send_now) {
-      //   payload.after = "0";
-      //   note = 'med det samme';
-      // } else if ($scope.schedule_at_specified) {
-      //   var temp = moment($scope.schedule_at);
-      //   payload.at = temp.toISOString();
-      //   note = temp.fromNow();
-      // } else {
-      //   payload.after = "5";
-      //   note = 'om 5 minutter';
-      // }
+
+      if ($scope.newsletter.context_id) {
+        payload.sharingProperties = {
+          sharedWith: [$scope.newsletter.context_id],
+          sharingType: "local"
+        }
+      }
+
+      if($scope.newsletter.AdditionalEmailAttribute1){
+        payload.data.email.attributes.push({
+          "DisplayName": "utm_campaign",
+          "Name": "__AdditionalEmailAttribute1",
+          "Value": $scope.newsletter.AdditionalEmailAttribute1,
+          "Order": 1,
+          "Channel": "email",
+          "AttributeType": "AdditionalEmailAttribute"
+        });
+      }
+
+      if($scope.newsletter.AdditionalEmailAttribute2){
+        payload.data.email.attributes.push({
+          "DisplayName": "Sleeknote",
+          "Name": "__AdditionalEmailAttribute2",
+          "Value": $scope.newsletter.AdditionalEmailAttribute2,
+          "Order": 2,
+          "Channel": "email",
+          "AttributeType": "AdditionalEmailAttribute"
+        });
+      }
+
+      if($scope.newsletter.AdditionalEmailAttribute3){
+        payload.data.email.attributes.push({
+          "DisplayName": "utm_campaign",
+          "Name": "__AdditionalEmailAttribute3",
+          "Value": $scope.newsletter.AdditionalEmailAttribute3,
+          "Order": 3,
+          "Channel": "email",
+          "AttributeType": "AdditionalEmailAttribute"
+        });
+      }
+
+      if($scope.newsletter.AdditionalEmailAttribute4){
+        payload.data.email.attributes.push({
+          "DisplayName": "utm_campaign",
+          "Name": "__AdditionalEmailAttribute4",
+          "Value": $scope.newsletter.AdditionalEmailAttribute4,
+          "Order": 4,
+          "Channel": "email",
+          "AttributeType": "AdditionalEmailAttribute"
+        });
+      }
+
+      if($scope.newsletter.AdditionalEmailAttribute5){
+        payload.data.email.attributes.push({
+          "DisplayName": "utm_campaign",
+          "Name": "__AdditionalEmailAttribute5",
+          "Value": $scope.newsletter.AdditionalEmailAttribute5,
+          "Order": 5,
+          "Channel": "email",
+          "AttributeType": "AdditionalEmailAttribute"
+        });
+      }
+
 
       var sending = $http.post('/newsletters/upload', payload).then(function (success) {
         console.log('Success', success);
