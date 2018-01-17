@@ -2,7 +2,7 @@
 'use strict';
 
 var http = require('http'),
-    checksum = require('checksum'),
+    // checksum = require('checksum'),
     exacttarget = require('./exacttarget_helper'),
     url = require('url'),
     moment = require('moment'),
@@ -28,7 +28,7 @@ const newsletter_schema = {
   template_html: Joi.string().min(1).max(100),
   template_plain: Joi.string().min(1).max(100),
   tags: Joi.array().items(Joi.string().min(1).max(100)),
-  scheduling_disabled: Joi.boolean()
+  scheduling_disabled: Joi.strip()
 };
 
 
@@ -212,94 +212,94 @@ module.exports.register = function (plugin, options, next) {
     }
   });
 
-  plugin.route({
-    method: 'post',
-    path: '/{ident}/send',
-    config: {
-      validate: {
-        params: {
-          ident: Joi.string().min(1).max(100)
-        }
-      }
-    },
-    handler: function (request, reply) {
-      mongodb.nyhedsbreve().findOne({ident: request.params.ident}, function (err, newsletter) {
-        if (err) return reply(err).code(500);
-        if (newsletter === null) return reply().code(404);
-        if (newsletter.scheduling_disabled === true) return reply().code(403);
-
-        bonddata.get(newsletter.bond_url, function (err, data) {
-          if (err) return reply(err).code(500);
-
-          var new_checksum = calculateChecksum(data);
-
-          if (new_checksum === newsletter.last_checksum) {
-            var message = 'Last checksum is identical for newsletter ' + newsletter.name;
-            console.log(message);
-            return reply({ message: message }).code(400);
-          }
-
-          var nyhedsbrev = {
-            folder_id: newsletter.folder_id,
-            context_id: newsletter.context_id,
-            subject: data.subject
-          };
-
-          var schedule = moment();
-          data.timestamp = schedule.unix();
-          data.tags = newsletter.tags;
-          nyhedsbrev.email_html = templates.render(newsletter.template_html, data);
-          nyhedsbrev.email_plain = templates.render(newsletter.template_plain, data);
-          nyhedsbrev.name = newsletter.name + ' ' + schedule.format("ddd D MMM YYYY HH:mm");
-
-          exacttarget.createEmailAsset(nyhedsbrev, function (err, result) {
-            if (err) {
-              console.error(err);
-              reply(err).code(err.statusCode ? err.statusCode : 500);
-            } else {
-
-              mongodb.nyhedsbreve().updateOne({ident: request.params.ident},
-                {$set: {'last_checksum': new_checksum}},
-                function (err, result) {
-                  if (err) console.log(err);
-              });
-
-              result.message = 'Sent';
-              result.name = nyhedsbrev.name;
-              reply(result);
-            }
-          });
-
-        });
-      });
-    }
-  });
-
-  plugin.route({
-    method: 'post',
-    path: '/{ident}/clear_last_checksum',
-    config: {
-      validate: {
-        params: {
-          ident: Joi.string().min(1).max(100)
-        }
-      }
-    },
-    handler: function (request, reply) {
-      mongodb.nyhedsbreve().updateOne({ident: request.params.ident},
-        {$unset: {'last_checksum': ''}},
-        function (err, result) {
-          if (err) {
-            reply(err).code(500);
-          } else if (result.nModified === 1) {
-            reply()
-          } else {
-            reply().code(404);
-          }
-        }
-      );
-    }
-  });
+  // plugin.route({
+  //   method: 'post',
+  //   path: '/{ident}/send',
+  //   config: {
+  //     validate: {
+  //       params: {
+  //         ident: Joi.string().min(1).max(100)
+  //       }
+  //     }
+  //   },
+  //   handler: function (request, reply) {
+  //     mongodb.nyhedsbreve().findOne({ident: request.params.ident}, function (err, newsletter) {
+  //       if (err) return reply(err).code(500);
+  //       if (newsletter === null) return reply().code(404);
+  //       if (newsletter.scheduling_disabled === true) return reply().code(403);
+  //
+  //       bonddata.get(newsletter.bond_url, function (err, data) {
+  //         if (err) return reply(err).code(500);
+  //
+  //         var new_checksum = calculateChecksum(data);
+  //
+  //         if (new_checksum === newsletter.last_checksum) {
+  //           var message = 'Last checksum is identical for newsletter ' + newsletter.name;
+  //           console.log(message);
+  //           return reply({ message: message }).code(400);
+  //         }
+  //
+  //         var nyhedsbrev = {
+  //           folder_id: newsletter.folder_id,
+  //           context_id: newsletter.context_id,
+  //           subject: data.subject
+  //         };
+  //
+  //         var schedule = moment();
+  //         data.timestamp = schedule.unix();
+  //         data.tags = newsletter.tags;
+  //         nyhedsbrev.email_html = templates.render(newsletter.template_html, data);
+  //         nyhedsbrev.email_plain = templates.render(newsletter.template_plain, data);
+  //         nyhedsbrev.name = newsletter.name + ' ' + schedule.format("ddd D MMM YYYY HH:mm");
+  //
+  //         exacttarget.createEmailAsset(nyhedsbrev, function (err, result) {
+  //           if (err) {
+  //             console.error(err);
+  //             reply(err).code(err.statusCode ? err.statusCode : 500);
+  //           } else {
+  //
+  //             mongodb.nyhedsbreve().updateOne({ident: request.params.ident},
+  //               {$set: {'last_checksum': new_checksum}},
+  //               function (err, result) {
+  //                 if (err) console.log(err);
+  //             });
+  //
+  //             result.message = 'Sent';
+  //             result.name = nyhedsbrev.name;
+  //             reply(result);
+  //           }
+  //         });
+  //
+  //       });
+  //     });
+  //   }
+  // });
+  //
+  // plugin.route({
+  //   method: 'post',
+  //   path: '/{ident}/clear_last_checksum',
+  //   config: {
+  //     validate: {
+  //       params: {
+  //         ident: Joi.string().min(1).max(100)
+  //       }
+  //     }
+  //   },
+  //   handler: function (request, reply) {
+  //     mongodb.nyhedsbreve().updateOne({ident: request.params.ident},
+  //       {$unset: {'last_checksum': ''}},
+  //       function (err, result) {
+  //         if (err) {
+  //           reply(err).code(500);
+  //         } else if (result.nModified === 1) {
+  //           reply()
+  //         } else {
+  //           reply().code(404);
+  //         }
+  //       }
+  //     );
+  //   }
+  // });
 
   next();
 };
@@ -320,20 +320,20 @@ function slugify (name) {
 }
 
 
-function calculateChecksum (data) {
-  if (data === null) return '';
-  if (data.type === 'nodequeue' || data.type === 'latest_news') {
-
-    var temp = data.nodes.map(function (node) {
-      return node.id;
-    });
-
-    // It's safer jo test against only the five articles
-    var temp2 = temp.slice(0, 5);
-
-    return checksum(JSON.stringify(temp2));
-
-  } else {
-    return checksum(JSON.stringify(data.id));
-  }
-}
+// function calculateChecksum (data) {
+//   if (data === null) return '';
+//   if (data.type === 'nodequeue' || data.type === 'latest_news') {
+//
+//     var temp = data.nodes.map(function (node) {
+//       return node.id;
+//     });
+//
+//     // It's safer jo test against only the five articles
+//     var temp2 = temp.slice(0, 5);
+//
+//     return checksum(JSON.stringify(temp2));
+//
+//   } else {
+//     return checksum(JSON.stringify(data.id));
+//   }
+// }
