@@ -113,9 +113,6 @@
         <li role="presentation" ng-click="currentTab = 'html_tab'; updatePreviews();" ng-class="{active:currentTab === 'html_tab'}">
           <a>HTML</a>
         </li>
-        <li role="presentation" ng-click="currentTab = 'text_tab'; updatePreviews();" ng-class="{active:currentTab === 'text_tab'}">
-          <a>TEXT</a>
-        </li>
         <li role="presentation" ng-click="currentTab = 'data_tab';" ng-class="{active:currentTab === 'data_tab'}">
           <a>Tilpas indhold</a>
         </li>
@@ -154,24 +151,6 @@
         </div>
       </div>
     </div>
-  </div>
-
-
-  <div class="row" ng-show="currentTab === 'text_tab'">
-    <div class="col-xs-12">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <p ng-show="loading_plain_preview">Loading...</p>
-          <p class="text-right">
-            <button type="button" class="btn btn-default btn-xs" ng-click="updatePreviews()" ng-disabled="loading">
-              <span class="glyphicon glyphicon-refresh"></span>
-            </button>
-          </p>
-          <textarea ng-hide="loading_plain_preview" class="form-control newsletter-preview" style="background-color: white;">{{ newsletter.email_plain }}</textarea>
-        </div>
-      </div>
-    </div>
-
   </div>
 
 
@@ -268,8 +247,6 @@
   <a class="debug_link" target="_blank" href="/templates/{{ newsletter.template_html }}?u={{ safe_bond_url }}&debug=true">Debug link HTML</a>
   <a class="debug_link" download="{{ newsletter.name }}" href="/templates/{{ newsletter.template_html }}?u={{ safe_bond_url }}">Download HTML</a>
   <a class="debug_link" ng-click="currentTab = 'raw_html_tab'; updatePreviews();">Vis rå HTML</a>
-  <a class="debug_link" target="_blank" href="/templates/{{ newsletter.template_plain }}?u={{ safe_bond_url }}&debug=true">Debug link Plain</a>
-  <a class="debug_link" download="{{ newsletter.name }}" href="/templates/{{ newsletter.template_plain }}?u={{ safe_bond_url }}">Download Plain</a>
   <a class="debug_link" ng-click="consoleLogData(newsletter)">Console newsletter</a>
   <a class="debug_link" ng-click="consoleLogData(bonddata)">Console data</a>
 </div>

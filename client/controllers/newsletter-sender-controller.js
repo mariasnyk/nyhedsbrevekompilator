@@ -262,9 +262,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
 
     function updatePreviews () {
-      var a = updateHtmlPreview();
-      var b = updatePlainPreview();
-      return $q.all([a,b]).then(function () {
+      return updateHtmlPreview().then(function () {
         $scope.bonddatadirty = false;
       });
     }
@@ -311,27 +309,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       return get_html;
     }
 
-
-    function updatePlainPreview () {
-      if ($scope.newsletter.template_plain === undefined) {
-        notifications.showWarning('Missing Text template');
-        return;
-      }
-
-      $scope.loading_plain_preview = true;
-
-      var get_plain = $http.post('/templates/' + $scope.newsletter.template_plain, $scope.bonddata)
-      .success(function (data) {
-        $scope.newsletter.email_plain = data;
-        $scope.loading_plain_preview = false;
-      })
-      .error(function (data, status, headers, config) {
-        $scope.loading_plain_preview = false;
-      });
-
-      loadingSwitch.watch(get_plain);
-      return get_plain;
-    }
 
 
     $scope.uploadNewsletter = function () {

@@ -26,7 +26,7 @@ const newsletter_schema = {
   categories: Joi.array().items(Joi.string().min(1).max(100)),
   bond_url: Joi.string().uri({scheme: ['http', 'https']}),
   template_html: Joi.string().min(1).max(100),
-  template_plain: Joi.string().min(1).max(100),
+  template_plain: Joi.strip(),
   tags: Joi.array().items(Joi.string().min(1).max(100)),
   AdditionalEmailAttribute1: Joi.string().min(1).max(100).allow('', null),
   AdditionalEmailAttribute2: Joi.string().min(1).max(100).allow('', null),

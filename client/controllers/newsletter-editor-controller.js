@@ -7,11 +7,10 @@ app.controller('NewsletterEditorController', ['$scope', '$routeParams', '$locati
     $scope.dirty = false;
 
     $scope.html_templates = Templates.query({filter:'.html'});
-    $scope.plain_templates = Templates.query({filter:'.plain'});
 
     // Waiting for the drop-down data to be fetched before we query the newsletter.
     // This is done so that drop-downs are populated and the equivalent newsletter value is selected in the drop-down.
-    var all = $q.all([$scope.html_templates.$promise, $scope.plain_templates.$promise]).then(function () {
+    var all = $scope.html_templates.$promise.then(function () {
       $scope.newsletter = Newsletters.get({ ident: $routeParams.ident }, function () { /* All OK. */ }, resourceErrorHandler);
       loadingSwitch.watch($scope.newsletter);
     }).catch(function (error, result) {
