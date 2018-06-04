@@ -17,11 +17,11 @@ WORKDIR /nyhedsbrevekompilator
 # Copying the code into image. Be aware no config files are including.
 COPY ./client /nyhedsbrevekompilator/client
 COPY ./node_modules /nyhedsbrevekompilator/node_modules
-COPY ./src /nyhedsbrevekompilator/src
+COPY ./server /nyhedsbrevekompilator/server
 COPY ./templates /nyhedsbrevekompilator/templates
 
 # Exposing our endpoint to Docker.
 EXPOSE  8000
 
 # When starting a container with our image, this command will be run.
-CMD ["node", "src/server.js"]
+CMD ["node", "server/index.js"]

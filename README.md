@@ -98,7 +98,7 @@ Make the config script executable with `chmod +x config.sh` and set the environm
 Start the app with the following command:
 
 ```
-../node/bin/node src/server.js
+../node/bin/node server/index.js
 ```
 
 Or, if you have installed *gulp* (using `npm install -g gulp`), just with the command `gulp`.
@@ -110,7 +110,7 @@ Now visit [http://localhost:8000/](http://localhost:8000/) if you get no error a
 The templates are written in Swig. See the documentation on [http://paularmstrong.github.io/swig/docs/](http://paularmstrong.github.io/swig/docs/).
 Also, SendGrid Email Tags are placeholders that will be used when sending the email. See [https://sendgrid.com/docs/Marketing_Emails/tags.html](https://sendgrid.com/docs/Marketing_Emails/tags.html)
 
-The templates are located in `src/templates` and can be previewed by following URL: `http://<server>/templates/<template_filename>`.
+The templates are located in `templates` and can be previewed by following URL: `http://<server>/templates/<template_filename>`.
 
 The data to be injected into the template is defined by
 
