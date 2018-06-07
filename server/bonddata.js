@@ -46,7 +46,7 @@ function getDataFromBond (url, callback) {
     if (err) {
       callback(err);
     } else if (data === null) {
-      callback({ message: 'Invalind data' });
+      callback({ message: 'Invalid data' });
     } else if (data.type !== undefined && ['nodequeue', 'latest_news', 'news_article'].indexOf(data.type) > -1) {
       orderBondImages(data);
       data.subject = subjectSuggestion(data);
