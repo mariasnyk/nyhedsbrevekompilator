@@ -29,7 +29,7 @@ module.exports.register = function (plugin, options, next) {
       plain: swig
     },
     path: templatesDir,
-    isCached: false /* must be turned of when in production*/
+    isCached: false
   });
 
 
