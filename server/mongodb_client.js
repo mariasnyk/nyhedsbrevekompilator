@@ -1,12 +1,12 @@
 /*jshint node: true */
 'use strict';
 
-var MongoClient = require('mongodb').MongoClient,
-    db;
+const MongoClient = require('mongodb').MongoClient;
+var db;
 
-var mongodb_host = process.env.MONGODB_HOST !== undefined ? process.env.MONGODB_HOST : '127.0.0.1';
-var mongodb_port = process.env.MONGODB_PORT !== undefined ? process.env.MONGODB_PORT : '27017';
-var mongodb_database = process.env.MONGODB_DATABASE !== undefined ? process.env.MONGODB_DATABASE : 'nyhedsbrevekompilator';
+const mongodb_host = process.env.MONGODB_HOST !== undefined ? process.env.MONGODB_HOST : '127.0.0.1';
+const mongodb_port = process.env.MONGODB_PORT !== undefined ? process.env.MONGODB_PORT : '27017';
+const mongodb_database = process.env.MONGODB_DATABASE !== undefined ? process.env.MONGODB_DATABASE : 'nyhedsbrevekompilator';
 
 MongoClient.connect('mongodb://' + mongodb_host + ':' + mongodb_port + '/' + mongodb_database, function(err, database) {
   db = database;

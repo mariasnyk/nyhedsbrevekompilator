@@ -1,10 +1,10 @@
 /*jshint node: true */
 'use strict';
 
-var https = require('https'),
-    clientId = process.env.EXACTTARGET_APP_CLIENT_ID,
-    clientSecret = process.env.EXACTTARGET_APP_CLIENT_SECRET,
-    authResponse = {};
+const Https = require('https');
+const clientId = process.env.EXACTTARGET_APP_CLIENT_ID;
+const clientSecret = process.env.EXACTTARGET_APP_CLIENT_SECRET;
+var authResponse = {};
 
 getExactTargetAuthtoken();
 
@@ -59,7 +59,7 @@ function callExactTarget (method, path, body, callback) {
     }
   };
 
-  var req = https.request(options, parseReponse(df));
+  var req = Https.request(options, parseReponse(df));
 
   if (body !== null){
     if (typeof body === 'object') {
@@ -107,7 +107,7 @@ function getExactTargetAuthtoken (callback) {
     }
   };
 
-  var req = https.request(options, parseReponse(function(err, response){
+  var req = Https.request(options, parseReponse(function(err, response){
     if (err){
       callback(err);
     } else {

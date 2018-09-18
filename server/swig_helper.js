@@ -1,9 +1,9 @@
 /*jshint node: true */
 'use strict';
 
-var swig = require('swig'),
-    extras = require('swig-extras'),
-    moment = require('moment');
+const swig = require('swig');
+const extras = require('swig-extras');
+const moment = require('moment');
 
 moment.locale('da');
 

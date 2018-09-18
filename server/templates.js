@@ -1,17 +1,17 @@
 /*jshint node: true */
 'use strict';
 
-var fs = require('fs'),
-    path = require('path'),
-    Joi = require('joi'),
-    swig = require('./swig_helper.js'),
-    bonddata = require('./bonddata'),
-    templatesDir = path.join(__dirname, '/../templates');
+const Fs = require('fs');
+const Path = require('path');
+const Joi = require('joi');
+const swig = require('./swig_helper.js');
+const data = require('./data');
+const templatesDir = Path.join(__dirname, '/../templates');
 
 function render(templateName, data, callback) {
-  var template = path.join(templatesDir, templateName);
+  var template = Path.join(templatesDir, templateName);
 
-  if (!fs.existsSync(template)) {
+  if (!Fs.existsSync(template)) {
     console.log( 'Template', templateName, 'not found');
     return null;
   }
@@ -32,14 +32,15 @@ module.exports.register = function (plugin, options, next) {
     isCached: false /* must be turned of when in production*/
   });
 
+
   plugin.route({
     method: 'GET',
     path: '/',
     handler: function (request, reply) {
-      fs.readdir(templatesDir, function (err, files) {
+      Fs.readdir(templatesDir, function (err, files) {
         reply(files
           .filter(function (file) {
-            return fs.statSync(path.join(templatesDir, file)).isFile() &&
+            return Fs.statSync(Path.join(templatesDir, file)).isFile() &&
               (request.query.filter !== undefined ?
                 file.indexOf(request.query.filter) > -1 :
                 true);
@@ -67,7 +68,7 @@ module.exports.register = function (plugin, options, next) {
     handler: function (request, reply) {
 
       if (request.query.u) {
-        bonddata.get(request.query.u, function (err, data) {
+        data.get(request.query.u, function (err, data) {
           if (err) {
             reply(err).code(500);
           } else if (data === null) {
@@ -90,14 +91,6 @@ module.exports.register = function (plugin, options, next) {
     }
   });
 
-  plugin.route({
-    method: 'GET',
-    path: '/features/{template*}',
-    handler: function (request, reply) {
-      // TODO: Let's build an enpoint where all tags in a template can be found and sent to the frontend
-      reply().code(501);
-    }
-  });
 
   plugin.route({
     method: 'POST',
@@ -122,51 +115,6 @@ module.exports.register = function (plugin, options, next) {
     }
   });
 
-  plugin.route({
-    method: 'PUT',
-    path: '/{template*}',
-    handler: function (request, reply) {
-
-      // If the request URL ends without a filename
-      if (request.params.template.charAt(request.params.template.length - 1) === '/')
-        reply().code(400);
-
-      // Creating all directories in the request URL recursive
-      var dirs = request.params.template.split('/').slice(0,-1);
-      dirs.forEach(function (dir, index) {
-        var newDir = path.join(templatesDir, dirs.slice(0, index + 1).join('/'));
-        if (!fs.existsSync(newDir))
-          fs.mkdirSync(newDir);
-      });
-
-      fs.writeFile(path.join(templatesDir, request.params.template), request.payload, function (err) {
-        if (err) reply().code(500);
-        else reply();
-      });
-    }
-  });
-
-  plugin.route({
-    method: 'DELETE',
-    path: '/{template*}',
-    handler: function (request, reply) {
-
-      if (request.params.template === undefined || request.params.template.charAt(request.params.template.length - 1) === '/')
-        reply().code(400);
-
-      var templatePath = fs.realpathSync(path.join(templatesDir, request.params.template));
-
-      if (fs.existsSync(templatePath)) {
-        fs.unlink(templatePath, function (err) {
-          if (err) reply().code(500);
-          else reply();
-        });
-      } else {
-        reply().code(404);
-      }
-    }
-  });
-
   next();
 };
 
@@ -177,9 +125,9 @@ module.exports.register.attributes = {
 
 
 function validateTemplate (value, options, next) {
-  var templatePath = path.join(templatesDir, value.template);
+  var templatePath = Path.join(templatesDir, value.template);
 
-  if (!fs.existsSync(templatePath) || !fs.statSync(templatePath).isFile())
+  if (!Fs.existsSync(templatePath) || !Fs.statSync(templatePath).isFile())
     next({ message: 'Template ' + templatePath + ' not found' });
   else
     next();
