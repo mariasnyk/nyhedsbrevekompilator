@@ -104,11 +104,7 @@ module.exports.register = function (plugin, options, next) {
       }
     },
     handler: function (request, reply) {
-      // reply
-      // .view(request.params.template, request.payload)
-      // .header('Transfer-Encoding', 'chunked')
-      // .header('Content-Type', contentTypeHeader(request.params.template));
-      var content = render(request.params.template, request.payload);
+      const content = render(request.params.template, request.payload);
       reply(content)
       .header('Transfer-Encoding', 'chunked')
       .header('Content-Type', contentTypeHeader(request.params.template));
@@ -125,7 +121,7 @@ module.exports.register.attributes = {
 
 
 function validateTemplate (value, options, next) {
-  var templatePath = Path.join(templatesDir, value.template);
+  const templatePath = Path.join(templatesDir, value.template);
 
   if (!Fs.existsSync(templatePath) || !Fs.statSync(templatePath).isFile())
     next({ message: 'Template ' + templatePath + ' not found' });
