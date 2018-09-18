@@ -63,11 +63,9 @@ server.connection({ port: process.env.PORT ? process.env.PORT : 8000 });
 server.register({register: good, options: goodOpts}, cb);
 server.register(inert, cb);
 server.register(vision, cb);
-// server.register(client, { routes: { prefix: '/nyhedsbreve' } }, cb);
 server.register(client, cb);
 server.register(templates, { routes: { prefix: '/templates' } }, cb);
 server.register(newsletters, { routes: { prefix: '/newsletters' } }, cb);
-// server.route({ method: 'GET', path: '/', handler: function (request, reply) { reply.redirect('/nyhedsbreve'); } });
 server.route({ method: 'GET', path: '/nyhedsbreve', handler: function (request, reply) { reply.redirect('/'); } });
 server.register(data, { routes: { prefix: '/data' } }, cb);
 
