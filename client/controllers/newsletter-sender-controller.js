@@ -352,7 +352,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
       if($scope.newsletter.AdditionalEmailAttribute3){
         payload.data.email.attributes.push({
-          "DisplayName": "utm_campaign",
+          "DisplayName": "__AdditionalEmailAttribute3",
           "Name": "__AdditionalEmailAttribute3",
           "Value": $scope.newsletter.AdditionalEmailAttribute3,
           "Order": 3,
@@ -363,7 +363,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
       if($scope.newsletter.AdditionalEmailAttribute4){
         payload.data.email.attributes.push({
-          "DisplayName": "utm_campaign",
+          "DisplayName": "__AdditionalEmailAttribute4",
           "Name": "__AdditionalEmailAttribute4",
           "Value": $scope.newsletter.AdditionalEmailAttribute4,
           "Order": 4,
@@ -374,7 +374,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
       if($scope.newsletter.AdditionalEmailAttribute5){
         payload.data.email.attributes.push({
-          "DisplayName": "utm_campaign",
+          "DisplayName": "__AdditionalEmailAttribute5",
           "Name": "__AdditionalEmailAttribute5",
           "Value": $scope.newsletter.AdditionalEmailAttribute5,
           "Order": 5,
