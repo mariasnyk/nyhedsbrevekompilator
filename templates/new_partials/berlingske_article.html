@@ -98,7 +98,11 @@
           <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
             <div style="margin: 10px 0px 18px 0px;">
               <div style="color: #007CBB; font-family: {{ font_family_guardian|safe }}; text-decoration: underline; font-weight: bold; font-size: 14px; line-height: 20px; text-rendering: optimizeLegibility;">
-                Læs mere
+                {% if node.calltoaction %}
+                  {{ node.calltoaction }}
+                {% else %}
+                  Læs mere
+                {% endif %}
             </div>
             </div>
           </a>
