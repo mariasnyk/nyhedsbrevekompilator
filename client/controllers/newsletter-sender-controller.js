@@ -33,7 +33,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       return getBondData()
       .then(suggestMarketingEmailSubject)
       .then(setShowBodyDefaults)
-      .then(AOAWeekendspecific)
       .then(updatePreviews);
     }
     $scope.getBondDataAndUpdatePreviews = getBondDataAndUpdatePreviews;
@@ -232,30 +231,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
         if (feature_showbodydefault && $scope.bonddata.nodes[0]) {
           $scope.bonddata.nodes[0].show_body = true;
         }
-      }
-    }
-
-
-    function AOAWeekendspecific () {
-      if ($scope.newsletter.categories == undefined) {
-        return;
-      }
-
-      var isAOAweekend = $scope.newsletter.categories.some(function (category) {
-        return ['AOA Weekend'].indexOf(category) > -1;
-      });
-
-      if (isAOAweekend) {
-        var AOAanbefalerUrl = 'http://common.berlingskemedia.net/bondapi/nodequeue/5935.ave-json?image_preset=620x355-c'.concat('&cache=',Date.now());
-
-        var get_AOAdata = $http.get('/data?u=' + encodeURIComponent(AOAanbefalerUrl)).then(function (response) {
-          $scope.bonddata.aoa_anbefaler = response.data;
-        }, function (response) {
-          notifications.showError('Failed to get data from ' + AOAanbefalerUrl);
-        });
-
-        loadingSwitch.watch(get_AOAdata);
-        return get_AOAdata;
       }
     }
 
