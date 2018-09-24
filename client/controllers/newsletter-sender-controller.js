@@ -11,7 +11,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     $scope.schedule_after = 15;
     $scope.schedule_at = moment().add(1, 'hours').startOf('hour');
 
-    setScheduleDateLabel();
+    // setScheduleDateLabel();
 
     $scope.newsletter_ident = $routeParams.ident;
 
@@ -33,7 +33,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       return getBondData()
       .then(suggestMarketingEmailSubject)
       .then(setShowBodyDefaults)
-      .then(AOAWeekendspecific)
       .then(updatePreviews);
     }
     $scope.getBondDataAndUpdatePreviews = getBondDataAndUpdatePreviews;
@@ -115,11 +114,11 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     };
 
 
-    function setScheduleDateLabel () {
-      $scope.schedule_date = $scope.schedule_at_specified
-        ? moment($scope.schedule_at).format('ddd D MMM YYYY')
-        : moment().add($scope.schedule_after, 'minutes').format("dddd [d.] D MMMM YYYY");
-    }
+    // function setScheduleDateLabel () {
+    //   $scope.schedule_date = $scope.schedule_at_specified
+    //     ? moment($scope.schedule_at).format('ddd D MMM YYYY')
+    //     : moment().add($scope.schedule_after, 'minutes').format("dddd [d.] D MMMM YYYY");
+    // }
 
 
     function suggestMarketingEmailSubject () {
@@ -236,30 +235,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     }
 
 
-    function AOAWeekendspecific () {
-      if ($scope.newsletter.categories == undefined) {
-        return;
-      }
-
-      var isAOAweekend = $scope.newsletter.categories.some(function (category) {
-        return ['AOA Weekend'].indexOf(category) > -1;
-      });
-
-      if (isAOAweekend) {
-        var AOAanbefalerUrl = 'http://common.berlingskemedia.net/bondapi/nodequeue/5935.ave-json?image_preset=620x355-c'.concat('&cache=',Date.now());
-
-        var get_AOAdata = $http.get('/data?u=' + encodeURIComponent(AOAanbefalerUrl)).then(function (response) {
-          $scope.bonddata.aoa_anbefaler = response.data;
-        }, function (response) {
-          notifications.showError('Failed to get data from ' + AOAanbefalerUrl);
-        });
-
-        loadingSwitch.watch(get_AOAdata);
-        return get_AOAdata;
-      }
-    }
-
-
     function updatePreviews () {
       return updateHtmlPreview().then(function () {
         $scope.bonddatadirty = false;
@@ -275,10 +250,10 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       }
 
       $scope.loading_html_preview = true;
-
-      $scope.bonddata.timestamp = $scope.schedule_at_specified
-        ? moment($scope.schedule_at).unix()
-        : moment().add($scope.schedule_after, 'minutes').unix();
+      // $scope.bonddata.timestamp = $scope.schedule_at_specified
+      //   ? moment($scope.schedule_at).unix()
+      //   : moment().add($scope.schedule_after, 'minutes').unix();
+      $scope.bonddata.timestamp = Date.now();
 
       $scope.bonddata.tags = $scope.newsletter.tags;
 
@@ -377,7 +352,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
       if($scope.newsletter.AdditionalEmailAttribute3){
         payload.data.email.attributes.push({
-          "DisplayName": "utm_campaign",
+          "DisplayName": "__AdditionalEmailAttribute3",
           "Name": "__AdditionalEmailAttribute3",
           "Value": $scope.newsletter.AdditionalEmailAttribute3,
           "Order": 3,
@@ -388,7 +363,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
       if($scope.newsletter.AdditionalEmailAttribute4){
         payload.data.email.attributes.push({
-          "DisplayName": "utm_campaign",
+          "DisplayName": "__AdditionalEmailAttribute4",
           "Name": "__AdditionalEmailAttribute4",
           "Value": $scope.newsletter.AdditionalEmailAttribute4,
           "Order": 4,
@@ -399,7 +374,7 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
       if($scope.newsletter.AdditionalEmailAttribute5){
         payload.data.email.attributes.push({
-          "DisplayName": "utm_campaign",
+          "DisplayName": "__AdditionalEmailAttribute5",
           "Name": "__AdditionalEmailAttribute5",
           "Value": $scope.newsletter.AdditionalEmailAttribute5,
           "Order": 5,

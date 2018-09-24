@@ -59,17 +59,19 @@ swig.setFilter('hasValue', function (listOfValues, value) {
     listOfValues.indexOf(value) > -1;
 });
 
-swig.setFilter('tagValue', function(inputTags, tagName){
+swig.setFilter('tagValue', function(inputTags, tagName, defaultValue){
   if(inputTags === undefined || inputTags === null || Object.prototype.toString.call(inputTags) !== '[object Array]') {
-    return;
+    return defaultValue ? defaultValue : undefined;
   }
 
-  var tag = inputTags.find(function(t){
+  const tag = inputTags.find(function(t){
     return t.indexOf(tagName) === 0;
   });
 
   if(tag){
     return tag.split(':')[1];
+  } else {
+    return defaultValue ? defaultValue : undefined;
   }
 });
 
@@ -88,12 +90,15 @@ swig.setFilter('hasTag', function(tags, tagValue, tagField){
   }
 
   if(tagField === undefined){
-    tagField = 'id';
+    return tags.some(function(tag){
+      // Eg. Tag is "berlingske_header_name:Morgen"... we use "hasTag()"
+      return tag === tagValue || tag.split(':')[0] === tagValue;
+    });
+  } else {
+    return tags.some(function(tag){
+      return tag[tagField] === tagValue;
+    });
   }
-
-  return tags.some(function(tag){
-    return tag[tagField] === tagValue;
-  });
 });
 
 swig.setFilter('typeof', function (variable) {

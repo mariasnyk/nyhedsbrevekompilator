@@ -126,9 +126,17 @@
               <a href="{{ home_url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
                 <div>
                   <img align="top" style="width: 188px;" src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/logos/berlingske_seal.png" width="188">
-                  <span style="color: {{ newsletter_name_color }}; font-family: {{ font_family|safe }}; font-weight: 800; font-size: 29px; line-height: 35px; text-rendering: optimizeLegibility;">
-                    &nbsp;{{ newsletter_name }}
+                  {% if tags | hasTag("berlingske_header_name")  %}
+                  <span style="color: {{ tags | tagValue('berlingske_header_color', '#201748') }}; font-family: {{ font_family|safe }}; font-weight: 800; font-size: 29px; line-height: 35px; text-rendering: optimizeLegibility;">
+                    &nbsp;{{ tags | tagValue('berlingske_header_name', 'shoko') }}
                   </span>
+                  {% elif berlingske_header_name  %}
+                  <span style="color: {{ berlingske_header_color }}; font-family: {{ font_family|safe }}; font-weight: 800; font-size: 29px; line-height: 35px; text-rendering: optimizeLegibility;">
+                    &nbsp;{{ berlingske_header_name }}
+                  </span>
+                  {% else %}
+                  <p>else</p>
+                  {% endif %}
                 </div>
               </a>
             </td>
