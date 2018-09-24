@@ -1,15 +1,15 @@
 /*jshint node: true */
 'use strict';
 
-var Hapi = require('hapi'),
-    inert = require('inert'),
-    vision = require('vision'),
-    moment = require('moment'),
-    newsletters = require('./newsletters'),
-    templates = require('./templates'),
-    bonddata = require('./bonddata'),
-    good = require('good'),
-    goodConsole = require('good-console');
+const Hapi = require('hapi');
+const inert = require('inert');
+const vision = require('vision');
+const moment = require('moment');
+const newsletters = require('./newsletters');
+const templates = require('./templates');
+const data = require('./data');
+const good = require('good');
+const goodConsole = require('good-console');
 
 // This will set the locale for all plugins using moment
 moment.locale('da');
@@ -63,13 +63,11 @@ server.connection({ port: process.env.PORT ? process.env.PORT : 8000 });
 server.register({register: good, options: goodOpts}, cb);
 server.register(inert, cb);
 server.register(vision, cb);
-// server.register(client, { routes: { prefix: '/nyhedsbreve' } }, cb);
 server.register(client, cb);
 server.register(templates, { routes: { prefix: '/templates' } }, cb);
 server.register(newsletters, { routes: { prefix: '/newsletters' } }, cb);
-// server.route({ method: 'GET', path: '/', handler: function (request, reply) { reply.redirect('/nyhedsbreve'); } });
 server.route({ method: 'GET', path: '/nyhedsbreve', handler: function (request, reply) { reply.redirect('/'); } });
-server.register(bonddata, { routes: { prefix: '/bonddata' } }, cb);
+server.register(data, { routes: { prefix: '/data' } }, cb);
 
 
 if (!module.parent) {

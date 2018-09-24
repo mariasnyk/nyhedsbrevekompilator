@@ -1,0 +1,59 @@
+<!-- AMPscript for getting danish day and month names -->
+<script runat=server language=ampscript>
+
+  Var @systolocal
+  Set @systolocal = SystemDateToLocalDate(NOW())
+
+  Var @dato
+  Set @dato = Format(@systolocal, "dd")
+
+  Var @dayofweek
+  Set @dayofweek = Format(@systolocal, "dddd")
+
+  Var @ugedag
+  IF @dayofweek == "Monday" THEN
+    Set @ugedag = "MANDAG"
+  ELSEIF @dayofweek == "Tuesday" THEN
+    Set @ugedag = "TIRSDAG"
+  ELSEIF @dayofweek == "Wednesday" THEN
+    Set @ugedag = "ONSDAG"
+  ELSEIF @dayofweek == "Thursday" THEN
+    Set @ugedag = "TORSDAG"
+  ELSEIF @dayofweek == "Friday" THEN
+    Set @ugedag = "FREDAG"
+  ELSEIF @dayofweek == "Saturday" THEN
+    Set @ugedag = "LØRDAG"
+  ELSEIF @dayofweek == "Sunday" THEN
+    Set @ugedag = "SØNDAG"
+  ENDIF
+
+  Var @month
+  Set @month = Format(@systolocal, "MMMM")
+
+  Var @maaned
+  IF @month == 'January' THEN
+    Set @maaned = "JANUAR"
+  ELSEIF @month == 'February' THEN
+    Set @maaned = "FEBRUAR"
+  ELSEIF @month == 'March' THEN
+    Set @maaned = "MARTS"
+  ELSEIF @month == 'April' THEN
+    Set @maaned = "APRIL"
+  ELSEIF @month == 'May' THEN
+    Set @maaned = "MAJ"
+  ELSEIF @month == 'June' THEN
+    Set @maaned = "JUNI"
+  ELSEIF @month == 'July' THEN
+    Set @maaned = "JULI"
+  ELSEIF @month == 'August' THEN
+    Set @maaned = "AUGUST"
+  ELSEIF @month == 'September' THEN
+    Set @maaned = "SEPTEMBER"
+  ELSEIF @month == 'October' THEN
+    Set @maaned = "OKTOBER"
+  ELSEIF @month == 'November' THEN
+    Set @maaned = "NOVEMBER"
+  ELSEIF @month == 'December' THEN
+    Set @maaned = "DECEMBER"
+  ENDIF
+</script>
