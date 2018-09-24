@@ -250,10 +250,10 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
       }
 
       $scope.loading_html_preview = true;
-
-      $scope.bonddata.timestamp = $scope.schedule_at_specified
-        ? moment($scope.schedule_at).unix()
-        : moment().add($scope.schedule_after, 'minutes').unix();
+      // $scope.bonddata.timestamp = $scope.schedule_at_specified
+      //   ? moment($scope.schedule_at).unix()
+      //   : moment().add($scope.schedule_after, 'minutes').unix();
+      $scope.bonddata.timestamp = Date.now();
 
       $scope.bonddata.tags = $scope.newsletter.tags;
 
