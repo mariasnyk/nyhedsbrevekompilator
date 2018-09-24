@@ -1,0 +1,110 @@
+{% if node !== undefined && node !== null %}
+
+  {% set article_url_appendage = tags | tagValue('article_url_appendage') %}
+
+  <!-- Berlingske article -->
+  <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
+    <tbody>
+
+      {% set image_count = 0; %}
+      {% if node.images | typeof === '[object Object]' %}
+        {% set images_keys = Object.keys(node.images); %}
+        {% set image_count = images_keys.length; %}
+      {% elif node.images | typeof === '[object Array]' %}
+        {% set image_count = node.images.length; %}
+      {% endif %}
+
+      {% if image_count > 0 && node.hide_image !== true %}
+        {% set image_found = false; %}
+        {% for image in node.images %}
+          {% if !image_found && image.relation | hasValue('default') %}
+            {% set image_found = true; %}
+            <tr>
+              <td align="center" valign="top">
+                <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
+                  <img  style="width: {{ width }}px;"
+                        width="{{ width }}"
+                        src="{{ image.image }}"
+                        border="0" />
+                </a>
+              </td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+
+      {% set primary_tag = null %}
+      {% if node.taxonomyTags.primary %}
+        {% for tag in node.taxonomyTags.primary %}
+          {% if tag.id != "2" %}
+            {% set primary_tag = tag.tag %} {# wwww.b.dk #}
+          {% else %}
+            {% set primary_tag = "Nyheder" %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      {% if primary_tag && show_tag !== false %}
+      <tr>
+        <td align="left" valign="top">
+          <div style="margin-top: 10px;">
+            <div style="color: #007CBB; font-family: {{ font_family_sans|safe }}; font-size: 11px; line-height: 13px; letter-spacing: 0.46px; text-transform: uppercase; text-rendering: optimizeLegibility;">
+              {{ primary_tag }}
+            </div>
+          </div>
+        </td>
+      </tr>
+      {% endif %}
+
+      <tr>
+        <td align="left" valign="top">
+          <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
+            <div style="margin-top: 10px;">
+              <div style="color: #333333; font-family: {{ font_family|safe }}; font-size: 22px; font-weight: 800; line-height: 25px; text-rendering: optimizeLegibility;">
+                {{ node.title }}
+              </div>
+            </div>
+          </a>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="left" valign="top">
+          <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank"  style="text-decoration: none;">
+            <div style="margin-top: 10px; padding: 3px 0px;">
+              <div style="color: #4A4A4A; font-family: {{ font_family_guardian|safe }}; text-decoration: none; font-size: 14px; line-height: 20px; text-rendering: optimizeLegibility;">
+                {{ node.summary }}
+              </div>
+            </div>
+          </a>
+        </td>
+      </tr>
+
+      {% if node.custom_summary %}
+      <tr>
+        <td align="left" valign="top">
+          <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank"  style="text-decoration: none;">
+            <div style="color: #4A4A4A; font-family: {{ font_family_guardian|safe }}; text-decoration: none; font-size: 14px; line-height: 20px; text-rendering: optimizeLegibility;">
+              {% autoescape false %} {{ node.custom_summary | safe }} {% endautoescape %}
+            </div>
+          </a>
+        </td>
+      </tr>
+      {% endif %}
+
+      <tr>
+        <td align="left" valign="top">
+          <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
+            <div style="margin: 10px 0px 18px 0px;">
+              <div style="color: #007CBB; font-family: {{ font_family_guardian|safe }}; text-decoration: underline; font-weight: bold; font-size: 14px; line-height: 20px; text-rendering: optimizeLegibility;">
+                Læs mere
+            </div>
+            </div>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- Berlingske article END -->
+{% endif %}

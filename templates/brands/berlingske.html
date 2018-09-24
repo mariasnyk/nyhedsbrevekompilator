@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+{% spaceless %}
+<head lang="en">
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ subject }}</title>
+  <style type="text/css">
+    /* From  https://github.com/mailchimp/email-blueprints/blob/master/responsive-templates/base_boxed_body_image_2column_query.html */
+
+    /* /\/\/\/\/\/\/\/\/ CLIENT-SPECIFIC STYLES /\/\/\/\/\/\/\/\/ */
+    #outlook a{padding:0;} /* Force Outlook to provide a "view in browser" message */
+    .ReadMsgBody{width:100%;} .ExternalClass{width:100%;} /* Force Hotmail to display emails at full width */
+    .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;} /* Force Hotmail to display normal line spacing */
+    body, table, td, p, a, li, blockquote{-webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;} /* Prevent WebKit and Windows mobile changing default text sizes */
+    table, td{mso-table-lspace:0pt; mso-table-rspace:0pt;} /* Remove spacing between tables in Outlook 2007 and up */
+    img{-ms-interpolation-mode:bicubic;} /* Allow smoother rendering of resized image in Internet Explorer */
+    /* /\/\/\/\/\/\/\/\/ RESET STYLES /\/\/\/\/\/\/\/\/ */
+    body{margin:0; padding:0;}
+    img{border:0; height:auto; line-height: 100%; outline:none; text-decoration:none;}
+    table{border-collapse:collapse !important;}
+    body, #bodyTable, #bodyCell{height:100% !important; margin:0; padding:0; width:100% !important;}
+
+    @font-face {
+      font-family: 'Sanomat Alt';
+      src: url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatAlt-Regular.eot');
+      src: url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatAlt-Regular.eot?#iefix') format('embedded-opentype'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatAlt-Regular.woff2') format('woff2'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatAlt-Regular.woff') format('woff'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatAlt-Regular.ttf') format('truetype'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatAlt-Regular.svg#SanomatAlt-Regular') format('svg');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Sanomat Alt';
+      src: url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatAlt-Extrabold.eot');
+      src: url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatAlt-Extrabold.eot?#iefix') format('embedded-opentype'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatAlt-Extrabold.woff2') format('woff2'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatAlt-Extrabold.woff') format('woff'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatAlt-Extrabold.ttf') format('truetype'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatAlt-Extrabold.svg#SanomatAlt-Extrabold') format('svg');
+      font-weight: 800;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Sanomat Sans';
+      src: url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatSans-Medium.eot');
+      src: url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatSans-Medium.eot?#iefix') format('embedded-opentype'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatSans-Medium.woff2') format('woff2'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatSans-Medium.woff') format('woff'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatSans-Medium.ttf') format('truetype'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatSans-Medium.svg#SanomatSans-Medium') format('svg');
+      font-weight: 500;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Sanomat Sans';
+      src: url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatSans-Regular.eot');
+      src: url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatSans-Regular.eot?#iefix') format('embedded-opentype'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatSans-Regular.woff2') format('woff2'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatSans-Regular.woff') format('woff'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatSans-Regular.ttf') format('truetype'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatSans-Regular.svg#SanomatSans-Regular') format('svg');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Sanomat Sans';
+      src: url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatSans-Light.eot');
+      src: url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatSans-Light.eot?#iefix') format('embedded-opentype'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatSans-Light.woff2') format('woff2'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatSans-Light.woff') format('woff'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatSans-Light.ttf') format('truetype'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SanomatSans-Light.svg#SanomatSans-Light') format('svg');
+      font-weight: 300;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Guardian TextEgyp';
+      src: url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/GuardianTextEgyp-Regular.eot');
+      src: url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/GuardianTextEgyp-Regular.eot?#iefix') format('embedded-opentype'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/GuardianTextEgyp-Regular.woff2') format('woff2'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/GuardianTextEgyp-Regular.woff') format('woff'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/GuardianTextEgyp-Regular.ttf') format('truetype'),
+          url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/GuardianTextEgyp-Regular.svg#GuardianTextEgyp-Regular') format('svg');
+      font-weight: normal;
+      font-style: normal;
+    }
+  </style>
+</head>
+
+<body style="background-color: #f9f9f9; margin: 0px;">
+
+  {% set font_family="'Sanomat Alt', Georgia, Times, 'Times New Roman', serif" %}
+  {% set font_family_sans="'Sanomat Sans', 'Helvetica Neue', Helvetica" %}
+  {% set font_family_guardian="'Guardian TextEgyp', 'Helvetica Bold', Helvetica" %}
+
+  {% include "../new_partials/danish_days_and_months.html" %}
+
+  <!--[if (gte mso 9)|(IE)]>
+  <table width="650" align="center" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+          <td>
+  <![endif]-->
+
+  <!-- The almighty table -->
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="white" style="margin: auto; max-width: 650px;">
+    <tr>
+      <td height="16"></td>
+    </tr>
+
+    <!-- The header -->
+    <tr>
+      <td align="center" valign="top">
+        <table width="587" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td colspan="2" align="left" valign="top">
+              <!-- Top logo -->
+              <a href="{{ home_url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+                <div>
+                  <img align="top" style="width: 188px;" src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/logos/berlingske_seal.png" width="188">
+                  <span style="color: {{ newsletter_name_color }}; font-family: {{ font_family|safe }}; font-weight: 800; font-size: 29px; line-height: 35px; text-rendering: optimizeLegibility;">
+                    &nbsp;{{ newsletter_name }}
+                  </span>
+                </div>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" height="6"></td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <img style="width: 100%;" src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/images/dots_thick.png">
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" height="12"></td>
+          </tr>
+          <tr>
+            <td align="left" valign="top">
+              <div style="color: #757575; font-family: {{ font_family_sans|safe }}; font-size: 12px; line-height: 14px; letter-spacing: 0.5px; text-rendering: optimizeLegibility;">
+                  %%=v(@ugedag)=%% D. %%=v(@dato)=%% %%=v(@maaned)=%%
+              </div>
+            </td>
+            <td align="right" valign="top">
+              {% if buy_subscription_href %}
+              <a href="{{ buy_subscription_href }}" target="_blank" style="text-decoration: none;">
+                <div style="color: #757575; font-family: {{ font_family_sans|safe }}; font-weight: 500; font-size: 12px; line-height: 14px; text-rendering: optimizeLegibility;">
+                  KØB ABONNEMENT
+                </div>
+              </a>
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <hr style="height: 1px; border: 0; background: #dddddd;">
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr>
+      <td height="20">&nbsp;</td>
+    </tr>
+
+    {# === This is the main block === #}
+    {% block content %}
+    {% endblock %}
+
+    <tr>
+      <td height="30">&nbsp;</td>
+    </tr>
+    
+    <tr>
+      <td align="center" height="502" style="background-image: url('https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/images/berlingske_footer_background.png'); background-repeat: no-repeat; background-position: top center; background-size: cover; background-color: #333333;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+            <tr>
+              <td height="48">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td align="center" valign="top">
+
+                <div style="width: 100%; height: 100%; opacity: 1;">
+                  <img src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/logos/berlingske_seal_negative.png" />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+                <td height="12">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td align="center" valign="top">
+                <div style="color: #FFFFFF; font-family: {{ font_family_sans|safe }}; font-size: 10px; line-height: 12px; opacity: 0.43; text-rendering: optimizeLegibility;">
+                  Grundlagt, 1749 af Ernst Henrich Berling
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td height="18">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td align="center" valign="top">
+                <div style="width: 100%; height: 100%; opacity: 0.56;">
+                  <img style="width: 100%;" src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/images/dots_footer_thin.png">
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td height="11">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td align="center" valign="top">
+                <div style="color: #FFFFFF; font-family: {{ font_family_sans|safe }}; opacity: 0.5; font-size: 11px; line-height: 16px; text-rendering: optimizeLegibility;">
+                  <div>Berlingske Media A/S | Pilestræde 34</div>
+                  <div>DK-1147 København K, Danmark | +45 33 75 75 75</div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td height="13">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td align="center" valign="top">
+                <div style="width: 100%; height: 100%; opacity: 0.56;">
+                  <img style="width: 100%;" src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/images/dots_footer_thick.png">
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td height="40">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td align="center" valign="top">
+                <div style="color: #FFFFFF; font-family: {{ font_family_sans|safe }}; opacity: 0.5; font-size: 11px; line-height: 16px; text-rendering: optimizeLegibility;">
+                  <div>Anders Krab-Johansen, koncernchef og udgiver</div>
+                  <div>Tom Jensen, Ansv. chefredaktør</div>
+                  <div>Mette Østergaard, chefredaktør</div>
+                  <div>Kevin Walsh, digital redaktionschef</div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td height="30">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td align="center" valign="top">
+                <div style="color: #FFFFFF; font-family: {{ font_family_sans|safe }}; opacity: 0.43; font-size: 10px; line-height: 12px; text-rendering: optimizeLegibility;">
+                  Følg Berlingske
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+                <td height="20">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td align="center" valign="top">
+                <div>
+                  <div style="padding: 0px 15px; display: inline-block;">
+                    <a target="_blank" href="https://www.facebook.com/berlingske" style="text-decoration: none;">
+                      <img src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/logos/facebook_negative.png" />
+                    </a>
+                  </div>
+                  <div style="padding: 0px 15px; display: inline-block;">
+                    <a target="_blank" href="https://twitter.com/berlingske" style="text-decoration: none;">
+                      <img src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/logos/twitter_negative.png" />
+                    </a>
+                  </div>
+                  <div style="padding: 0px 15px; display: inline-block;">
+                    <a target="_blank" href="https://www.instagram.com/berlingske/" style="text-decoration: none;">
+                      <img src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/logos/instagram_negative.png" />
+                    </a>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td height="30">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td align="center" valign="top">
+                <div style="color: #FFFFFF; font-family: {{ font_family_sans|safe }}; font-size: 11px; line-height: 16px; opacity: 0.5; text-rendering: optimizeLegibility;">
+                  <div>© Berlingske Media. | Generelle handelsbetingelser</div>
+                  <div>
+                    <span>Cookie- og Privatlivspolitik | <a href="https://www.berlingske.dk/cookiedeklaration" title="Cookiedeklaration" style="text-decoration: none; color: inherit;">Cookiedeklaration</a> | CVR.nr.: 29 20 73 13</span>
+                    {% if unsubscribe_href %}
+                    <a target="_blank" href="{{ unsubscribe_href }}" style="color: inherit; text-decoration: none;">
+                      <span> | Afmeld nyhedsbrev</span>
+                    </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td height="45">&nbsp;</td>
+            </tr>
+          </table>
+      </td>
+    </tr>
+
+    <tr>
+      <td width="100%" height="14">&nbsp;</td>
+    </tr>
+  </table>
+
+  {% if debug %}
+    {% include "../partials/debuginfo.html" %}
+  {% endif %}
+
+  <!--[if (gte mso 9)|(IE)]>
+      </td>
+    </tr>
+  </table>
+  <![endif]-->
+
+<div style="display:none; white-space:nowrap; font:15px courier; color:#ffffff;">
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+</div>
+
+<!--
+  Marketing Cloud - Open Tracking
+  https://help.salesforce.com/articleView?id=000249050&language=en_US&type=1
+ -->
+<custom name="opencounter" type="tracking" />
+
+</body>
+{% endspaceless %}
+</html>

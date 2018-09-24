@@ -6,8 +6,10 @@ MAINTAINER Daniel Kokott <dako@berlingskemedia.dk>
 RUN apt-get update
 RUN apt-get install -y wget
 
+ENV NODE_VERSION v6.10.3
+
 # Downloading and installing Node.
-RUN wget -O - http://nodejs.org/dist/v4.2.2/node-v4.2.2-linux-x64.tar.gz \
+RUN wget -O - https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64.tar.gz \
     | tar xzf - --strip-components=1 --exclude="README.md" --exclude="LICENSE" \
     --exclude="ChangeLog" -C "/usr/local"
 
