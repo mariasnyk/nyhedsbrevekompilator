@@ -25,8 +25,8 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
     $scope.newsletter.$promise
     .then(suggestMarketingEmailName)
-    .then(getControlroomUrl)
     .then(getBondDataAndUpdatePreviews)
+    .then(getControlroomUrl);
 
 
     function getBondDataAndUpdatePreviews () {
@@ -166,6 +166,10 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
 
 
     function getControlroomUrl () {
+      if(!$scope.newsletter.bond_url) {
+        return $q.reject();
+      }
+
       var bond = new URL($scope.newsletter.bond_url);
       var bond_base_url = '';
 
@@ -246,7 +250,11 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     function updateHtmlPreview () {
       if ($scope.newsletter.template_html === undefined) {
         notifications.showWarning('Missing HTML template');
-        return;
+        return $q.reject();
+      }
+
+      if(!$scope.bonddata) {
+        return $q.reject();
       }
 
       $scope.loading_html_preview = true;
