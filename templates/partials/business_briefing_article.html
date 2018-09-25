@@ -1,7 +1,6 @@
 {% if node !== undefined && node !== null %}
 
 {% set article_url_appendage = tags | tagValue('article_url_appendage') %}
-{% set hotfix_url = node.url | stringreplace('http://www.b.dk/politiko', 'http://www.politiko.dk'); %}
 
 {% set primary_tag = null %}
 {% if node.taxonomyTags.primary %}
@@ -36,7 +35,7 @@
     {% endif %}
 
 
-      <a href="{{ hotfix_url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
+      <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
         <div style="text-align: left; line-height: 100%; padding-top: 5px; text-decoration: none;">
           {% if node.primary_article %}
           <font
@@ -59,7 +58,7 @@
         {% for image in node.images %}
           {% if !image_found && image.relation | hasValue('default') %}
             {% set image_found = true; %}
-            <a href="{{ hotfix_url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
+            <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
               <img  style="width: {{ width }}px;"
                     width="{{ width }}"
                     src="{{ image.image }}"
@@ -80,7 +79,7 @@
       {% else %}
 
         {% if (node.primary_article && node.summary) || always_show_article_summary === true %}
-        <a href="{{ hotfix_url }}?{{ tracking }}" target="_blank"  style="text-decoration: none;">
+        <a href="{{ node.url }}?{{ tracking }}" target="_blank"  style="text-decoration: none;">
           <div style="text-align: left; line-height: 100%; padding-top: 5px; text-decoration: none;">
             <font
               color="#1A1A1A"
@@ -92,7 +91,7 @@
         {% endif %}
 
         {% if node.custom_summary %}
-        <a href="{{ hotfix_url }}?{{ tracking }}" target="_blank"  style="text-decoration: none;">
+        <a href="{{ node.url }}?{{ tracking }}" target="_blank"  style="text-decoration: none;">
           <div style="text-align: left; line-height: 100%; padding-top: 10px;">
             <font
               color="#1A1A1A"
@@ -104,7 +103,7 @@
         {% endif %}
 
         {% if node.calltoaction %}
-        <a href="{{ hotfix_url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+        <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
           <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
             <font
               color="#d00000"
@@ -115,7 +114,7 @@
         </a>
 
         {% elif node.type === 'image_gallery' %}
-        <a href="{{ hotfix_url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+        <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
           <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
             <font
               color="#d00000"
@@ -126,7 +125,7 @@
         </a>
 
         {% elif node.type === 'news_article' %}
-        <a href="{{ hotfix_url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+        <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
           <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
             <font
               color="#d00000"
@@ -137,7 +136,7 @@
         </a>
 
         {% elif node.type === 'news_article_external' %}
-        <a href="{{ hotfix_url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+        <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
           <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
             <font
               color="#d00000"
@@ -148,7 +147,7 @@
         </a>
 
         {% elif node.type === 'webtv_link' %}
-        <a href="{{ hotfix_url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+        <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
           <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
             <font
               color="#d00000"
@@ -159,7 +158,7 @@
         </a>
 
         {% else %}
-        <a href="{{ hotfix_url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+        <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
           <div style="text-align: left; line-height: 100%; padding: 10px 0px;">
             <font
               color="#d00000"
