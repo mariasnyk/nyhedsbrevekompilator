@@ -182,6 +182,25 @@
       <td height="20">&nbsp;</td>
     </tr>
 
+    {% if textbox %}
+    <tr>
+      <td align="center" valign="top">
+        <table width="587" cellpadding="0" cellspacing="10" border="0">
+          <tr>
+            <td>
+              <div style="color: #4A4A4A; font-family: {{ font_family_guardian|safe }}; text-decoration: none; font-size: 14px; line-height: 20px; text-rendering: optimizeLegibility;">
+                {% autoescape false %} {{ textbox | safe }} {% endautoescape %}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td height="30">&nbsp;</td>
+    </tr>
+    {% endif %}
+
     {# === This is the main block === #}
     {% block content %}
     {% endblock %}
