@@ -76,23 +76,6 @@ app.controller('NewsletterSenderController', ['$scope', '$routeParams', '$locati
     //   setScheduleDateLabel();
     // };
 
-
-    $scope.hasCategory = function (category) {
-      if ($scope.newsletter.categories === undefined) {
-        return false;
-      }
-
-      return $scope.newsletter.categories.some(function (cat) {
-        if (typeof category === 'string') {
-          return cat === category;
-        } else if(category instanceof Array) {
-          return category.indexOf(cat) > -1;
-        } else {
-          return false;
-        }
-      });
-    };
-
     $scope.hasTag = function (tags, every) {
       if ($scope.newsletter.tags === undefined) {
         return false;

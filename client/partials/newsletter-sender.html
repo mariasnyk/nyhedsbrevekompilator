@@ -167,6 +167,19 @@
                 &Aring;bn nodek&oslash; i BOND
               </a>
             </p>
+            <div class="row" ng-show="hasTag('feature_textbox')">
+              <div class="col-xs-1">
+                <label class="control-label">Indledning</label>
+              </div>
+              <div class="col-xs-9">
+                <textarea
+                  class="form-control"
+                  type="text"
+                  rows="4"
+                  ng-model="bonddata.textbox"
+                  placeholder="Indledning"></textarea>
+              </div>
+            </div>
             <div class="row node" ng-repeat="node in bonddata.nodes">
               <div class="col-xs-1">
                 <label class="control-label">Artikel {{ $index + 1 }}</label>
@@ -175,37 +188,15 @@
                 <input
                   class="form-control"
                   type="text"
-                  ng-hide="$index === 0 && hasCategory('AOK')"
                   ng-model="node.title"
                   ng-change="changeNodeTitle()"
-                  ng-blur="blurNodeTitle()"
                   placeholder="Rubrik"/>
-                <div
-                  class="checkbox"
-                  ng-if="$index === 0 && hasCategory(['Berlingske', 'Business'])">
-                  <label>
-                    <input
-                      type="checkbox"
-                      ng-model="node.show_body">
-                      Anvend br&oslash;dtekst istedet for underrubrik
-                  </label>
-                </div>
-                <div class="panel panel-default" ng-show="node.show_body">
-                  <div class="panel-body">
-                    <small>
-                      <div ng-bind-html="node.body"></div>
-                    </small>
-                  </div>
-                </div>
                 <textarea
                   class="form-control"
                   type="text"
                   rows="3"
-                  ng-init="show_summary = ($index === 0 && hasTag('feature_showsummaryonfirst')) || hasTag('feature_showsummary')"
-                  ng-show="show_summary && !node.show_body"
                   ng-model="node.summary"
                   ng-change="changeNodeTitle()"
-                  ng-blur="blurNodeTitle()"
                   placeholder="Underrubrik"></textarea>
                 <textarea
                   class="form-control"
@@ -215,15 +206,12 @@
                   ng-show="show_custom_summary"
                   ng-model="node.custom_summary"
                   ng-change="changeNodeTitle()"
-                  ng-blur="blurNodeTitle()"
                   placeholder="Fri underrubrik"></textarea>
                 <input
                   class="form-control"
                   type="text"
-                  ng-hide="node.show_body"
                   ng-model="node.calltoaction"
                   ng-change="changeNodeTitle()"
-                  ng-blur="blurNodeTitle()"
                   placeholder="Læs mere"/>
               </div>
               <div class="col-xs-2">
