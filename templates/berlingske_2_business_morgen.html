@@ -17,7 +17,7 @@
     }
   %}
 
-  {% include "new_partials/berlingske_annonce.html" with { placementID: "123" } %}
+  {% include "new_partials/berlingske_annonce.html" with { placementID: "124" } %}
 
   {% for node in nodes %}
     {% if max_nodes > 0 && loop.index > max_nodes %}
@@ -38,14 +38,17 @@
     {% endif %}
 
     {% if loop.index === 5 %}
-      {% include "new_partials/berlingske_annonce.html" with { placementID: "77" } %}
+      {% include "new_partials/berlingske_annonce.html" with { placementID: "79" } %}
       {% set box_banner_1_inserted = true %}
     {% elif loop.index === 9 %}
-      {% include "new_partials/berlingske_annonce.html" with { placementID: "78" } %}
-      {% set box_banner_2_inserted = true %}
+      {% include "new_partials/berlingske_annonce.html" with { placementID: "80" } %}
+      {% set last_banner_inserted = true %}
     {% endif %}
   {% endfor %}
 
+  {% if last_banner_inserted !== true %}
+    {% include "new_partials/berlingske_annonce.html" with { placementID: "80" } %}
+  {% endif %}
 
   {# include "new_partials/berlingske_annonce.html" with { placementID: "XXX" } #}
 

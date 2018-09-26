@@ -42,9 +42,13 @@
       {% set box_banner_1_inserted = true %}
     {% elif loop.index === 9 %}
       {% include "new_partials/berlingske_annonce.html" with { placementID: "83" } %}
-      {% set box_banner_2_inserted = true %}
+      {% set last_banner_inserted = true %}
     {% endif %}
   {% endfor %}
+
+  {% if last_banner_inserted !== true %}
+    {% include "new_partials/berlingske_annonce.html" with { placementID: "83" } %}
+  {% endif %}
 
 
   {# include "new_partials/berlingske_annonce.html" with { placementID: "XXX" } #}
