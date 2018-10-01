@@ -45,7 +45,8 @@
         {% endfor %}
       {% endif %}
 
-      {% if primary_tag && show_tag !== false %}
+      {# Value "show_tag" must be false to hide the tag. But "node.show_body" must to true to hide it. (Ie. tag must be show if eitjer true or undefined) #}
+      {% if primary_tag && show_tag !== false && !node.show_body %}
       <tr>
         <td align="left" valign="top">
           <div style="margin-top: 10px;">
