@@ -192,6 +192,24 @@
                   ng-model="node.title"
                   ng-change="changeNodeTitle()"
                   placeholder="Rubrik"/>
+                <div
+                  class="checkbox"
+                  ng-init="$index === 0 && node.show_body = hasTag('feature_showbodydefault')"
+                  ng-if="$index === 0">
+                  <label>
+                    <input
+                      type="checkbox"
+                      ng-model="node.show_body">
+                      Anvend br&oslash;dtekst istedet for underrubrik
+                  </label>
+                </div>
+                <div class="panel panel-default" ng-show="node.show_body">
+                  <div class="panel-body">
+                    <small>
+                      <div ng-bind-html="node.body"></div>
+                    </small>
+                  </div>
+                </div>
                 <textarea
                   class="form-control"
                   type="text"

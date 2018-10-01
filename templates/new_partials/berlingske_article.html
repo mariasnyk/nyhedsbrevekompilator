@@ -69,45 +69,62 @@
         </td>
       </tr>
 
-      <tr>
-        <td align="left" valign="top">
-          <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank"  style="text-decoration: none;">
+      {% if node.show_body %}
+
+        <tr>
+          <td align="left" valign="top">
             <div style="margin-top: 10px; padding: 3px 0px;">
               <div style="color: #4A4A4A; font-family: {{ font_family_guardian|safe }}; text-decoration: none; font-size: 14px; line-height: 20px; text-rendering: optimizeLegibility;">
-                {{ node.summary }}
-              </div>
+                {% autoescape false %} {{ node.body | safe }} {% endautoescape %}
             </div>
-          </a>
-        </td>
-      </tr>
+          </td>
+        </tr>
 
-      {% if node.custom_summary %}
-      <tr>
-        <td align="left" valign="top">
-          <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank"  style="text-decoration: none;">
-            <div style="color: #4A4A4A; font-family: {{ font_family_guardian|safe }}; text-decoration: none; font-size: 14px; line-height: 20px; text-rendering: optimizeLegibility;">
-              {% autoescape false %} {{ node.custom_summary | safe }} {% endautoescape %}
-            </div>
-          </a>
-        </td>
-      </tr>
+      {% else %}
+
+        <tr>
+          <td align="left" valign="top">
+            <a hre f="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank"  style="text-decoration: none;">
+              <div style="margin-top: 10px; padding: 3px 0px;">
+                <div style="color: #4A4A4A; font-family: {{ font_family_guardian|safe }}; text-decoration: none; font-size: 14px; line-height: 20px; text-rendering: optimizeLegibility;">
+                  {{ node.summary }}
+                </div>
+              </div>
+            </a>
+          </td>
+        </tr>
+
+
+        {% if node.custom_summary %}
+        <tr>
+          <td align="left" valign="top">
+            <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank"  style="text-decoration: none;">
+              <div style="color: #4A4A4A; font-family: {{ font_family_guardian|safe }}; text-decoration: none; font-size: 14px; line-height: 20px; text-rendering: optimizeLegibility;">
+                {% autoescape false %} {{ node.custom_summary | safe }} {% endautoescape %}
+              </div>
+            </a>
+          </td>
+        </tr>
+        {% endif %}
+
+        <tr>
+          <td align="left" valign="top">
+            <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
+              <div style="margin: 10px 0px 18px 0px;">
+                <div style="color: #007CBB; font-family: {{ font_family_guardian|safe }}; text-decoration: underline; font-weight: bold; font-size: 14px; line-height: 20px; text-rendering: optimizeLegibility;">
+                  {% if node.calltoaction %}
+                    {{ node.calltoaction }}
+                  {% else %}
+                    Læs mere
+                  {% endif %}
+              </div>
+              </div>
+            </a>
+          </td>
+        </tr>
+
       {% endif %}
 
-      <tr>
-        <td align="left" valign="top">
-          <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
-            <div style="margin: 10px 0px 18px 0px;">
-              <div style="color: #007CBB; font-family: {{ font_family_guardian|safe }}; text-decoration: underline; font-weight: bold; font-size: 14px; line-height: 20px; text-rendering: optimizeLegibility;">
-                {% if node.calltoaction %}
-                  {{ node.calltoaction }}
-                {% else %}
-                  Læs mere
-                {% endif %}
-            </div>
-            </div>
-          </a>
-        </td>
-      </tr>
     </tbody>
   </table>
   <!-- Berlingske article END -->
