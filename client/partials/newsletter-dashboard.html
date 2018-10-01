@@ -1,9 +1,28 @@
 <div class="container">
   <div class="row">
+    <div class="col-xs-12">
+      <a title="Til oversigt" class="btn btn-default" aria-disabled="true" disabled="disabled">
+        Til oversigt <span class="glyphicon glyphicon-chevron-left"></span>
+      </a>
+      <a title="Vejledning" class="btn btn-warning" target="_blank" ng-href="https://docs.google.com/document/d/1UU2_PcJCrXm1zwfhTSoGQ7_y8sQWmbEzLgxV5Z2hk68/edit?usp=sharing">
+        Åbn vejledning <span class="glyphicon glyphicon-file"></span>
+      </a>
+      <button type="button" class="btn btn-success" disabled="disabled">
+        Opret i Marketing Cloud <span class="glyphicon glyphicon-envelope"></span>
+      </button>
+      <a title="Marketing Cloud" class="btn btn-info" target="_blank" ng-href="https://mc.s7.exacttarget.com/cloud/#app/Email/C12/Default.aspx?entityType=none&entityID=0%23Content">
+        Åbn Marketing Cloud <span class="glyphicon glyphicon-send"></span>
+      </a>
+    </div>
+  </div>
+
+  <hr>
+    
+  <div class="row">
     <div class="col-xs-6">
       <input
         class="form-control input-sm"
-        placeholder="Filter"
+        placeholder="Filtrer ved at indtaste her"
         type="text"
         ng-model="newsletterFilter">
     </div>
@@ -14,7 +33,7 @@
           type="text"
           ng-model="name"
           ng-keyup="createNewsletterKeyUp($event, name)"
-          placeholder="Indtast navn"/>
+          placeholder="Indtast navn på nyt nyhedsbrev"/>
         <span class="input-group-btn"><button type="button" class="btn btn-primary btn-sm" ng-click="createNewsletter(name)">
           Opret ny skabelon <span class="glyphicon glyphicon-plus"></span>
         </button></span>
