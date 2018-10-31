@@ -125,15 +125,20 @@
               <!-- Top logo -->
               <a href="{{ home_url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
                 <div>
-                  <img align="top" style="width: 188px;" src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/logos/berlingske_seal.png" width="188">
+                  <img align="top" style="width: 188px;" width="188" src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/logos/berlingske_seal.png">
                   {% if tags | hasTag("berlingske_header_name")  %}
+                  <span>A</span>
                   <span style="color: {{ tags | tagValue('berlingske_header_color', '#201748') }}; font-family: {{ font_family|safe }}; font-weight: 800; font-size: 29px; line-height: 35px; text-rendering: optimizeLegibility;">
-                    &nbsp;{{ tags | tagValue('berlingske_header_name', 'shoko') }}
+                    &nbsp;{{ tags | tagValue('berlingske_header_name', '') }}
                   </span>
                   {% elif berlingske_header_name  %}
                   <span style="color: {{ berlingske_header_color }}; font-family: {{ font_family|safe }}; font-weight: 800; font-size: 29px; line-height: 35px; text-rendering: optimizeLegibility;">
                     &nbsp;{{ berlingske_header_name }}
                   </span>
+                  {% endif %}
+                  {% if berlingske_header_img_src  %}
+                  <span style="padding-left: 6px">&nbsp;</span>
+                  <img align="top" style="width: {{ berlingske_header_img_width }}; height: {{ berlingske_header_img_height }}; margin: {{ berlingske_header_img_margin }}" width="{{ berlingske_header_img_width }}" src="{{ berlingske_header_img_src }}">
                   {% endif %}
                 </div>
               </a>
