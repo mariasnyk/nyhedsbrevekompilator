@@ -194,8 +194,8 @@
                   placeholder="Rubrik"/>
                 <div
                   class="checkbox"
-                  ng-init="$index === 0 && node.show_body = hasTag('feature_showbodydefault')"
-                  ng-if="$index === 0">
+                  ng-init="node.show_body = hasTag('feature_showbodydefault')"
+                  ng-if="$index === 0 && node.show_body">
                   <label>
                     <input
                       type="checkbox"
