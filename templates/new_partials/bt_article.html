@@ -1,0 +1,58 @@
+{% if node !== undefined && node !== null %}
+
+  {% set article_url_appendage = tags | tagValue('article_url_appendage') %}
+
+  <!-- BT article -->
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tbody>
+
+      {% set image_count = 0; %}
+      {% if node.images | typeof === '[object Object]' %}
+        {% set images_keys = Object.keys(node.images); %}
+        {% set image_count = images_keys.length; %}
+      {% elif node.images | typeof === '[object Array]' %}
+        {% set image_count = node.images.length; %}
+      {% endif %}
+
+      {% if image_count > 0 && node.hide_image !== true %}
+        {% set image_found = false; %}
+        {% for image in node.images %}
+          {% if !image_found && image.relation | hasValue('default') %}
+            {% set image_found = true; %}
+            <tr>
+              <td width="100%" align="center" valign="top">
+                <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none; overflow: hidden; position: relative; width: 100%; display: block;">
+                  <img src="{{ image.image }}" width="100%" border="0" style="display: block;">
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td align="left" valign="top" style="padding-top: 15px">
+                <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none; color: #212121; font-family: {{ font_family|safe }}; letter-spacing: -0.1px; font-size: 39px; line-height: 42px; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+                  {{ node.title }}
+                </a>
+              </td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+
+      {% else %}
+
+      <tr>
+        <td align="left" valign="top" style=";">
+          <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
+            <div style="color: #212121; font-family: {{ font_family|safe }}; font-size: 39px; line-height: 42px; text-rendering: optimizeLegibility;">
+              {{ node.title }}
+            </div>
+          </a>
+        </td>
+      </tr>
+
+      {% endif %}
+
+    </tbody>
+  </table>
+  <!-- BT article END -->
+{% endif %}
+
+

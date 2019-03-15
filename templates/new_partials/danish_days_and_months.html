@@ -10,6 +10,9 @@
   Var @dayofweek
   Set @dayofweek = Format(@systolocal, "dddd")
 
+  Var @year
+  Set @year = Format(@systolocal, "yyyy")
+
   Var @ugedag
   IF @dayofweek == "Monday" THEN
     Set @ugedag = "MANDAG"
@@ -29,6 +32,33 @@
 
   Var @month
   Set @month = Format(@systolocal, "MMMM")
+
+  Var @month_abbreviations
+  IF @month == 'January' THEN
+    Set @month_abbreviations = "jan."
+  ELSEIF @month == 'February' THEN
+    Set @month_abbreviations = "febr."
+  ELSEIF @month == 'March' THEN
+    Set @month_abbreviations = "marts"
+  ELSEIF @month == 'April' THEN
+    Set @month_abbreviations = "april"
+  ELSEIF @month == 'May' THEN
+    Set @month_abbreviations = "maj"
+  ELSEIF @month == 'June' THEN
+    Set @month_abbreviations = "juni"
+  ELSEIF @month == 'July' THEN
+    Set @month_abbreviations = "juli"
+  ELSEIF @month == 'August' THEN
+    Set @month_abbreviations = "aug."
+  ELSEIF @month == 'September' THEN
+    Set @month_abbreviations = "sept."
+  ELSEIF @month == 'October' THEN
+    Set @month_abbreviations = "okt."
+  ELSEIF @month == 'November' THEN
+    Set @month_abbreviations = "nov."
+  ELSEIF @month == 'December' THEN
+    Set @month_abbreviations = "dec."
+  ENDIF
 
   Var @maaned
   IF @month == 'January' THEN

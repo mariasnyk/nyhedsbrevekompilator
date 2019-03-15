@@ -1,0 +1,116 @@
+{% if node !== undefined && node !== null %}
+
+  {% set article_url_appendage = tags | tagValue('article_url_appendage') %}
+
+  <!-- BT main article -->
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-bottom: 1px solid rgba(33,33,33,0.2);">
+    <tbody>
+
+      {% set image_count = 0; %}
+      {% if node.images | typeof === '[object Object]' %}
+        {% set images_keys = Object.keys(node.images); %}
+        {% set image_count = images_keys.length; %}
+      {% elif node.images | typeof === '[object Array]' %}
+        {% set image_count = node.images.length; %}
+      {% endif %}
+
+      {% if image_count > 0 && node.hide_image !== true %}
+        {% set image_found = false; %}
+        {% for image in node.images %}
+          {% if !image_found && image.relation | hasValue('default') %}
+            {% set image_found = true; %}
+            <tr>
+              <td align="center" valign="bottom" bgcolor="#ffffff">
+                <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="display: table; text-decoration: none; margin: 0; padding: 0; width: 100%; background-color: #ffffff; font-size: 28px; line-height: 33px; font-family: {{ font_family|safe }}; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+                  <img src="{{ image.image }}" width="100%" border="0" style="display: block;">
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 0 19px;">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tbody>
+                  <tr>
+                    <td style="padding: 19px 40px; border-bottom: 1px solid #cccccc;" valign="center" align="center">
+                      <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none; position: relative; text-align: center; width: 100%; display: block;height: 100%;font-size: 28px; line-height: 33px; font-family: {{ font_family|safe }}; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; color: #212121;">
+                        {{ node.title }}
+                      </a>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+
+              </td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+      <tr>
+        <td style="padding: 0 19px;">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 620px;">
+            <tbody>
+            <tr>
+              <td style="padding: 19px 40px; border-bottom: 1px solid #cccccc;" valign="center" aling="center">
+                <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none; position: relative; text-align: center; width: 100%; display: block;height: 100%;font-size: 28px; line-height: 33px; font-family: {{ font_family|safe }}; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; color: #212121;">
+                  {{ node.title }}
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+        </td>
+      </tr>
+      {% endif %}
+
+      {% if node.authors[0] %}
+        <tr>
+          <td style="padding: 19px;">
+            <table width="100%" align="left" cellpadding="0" cellspacing="0" border="0" style="max-width:620px;">
+              <tbody>
+                <tr>
+                  {% if node.authors[0].picture %}
+                    <td width="80" height="80" style="width:80px; background-image: url({{ node.authors[0].picture }}); background-color: #ffffff; background-size: cover; background-position: center; height:80px; max-height: 80px;overflow:hidden;border-radius:50%;text-align:center;display:inline-block;margin-right:19px;position: relative;">
+                      <img width="auto" height="84" style="width: auto;height:84px;min-height: 84px;max-height: 84px;left: -50%;right:-50%;position:absolute;margin: 0 auto;" src="{{ node.authors[0].picture }}">
+                    </td>
+                  {% endif %}
+                  <td style="display:inline-block;vertical-align:middle;">
+                    {% if node.authors[0].profileName %}
+                      <p style="font-family: {{ font_family|safe }};font-size:17px;margin:0;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;">{{ node.authors[0].profileName }}</p>
+                    {% elseif node.authors[0].freetext %}
+                      <p style="font-family: {{ font_family|safe }};font-size:17px;margin:0;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;">{{ node.authors[0].freetext }}</p>
+                    {% endif %}
+                    {% if node.authors[0].profileTitle %}
+                      <p style="font-family: {{ font_family_normal|safe }}; font-size:17px;margin:0;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;">{{node.authors[0].profileTitle}}</p>
+                    {% endif %}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      {% endif %}
+
+      {% if node.summary %}
+        <tr>
+          <td align="left" valign="top" style="padding: 19px; {% if node.authors[0] %} padding-top: 15px; {% endif %}">
+              <div style="color: #212121; font-family: {{ font_family_normal|safe }}; text-decoration: none; font-size: 19px; line-height: 27px; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+                {% autoescape false %} {{ node.summary|safe }} {% endautoescape %}
+              </div>
+          </td>
+        </tr>
+      {% endif %}
+
+      {% if node.custom_summary %}
+        <tr>
+          <td align="left" valign="top" style="padding: 19px; {% if node.authors[0] %} padding-top: 15px; {% endif %}">
+            <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank"  style="text-decoration: none; color: #212121; font-family: {{ font_family_normal|safe }}; text-decoration: none; font-size: 19px; line-height: 27px; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+              {% autoescape false %} {{ node.custom_summary | safe }} {% endautoescape %}
+            </a>
+          </td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+  <!-- BT main article END -->
+{% endif %}

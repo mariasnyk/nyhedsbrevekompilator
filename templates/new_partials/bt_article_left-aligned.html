@@ -1,0 +1,52 @@
+{% if node !== undefined && node !== null %}
+
+  {% set article_url_appendage = tags | tagValue('article_url_appendage') %}
+
+  <!-- BT article small -->
+  <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
+    <tbody>
+
+      {% set image_count = 0; %}
+      {% if node.images | typeof === '[object Object]' %}
+        {% set images_keys = Object.keys(node.images); %}
+        {% set image_count = images_keys.length; %}
+      {% elif node.images | typeof === '[object Array]' %}
+        {% set image_count = node.images.length; %}
+      {% endif %}
+
+      {% if image_count > 0 && node.hide_image !== true %}
+        {% set image_found = false; %}
+        {% for image in node.images %}
+          {% if !image_found && image.relation | hasValue('default') %}
+            {% set image_found = true; %}
+            <tr>
+              <td width="150" height="150" valign="center" style="padding-bottom: 7px; overflow:hidden;position: relative;max-height: 150px; max-width: 150px;">
+                <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none; height: 150px; max-height: 150px;width: 150px; display: block;">
+                  <img src="{{ image.image }}" height="150" style="display:block;position: absolute; left: -50%; right: -50%; margin: auto; height: 150px; max-height: 150px; width: auto;">
+                </a>
+              </td>
+              <td align="left" valign="center" style="padding-bottom: 7px; width: 100%">
+                <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none; color: #333333; font-family: {{ font_family|safe }};letter-spacing: -0.1px; font-size: 28px;display:inline-block;line-height: 32px; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+                  <p style="margin-top: 0;margin-bottom: 0; text-decoration: none; color: #333333; font-family: {{ font_family|safe }};letter-spacing: -0.1px; font-size: 28px;margin-left:19px;display:inline-block;line-height: 32px; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">{{ node.title }}</p>
+                </a>
+              </td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+
+      {% else %}
+
+      <tr>
+        <td align="left" valign="center" style="padding-bottom: 7px; width: 100%">
+          <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none; margin-top: 15px; color: #333333; font-family: {{ font_family|safe }}; letter-spacing: -0.1px; font-size: 28px; line-height: 32px; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+            {{ node.title }}
+          </a>
+        </td>
+      </tr>
+
+      {% endif %}
+
+    </tbody>
+  </table>
+  <!-- BT small article END -->
+{% endif %}

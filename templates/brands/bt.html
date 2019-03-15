@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+{% spaceless %}
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta content="telephone=no" name="format-detection">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{{ subject }}</title>
+    <style type="text/css">
+        /* From  https://github.com/mailchimp/email-blueprints/blob/master/responsive-templates/base_boxed_body_image_2column_query.html */
+
+        /* /\/\/\/\/\/\/\/\/ CLIENT-SPECIFIC STYLES /\/\/\/\/\/\/\/\/ */
+        #outlook a{padding:0;} /* Force Outlook to provide a "view in browser" message */
+        .ReadMsgBody{width:100%;} .ExternalClass{width:100%;} /* Force Hotmail to display emails at full width */
+        .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;} /* Force Hotmail to display normal line spacing */
+        body, table, td, p, a, li, blockquote{-webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;} /* Prevent WebKit and Windows mobile changing default text sizes */
+        table, td{mso-table-lspace:0pt; mso-table-rspace:0pt;} /* Remove spacing between tables in Outlook 2007 and up */
+        img{-ms-interpolation-mode:bicubic;} /* Allow smoother rendering of resized image in Internet Explorer */
+        /* /\/\/\/\/\/\/\/\/ RESET STYLES /\/\/\/\/\/\/\/\/ */
+        body{margin:0; padding:0;}
+        img{border:0; height:auto; line-height: 100%; outline:none; text-decoration:none;}
+        table{border-collapse:collapse !important;}
+        body, #bodyTable, #bodyCell{height:100% !important; margin:0; padding:0; width:100% !important;}
+        /* /\/\/\/\/\/\/\/\/ CUSTOM STYLES /\/\/\/\/\/\/\/\/ */
+        a{color:#3767ff;}
+        p {margin:0;}
+        /* /\/\/\/\/\/\/\/\/ Iphones reset STYLES /\/\/\/\/\/\/\/\/ */
+        a[href^=tel]{ color:#FFFFFF; text-decoration:none;}
+        a[x-apple-data-detectors] {
+            color: inherit !important;
+            text-decoration: none !important;
+            font-size: inherit !important;
+            font-family: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+        }
+        @font-face {
+            font-family: "SequelSansBlack";
+            src: url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SequelSans-BlackBody.eot");
+            src: url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SequelSans-BlackBody.eot?#iefix") format("embedded-opentype"),
+            url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SequelSans-BlackBody.woff2") format("woff2"),
+            url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SequelSans-BlackBody.woff") format("woff"),
+            url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SequelSans-BlackBody.ttf") format("truetype");
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: "SequelSansBold";
+            src: url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SequelSans-BoldBody.eot");
+            src: url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SequelSans-BoldBody.eot?#iefix") format("embedded-opentype"),
+            url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SequelSans-BoldBody.woff2") format("woff2"),
+            url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SequelSans-BoldBody.woff") format("woff"),
+            url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SequelSans-BoldBody.ttf") format("truetype");
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: "SequelSansRoman";
+            src: url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SequelSans-RomanBody.eot");
+            src: url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SequelSans-RomanBody.eot?#iefix") format("embedded-opentype"),
+            url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SequelSans-RomanBody.woff2") format("woff2"),
+            url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SequelSans-RomanBody.woff") format("woff"),
+            url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/SequelSans-RomanBody.ttf") format("truetype");
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: "bt_normal";
+            src: url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BTOneText-webfont.eot");
+            src: url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BTOneText-webfont.eot?#iefix") format("embedded-opentype"),
+            url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BTOneText-webfont.woff2") format("woff2"),
+            url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BTOneText-webfont.woff") format("woff"),
+            url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BTOneText-webfont.ttf") format("truetype");
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: "bt_bold";
+            src: url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BTOne-Bold-webfont.eot");
+            src: url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BTOne-Bold-webfont.eot?#iefix") format("embedded-opentype"),
+            url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BTOne-Bold-webfont.woff2") format("woff2"),
+            url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BTOne-Bold-webfont.woff") format("woff"),
+            url("https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/fonts/BTOne-Bold-webfont.ttf") format("truetype");
+            font-weight: bold;
+            font-style: normal;
+        }
+    </style>
+    <!--[if gte mso 9]>
+    <style type="text/css">
+        body {background-color: #ffffff!important;}
+    </style>
+    <![endif]-->
+</head>
+
+<body style="background-color: #efeeee; margin: 0;">
+
+{% set font_family="'SequelSansBlack', 'Arial Black', 'Arial Bold', 'Helvetica Neue', Helvetica,  Arial, sans-serif" %}
+{% set font_family_bold="'SequelSansBold', 'Arial Black', 'Arial Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif" %}
+{% set font_family_normal="'SequelSansRoman', 'Helvetica Neue', Helvetica, 'Arial Black', Arial, sans-serif" %}
+
+{% include "../new_partials/danish_days_and_months.html" %}
+
+<!--[if (gte mso 9)|(IE)]>
+<table width="620" align="center" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        <td>
+<![endif]-->
+
+<!-- The almighty table -->
+<div style="width: 620px; display: block;margin: 0 auto;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="white" style="margin: auto; max-width: 620px;">
+        <tr>
+            <td height="35"></td>
+        </tr>
+
+        <!-- The header -->
+        <tr>
+            <td align="center" valign="top">
+                <table width="587" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td colspan="2" align="center" valign="top">
+                            <!-- Top logo -->
+                            <!--{{ title }}-->
+                            <a href="{{ home_url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
+                                <div>
+                                    <img align="top" style="width: 94px;" width="94" src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/headers/BT_logo.png">
+                                </div>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td height="20"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center" valign="top">
+                            <div style="color: #F03228; font-family: {{ font_family_bold|safe }}; font-size: 12px; line-height: 14px; letter-spacing: -0.1px; text-rendering: optimizeLegibility;">
+                                NYHEDSBREV - %%=v(@ugedag)=%% %%=v(@dato)=%%. %%=v(@month_abbreviations)=%% %%=v(@year)=%%
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <td height="15"></td>
+        </tr>
+
+        {% if textbox %}
+        <tr>
+            <td align="center" valign="top">
+                <table width="587" cellpadding="0" cellspacing="10" border="0">
+                    <tr>
+                        <td>
+                            <div style="color: #4A4A4A; font-family: {{ font_family_normal|safe }}; text-decoration: none; font-size: 14px; line-height: 20px; text-rendering: optimizeLegibility;">
+                                {% autoescape false %} {{ textbox | safe }} {% endautoescape %}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="30"></td>
+        </tr>
+        {% endif %}
+
+        {# === This is the main block === #}
+        {% block content %}
+        {% endblock %}
+
+        <tr class="footer">
+            <td align="center" height="502" style="background-color: #212121;">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tbody>
+                    <tr>
+                        <td align="center">
+                            <table width="435" cellpadding="0" cellspacing="0" border="0" style="max-width: 435px;">
+                                <tr>
+                                    <td height="62"></td>
+                                </tr>
+
+                                <tr>
+                                    <td align="center" valign="top">
+
+                                        <div class="footer-logo" style="width: 136px; height: 100%; opacity: 1;">
+                                            <img src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/headers/bt_white.png" />
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td height="39"></td>
+                                </tr>
+
+                                <tr>
+                                    <td align="center" valign="top">
+                                        <div style="color: #FFFFFF; font-family: {{ font_family_normal|safe }}; font-size: 10px; line-height: 22px; opacity: 0.5; padding-top: 10px; padding-bottom: 10px; border-top: 1px solid #373737; border-bottom: 1px solid #373737; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+                                            <div>
+                                                Berlingske Media A/S
+                                                <span style="padding-left: 5px; padding-right: 5px;"> | </span>
+                                                Pilestræde 34
+                                            </div>
+                                            <div>
+                                                DK-1147 København K, Danmark
+                                                <span style="padding-left: 5px; padding-right: 5px;"> | </span>
+                                                Tlf. +45 3375 7533
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td height="53"></td>
+                                </tr>
+
+                                <tr>
+                                    <td align="center" valign="top" style="padding-left:30px; padding-right: 30px;">
+                                        <table width="375" align="center" valign="top" cellpadding="0" cellspacing="0" border="0">
+                                            <tbody>
+                                            <tr align="center" style=" border-top: 1px solid #4B4B4B;  border-bottom: 1px solid #4B4B4B;">
+                                                <td width="100%" style="padding-top: 13px; padding-bottom: 10px;">
+                                                    <a href="http://click.et.berlingskemedia.dk/?qs=129acdc39b8482f1af9a287df62b0de565256e1f44284e8a1ffd3c31d006ea599e0dec0b3a2db9b885ff88f3863dae7e" target="_blank" style="min-height: 23px; font-size: 15px; box-sizing: border-box; font-family: {{ font_family|safe }}; text-decoration: none; position:relative; display: block; width: 100%; color: #ffffff; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+                                                        Annonceinfo
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="http://click.et.berlingskemedia.dk/?qs=129acdc39b8482f1af9a287df62b0de565256e1f44284e8a1ffd3c31d006ea599e0dec0b3a2db9b885ff88f3863dae7e" target="_blank" style="box-sizing: border-box;">
+                                                        <img style="width:10px; height: 20px; opacity: 0.5; right: 0; vertical-align: middle;" src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/images/arrow.png" />
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr align="center" style="border-bottom: 1px solid #4B4B4B;">
+                                                <td width="100%" style="padding-top: 13px; padding-bottom: 10px;">
+                                                    <a href="http://click.et.berlingskemedia.dk/?qs=129acdc39b8482f1618ab6171a017d67e714c2d086a2522440643ccbca20a92d4cd5c5c4f1b3fdd9fe0c3317e86451d1" target="_blank" style="min-height: 23px; font-size: 15px; box-sizing: border-box; font-family: {{ font_family|safe }}; text-decoration: none; position:relative; display: block; width: 100%;  color: #ffffff; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+                                                        Afmeld nyhedsbreve
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="http://click.et.berlingskemedia.dk/?qs=129acdc39b8482f1618ab6171a017d67e714c2d086a2522440643ccbca20a92d4cd5c5c4f1b3fdd9fe0c3317e86451d1" target="_blank" style="box-sizing: border-box;">
+                                                        <img style="width:10px; height: 20px; opacity: 0.5; right: 0; vertical-align: middle;" src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/images/arrow.png" />
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr align="center" style="border-bottom: 1px solid #4B4B4B;">
+                                                <td width="100%" style="padding-top: 13px; padding-bottom: 10px;">
+                                                    <a href="http://click.et.berlingskemedia.dk/?qs=129acdc39b8482f1618ab6171a017d67e714c2d086a2522440643ccbca20a92d4cd5c5c4f1b3fdd9fe0c3317e86451d1" target="_blank" style="min-height:23px;font-size:15px;box-sizing:border-box;text-decoration:none;position:relative;display:block;width: 100%;color:#ffffff;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-family:{{ font_family|safe }};">
+                                                        Tilmeld dig nyhedsbreve
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="http://click.et.berlingskemedia.dk/?qs=129acdc39b8482f1618ab6171a017d67e714c2d086a2522440643ccbca20a92d4cd5c5c4f1b3fdd9fe0c3317e86451d1" target="_blank" style="box-sizing: border-box;">
+                                                        <img style="width:10px; height: 20px; opacity: 0.5; right: 0; vertical-align: middle;" src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/images/arrow.png" />
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td height="70"></td>
+                                </tr>
+                                <tr>
+                                    <td align="center" valign="top">
+                                        <div style="color: #FFFFFF; font-family: {{ font_family_normal|safe }}; font-size: 10px; line-height: 22px; opacity: 0.5; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+                                            <div>
+                                                <span style="color: #ffffff;"><a href="https://www.berlingskemedia.dk/handelsbetingelser" title="Generelle handelsbetingelser" style="text-decoration: none; color: #ffffff;">Generelle handelsbetingelser</a></span>
+                                                <span style="padding-left: 5px; padding-right: 5px;"> | </span>
+                                                <span style="color: #ffffff;"><a href="https://www.berlingskemedia.dk/cookie-og-privatlivspolitik" title="Cookie- og Privatlivspolitik" style="text-decoration: none; color: #ffffff;">Cookie- og Privatlivspolitik</a></span>
+                                            </div>
+                                            <div>
+                                                <span>Vilkår</span>
+                                                <span style="padding-left: 5px; padding-right: 5px;"> | </span>
+                                                <span>CVR.nr.: 29 20 73 13</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td height="45"></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    {% if debug %}
+    {% include "../partials/debuginfo.html" %}
+    {% endif %}
+
+    <!--[if (gte mso 9)|(IE)]>
+    </td>
+    </tr>
+    </table>
+    <![endif]-->
+</div>
+
+
+<div style="display:none; white-space:nowrap; font:15px courier; color:#ffffff;">
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+</div>
+
+<!--
+  Marketing Cloud - Open Tracking
+  https://help.salesforce.com/articleView?id=000249050&language=en_US&type=1
+ -->
+<custom name="opencounter" type="tracking" />
+
+</body>
+{% endspaceless %}
+</html>

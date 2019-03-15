@@ -1,0 +1,52 @@
+{% if node !== undefined && node !== null %}
+
+  {% set article_url_appendage = tags | tagValue('article_url_appendage') %}
+
+  {% set primary_tag = null %}
+  {% set primary_background = null %}
+  {% set primary_color = null %}
+
+  {% if node.taxonomyTags.primary %}
+    {% for tag in node.taxonomyTags.primary %}
+      {% if tag.id != "2" %}
+        {% set primary_tag = tag.tag %} {# wwww.bt.dk #}
+      {% else %}
+        {% set primary_tag = "Nyheder" %}
+      {% endif %}
+      {% if node.taxonomyTags.primary[0].parent.description == "Nyheder" %}
+          {% set primary_background = "#FF3E00"%}
+          {% set primary_color = "#FFFFFF" %}
+      {% elseif node.taxonomyTags.primary[0].parent.description == "Underholdning" %}
+        {% set primary_background = "#d30d64"%}
+        {% set primary_color = "#FFFFFF" %}
+      {% elseif node.taxonomyTags.primary[0].parent.description == "Sport" %}
+          {% set primary_background = "#0037b8;"%}
+          {% set primary_color = "#FFFFFF" %}
+      {% else %}
+        {% if node.taxonomyTags.primary[0].parent.tag == "Sport" %}
+          {% set primary_background = "#0037b8;"%}
+          {% set primary_color = "#FFFFFF" %}
+        {% else %}
+          {% set primary_background = "#FF3E00"%}
+          {% set primary_color = "#FFFFFF" %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tbody>
+        <tr>
+          <td align="left" valign="top" style="border-bottom: 1px solid rgba(33,33,33,0.3); padding: 15px 19px; background-color: {{ primary_background }};">
+            <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none; color: {{ primary_color }}; font-family: {{ font_family|safe }}; font-size: 34px; line-height: 38px; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+              {{ node.title }}
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td style="height: 10px; background: #EDEBEB;"></td>
+        </tr>
+    </tbody>
+  </table>
+  <!-- Berlingske article END -->
+{% endif %}

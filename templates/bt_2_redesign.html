@@ -1,0 +1,72 @@
+{% extends "brands/bt.html" %}
+
+{% set tracking = "utm_source=newsletter&utm_medium=email&utm_content=red_nb-" + timestamp | yyyymmdd + "&utm_campaign=TODO"; %}
+{% set home_url = "https://www.bt.dk"; %}
+{% set unsubscribe_href = "https://profil.berlingskemedia.dk/tilmeldt/TODO?id=%%ExternalId%%" %}
+{% set buy_subscription_href = "TODO" %}
+
+{% block content %}
+
+{% include "new_partials/bt_single_column.html" with
+{
+article_template: "bt_main_article.html",
+article: nodes[0]
+}
+%}
+
+{% include "new_partials/bt_annonce.html" with { placementID: "72" } %}
+
+{% include "new_partials/bt_single_column.html" with
+{
+article_template: "bt_category_background_article.html",
+article: nodes[1]
+}
+%}
+
+{% include "new_partials/bt_single_column_with_padding.html" with
+{
+article_template: "bt_article.html",
+article: nodes[2]
+}
+%}
+
+{% include "new_partials/bt_two_columns.html" with
+{
+articleA: {
+article_template: "bt_article_small.html",
+article: nodes[3]
+},
+articleB: {
+article_template: "bt_article_small.html",
+article: nodes[4]
+}
+}
+%}
+
+{% include "new_partials/bt_annonce.html" with { placementID: "2612" } %}
+
+{% include "new_partials/bt_single_column_with_padding.html" with
+{
+article_template: "bt_article_left-aligned.html",
+article: nodes[5]
+}
+%}
+
+{% include "new_partials/bt_single_column_with_padding.html" with
+{
+article_template: "bt_article_left-aligned.html",
+article: nodes[6]
+}
+%}
+
+{% include "new_partials/bt_single_column.html" with
+{
+article_template: "bt_article_top-byline.html",
+article: nodes[7]
+}
+%}
+
+{% include "new_partials/bt_annonce.html" with { placementID: "95" } %}
+
+
+{% endblock %}

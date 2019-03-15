@@ -1,0 +1,43 @@
+{% if node !== undefined && node !== null %}
+
+  <!-- BT article top byline -->
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:620px;">
+    <tbody>
+    {% if node.authors[0] %}
+      <tr>
+        <td width="100%" valign="center" align="center" style="padding: 19px 19px 21px;width: 100%; border-bottom: 1px solid rgba(33,33,33,0.2)" >
+          <table align="center" valign="center" cellpadding="0" cellspacing="0" border="0">
+            <tbody>
+              <tr>
+                {% if node.authors[0].picture %}
+                <td width="100" height="100" style="width:100px;height:100px; max-height: 100px; position: relative;overflow:hidden;border-radius:50%;text-align:center;display:inline-block;margin-right:19px; background-image: url({{ node.authors[0].picture }}); background-color: #ffffff; background-size: cover; background-position: center;">
+                  <img width="auto" height="104" style="display:block; width: auto; height:104px;min-height: 104px; max-height: 104px; position: absolute;margin: auto;top: 0;left: -50%;right:-50%;bottom: 0;" src="{{ node.authors[0].picture }}">
+                </td>
+                {% endif %}
+                <td style="display:inline-block;vertical-align:middle;">
+                  <img width="156" height="27" style="width:156px;height:27px;display: block;margin: 10px 0;" src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/images/BT_MENER.png" />
+                  {% if node.authors[0].profileName %}
+                  <p style="font-family: {{ font_family|safe }};font-size:17px;margin:0;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;">{{ node.authors[0].profileName }}</p>
+                  {% endif %}
+                  {% if node.authors[0].profileTitle %}
+                  <p style="font-family: {{ font_family_normal|safe }}; font-size: 17px; margin: -5px 0 0">{{node.authors[0].profileTitle}}</p>
+                  {% endif %}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      {% endif %}
+      <tr>
+        <td align="left" valign="center" style="padding: 19px;">
+          <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none; color: #212121; font-family: {{ font_family|safe }}; letter-spacing: -0.1px; font-size: 28px; line-height: 32px;text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+            {{ node.title }}
+          </a>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+  <!-- BT small article END -->
+{% endif %}
