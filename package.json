@@ -5,6 +5,7 @@
   "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",
+    "dev": "nodemon --inspect --ignore 'client/' --ignore 'templates/' server/index.js",
     "build": "docker build -t berlingskemedia/$npm_package_name:$npm_package_version . && docker tag -f berlingskemedia/$npm_package_name:$npm_package_version berlingskemedia/$npm_package_name:latest",
     "push": "docker push berlingskemedia/$npm_package_name:$npm_package_version && docker push berlingskemedia/$npm_package_name:latest"
   },
@@ -28,8 +29,6 @@
     "vision": "^4.1.1"
   },
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-jshint": "^2.0.4",
-    "jshint": "^2.9.5"
+    "nodemon": "^1.19.0"
   }
 }

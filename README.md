@@ -98,10 +98,10 @@ Make the config script executable with `chmod +x config.sh` and set the environm
 Start the app with the following command:
 
 ```
-../node/bin/node server/index.js
+npm start
 ```
 
-Or, if you have installed *gulp* (using `npm install -g gulp`), just with the command `gulp`.
+Or, to have the app reload on changes, use `npm run dev`.
 
 Now visit [http://localhost:8000/](http://localhost:8000/) if you get no error after startup to see the app.
 
