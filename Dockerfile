@@ -10,7 +10,7 @@ ADD ./client ./client
 ADD ./server ./server
 ADD ./templates ./templates
 ADD package.json .
-#ADD package-lock.json .
+ADD package-lock.json .
 
 RUN npm install --production
 
