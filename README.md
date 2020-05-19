@@ -4,6 +4,24 @@ Redaktionelle nyhedsbreve
 
 This is the application for editorial newsletters with an API and a web interface to admin the newsletters, preview the content, initiate the send out. The application will be built in Node.js and the web framework Hapijs. The application will be run through a Docker container.
 
+# Templating
+
+The templates are written in Swig. See the documentation on [http://paularmstrong.github.io/swig/docs/](http://paularmstrong.github.io/swig/docs/).
+
+The templates are located in `templates` and can be previewed by following URL: `http://<server>/templates/<template_filename>`.
+
+The data to be injected into the template is defined by
+
+E.g.:
+
+```
+http://localhost:8000/templates/berlingske_middag.html?f=berlingske_middag.json
+http://localhost:8000/templates/berlingske_middag.html?u=http%3A%2F%2Fedit.berlingskemedia.net.white.bond.u.net%2Fbondapi%2Fnodequeue%2F5842.ave-json%3Fimage_preset%3D620x355-c
+```
+
+Note: Changes to the templates does not require the application to be restarted since the templates are not cached nor compiled.
+
+
 ## Run from Docker
 
 *This sections describes the details for deploying the app (HCL).*
@@ -104,26 +122,6 @@ npm start
 Or, to have the app reload on changes, use `npm run dev`.
 
 Now visit [http://localhost:8000/](http://localhost:8000/) if you get no error after startup to see the app.
-
-# Templating
-
-The templates are written in Swig. See the documentation on [http://paularmstrong.github.io/swig/docs/](http://paularmstrong.github.io/swig/docs/).
-Also, SendGrid Email Tags are placeholders that will be used when sending the email. See [https://sendgrid.com/docs/Marketing_Emails/tags.html](https://sendgrid.com/docs/Marketing_Emails/tags.html)
-
-The templates are located in `templates` and can be previewed by following URL: `http://<server>/templates/<template_filename>`.
-
-The data to be injected into the template is defined by
-
-E.g.:
-
-```
-http://localhost:8000/templates/berlingske_middag.html?f=berlingske_middag.json
-http://localhost:8000/templates/berlingske_middag.html?u=http%3A%2F%2Fedit.berlingskemedia.net.white.bond.u.net%2Fbondapi%2Fnodequeue%2F5842.ave-json%3Fimage_preset%3D620x355-c
-```
-
-To generate the JSON file in the testdata-folder, user the gulptask **gulp testdata**.
-
-Note: Changes to the templates does not require the application to be restarted since the templates are not cached nor compiled.
 
 # API
 
