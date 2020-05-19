@@ -32,8 +32,8 @@ module.exports.register.attributes = {
 
 function get (url, callback) {
   download(url, function (err, data) {
-    if (err) return reply(err).code(500);
-    if (data === null) return reply().code(404);
+    if (err) return callback(err);
+    if (data === null) return callback(null, null);
 
     if (data.type !== undefined && ['nodequeue', 'latest_news', 'news_article'].indexOf(data.type) > -1) {
       orderBondImages(data);
