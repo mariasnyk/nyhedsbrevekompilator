@@ -9,22 +9,22 @@
 {% set berlingske_header_color = "#201748"; %}
 
 {% block content %}
-
-  {% include "new_partials/berlingske_single_column.html" with
-    {
+  {% set content = {
       article_template: "berlingske_article.html",
       article: nodes[0]
     }
   %}
+  {% include "new_partials/berlingske_single_column.html" %}
 
-  {% include "new_partials/berlingske_annonce.html" with { placementID: "122" } %}
+
+  {% set content = { placementID: "122" } %}
+  {% include "partials/berlingske_annonce.html" %}
 
   {% for node in nodes %}
-    {% if max_nodes > 0 && loop.index > max_nodes %}
+    {% if max_nodes > 0 and loop.index > max_nodes %}
       {# This is empty on purpose. #}
-    {% elif loop.index0 > 0 && loop.index0 % 2 === 0 %}
-      {% include "new_partials/berlingske_two_columns.html" with
-        {
+    {% elif loop.index0 > 0 and loop.index0 % 2 == 0 %}
+      {% set content = {
           articleA: {
             article_template: "berlingske_article.html",
             article: nodes[loop.index0 - 1]
@@ -35,22 +35,27 @@
           }
         }
       %}
+      {% include "new_partials/berlingske_two_columns.html" %}
+
     {% endif %}
 
-    {% if loop.index === 5 %}
-      {% include "new_partials/berlingske_annonce.html" with { placementID: "75" } %}
+    {% if loop.index == 5 %}
+      {% set content = { placementID: "75" } %}
+      {% include "partials/berlingske_annonce.html" %}
       {% set box_banner_1_inserted = true %}
-    {% elif loop.index === 9 %}
-      {% include "new_partials/berlingske_annonce.html" with { placementID: "76" } %}
+    {% elif loop.index == 9 %}
+      {% set content = { placementID: "76" } %}
+      {% include "partials/berlingske_annonce.html" %}
       {% set last_banner_inserted = true %}
     {% endif %}
   {% endfor %}
 
-  {% if last_banner_inserted !== true %}
-    {% include "new_partials/berlingske_annonce.html" with { placementID: "76" } %}
+  {% if last_banner_inserted != true %}
+    {% set content = { placementID: "76" } %}
+    {% include "partials/berlingske_annonce.html" %}
   {% endif %}
 
-
-  {# include "new_partials/berlingske_annonce.html" with { placementID: "XXX" } #}
+  {% set content = { placementID: "XXX" } %}
+  {% include "partials/berlingske_annonce.html" %}
 
 {% endblock %}

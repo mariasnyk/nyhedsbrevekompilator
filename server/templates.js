@@ -4,9 +4,13 @@
 const Fs = require('fs');
 const Path = require('path');
 const Joi = require('joi');
-const swig = require('./swig_helper.js');
+const nunjucks = require('nunjucks');
 const data = require('./data');
 const templatesDir = Path.join(__dirname, '/../templates');
+
+nunjucks.configure(templatesDir, {
+  autoescape: true
+});
 
 function render(templateName, data, callback) {
   var template = Path.join(templatesDir, templateName);
@@ -16,7 +20,7 @@ function render(templateName, data, callback) {
     return null;
   }
 
-  return swig.renderFile(template, data);
+  return nunjucks.render(template, data);
 };
 
 module.exports.render = render;
@@ -25,8 +29,8 @@ module.exports.register = function (plugin, options, next) {
 
   plugin.select('templates').views({
     engines: {
-      html: swig,
-      plain: swig
+      html: nunjucks,
+      plain: nunjucks
     },
     path: templatesDir,
     isCached: false

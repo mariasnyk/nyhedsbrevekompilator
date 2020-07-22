@@ -8,13 +8,8 @@
 {% set kw = "AOK_breaking"; %}
 
 {% block content %}
-
-  {% include "new_partials/single_column.html" with
-    {
-      article_template: "aok_article.html",
-      article: nodes[0]
-    }
-  %}
+  {% set content = { article_template: 'aok_article.html', article: nodes[0] } %}
+  {% include "new_partials/single_column.html" %}
 
   {% if nodes.length > 2 %}
     <tr>
@@ -35,23 +30,22 @@
       </td>
     </tr>
 
-    {% include "new_partials/two_column.html" with
-      {
-        articleA: {
-          article_template: "aok_article.html",
-          article: nodes[1]
-        },
-        articleB: {
-          article_template: "aok_article.html",
-          article: nodes[2]
-        },
-        show_tag: false
+    {% set content = {
+      articleA: {
+        article_template: "aok_article.html",
+        article: nodes[1]
+      },
+      articleB: {
+        article_template: "aok_article.html",
+        article: nodes[2]
+      },
+      show_tag: false
       }
     %}
-
+    {% include "new_partials/two_column.html" %}
   {% endif %}
 
-
-  {% include "new_partials/banner.html" with { cu: "29864" } %}
+  {% set content = { cu: "29864" } %}
+  {% include "new_partials/banner.html" %}
 
 {% endblock %}

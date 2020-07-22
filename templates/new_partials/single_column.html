@@ -4,7 +4,8 @@
     <table width="614" cellpadding="0" cellspacing="10" border="0">
       <tr>
         <td>
-          {% include article_template with { node: article, width: 614 } %}
+          {% set content = { node: article, width: 614 } %}
+          {% include article_template %}
         </td>
       </tr>
       <tr>

@@ -8,20 +8,19 @@
 {% set berlingske_header_color = "#201748"; %}
 
 {% block content %}
-
-  {% include "new_partials/berlingske_single_column.html" with
-    {
+  {% set content = {
       article_template: "berlingske_article.html",
       article: nodes[0]
     }
   %}
+  {% include "new_partials/berlingske_single_column.html" %}
+
 
   {% for node in nodes %}
-    {% if max_nodes > 0 && loop.index > max_nodes %}
+    {% if max_nodes > 0 and loop.index > max_nodes %}
       {# This is empty on purpose. #}
-    {% elif loop.index0 > 0 && loop.index0 % 2 === 0 %}
-      {% include "new_partials/berlingske_two_columns.html" with
-        {
+    {% elif loop.index0 > 0 and loop.index0 % 2 == 0 %}
+      {% set content = {
           articleA: {
             article_template: "berlingske_article.html",
             article: nodes[loop.index0 - 1]
@@ -32,6 +31,8 @@
           }
         }
       %}
+      {% include "new_partials/berlingske_two_columns.html" %}
+
     {% endif %}
   {% endfor %}
 
