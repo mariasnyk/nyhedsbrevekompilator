@@ -6,6 +6,6 @@ config.sh
 config.bat
 #templates
 testdata
-
+.idea
 
 *.sublime-*
