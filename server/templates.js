@@ -41,7 +41,6 @@ module.exports.render = render;
 const NunjucksHapi = {
   compile: function (template, options) {
     return function (context, options) {
-      console.log(template);
       return nunjucks.renderString(template, context);
     }
   }
