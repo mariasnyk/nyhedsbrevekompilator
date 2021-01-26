@@ -20,10 +20,10 @@
         <td align="left" valign="top">
           <div style="font-size: 0; line-height: 0px; position: relative;">
 
-            {% set image_found = false; %}
+            {% set image_found = false %}
             {% for image in node.images %}
               {% if !image_found and image.relation | hasValue('default') %}
-                {% set image_found = true; %}
+                {% set image_found = true %}
                 <a href="{{ node.url }}?{{ tracking }}" target="_blank" style="text-decoration: none;">
                   <div style="opacity: .4; background-color: black; position: absolute; left: 0; top: 0; bottom: 0; right: 0;"></div>
                   <img  style="width: {{ width }}px;"

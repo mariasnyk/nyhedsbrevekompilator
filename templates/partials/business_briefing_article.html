@@ -27,12 +27,12 @@
 
 {% set background = "#ffffff" %}
 
-{% set image_count = 0; %}
+{% set image_count = 0 %}
 {% if node.images | typeof == '[object Object]' %}
-  {% set images_keys = Object.keys(node.images); %}
-  {% set image_count = images_keys.length; %}
+  {% set images_keys = Object.keys(node.images) %}
+  {% set image_count = images_keys.length %}
 {% elif node.images | typeof == '[object Array]' %}
-  {% set image_count = node.images.length; %}
+  {% set image_count = node.images.length %}
 {% endif %}
 
 {% if image_count == 0 %}
@@ -68,10 +68,10 @@
       </a>
 
       {% if image_count > 0 %}
-        {% set image_found = false; %}
+        {% set image_found = false %}
         {% for image in node.images %}
           {% if !image_found and image.relation | hasValue('default') %}
-            {% set image_found = true; %}
+            {% set image_found = true %}
             <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
               <img  style="width: {{ width }}px;"
                     width="{{ width }}"

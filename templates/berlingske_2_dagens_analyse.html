@@ -1,12 +1,13 @@
 {% extends "brands/berlingske.html" %}
 
-{% set tracking = "utm_source=newsletter&utm_medium=email&utm_content=red_nb-" + timestamp | yyyymmdd + "&utm_campaign=berlingske_politiko"; %}
-{% set home_url = "https://www.berlingske.dk"; %}
+{% set tracking = "utm_source=newsletter&utm_medium=email&utm_content=red_nb-" + timestamp | yyyymmdd + "&utm_campaign=berlingske_politiko" %}
+{% set home_url = "https://www.berlingske.dk" %}
 {% set unsubscribe_href = "https://profil.berlingskemedia.dk/tilmeldt/154?id=%%ExternalId%%" %}
 {% set buy_subscription_href = "https://abonnement.berlingske.dk/berlingske-abonnementer/?utm_source=own_newsletters_ed&utm_medium=berlingske&utm_content=nl_link&utm_campaign=abonnementer_berlingske&ns_fee=AL-151222-CP-WKLEDIT1WK" %}
 
-{% set berlingske_header_name = "Dagens analyse"; %}
-{% set berlingske_header_color = "#201748"; %}
+{% set berlingske_header_name = "Dagens analyse" %}
+{% set berlingske_header_color = "#201748" %}
+{% set last_banner_inserted = false %}
 
 {% block content %}
   {% set content = {
@@ -56,6 +57,6 @@
   {% endif %}
 
 {% set content = { placementID: 'XXX' } %}
-{% include "new_partials/berlingske_annonce.html" %}
+{# include "new_partials/berlingske_annonce.html" #}
 
 {% endblock %}

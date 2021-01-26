@@ -1,14 +1,15 @@
 {% extends "brands/berlingske.html" %}
 
-{% set tracking = "utm_source=newsletter&utm_medium=email&utm_content=red_nb-" + timestamp | yyyymmdd + "&utm_campaign=berlingske_aok"; %}
-{% set home_url = "https://www.berlingske.dk/aok"; %}
+{% set tracking = "utm_source=newsletter&utm_medium=email&utm_content=red_nb-" + timestamp | yyyymmdd + "&utm_campaign=berlingske_aok" %}
+{% set home_url = "https://www.berlingske.dk/aok" %}
 {% set unsubscribe_href = "https://profil.berlingskemedia.dk/smartlinks?ekstern_id=%%ExternalId%%&nid=17&nid=16486&lid=3115&action=signout&url=https%3A%2F%2Fwww.berlingske.dk%2Fafmelding" %}
 {% set buy_subscription_href = "https://abonnement.berlingske.dk/berlingske-abonnementer/?utm_source=own_newsletters_ed&utm_medium=berlingske&utm_content=nl_link&utm_campaign=abonnementer_berlingske&ns_fee=AL-151222-CP-WKLEDIT1WK" %}
 
-{% set berlingske_header_img_src = "https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/logos/AoK_logo_rgb.png"; %}
-{% set berlingske_header_img_height = "28px"; %}
-{% set berlingske_header_img_width = ""; %}
-{% set berlingske_header_img_padding = ""; %}
+{% set berlingske_header_img_src = "https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/logos/AoK_logo_rgb.png" %}
+{% set berlingske_header_img_height = "28px" %}
+{% set berlingske_header_img_width = "" %}
+{% set berlingske_header_img_padding = "" %}
+{% set last_banner_inserted = false %}
 
 {% block content %}
 
@@ -21,7 +22,7 @@
 
 
   {% set content = { placementID: "139" } %}
-  {% include "partials/berlingske_annonce.html" %}
+  {% include "new_partials/berlingske_annonce.html" %}
 
   {% for node in nodes %}
     {% if max_nodes > 0 and loop.index > max_nodes %}
@@ -44,21 +45,21 @@
 
     {% if loop.index == 5 %}
       {% set content = { placementID: "94" } %}
-      {% include "partials/berlingske_annonce.html" %}
+      {% include "new_partials/berlingske_annonce.html" %}
       {% set box_banner_1_inserted = true %}
     {% elif loop.index == 9 %}
       {% set content = { placementID: "XXX3" } %}
-      {% include "partials/berlingske_annonce.html" %}
+      {# include "new_partials/berlingske_annonce.html" #}
       {% set last_banner_inserted = true %}
     {% endif %}
   {% endfor %}
 
   {% if last_banner_inserted != true %}
     {% set content = { placementID: "XXX3" } %}
-    {% include "partials/berlingske_annonce.html" %}
+    {# include "new_partials/berlingske_annonce.html" #}
   {% endif %}
 
   {% set content = { placementID: "XXX4" } %}
-  {% include "partials/berlingske_annonce.html" %}
+  {# include "new_partials/berlingske_annonce.html" #}
 
 {% endblock %}

@@ -1,16 +1,5 @@
-{% if node == undefined or node == null %}
-  {% if content != undefined and content != null %}
-    {% set node = content.node %}
-  {% endif %}
-{% endif %}
-
-{% if width == undefined or width == null %}
-  {% if content != undefined and content != null %}
-    {% set width = content.width %}
-  {% else %}
-    {% set width = 'auto' %}
-  {% endif %}
-{% endif %}
+{% set node = content.node %}
+{% set width = content.width %}
 
 {% if node != undefined and node != null %}
   {% set article_url_appendage = tags | tagValue('article_url_appendage') %}
@@ -26,12 +15,12 @@
 
   {% set background = "#ffffff" %}
 
-  {% set image_count = 0; %}
+  {% set image_count = 0 %}
   {% if node.images | typeof == '[object Object]' %}
-    {% set images_keys = Object.keys(node.images); %}
-    {% set image_count = images_keys.length; %}
+    {% set images_keys = Object.keys(node.images) %}
+    {% set image_count = images_keys.length %}
   {% elif node.images | typeof == '[object Array]' %}
-    {% set image_count = node.images.length; %}
+    {% set image_count = node.images.length %}
   {% endif %}
 
   {% if image_count == 0 %}
@@ -41,10 +30,10 @@
   <div style="width: {{ width }}px; height: 100%; display: inline-block; background-color: {{ background }}; font-size: 0; line-height: 0px;">
 
     {% if image_count > 0 %}
-      {% set image_found = false; %}
+      {% set image_found = false %}
       {% for image in node.images %}
-        {% if !image_found and image.relation | hasValue('default') %}
-          {% set image_found = true; %}
+        {% if not image_found and image.relation | hasValue('default') %}
+          {% set image_found = true %}
           <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
             <img  style="width: {{ width }}px;"
                   width="{{ width }}"

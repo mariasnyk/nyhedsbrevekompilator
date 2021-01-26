@@ -37,7 +37,7 @@
 {% set color = "#000000" %}
 {% set highlight_color = "#cd0403" %}
 
-{% if !disableBTbackground and node.taxonomyTags.presentationTags %}
+{% if not disableBTbackground and node.taxonomyTags.presentationTags %}
   {% for tag in node.taxonomyTags.presentationTags %}
     {% if tag.id == "191134" %}     {# Yellow #}  {% set background = "#fde62f" %}  {% set color = "#000000" %}{% set highlight_color = "#cd0403" %}
     {% elseif tag.id == "191131" %} {# Black #}   {% set background = "#000000" %}  {% set color = "#ffffff" %}{% set highlight_color = "#cd0403" %}
@@ -50,12 +50,12 @@
   {% endfor %}
 {% endif %}
 
-{% set image_count = 0; %}
+{% set image_count = 0 %}
 {% if node.images | typeof == '[object Object]' %}
-  {% set images_keys = Object.keys(node.images); %}
-  {% set image_count = images_keys.length; %}
+  {% set images_keys = Object.keys(node.images) %}
+  {% set image_count = images_keys.length %}
 {% elif node.images | typeof == '[object Array]' %}
-  {% set image_count = node.images.length; %}
+  {% set image_count = node.images.length %}
 {% endif %}
 
 {% if image_count == 0 %}
@@ -76,10 +76,10 @@
 <div style="width: {{ width }}px; height: 100%; display: inline-block; background-color: {{ background }}; font-size: 0; line-height: 0px;">
 
   {% if image_count > 0 %}
-    {% set image_found = false; %}
+    {% set image_found = false %}
     {% for image in node.images %}
-      {% if !image_found and image.relation | hasValue('default') %}
-        {% set image_found = true; %}
+      {% if not image_found and image.relation | hasValue('default') %}
+        {% set image_found = true %}
         <a href="{{ node.url }}?{{ article_url_appendage }}&{{ tracking }}" target="_blank" style="text-decoration: none;">
           <img
             style="width: {{ width }}px;"
