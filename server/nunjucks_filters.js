@@ -96,6 +96,21 @@ const strreplace = function (input, substr, newSubStr) {
     return input.replace(substr, newSubStr);
 };
 
+const setAttribute = function(dictionary, key, value) {
+    dictionary[key] = value;
+    return dictionary;
+};
+
+const json = function (value, spaces) {
+    if (value === undefined)
+        return nunjucks.runtime.markSafe('undefined')
+    if (value instanceof nunjucks.runtime.SafeString) {
+        value = value.toString()
+    }
+    const jsonString = JSON.stringify(value, null, spaces).replace(/</g, '\\u003c')
+    return nunjucks.runtime.markSafe(jsonString)
+};
+
 module.exports = (env) => {
 
     env.addFilter('highlighter', highlighter);
@@ -121,20 +136,8 @@ module.exports = (env) => {
 
     env.addFilter('stringreplace', strreplace);
 
-    env.addFilter('setAttribute', function(dictionary, key, value) {
-        dictionary[key] = value;
-        return dictionary;
-    });
+    env.addFilter('setAttribute', setAttribute);
 
-    env.addFilter('json', function (value, spaces) {
-        console.log(value);
-        if (value === undefined)
-            return nunjucks.runtime.markSafe('undefined')
-        if (value instanceof nunjucks.runtime.SafeString) {
-            value = value.toString()
-        }
-        const jsonString = JSON.stringify(value, null, spaces).replace(/</g, '\\u003c')
-        return nunjucks.runtime.markSafe(jsonString)
-    })
+    env.addFilter('json', json)
 
 }
