@@ -5,7 +5,9 @@
   "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",
-    "dev": "nodemon --inspect --ignore 'client/' --ignore 'templates/' server/index.js"
+    "dev": "nodemon --inspect --ignore 'client/' --ignore 'templates/' server/index.js",
+    "prepare": "npm run snyk-protect",
+    "snyk-protect": "snyk-protect"
   },
   "author": "Berlingske Media",
   "license": "ISC",
@@ -20,13 +22,15 @@
     "hapi": "^16.6.2",
     "inert": "^4.2.1",
     "joi": "^10.6.0",
-    "moment": "^2.18.1",
-    "mongodb": "^2.2.36",
+    "moment": "^2.29.2",
+    "mongodb": "^3.1.13",
     "swig": "^1.4.2",
     "swig-extras": "0.0.1",
-    "vision": "^4.1.1"
+    "vision": "^4.1.1",
+    "@snyk/protect": "latest"
   },
   "devDependencies": {
     "nodemon": "^1.19.0"
-  }
+  },
+  "snyk": true
 }
